@@ -1,7 +1,9 @@
-import React from 'react';
 import { ArrowRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Hero = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="relative min-h-screen flex items-center">
       {/* Gradient background */}
@@ -13,21 +15,20 @@ const Hero = () => {
       {/* Content */}
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center">
         <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-6 gradient-text">
-          無限の可能性に、ビジョンを
+          {t('hero.title')}
         </h1>
         <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-2xl mx-auto">
-        tentspaceは、確かな技術と柔軟な発想で、あなたの構想を実現するパートナーです。
-        小さな拠点から広がる無限の挑戦を支えます。
+          {t('hero.subtitle')}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <a href="#contact" 
               className="group px-6 py-3 bg-primary text-white rounded-lg text-lg font-medium hover:bg-primary/90 transition-colors inline-flex items-center justify-center">
-            プロジェクトを始める
+            {t('nav.getStarted')}
             <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
           </a>
           <a href="#services" 
               className="px-6 py-3 glass-effect rounded-lg text-lg font-medium hover:bg-gray-900/10 transition-colors">
-            もっと知る
+            {t('hero.cta')}
           </a>
         </div>
       </div>

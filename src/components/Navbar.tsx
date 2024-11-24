@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Code2, Menu, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from './LanguageSwitcher';
 
 const Navbar = () => {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -27,12 +30,13 @@ const Navbar = () => {
           
           <div className="hidden md:block">
             <div className="flex items-center space-x-8">
-              <a href="#services" className="text-gray-600 hover:text-primary transition-colors">Services</a>
-              <a href="#about" className="text-gray-600 hover:text-primary transition-colors">About</a>
-              <a href="#contact" className="text-gray-600 hover:text-primary transition-colors">Contact</a>
+              <a href="#services" className="text-gray-600 hover:text-primary transition-colors">{t('nav.services')}</a>
+              <a href="#about" className="text-gray-600 hover:text-primary transition-colors">{t('nav.about')}</a>
+              <a href="#contact" className="text-gray-600 hover:text-primary transition-colors">{t('nav.contact')}</a>
               <a href="#contact" className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
-                Get Started
+                {t('nav.getStarted')}
               </a>
+              <LanguageSwitcher />
             </div>
           </div>
           
@@ -47,12 +51,13 @@ const Navbar = () => {
       {isOpen && (
         <div className="md:hidden glass-effect mt-2">
           <div className="px-4 py-4 space-y-3">
-            <a href="#services" className="block px-3 py-2 text-gray-600 hover:text-primary rounded-lg transition-colors">Services</a>
-            <a href="#about" className="block px-3 py-2 text-gray-600 hover:text-primary rounded-lg transition-colors">About</a>
-            <a href="#contact" className="block px-3 py-2 text-gray-600 hover:text-primary rounded-lg transition-colors">Contact</a>
+            <a href="#services" className="block px-3 py-2 text-gray-600 hover:text-primary rounded-lg transition-colors">{t('nav.services')}</a>
+            <a href="#about" className="block px-3 py-2 text-gray-600 hover:text-primary rounded-lg transition-colors">{t('nav.about')}</a>
+            <a href="#contact" className="block px-3 py-2 text-gray-600 hover:text-primary rounded-lg transition-colors">{t('nav.contact')}</a>
             <a href="#contact" className="block px-3 py-2 bg-primary text-white rounded-lg text-center hover:bg-primary/90 transition-colors">
-              Get Started
+              {t('nav.getStarted')}
             </a>
+            <LanguageSwitcher />
           </div>
         </div>
       )}

@@ -1,7 +1,16 @@
-import React from 'react';
 import { Code2, Github, Linkedin, Twitter } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+
 
 const Footer = () => {
+  const { t } = useTranslation();
+
+  const socialLinks = [
+    { Icon: Twitter, href: '#' },
+    { Icon: Github, href: '#' },
+    { Icon: Linkedin, href: '#' }
+  ];
+
   return (
     <footer className="border-t border-gray-200">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -12,11 +21,11 @@ const Footer = () => {
               <span className="ml-2 text-xl font-bold text-gray-900">tent␣</span>
             </div>
             <p className="text-gray-600 mb-6 text-lg">
-              Building the future through innovative technology solutions.
+              {t('footer.description')}
             </p>
             <div className="flex space-x-6">
-              {[Twitter, Github, Linkedin].map((Icon, index) => (
-                <a key={index} href="#" className="p-2 text-gray-400 hover:text-primary transition-colors">
+              {socialLinks.map(({ Icon, href }, index) => (
+                <a key={index} href={href} className="p-2 text-gray-400 hover:text-primary transition-colors">
                   <Icon className="h-5 w-5" />
                 </a>
               ))}
@@ -24,22 +33,22 @@ const Footer = () => {
           </div>
           
           <div>
-            <h3 className="font-semibold mb-6 text-lg text-gray-900">Services</h3>
+            <h3 className="font-semibold mb-6 text-lg text-gray-900">{t('footer.services.title')}</h3>
             <ul className="space-y-4 text-gray-600">
-              {['Custom Development', 'Digital Innovation', 'Tech Consulting', 'Rapid Prototyping'].map((item, index) => (
+              {(t('footer.services.items', { returnObjects: true }) as string[]).map((item: string, index: number) => (
                 <li key={index}>
-                  <a href="#" className="hover:text-primary transition-colors">{item}</a>
+                  <a href="#services" className="hover:text-primary transition-colors">{item}</a>
                 </li>
               ))}
             </ul>
           </div>
           
           <div>
-            <h3 className="font-semibold mb-6 text-lg text-gray-900">Company</h3>
+            <h3 className="font-semibold mb-6 text-lg text-gray-900">{t('footer.company.title')}</h3>
             <ul className="space-y-4 text-gray-600">
-              {['About Us', 'Careers', 'Privacy Policy', 'Terms of Service'].map((item, index) => (
+              {(t('footer.company.items', { returnObjects: true }) as string[]).map((item: string, index: number) => (
                 <li key={index}>
-                  <a href="#" className="hover:text-primary transition-colors">{item}</a>
+                  <a href="#about" className="hover:text-primary transition-colors">{item}</a>
                 </li>
               ))}
             </ul>
@@ -47,7 +56,7 @@ const Footer = () => {
         </div>
         
         <div className="mt-12 pt-8 border-t border-gray-200 text-center text-gray-600">
-          <p>&copy; {new Date().getFullYear()} tent␣. All rights reserved.</p>
+          <p>{t('footer.copyright', { year: new Date().getFullYear() })}</p>
         </div>
       </div>
     </footer>

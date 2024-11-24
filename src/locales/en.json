@@ -1,0 +1,104 @@
+{
+  "nav": {
+    "services": "Services",
+    "about": "About",
+    "contact": "Contact",
+    "getStarted": "Get Started"
+  },
+  "hero": {
+    "title": "Your Vision, Our Space",
+    "subtitle": "We transform ideas into reality with innovative technology. From a small base to infinite possibilities.",
+    "cta": "Learn More"
+  },
+  "services": {
+    "title": "Our Services",
+    "subtitle": "Comprehensive solutions for modern digital challenges",
+    "items": {
+      "web": {
+        "title": "Web Development",
+        "description": "Blazing-fast web experiences that scale. Built with modern tech stacks for the digital-first world."
+      },
+      "mobile": {
+        "title": "Mobile App Development",
+        "description": "Native-quality apps that delight users. One codebase, seamless experience across platforms."
+      },
+      "cloud": {
+        "title": "Cloud Solutions",
+        "description": "Future-proof cloud infrastructure that grows with you. Secure, scalable, and cost-efficient."
+      },
+      "custom": {
+        "title": "Custom Development",
+        "description": "Your unique vision, engineered to perfection. From concept to launch and beyond."
+      }
+    }
+  },
+  "about": {
+    "title": "Pushing Boundaries",
+    "description": "Every breakthrough starts small.\n\nWe're a tech studio that combines AI-powered development with battle-tested expertise to ship faster, smarter solutions. Ready to turn your vision into reality? Let's build something amazing together.",
+    "highlights": [
+      {
+        "number": "2x",
+        "label": "Faster\nDelivery"
+      },
+      {
+        "number": "50+",
+        "label": "Core Tech\nStack"
+      },
+      {
+        "number": "24/7",
+        "label": "Support\nAvailability"
+      },
+      {
+        "number": "100%",
+        "label": "Shipping\nSuccess Rate"
+      }
+    ]
+  },
+  "contact": {
+    "title": "Get in Touch",
+    "description": "Ready to start your next project? We'd love to hear from you.",
+    "location": {
+      "title": "Location",
+      "content": "323 Tsunoyama, Ogawa, Hiki District, Saitama 355-0316, Japan"
+    },
+    "email": {
+      "title": "Email",
+      "content": "back-office@tentspace.net"
+    },
+    "chat": {
+      "title": "Live Chat",
+      "content": "Drop us a message anytime"
+    },
+    "form": {
+      "name": "Your Name",
+      "email": "Your Email",
+      "message": "Your Message",
+      "submit": "Send Message"
+    }
+  },
+  "footer": {
+    "description": "Building the future through innovative technology solutions",
+    "services": {
+      "title": "Services",
+      "items": [
+        "Web Development",
+        "Mobile App Development",
+        "Cloud Solutions",
+        "Custom Development"
+      ]
+    },
+    "company": {
+      "title": "Company",
+      "items": [
+        "About Us",
+        "Careers",
+        "Privacy Policy",
+        "Terms of Service"
+      ]
+    },
+    "copyright": "© {{year}} tent space Inc. All rights reserved."
+  },
+  "meta": {
+    "title": "tent␣ - Custom Software Development"
+  }
+} 

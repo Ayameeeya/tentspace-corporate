@@ -1,13 +1,9 @@
-import React from 'react';
-
-const stats = [
-  { number: '150+', label: 'Projects Completed' },
-  { number: '50+', label: 'Team Members' },
-  { number: '10+', label: 'Years Experience' },
-  { number: '98%', label: 'Client Satisfaction' }
-];
+import { useTranslation } from 'react-i18next';
 
 const About = () => {
+  const { t } = useTranslation();
+  const highlights = t('about.highlights', { returnObjects: true });
+
   return (
     <section id="about" className="py-32 relative">
       <div className="absolute inset-0">
@@ -18,17 +14,17 @@ const About = () => {
         <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
           <div>
             <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
-              Pushing Boundaries
+              {t('about.title')}
             </h2>
-            <p className="text-xl text-gray-600 mb-12">
-              At tent␣, we're more than just a tech company. We're a collective of innovators, dreamers, and doers who are passionate about creating digital solutions that make a difference.
+            <p className="text-xl text-gray-600 mb-12 whitespace-pre-wrap">
+              {t('about.description')}
             </p>
             
             <div className="grid grid-cols-2 gap-8">
-              {stats.map((stat, index) => (
+              {Array.isArray(highlights) && highlights.map((item: any, index: any) => (
                 <div key={index} className="bg-white p-6 rounded-xl shadow-lg">
-                  <div className="text-3xl font-bold mb-2 text-primary">{stat.number}</div>
-                  <div className="text-gray-600">{stat.label}</div>
+                  <div className="text-3xl font-bold mb-2 text-primary">{item.number}</div>
+                  <div className="text-gray-600">{item.label}</div>
                 </div>
               ))}
             </div>
