@@ -1,6 +1,6 @@
 import { Github, Linkedin, Twitter } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   const { t } = useTranslation();
@@ -31,30 +31,34 @@ const Footer = () => {
               ))}
             </div>
           </div>
-          
+
           <div>
             <h3 className="font-semibold mb-6 text-lg text-gray-900">{t('footer.services.title')}</h3>
             <ul className="space-y-4 text-gray-600">
-              {(t('footer.services.items', { returnObjects: true }) as string[]).map((item: string, index: number) => (
+              {(t('footer.services.items', { returnObjects: true }) as Array<{ label: string, href: string }>).map((item, index) => (
                 <li key={index}>
-                  <a href="#services" className="hover:text-primary transition-colors">{item}</a>
+                  <a href={item.href} className="hover:text-primary transition-colors">{item.label}</a>
                 </li>
               ))}
             </ul>
           </div>
-          
+
           <div>
             <h3 className="font-semibold mb-6 text-lg text-gray-900">{t('footer.company.title')}</h3>
             <ul className="space-y-4 text-gray-600">
-              {(t('footer.company.items', { returnObjects: true }) as string[]).map((item: string, index: number) => (
+              {(t('footer.company.items', { returnObjects: true }) as Array<{ label: string, href: string }>).map((item, index) => (
                 <li key={index}>
-                  <a href="#about" className="hover:text-primary transition-colors">{item}</a>
+                  {item.href.startsWith('/') ? (
+                    <Link to={item.href} className="hover:text-primary transition-colors">{item.label}</Link>
+                  ) : (
+                    <a href={item.href} className="hover:text-primary transition-colors">{item.label}</a>
+                  )}
                 </li>
               ))}
             </ul>
           </div>
         </div>
-        
+
         <div className="mt-12 pt-8 border-t border-gray-200 text-center text-gray-600">
           <p>{t('footer.copyright', { year: new Date().getFullYear() })}</p>
         </div>

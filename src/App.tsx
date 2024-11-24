@@ -1,12 +1,28 @@
 import './i18n';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Services from './components/Services';
-import About from './components/About';
-import Contact from './components/Contact';
 import Footer from './components/Footer';
+import Home from './pages/Home';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
+
+function ScrollToHash() {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash) {
+      const element = document.querySelector(location.hash);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [location]);
+
+  return null;
+}
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -25,14 +41,18 @@ function App() {
   }, [t, i18n]);
 
   return (
-    <div className="min-h-screen bg-white text-gray-900">
-      <Navbar />
-      <Hero />
-      <Services />
-      <About />
-      <Contact />
-      <Footer />
-    </div>
+    <Router>
+      <ScrollToHash />
+      <div className="min-h-screen bg-white text-gray-900">
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="*" element={<Home />} />
+        </Routes>
+        <Footer />
+      </div>
+    </Router>
   );
 }
 
