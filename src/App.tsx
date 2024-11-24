@@ -3,7 +3,9 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
+import AboutUs from './pages/AboutUs';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import Terms from './pages/Terms';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
 
@@ -47,7 +49,9 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/about-us" element={<AboutUs />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<Terms />} />
           <Route path="*" element={<Home />} />
         </Routes>
         <Footer />

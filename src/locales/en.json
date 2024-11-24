@@ -54,6 +54,17 @@
       }
     ]
   },
+  "aboutUs": {
+    "title": "About Us",
+    "description": "tent space Inc. realizes your vision with the latest technology and flexible ideas.",
+    "companyInfo": {
+      "name": "Company Name: tent space Inc.",
+      "established": "Established: August 1, 2023",
+      "capital": "Capital: ¥1,000,000 (including capital reserve)",
+      "business": "Business: Software Development, IT Consulting",
+      "location": "Location: 323 Tsunoyama, Ogawa, Hiki District, Saitama 355-0316, Japan"
+    }
+  },
   "contact": {
     "title": "Get in Touch",
     "description": "Ready to start your next project? We'd love to hear from you.",
@@ -90,10 +101,9 @@
     "company": {
       "title": "Company",
       "items": [
-        { "label": "About Us", "href": "/#about" },
-        { "label": "Careers", "href": "/#about" },
+        { "label": "About Us", "href": "/about-us" },
         { "label": "Privacy Policy", "href": "/privacy-policy" },
-        { "label": "Terms of Service", "href": "/#about" }
+        { "label": "Terms of Service", "href": "/terms-of-service" }
       ]
     },
     "copyright": "© {{year}} tent space Inc. All rights reserved."
@@ -102,7 +112,6 @@
     "title": "tent␣ - Custom Software Development"
   },
   "privacy": {
-    "backToHome": "Back to Home",
     "title": "Privacy Policy",
     "sections": [
       {
@@ -205,5 +214,52 @@
     ],
     "lastUpdated": "Last updated: {{date}}",
     "updateDate": "November 25, 2024"
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "lastUpdated": "Last updated: {{date}}",
+    "updateDate": "November 25, 2024",
+    "sections": [
+      {
+        "title": "1. Agreement to Terms",
+        "content": [
+          "By accessing or using our services, you agree to be bound by these Terms of Service and all applicable laws and regulations."
+        ]
+      },
+      {
+        "title": "2. Use of Services",
+        "content": [
+          "Our services are provided \"as is\" and are intended for lawful use only. You agree to use our services in compliance with all applicable laws and regulations.",
+          "You must be at least 18 years old to use our services.",
+          "You are responsible for maintaining the security of your account.",
+          "You agree not to misuse or attempt to disrupt our services."
+        ]
+      },
+      {
+        "title": "3. Intellectual Property",
+        "content": [
+          "All content, features, and functionality of our services are owned by tent space Inc. (hereinafter referred to as 'the Company') and are protected by international copyright, trademark, and other intellectual property laws."
+        ]
+      },
+      {
+        "title": "4. Limitation of Liability",
+        "content": [
+          "The Company shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use or inability to use our services."
+        ]
+      },
+      {
+        "title": "5. Changes to Terms",
+        "content": [
+          "We reserve the right to modify these terms at any time. We will notify users of any material changes via email or through our services."
+        ]
+      },
+      {
+        "title": "6. Contact Information",
+        "content": [
+          "If you have any questions about these Terms, please contact us at:",
+          "Address: 323 Tsunoyama, Ogawa, Hiki District, Saitama 355-0316, Japan\nCompany Name: tent space Inc.\nEmail Address: back-office@tentspace.net"
+        ]
+      }
+    ]
   }
 } 
