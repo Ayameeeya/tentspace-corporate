@@ -9,7 +9,7 @@ const Hero = () => {
       {/* Gradient background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-b from-white to-gray-50"></div>
-        <div className="absolute top-[20%] left-[50%] w-[600px] h-[600px] bg-primary/10 rounded-full blur-[128px] -translate-x-1/2"></div>
+        <div className="absolute top-[20%] left-[50%] w-full h-[600px] bg-primary/10 rounded-full blur-[128px] -translate-x-1/2"></div>
       </div>
       
       {/* Content */}

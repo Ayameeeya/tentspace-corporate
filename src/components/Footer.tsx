@@ -1,4 +1,4 @@
-import { Code2, Github, Linkedin, Twitter } from 'lucide-react';
+import { Github, Linkedin, Twitter } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 
@@ -17,8 +17,8 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center mb-6">
-              <Code2 className="h-8 w-8 text-primary" />
-              <span className="ml-2 text-xl font-bold text-gray-900">tent␣</span>
+              <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo_black_symbol-sj8aep4AiJ8rmg4cI3B2xAxWjIwNPC.png" alt="Logo" width={40} height={40} />
+              <span className="ml-1 text-xl font-bold text-gray-900">tent␣</span>
             </div>
             <p className="text-gray-600 mb-6 text-lg">
               {t('footer.description')}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Code2, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from './LanguageSwitcher';
 
@@ -24,8 +24,8 @@ const Navbar = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <Code2 className="h-8 w-8 text-primary" />
-            <span className="ml-2 text-xl font-bold text-gray-900">tent␣</span>
+            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo_gradation__symbol-3BWbJdNPb1TreoCQYugpmwHZs5CsrW.png" alt="Logo" width={40} height={40} />
+            <span className="ml-1 text-xl font-bold text-gray-900">tent␣</span>
           </div>
           
           <div className="hidden md:block">
