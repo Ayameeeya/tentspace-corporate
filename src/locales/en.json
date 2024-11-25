@@ -55,14 +55,49 @@
     ]
   },
   "aboutUs": {
+    "hero": {
+      "title": "Code Your Blank Canvas",
+      "subtitle": "Hey, we're tent␣—two engineers turning bold ideas into elegant solutions. Let's build something extraordinary together."
+    },
+    "story": {
+      "title": "Our Story",
+      "content": [
+        "Born in August 2023, tent␣ started with a simple belief: every blank space (␣) holds infinite potential. Today, we craft everything from lightning-fast web apps to AI-powered solutions that push boundaries.",
+        "Small team, big impact. We move fast, adapt faster, and deliver solutions that scale. No overhead, just pure engineering excellence focused on turning your vision into reality."
+      ]
+    },
+    "values": {
+      "title": "Our Values",
+      "items": [
+        {
+          "icon": "Code2",
+          "title": "Engineering First",
+          "description": "Full-stack expertise meets AI innovation. We build solutions that don't just work—they excel."
+        },
+        {
+          "icon": "Rocket",
+          "title": "Smart Innovation",
+          "description": "We leverage the latest trends to implement solutions that add real value to your business."
+        },
+        {
+          "icon": "Users",
+          "title": "True Partnership",
+          "description": "Your success is our blueprint. We're not just vendors, we're your tech allies."
+        },
+        {
+          "icon": "Zap",
+          "title": "Lightning Speed",
+          "description": "Agile at heart, we ship fast and iterate faster. In tech, speed wins."
+        }
+      ]
+    },
     "title": "About Us",
-    "description": "tent space Inc. realizes your vision with the latest technology and flexible ideas.",
     "companyInfo": {
       "name": "Company Name: tent space Inc.",
       "established": "Established: August 1, 2023",
       "capital": "Capital: ¥1,000,000 (including capital reserve)",
       "business": "Business: Software Development, IT Consulting",
-      "location": "Location: 323 Tsunoyama, Ogawa, Hiki District, Saitama 355-0316, Japan"
+      "location": "Location: 323 Kadoyama, Ogawa, Hiki District, Saitama 355-0316, Japan"
     }
   },
   "contact": {
@@ -70,7 +105,7 @@
     "description": "Ready to start your next project? We'd love to hear from you.",
     "location": {
       "title": "Location",
-      "content": "323 Tsunoyama, Ogawa, Hiki District, Saitama 355-0316, Japan"
+      "content": "323 Kadoyama, Ogawa, Hiki District, Saitama 355-0316, Japan"
     },
     "email": {
       "title": "Email",
@@ -129,7 +164,7 @@
       {
         "title": "Article 2 (Business Information)",
         "content": [
-          "Company Name: tent space Inc.\nAddress: 323 Tsunoyama, Ogawa, Hiki District, Saitama 355-0316, Japan\nRepresentative: Ayako Ishii"
+          "Company Name: tent space Inc.\nAddress: 323 Kadoyama, Ogawa, Hiki District, Saitama 355-0316, Japan\nRepresentative: Ayako Ishii"
         ]
       },
       {
@@ -208,7 +243,7 @@
         "title": "Article 10 (Contact for Inquiries and Complaints Regarding Handling of Personal Information)",
         "content": [
           "For questions, inquiries, complaints, or other inquiries regarding the handling of personal information by the Company, please contact the following:",
-          "Address: 323 Tsunoyama, Ogawa, Hiki District, Saitama 355-0316, Japan\nCompany Name: tent space Inc.\nEmail Address: back-office@tentspace.net"
+          "Address: 323 Kadoyama, Ogawa, Hiki District, Saitama 355-0316, Japan\nCompany Name: tent space Inc.\nEmail Address: back-office@tentspace.net"
         ]
       }
     ],
@@ -257,7 +292,7 @@
         "title": "6. Contact Information",
         "content": [
           "If you have any questions about these Terms, please contact us at:",
-          "Address: 323 Tsunoyama, Ogawa, Hiki District, Saitama 355-0316, Japan\nCompany Name: tent space Inc.\nEmail Address: back-office@tentspace.net"
+          "Address: 323 Kadoyama, Ogawa, Hiki District, Saitama 355-0316, Japan\nCompany Name: tent space Inc.\nEmail Address: back-office@tentspace.net"
         ]
       }
     ]
