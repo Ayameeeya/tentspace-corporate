@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import AboutUs from './pages/AboutUs';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Terms from './pages/Terms';
+import ChatWidget from './components/ChatWidget/ChatWidget';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
 
@@ -54,6 +55,7 @@ function App() {
           <Route path="/terms-of-service" element={<Terms />} />
           <Route path="*" element={<Home />} />
         </Routes>
+        {/* <ChatWidget /> */}
         <Footer />
       </div>
     </Router>

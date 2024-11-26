@@ -1,26 +1,30 @@
-import { Mail, MapPin, MessagesSquare } from 'lucide-react';
+import { Mail, MapPin, MessagesSquare, CheckCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useForm, ValidationError } from '@formspree/react';
 
 const Contact = () => {
   const { t } = useTranslation();
+  const [state, handleSubmit] = useForm("mkgnqgbn");
 
   const contactInfo = [
-    { 
-      icon: <MapPin className="text-primary" />, 
-      title: t('contact.location.title'), 
-      content: t('contact.location.content') 
+    {
+      icon: <MapPin className="text-primary" />,
+      title: t('contact.location.title'),
+      content: t('contact.location.content')
     },
-    { 
-      icon: <Mail className="text-primary" />, 
-      title: t('contact.email.title'), 
-      content: t('contact.email.content') 
+    {
+      icon: <Mail className="text-primary" />,
+      title: t('contact.email.title'),
+      content: t('contact.email.content')
     },
-    { 
-      icon: <MessagesSquare className="text-primary" />, 
-      title: t('contact.chat.title'), 
-      content: t('contact.chat.content') 
+    {
+      icon: <MessagesSquare className="text-primary" />,
+      title: t('contact.chat.title'),
+      content: t('contact.chat.content')
     }
   ];
+
+  const errorClassName = "text-red-500 text-sm mt-1";
 
   return (
     <section id="contact" className="py-32 bg-gray-50">
@@ -49,35 +53,79 @@ const Contact = () => {
             ))}
           </div>
 
-          <form className="bg-white p-8 rounded-xl shadow-lg space-y-6">
-            <div>
-              <input
-                type="text"
-                placeholder={t('contact.form.name')}
-                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-              />
+          {state.succeeded ? (
+            <div className="bg-white p-8 rounded-xl shadow-lg">
+              <div className="flex flex-col items-center justify-center space-y-4">
+                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                  <CheckCircle className="w-8 h-8 text-primary" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900">
+                  {t('contact.form.successTitle')}
+                </h3>
+                <p className="text-gray-600 text-center max-w-md">
+                  {t('contact.form.success')}
+                </p>
+              </div>
             </div>
-            <div>
-              <input
-                type="email"
-                placeholder={t('contact.form.email')}
-                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-              />
-            </div>
-            <div>
-              <textarea
-                rows={4}
-                placeholder={t('contact.form.message')}
-                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-              ></textarea>
-            </div>
-            <button
-              type="submit"
-              className="w-full px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors"
-            >
-              {t('contact.form.submit')}
-            </button>
-          </form>
+          ) : (
+            <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-lg space-y-6">
+              <div>
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  placeholder={t('contact.form.name')}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                  required
+                />
+                <ValidationError
+                  prefix="Name"
+                  field="name"
+                  errors={state.errors}
+                  className={errorClassName}
+                />
+              </div>
+              <div>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder={t('contact.form.email')}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                  required
+                />
+                <ValidationError
+                  prefix="Email"
+                  field="email"
+                  errors={state.errors}
+                  className={errorClassName}
+                />
+              </div>
+              <div>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows={4}
+                  placeholder={t('contact.form.message')}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                  required
+                ></textarea>
+                <ValidationError
+                  prefix="Message"
+                  field="message"
+                  errors={state.errors}
+                  className={errorClassName}
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={state.submitting}
+                className="w-full px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {state.submitting ? t('contact.form.sending') : t('contact.form.submit')}
+              </button>
+            </form>
+          )}
         </div>
       </div>
     </section>
