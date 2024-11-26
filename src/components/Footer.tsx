@@ -20,7 +20,7 @@ const Footer = () => {
               <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo_black_symbol-sj8aep4AiJ8rmg4cI3B2xAxWjIwNPC.png" alt="Logo" width={40} height={40} />
               <span className="ml-1 text-xl font-bold text-gray-900">tent␣</span>
             </div>
-            <p className="text-gray-600 mb-6 text-lg">
+            <p className="text-gray-600 mb-6 text-sm">
               {t('footer.description')}
             </p>
             <div className="flex space-x-6">
