@@ -57,7 +57,7 @@ const Navbar = () => {
       </div>
 
       {isOpen && (
-        <div className="md:hidden bg-gray-900/5 backdrop-blur-lg border border-gray-200/20 mt-2">
+        <div className="md:hidden bg-white/80 backdrop-blur-lg mt-2">
           <div className="px-4 py-4 space-y-3">
             <Link
               to="/#services"
