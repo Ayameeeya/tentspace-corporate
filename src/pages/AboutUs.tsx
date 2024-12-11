@@ -13,6 +13,12 @@ const iconComponents = {
 const AboutUs = () => {
   const { t } = useTranslation();
 
+  const renderContentWithLineBreaks = (text: string) => {
+    return text.split('\n').map((line, index) => (
+      <p key={index}>{line}</p>
+    ));
+  };
+
   return (
     <div className="pt-32 pb-16">
       {/* Hero Section */}
@@ -85,7 +91,7 @@ const AboutUs = () => {
                 <div className="space-y-4">
                   {Object.entries(t('aboutUs.companyInfo', { returnObjects: true })).map(([key, value]) => (
                     <div key={key} className="border-b border-gray-200 pb-4 last:border-0 last:pb-0">
-                      <p className="text-gray-800">{value}</p>
+                      <p className="text-gray-800">{renderContentWithLineBreaks(value)}</p>
                     </div>
                   ))}
                 </div>

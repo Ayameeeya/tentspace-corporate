@@ -97,6 +97,7 @@
       "established": "設立：2023年8月1日",
       "capital": "資本金：¥1,000,000（資本準備金含む）",
       "business": "事業内容：ソフトウェア開発、ITコンサルティング",
+      "representatives": "代表者： 代表取締役 石井 絢子\n　　　　 取締役 根岸 宏繁",
       "location": "所在地：〒355-0316 埼玉県比企郡小川町大字角山323"
     }
   },
@@ -251,12 +252,12 @@
       }
     ],
     "lastUpdated": "最終更新日: {{date}}",
-    "updateDate": "2024年11月25日"
+    "updateDate": "2024年12月1日"
   },
   "terms": {
     "title": "利用規約",
     "lastUpdated": "最終更新日: {{date}}",
-    "updateDate": "2024年11月25日",
+    "updateDate": "2024年12月1日",
     "sections": [
       {
         "title": "1. 規約への同意",

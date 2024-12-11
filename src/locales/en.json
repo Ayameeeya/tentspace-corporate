@@ -95,8 +95,9 @@
     "companyInfo": {
       "name": "Company Name: tent space Inc.",
       "established": "Established: August 1, 2023",
-      "capital": "Capital: ¥1,000,000 (including capital reserve)",
-      "business": "Business: Software Development, IT Consulting",
+      "capital": "Common stock: ¥1,000,000 (including capital reserve)",
+      "business": "Description of business: Software Development, IT Consulting",
+      "representatives": "Representatives: Ayako Ishii, President & CEO\nHiroshige Negishi, Representative Director & CTO",
       "location": "Location: 323 Kadoyama, Ogawa, Hiki District, Saitama 355-0316, Japan"
     }
   },
@@ -251,12 +252,12 @@
       }
     ],
     "lastUpdated": "Last updated: {{date}}",
-    "updateDate": "November 25, 2024"
+    "updateDate": "December 1, 2024"
   },
   "terms": {
     "title": "Terms of Service",
     "lastUpdated": "Last updated: {{date}}",
-    "updateDate": "November 25, 2024",
+    "updateDate": "December 1, 2024",
     "sections": [
       {
         "title": "1. Agreement to Terms",
