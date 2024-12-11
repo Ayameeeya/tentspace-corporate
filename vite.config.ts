@@ -6,6 +6,10 @@ export default defineConfig({
   base: '/',
   server: {
     port: 5173,
-    open: true
+    open: true,
+    headers: {
+      'X-Frame-Options': 'DENY',
+      'Content-Security-Policy': "frame-ancestors 'none';"
+    }
   }
 });
