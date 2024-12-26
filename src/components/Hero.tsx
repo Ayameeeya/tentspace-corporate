@@ -1,23 +1,28 @@
 import { ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import AnimatedGradient from './AnimatedGradient';
 
 const Hero = () => {
   const { t } = useTranslation();
 
   return (
     <div className="relative min-h-screen flex items-center">
-      {/* Gradient background */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-white to-gray-50"></div>
-        <div className="absolute top-[20%] left-[50%] w-full h-[600px] bg-primary/10 rounded-full blur-[128px] -translate-x-1/2"></div>
-      </div>
+      {/* Animated Gradient background */}
+      <AnimatedGradient
+        colors={[
+          'rgba(26, 77, 193, 0.2)',
+          'rgba(26, 77, 193, 0.1)',
+        ]}
+        speed={1}
+        blur="medium"
+      />
 
       {/* Content */}
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center">
         <h1 className="text-4xl md:text-7xl font-bold leading-tight mb-6 gradient-text">
           {t('hero.title')}
         </h1>
-        <p className="text-base md:text-2xl text-gray-600 mb-12 max-w-2xl mx-auto">
+        <p className="text-lg md:text-2xl text-gray-600 mb-12 max-w-2xl mx-auto">
           {t('hero.subtitle')}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
