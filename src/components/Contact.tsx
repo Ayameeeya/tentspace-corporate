@@ -120,7 +120,7 @@ const Contact = () => {
               <button
                 type="submit"
                 disabled={state.submitting}
-                className="w-full px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full px-6 py-3 bg-primary text-sm md:text-base text-white rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {state.submitting ? t('contact.form.sending') : t('contact.form.submit')}
               </button>
