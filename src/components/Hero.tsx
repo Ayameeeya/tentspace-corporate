@@ -17,7 +17,7 @@ const Hero = () => {
         <h1 className="text-4xl md:text-7xl font-bold leading-tight mb-6 gradient-text">
           {t('hero.title')}
         </h1>
-        <p className="text-lg md:text-2xl text-gray-600 mb-12 max-w-2xl mx-auto">
+        <p className="text-base md:text-2xl text-gray-600 mb-12 max-w-2xl mx-auto">
           {t('hero.subtitle')}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
