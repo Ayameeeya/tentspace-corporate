@@ -31,10 +31,10 @@ const Services = () => {
     <section id="services" className="py-32 bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-20">
-          <h2 className="text-3xl md:text-5xl font-bold mb-4 gradient-text">
+          <h2 className="text-2xl md:text-5xl font-bold mb-4 gradient-text">
             {t('services.title')}
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-base md:text-xl text-gray-600 max-w-2xl mx-auto">
             {t('services.subtitle')}
           </p>
         </div>
@@ -43,13 +43,13 @@ const Services = () => {
           {services.map((service, index) => (
             <div
               key={index}
-              className="group bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+              className="group bg-white p-6 md:p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
             >
-              <div className="mb-6 p-3 inline-block glass-effect rounded-lg group-hover:scale-110 transition-transform">
+              <div className="mb-4 md:mb-6 p-3 inline-block glass-effect rounded-lg group-hover:scale-110 transition-transform">
                 {service.icon}
               </div>
-              <h3 className="text-2xl font-semibold mb-4 text-gray-900">{service.title}</h3>
-              <p className="text-gray-600 text-lg">{service.description}</p>
+              <h3 className="text-xl md:text-2xl font-semibold mb-3 md:mb-4 text-gray-900">{service.title}</h3>
+              <p className="text-base md:text-lg text-gray-600">{service.description}</p>
             </div>
           ))}
         </div>

@@ -33,7 +33,7 @@ const Navbar = () => {
             onClick={handleMenuClick}
           >
             <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo_gradation__symbol-3BWbJdNPb1TreoCQYugpmwHZs5CsrW.png" alt="Logo" width={40} height={40} />
-            <span className="ml-1 text-xl font-bold text-gray-900">tent␣</span>
+            <span className="ml-1 text-base md:text-xl font-bold text-gray-900">tent␣</span>
           </Link>
 
           <div className="hidden md:block">
@@ -62,28 +62,28 @@ const Navbar = () => {
             <Link
               to="/#services"
               onClick={handleMenuClick}
-              className="block px-3 py-2 text-gray-600 hover:text-primary rounded-lg transition-colors"
+              className="block px-3 py-2 text-sm md:text-base text-gray-600 hover:text-primary rounded-lg transition-colors"
             >
               {t('nav.services')}
             </Link>
             <Link
               to="/#about"
               onClick={handleMenuClick}
-              className="block px-3 py-2 text-gray-600 hover:text-primary rounded-lg transition-colors"
+              className="block px-3 py-2 text-sm md:text-base text-gray-600 hover:text-primary rounded-lg transition-colors"
             >
               {t('nav.about')}
             </Link>
             <Link
               to="/#contact"
               onClick={handleMenuClick}
-              className="block px-3 py-2 text-gray-600 hover:text-primary rounded-lg transition-colors"
+              className="block px-3 py-2 text-sm md:text-base text-gray-600 hover:text-primary rounded-lg transition-colors"
             >
               {t('nav.contact')}
             </Link>
             <Link
               to="/#contact"
               onClick={handleMenuClick}
-              className="block px-3 py-2 bg-primary text-white rounded-lg text-center hover:bg-primary/90 transition-colors"
+              className="block px-3 py-2 text-sm md:text-base bg-primary text-white rounded-lg text-center hover:bg-primary/90 transition-colors"
             >
               {t('nav.getStarted')}
             </Link>

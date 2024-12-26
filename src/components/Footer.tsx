@@ -18,23 +18,23 @@ const Footer = () => {
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center mb-6">
               <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo_black_symbol-sj8aep4AiJ8rmg4cI3B2xAxWjIwNPC.png" alt="Logo" width={40} height={40} />
-              <span className="ml-1 text-xl font-bold text-gray-900">tent␣</span>
+              <span className="ml-1 text-base md:text-xl font-bold text-gray-900">tent␣</span>
             </div>
-            <p className="text-gray-600 mb-6 text-sm">
+            <p className="text-gray-600 mb-6 text-xs md:text-sm">
               {t('footer.description')}
             </p>
             <div className="flex space-x-6">
               {socialLinks.map(({ Icon, href }, index) => (
                 <a key={index} href={href} className="p-2 text-gray-400 hover:text-primary transition-colors">
-                  <Icon className="h-5 w-5" />
+                  <Icon className="h-4 w-4 md:h-5 md:w-5" />
                 </a>
               ))}
             </div>
           </div>
 
           <div>
-            <h3 className="font-semibold mb-6 text-lg text-gray-900">{t('footer.services.title')}</h3>
-            <ul className="space-y-4 text-gray-600">
+            <h3 className="font-semibold mb-4 md:mb-6 text-base md:text-lg text-gray-900">{t('footer.services.title')}</h3>
+            <ul className="space-y-3 md:space-y-4 text-sm md:text-base text-gray-600">
               {(t('footer.services.items', { returnObjects: true }) as Array<{ label: string, href: string }>).map((item, index) => (
                 <li key={index}>
                   <a href={item.href} className="hover:text-primary transition-colors">{item.label}</a>
@@ -44,8 +44,8 @@ const Footer = () => {
           </div>
 
           <div>
-            <h3 className="font-semibold mb-6 text-lg text-gray-900">{t('footer.company.title')}</h3>
-            <ul className="space-y-4 text-gray-600">
+            <h3 className="font-semibold mb-4 md:mb-6 text-base md:text-lg text-gray-900">{t('footer.company.title')}</h3>
+            <ul className="space-y-3 md:space-y-4 text-sm md:text-base text-gray-600">
               {(t('footer.company.items', { returnObjects: true }) as Array<{ label: string, href: string }>).map((item, index) => (
                 <li key={index}>
                   {item.href.startsWith('/') ? (

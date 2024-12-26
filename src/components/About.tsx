@@ -9,27 +9,27 @@ const About = () => {
       <div className="absolute inset-0">
         <div className="absolute right-0 top-1/4 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[128px]"></div>
       </div>
-      
+
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
           <div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
+            <h2 className="text-2xl md:text-5xl font-bold mb-6 gradient-text">
               {t('about.title')}
             </h2>
-            <p className="text-xl text-gray-600 mb-12 whitespace-pre-wrap">
+            <p className="text-base md:text-xl text-gray-600 mb-12 whitespace-pre-wrap">
               {t('about.description')}
             </p>
-            
-            <div className="grid grid-cols-2 gap-8">
+
+            <div className="grid grid-cols-2 gap-4 md:gap-8">
               {Array.isArray(highlights) && highlights.map((item: any, index: any) => (
-                <div key={index} className="bg-white p-6 rounded-xl shadow-lg">
-                  <div className="text-3xl font-bold mb-2 text-primary">{item.number}</div>
-                  <div className="text-gray-600">{item.label}</div>
+                <div key={index} className="bg-white p-4 md:p-6 rounded-xl shadow-lg">
+                  <div className="text-2xl md:text-3xl font-bold mb-2 text-primary">{item.number}</div>
+                  <div className="text-sm md:text-base text-gray-600">{item.label}</div>
                 </div>
               ))}
             </div>
           </div>
-          
+
           <div className="relative mt-12 lg:mt-0">
             <div className="rounded-xl overflow-hidden shadow-lg">
               <img

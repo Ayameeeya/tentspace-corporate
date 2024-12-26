@@ -25,10 +25,10 @@ const AboutUs = () => {
       <div className="relative overflow-hidden mb-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold gradient-text mb-6">
+            <h1 className="text-2xl md:text-5xl font-bold gradient-text mb-6">
               {t('aboutUs.hero.title')}
             </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-base md:text-xl text-gray-600 max-w-2xl mx-auto">
               {t('aboutUs.hero.subtitle')}
             </p>
           </div>
@@ -39,8 +39,8 @@ const AboutUs = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <h2 className="text-3xl font-bold mb-6">{t('aboutUs.story.title')}</h2>
-            <div className="space-y-4 text-gray-600">
+            <h2 className="text-xl md:text-3xl font-bold mb-6">{t('aboutUs.story.title')}</h2>
+            <div className="space-y-4 text-sm md:text-base text-gray-600">
               {(t('aboutUs.story.content', { returnObjects: true }) as any[]).map((paragraph: any, index: number) => (
                 <p key={index}>{paragraph}</p>
               ))}
@@ -59,19 +59,19 @@ const AboutUs = () => {
       {/* Values Section */}
       <div className="bg-gray-50 py-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12">
+          <h2 className="text-xl md:text-3xl font-bold text-center mb-12">
             {t('aboutUs.values.title')}
           </h2>
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-6 md:gap-8">
             {(t('aboutUs.values.items', { returnObjects: true }) as any[]).map((value: any, index: number) => {
               const IconComponent = iconComponents[value.icon as keyof typeof iconComponents];
               return (
-                <div key={index} className="bg-white p-8 rounded-xl shadow-lg">
-                  <div className="mb-4 p-3 inline-block glass-effect rounded-lg">
-                    <IconComponent className="h-8 w-8 text-primary" />
+                <div key={index} className="bg-white p-6 md:p-8 rounded-xl shadow-lg">
+                  <div className="mb-3 md:mb-4 p-2 md:p-3 inline-block glass-effect rounded-lg">
+                    <IconComponent className="h-6 w-6 md:h-8 md:w-8 text-primary" />
                   </div>
-                  <h3 className="text-xl font-semibold mb-4">{value.title}</h3>
-                  <p className="text-gray-600">{value.description}</p>
+                  <h3 className="text-lg md:text-xl font-semibold mb-3 md:mb-4">{value.title}</h3>
+                  <p className="text-sm md:text-base text-gray-600">{value.description}</p>
                 </div>
               );
             })}
@@ -84,14 +84,14 @@ const AboutUs = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-12 items-start">
             <div>
-              <h2 className="text-3xl font-bold mb-6">
+              <h2 className="text-xl md:text-3xl font-bold mb-6">
                 {t('aboutUs.title')}
               </h2>
-              <div className="bg-gray-50 rounded-xl p-8 shadow-sm">
+              <div className="bg-gray-50 rounded-xl p-6 md:p-8 shadow-sm">
                 <div className="space-y-4">
                   {Object.entries(t('aboutUs.companyInfo', { returnObjects: true })).map(([key, value]) => (
                     <div key={key} className="border-b border-gray-200 pb-4 last:border-0 last:pb-0">
-                      <p className="text-gray-800">{renderContentWithLineBreaks(value)}</p>
+                      <p className="text-sm md:text-base text-gray-800">{renderContentWithLineBreaks(value)}</p>
                     </div>
                   ))}
                 </div>
