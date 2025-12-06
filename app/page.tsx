@@ -542,12 +542,12 @@ function HUDTip({
   const fullText = typeof children === "string" ? children : ""
 
   const positionClasses: Record<string, string> = {
-    "top-left": "top-8 left-8",
-    "top-right": "top-24 right-8",
-    "bottom-left": "bottom-8 left-8",
-    "bottom-right": "bottom-8 right-8",
-    left: "top-1/3 -translate-y-1/2 left-8",
-    right: "top-2/3 -translate-y-1/2 right-8",
+    "top-left": "top-4 left-4 md:top-8 md:left-8",
+    "top-right": "top-16 right-4 md:top-24 md:right-8",
+    "bottom-left": "bottom-4 left-4 md:bottom-8 md:left-8",
+    "bottom-right": "bottom-4 right-4 md:bottom-8 md:right-8",
+    left: "top-1/3 -translate-y-1/2 left-4 md:left-8",
+    right: "top-2/3 -translate-y-1/2 right-4 md:right-8",
   }
 
   useEffect(() => {
@@ -578,7 +578,7 @@ function HUDTip({
   const isDark = scrollProgress < 0.85
 
   return (
-    <div ref={tipRef} className={`fixed ${positionClasses[position]} z-40 max-w-xs pointer-events-none`}>
+    <div ref={tipRef} className={`fixed ${positionClasses[position]} z-40 max-w-[280px] md:max-w-xs pointer-events-none`}>
       <div className="relative">
         {/* Scanning line effect */}
         <div className="absolute inset-0 overflow-hidden">
@@ -594,25 +594,25 @@ function HUDTip({
 
         {/* Corner brackets */}
         <div
-          className="absolute -top-1 -left-1 w-3 h-3 border-t-2 border-l-2 animate-pulse transition-colors duration-500"
+          className="absolute -top-1 -left-1 w-2 h-2 md:w-3 md:h-3 border-t-2 border-l-2 animate-pulse transition-colors duration-500"
           style={{ borderColor: isDark ? "rgb(96, 165, 250)" : "rgb(59, 130, 246)" }}
         />
         <div
-          className="absolute -top-1 -right-1 w-3 h-3 border-t-2 border-r-2 animate-pulse transition-colors duration-500"
+          className="absolute -top-1 -right-1 w-2 h-2 md:w-3 md:h-3 border-t-2 border-r-2 animate-pulse transition-colors duration-500"
           style={{ borderColor: isDark ? "rgb(96, 165, 250)" : "rgb(59, 130, 246)" }}
         />
         <div
-          className="absolute -bottom-1 -left-1 w-3 h-3 border-b-2 border-l-2 animate-pulse transition-colors duration-500"
+          className="absolute -bottom-1 -left-1 w-2 h-2 md:w-3 md:h-3 border-b-2 border-l-2 animate-pulse transition-colors duration-500"
           style={{ borderColor: isDark ? "rgb(96, 165, 250)" : "rgb(59, 130, 246)" }}
         />
         <div
-          className="absolute -bottom-1 -right-1 w-3 h-3 border-b-2 border-r-2 animate-pulse transition-colors duration-500"
+          className="absolute -bottom-1 -right-1 w-2 h-2 md:w-3 md:h-3 border-b-2 border-r-2 animate-pulse transition-colors duration-500"
           style={{ borderColor: isDark ? "rgb(96, 165, 250)" : "rgb(59, 130, 246)" }}
         />
 
         {/* Main container */}
         <div
-          className="border backdrop-blur-sm p-4 relative transition-colors duration-500"
+          className="border backdrop-blur-sm p-2.5 md:p-4 relative transition-colors duration-500"
           style={{
             borderColor: isDark ? "rgba(96, 165, 250, 0.5)" : "rgba(59, 130, 246, 0.6)",
             backgroundColor: isDark ? "rgba(2, 2, 18, 0.8)" : "rgba(255, 255, 255, 0.9)",
@@ -625,13 +625,13 @@ function HUDTip({
           />
 
           {/* Status indicator */}
-          <div className="flex items-center gap-2 mb-2">
+          <div className="flex items-center gap-1.5 md:gap-2 mb-1.5 md:mb-2">
             <div
-              className="w-2 h-2 rounded-full animate-ping-slow transition-colors duration-500"
+              className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full animate-ping-slow transition-colors duration-500"
               style={{ backgroundColor: isDark ? "rgb(96, 165, 250)" : "rgb(59, 130, 246)" }}
             />
             <span
-              className="text-[10px] font-mono tracking-widest uppercase transition-colors duration-500"
+              className="text-[8px] md:text-[10px] font-mono tracking-widest uppercase transition-colors duration-500"
               style={{ color: isDark ? "rgba(96, 165, 250, 0.8)" : "rgba(59, 130, 246, 0.9)" }}
             >
               SYSTEM
@@ -640,20 +640,20 @@ function HUDTip({
 
           {/* Text content with cursor */}
           <p
-            className="text-xs font-mono leading-relaxed transition-colors duration-500"
+            className="text-[10px] md:text-xs font-mono leading-relaxed transition-colors duration-500"
             style={{ color: isDark ? "rgba(255, 255, 255, 0.9)" : "rgba(0, 0, 0, 0.8)" }}
           >
             {displayText}
             <span
-              className="inline-block w-2 h-4 ml-0.5 animate-blink transition-colors duration-500"
+              className="inline-block w-1.5 h-3 md:w-2 md:h-4 ml-0.5 animate-blink transition-colors duration-500"
               style={{ backgroundColor: isDark ? "rgba(96, 165, 250, 0.8)" : "rgba(59, 130, 246, 0.8)" }}
             />
           </p>
         </div>
 
-        {/* Decorative line */}
+        {/* Decorative line - hidden on mobile */}
         <div
-          className="absolute top-1/2 h-px transition-colors duration-500"
+          className="absolute top-1/2 h-px transition-colors duration-500 hidden md:block"
           style={{
             left: position.includes("left") ? "auto" : "-32px",
             right: position.includes("left") ? "-32px" : "auto",
@@ -687,10 +687,10 @@ function HUDDataDisplay({
   const [visibleItems, setVisibleItems] = useState<number[]>([])
 
   const positionClasses = {
-    "top-left": "top-24 left-8",
-    "top-right": "top-24 right-8",
-    "bottom-left": "bottom-24 left-8",
-    "bottom-right": "bottom-24 right-8",
+    "top-left": "top-16 left-4 md:top-24 md:left-8",
+    "top-right": "top-16 right-4 md:top-24 md:right-8",
+    "bottom-left": "bottom-16 left-4 md:bottom-24 md:left-8",
+    "bottom-right": "bottom-16 right-4 md:bottom-24 md:right-8",
   }
 
   useEffect(() => {
@@ -698,7 +698,7 @@ function HUDDataDisplay({
       data.forEach((_, index) => {
         setTimeout(() => {
           setVisibleItems((prev) => [...prev, index])
-        }, index * 200)
+        }, index * 150)
       })
     } else {
       setVisibleItems([])
@@ -711,26 +711,26 @@ function HUDDataDisplay({
 
   return (
     <div className={`fixed ${positionClasses[position]} z-40 pointer-events-none`}>
-      <div className="space-y-2">
+      <div className="space-y-1.5 md:space-y-2">
         {data.map((item, index) => (
           <div
             key={index}
-            className={`flex items-center gap-3 transition-all duration-300 ${visibleItems.includes(index) ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"
+            className={`flex items-center gap-2 md:gap-3 transition-all duration-300 ${visibleItems.includes(index) ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"
               }`}
           >
             <div
-              className="w-1 h-4 animate-pulse transition-colors duration-500"
+              className="w-0.5 h-3 md:w-1 md:h-4 animate-pulse transition-colors duration-500"
               style={{ backgroundColor: isDark ? "rgb(96, 165, 250)" : "rgb(59, 130, 246)" }}
             />
             <div className="font-mono">
               <span
-                className="text-[10px] uppercase tracking-wider transition-colors duration-500"
+                className="text-[8px] md:text-[10px] uppercase tracking-wider transition-colors duration-500"
                 style={{ color: isDark ? "rgba(255, 255, 255, 0.5)" : "rgba(0, 0, 0, 0.5)" }}
               >
                 {item.label}
               </span>
               <div
-                className="text-sm font-bold transition-colors duration-500"
+                className="text-xs md:text-sm font-bold transition-colors duration-500"
                 style={{ color: isDark ? "rgb(96, 165, 250)" : "rgb(59, 130, 246)" }}
               >
                 {item.value}
@@ -785,8 +785,8 @@ function RadarScanner({
   const isDark = scrollProgress < 0.85
 
   return (
-    <div className={`fixed bottom-32 ${positionClass} z-40 pointer-events-none`}>
-      <div className="relative w-24 h-24">
+    <div className={`fixed bottom-20 md:bottom-32 ${positionClass} z-40 pointer-events-none`}>
+      <div className="relative w-16 h-16 md:w-24 md:h-24">
         {/* Outer ring */}
         <div
           className="absolute inset-0 border rounded-full transition-colors duration-500"
@@ -815,17 +815,17 @@ function RadarScanner({
 
         {/* Center dot */}
         <div
-          className="absolute top-1/2 left-1/2 w-2 h-2 -translate-x-1/2 -translate-y-1/2 rounded-full animate-ping-slow transition-colors duration-500"
+          className="absolute top-1/2 left-1/2 w-1.5 h-1.5 md:w-2 md:h-2 -translate-x-1/2 -translate-y-1/2 rounded-full animate-ping-slow transition-colors duration-500"
           style={{ backgroundColor: isDark ? "rgb(96, 165, 250)" : "rgb(59, 130, 246)" }}
         />
 
         {/* Blips */}
         <div
-          className="absolute top-1/4 left-1/3 w-1 h-1 rounded-full animate-pulse transition-colors duration-500"
+          className="absolute top-1/4 left-1/3 w-0.5 h-0.5 md:w-1 md:h-1 rounded-full animate-pulse transition-colors duration-500"
           style={{ backgroundColor: isDark ? "rgb(96, 165, 250)" : "rgb(59, 130, 246)" }}
         />
         <div
-          className="absolute top-2/3 right-1/4 w-1 h-1 rounded-full animate-pulse transition-colors duration-500"
+          className="absolute top-2/3 right-1/4 w-0.5 h-0.5 md:w-1 md:h-1 rounded-full animate-pulse transition-colors duration-500"
           style={{
             backgroundColor: isDark ? "rgb(96, 165, 250)" : "rgb(59, 130, 246)",
             animationDelay: "0.5s",
@@ -851,17 +851,17 @@ function StatusBar({ currentSection, scrollProgress }: { currentSection: number;
   return (
     <div className="fixed top-4 left-1/2 -translate-x-1/2 z-40 pointer-events-none">
       <div
-        className="flex items-center gap-4 px-6 py-2 border backdrop-blur-sm transition-colors duration-500"
+        className="flex items-center gap-2 md:gap-4 px-3 md:px-6 py-1.5 md:py-2 border backdrop-blur-sm transition-colors duration-500"
         style={{
           borderColor: isDark ? "rgba(96, 165, 250, 0.3)" : "rgba(59, 130, 246, 0.4)",
           backgroundColor: isDark ? "rgba(2, 2, 18, 0.9)" : "rgba(255, 255, 255, 0.7)",
         }}
       >
-        <div className="flex gap-1">
+        <div className="flex gap-0.5 md:gap-1">
           {[0, 1, 2, 3, 4].map((i) => (
             <div
               key={i}
-              className="w-2 h-2 transition-colors duration-300"
+              className="w-1.5 h-1.5 md:w-2 md:h-2 transition-colors duration-300"
               style={{
                 backgroundColor:
                   i <= currentSection
@@ -876,13 +876,13 @@ function StatusBar({ currentSection, scrollProgress }: { currentSection: number;
           ))}
         </div>
         <div
-          className="h-4 w-px transition-colors duration-500"
+          className="h-3 md:h-4 w-px transition-colors duration-500"
           style={{
             backgroundColor: isDark ? "rgba(96, 165, 250, 0.3)" : "rgba(59, 130, 246, 0.4)",
           }}
         />
         <span
-          className="text-xs font-mono animate-pulse transition-colors duration-500"
+          className="text-[9px] md:text-xs font-mono animate-pulse transition-colors duration-500"
           style={{
             color: isDark ? "rgb(96, 165, 250)" : "rgb(59, 130, 246)",
           }}
@@ -1180,43 +1180,43 @@ function TextOverlay({ scrollProgress }: { scrollProgress: number }) {
 
       <div className="h-screen flex items-center justify-center">
         <div ref={section1Ref} className="text-center perspective-1000">
-          <h1 className="text-7xl md:text-9xl font-bold tracking-tighter text-white glow-text-white mb-6">
+          <h1 className="text-5xl md:text-9xl font-bold tracking-tighter text-white glow-text-white mb-4 md:mb-6">
             <GlitchText text="tent␣" active={activeSection === 0} />
           </h1>
-          <p className="text-xl md:text-2xl text-white/60 tracking-widest uppercase">AI Driven Development</p>
+          <p className="text-sm md:text-2xl text-white/60 tracking-widest uppercase">AI Driven Development</p>
         </div>
       </div>
 
       <div className="h-screen flex items-center justify-center">
-        <div ref={section2Ref} className="text-center">
-          <h2 className="text-5xl md:text-8xl font-bold text-primary glow-text">
+        <div ref={section2Ref} className="text-center px-4">
+          <h2 className="text-4xl md:text-8xl font-bold text-primary glow-text">
             {"CREATE".split("").map((char, i) => (
               <span key={i} className="char inline-block">
                 {char}
               </span>
             ))}
           </h2>
-          <p className="text-lg md:text-xl text-white/50 mt-8 max-w-xl mx-auto">小さなテントから、無限の可能性を創造する</p>
+          <p className="text-xs md:text-xl text-white/50 mt-4 md:mt-8 max-w-xl mx-auto">小さなテントから、無限の可能性を創造する</p>
         </div>
       </div>
 
       <div className="h-screen flex items-center justify-center">
-        <div ref={section3Ref} className="text-center">
-          <h2 className="text-5xl md:text-8xl font-bold text-white glow-text-white">INNOVATE</h2>
-          <p className="text-lg md:text-xl text-primary/80 mt-8 tracking-wider">次世代のソリューションを構築</p>
+        <div ref={section3Ref} className="text-center px-4">
+          <h2 className="text-4xl md:text-8xl font-bold text-white glow-text-white">INNOVATE</h2>
+          <p className="text-xs md:text-xl text-primary/80 mt-4 md:mt-8 tracking-wider">次世代のソリューションを構築</p>
         </div>
       </div>
 
       <div className="h-screen flex items-center justify-center">
-        <div ref={section4Ref} className="text-center">
-          <h2 className="text-4xl md:text-7xl font-bold text-primary tracking-widest glow-text uppercase">Transform</h2>
+        <div ref={section4Ref} className="text-center px-4">
+          <h2 className="text-3xl md:text-7xl font-bold text-primary tracking-widest glow-text uppercase">Transform</h2>
         </div>
       </div>
 
       <div className="h-screen flex items-center justify-center">
-        <div ref={section5Ref} className="text-center perspective-1000">
+        <div ref={section5Ref} className="text-center perspective-1000 px-4">
           <h2
-            className="text-6xl md:text-9xl font-bold mb-8 transition-colors duration-500"
+            className="text-5xl md:text-9xl font-bold mb-4 md:mb-8 transition-colors duration-500"
             style={{
               color: scrollProgress > 0.85 ? "#1a1a1a" : "#ffffff",
               textShadow:
@@ -1228,7 +1228,7 @@ function TextOverlay({ scrollProgress }: { scrollProgress: number }) {
             未来へ
           </h2>
           <p
-            className="text-xl md:text-2xl tracking-widest transition-colors duration-500"
+            className="text-sm md:text-2xl tracking-widest transition-colors duration-500"
             style={{
               color: scrollProgress > 0.85 ? "#3b82f6" : "rgba(96, 165, 250, 0.8)",
             }}
@@ -1306,40 +1306,40 @@ function LetsTalkSection() {
   }, [])
 
   return (
-    <div ref={sectionRef} className="relative z-20 mx-4 md:mx-8 mb-0">
-      <div className="bg-primary rounded-t-3xl px-8 md:px-16 py-12 md:py-16 min-h-[400px] flex flex-col justify-between">
+    <div ref={sectionRef} className="relative z-20 mx-2 md:mx-8 mb-0">
+      <div className="bg-primary rounded-t-2xl md:rounded-t-3xl px-6 md:px-16 py-8 md:py-16 min-h-[350px] md:min-h-[400px] flex flex-col justify-between">
         {/* Top label */}
-        <div className="flex items-center gap-3 text-primary-foreground/80">
-          <div className="w-8 h-8 rounded-lg bg-primary-foreground/20 flex items-center justify-center">
-            <svg width="16" height="2" viewBox="0 0 16 2" fill="currentColor">
+        <div className="flex items-center gap-2 md:gap-3 text-primary-foreground/80">
+          <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg bg-primary-foreground/20 flex items-center justify-center">
+            <svg width="12" height="2" viewBox="0 0 16 2" fill="currentColor" className="md:w-4">
               <rect width="16" height="2" rx="1" />
             </svg>
           </div>
-          <span className="text-sm font-medium tracking-wide">Next step</span>
+          <span className="text-xs md:text-sm font-medium tracking-wide">Next step</span>
         </div>
 
         {/* Main content */}
-        <div className="flex items-end justify-between mt-12">
+        <div className="flex items-end justify-between mt-8 md:mt-12">
           <h2
             ref={textRef}
-            className="text-6xl md:text-8xl lg:text-9xl font-bold text-primary-foreground tracking-tight"
+            className="text-4xl md:text-8xl lg:text-9xl font-bold text-primary-foreground tracking-tight"
           >
             Let's talk
           </h2>
           <a
             href="mailto:back-office@tentspace.net"
             ref={arrowRef}
-            className="w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-primary-foreground/30 flex items-center justify-center cursor-pointer hover:bg-primary-foreground/10 transition-colors"
+            className="w-12 h-12 md:w-20 md:h-20 rounded-full border-2 border-primary-foreground/30 flex items-center justify-center cursor-pointer hover:bg-primary-foreground/10 transition-colors shrink-0"
             aria-label="Contact us via email"
           >
             <svg
-              width="24"
-              height="24"
+              width="20"
+              height="20"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
-              className="text-primary-foreground"
+              className="text-primary-foreground md:w-6 md:h-6"
             >
               <path d="M7 17L17 7M17 7H7M17 7V17" />
             </svg>
@@ -1347,25 +1347,25 @@ function LetsTalkSection() {
         </div>
 
         {/* Bottom info */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mt-12 pt-8 border-t border-primary-foreground/20">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mt-8 md:mt-12 pt-6 md:pt-8 border-t border-primary-foreground/20">
           <div className="text-primary-foreground/80 space-y-1">
             <a
               href="mailto:back-office@tentspace.net"
-              className="font-medium hover:text-primary-foreground transition-colors inline-block"
+              className="text-xs md:text-base font-medium hover:text-primary-foreground transition-colors inline-block"
             >
               back-office@tentspace.net
             </a>
-            <p className="text-sm">323 Kadoyama, Ogawa, Hiki District, Saitama 355-0316, Japan</p>
+            <p className="text-[10px] md:text-sm">323 Kadoyama, Ogawa, Hiki District, Saitama 355-0316, Japan</p>
           </div>
-          <div className="flex items-center gap-6 mt-4 md:mt-0 text-sm text-primary-foreground/60">
+          <div className="flex items-center gap-3 md:gap-6 mt-4 md:mt-0 text-[10px] md:text-sm text-primary-foreground/60">
             <Link href="/about" className="hover:text-primary-foreground transition-colors">
               About Us
             </Link>
             <Link href="/terms" className="hover:text-primary-foreground transition-colors">
-              Terms of Service
+              Terms
             </Link>
             <Link href="/privacy" className="hover:text-primary-foreground transition-colors">
-              Privacy Policy
+              Privacy
             </Link>
           </div>
         </div>
@@ -1377,9 +1377,9 @@ function LetsTalkSection() {
 // Footer Component
 function Footer() {
   return (
-    <footer className="relative z-20 px-4 md:px-8 py-0.5">
+    <footer className="relative z-20 px-2 md:px-8 py-1">
       <div className="flex justify-end">
-        <p className="text-[9px] text-primary-foreground/60">© 2025 tent space Inc. All rights reserved.</p>
+        <p className="text-[8px] md:text-[9px] text-primary-foreground/60">© 2025 tent space Inc. All rights reserved.</p>
       </div>
     </footer>
   )

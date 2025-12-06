@@ -81,7 +81,7 @@ export function Header({ scrollProgress = 0 }: { scrollProgress?: number }) {
 
   return (
     <header ref={headerRef} className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
-      <div className="flex items-center justify-end px-8 py-6">
+      <div className="flex items-center justify-end px-4 py-3 md:px-8 md:py-6">
         <div ref={logoRef} className="pointer-events-auto">
           <Link
             href="/"
@@ -95,7 +95,7 @@ export function Header({ scrollProgress = 0 }: { scrollProgress?: number }) {
               alt="tent"
               width={110}
               height={50}
-              className="transition-all duration-500 relative z-10"
+              className="transition-all duration-500 relative z-10 w-[70px] h-auto md:w-[110px]"
               priority
             />
 
@@ -109,7 +109,7 @@ export function Header({ scrollProgress = 0 }: { scrollProgress?: number }) {
                 filter: "hue-rotate(90deg) saturate(2)",
               }}
             >
-              <Image src={logoSrc} alt="" width={110} height={50} aria-hidden="true" />
+              <Image src={logoSrc} alt="" width={110} height={50} aria-hidden="true" className="w-[70px] h-auto md:w-[110px]" />
             </div>
 
             <div
@@ -121,7 +121,7 @@ export function Header({ scrollProgress = 0 }: { scrollProgress?: number }) {
                 filter: "hue-rotate(-90deg) saturate(2)",
               }}
             >
-              <Image src={logoSrc} alt="" width={110} height={50} aria-hidden="true" />
+              <Image src={logoSrc} alt="" width={110} height={50} aria-hidden="true" className="w-[70px] h-auto md:w-[110px]" />
             </div>
           </Link>
         </div>

@@ -123,15 +123,25 @@
   }
   body {
     @apply bg-background text-foreground overflow-x-hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: none;
   }
 }
 
 html {
   scroll-behavior: auto;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: pan-y;
 }
 
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 2px;
+}
+
+@media (min-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
 }
 
 ::-webkit-scrollbar-track {
@@ -145,12 +155,24 @@ html {
 
 /* Glow effects */
 .glow-text {
-  text-shadow: 0 0 40px oklch(0.65 0.2 250 / 0.8), 0 0 80px oklch(0.65 0.2 250 / 0.4), 0 0 120px
-    oklch(0.65 0.2 250 / 0.2);
+  text-shadow: 0 0 20px oklch(0.65 0.2 250 / 0.6), 0 0 40px oklch(0.65 0.2 250 / 0.3);
+}
+
+@media (min-width: 768px) {
+  .glow-text {
+    text-shadow: 0 0 40px oklch(0.65 0.2 250 / 0.8), 0 0 80px oklch(0.65 0.2 250 / 0.4), 0 0 120px
+      oklch(0.65 0.2 250 / 0.2);
+  }
 }
 
 .glow-text-white {
-  text-shadow: 0 0 40px oklch(1 0 0 / 0.8), 0 0 80px oklch(1 0 0 / 0.4);
+  text-shadow: 0 0 20px oklch(1 0 0 / 0.6), 0 0 40px oklch(1 0 0 / 0.3);
+}
+
+@media (min-width: 768px) {
+  .glow-text-white {
+    text-shadow: 0 0 40px oklch(1 0 0 / 0.8), 0 0 80px oklch(1 0 0 / 0.4);
+  }
 }
 
 /* Adding SF-style HUD animations */
@@ -269,19 +291,42 @@ html {
     transform: translate(0);
   }
   20% {
-    transform: translate(-2px, 2px);
+    transform: translate(-1px, 1px);
   }
   40% {
-    transform: translate(-2px, -2px);
+    transform: translate(-1px, -1px);
   }
   60% {
-    transform: translate(2px, 2px);
+    transform: translate(1px, 1px);
   }
   80% {
-    transform: translate(2px, -2px);
+    transform: translate(1px, -1px);
   }
   100% {
     transform: translate(0);
+  }
+}
+
+@media (min-width: 768px) {
+  @keyframes glitch {
+    0% {
+      transform: translate(0);
+    }
+    20% {
+      transform: translate(-2px, 2px);
+    }
+    40% {
+      transform: translate(-2px, -2px);
+    }
+    60% {
+      transform: translate(2px, 2px);
+    }
+    80% {
+      transform: translate(2px, -2px);
+    }
+    100% {
+      transform: translate(0);
+    }
   }
 }
 
@@ -340,8 +385,22 @@ html {
     opacity: 0.3;
   }
   50% {
-    transform: translateY(6px);
+    transform: translateY(4px);
     opacity: 1;
+  }
+}
+
+@media (min-width: 768px) {
+  @keyframes chevronBounce {
+    0%,
+    100% {
+      transform: translateY(0);
+      opacity: 0.3;
+    }
+    50% {
+      transform: translateY(6px);
+      opacity: 1;
+    }
   }
 }
 
