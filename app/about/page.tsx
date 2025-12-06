@@ -207,6 +207,16 @@ export default function AboutPage() {
   const [scrollProgress, setScrollProgress] = useState(0)
 
   useEffect(() => {
+    // Configure ScrollTrigger for better mobile performance
+    if (typeof window !== 'undefined') {
+      ScrollTrigger.config({
+        limitCallbacks: true,
+        syncInterval: 150,
+      })
+    }
+  }, [])
+
+  useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY
       const docHeight = document.documentElement.scrollHeight - window.innerHeight
@@ -219,6 +229,8 @@ export default function AboutPage() {
   }, [])
 
   useEffect(() => {
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768
+
     const ctx = gsap.context(() => {
       const heroTl = gsap.timeline({ defaults: { ease: "power4.out" } })
 
@@ -319,32 +331,34 @@ export default function AboutPage() {
         })
       })
 
-      // Parallax elements
-      gsap.utils.toArray<HTMLElement>(".parallax-slow").forEach((el) => {
-        gsap.to(el, {
-          y: -100,
-          ease: "none",
-          scrollTrigger: {
-            trigger: el,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 1,
-          },
+      // Parallax elements - disabled on mobile for better scroll performance
+      if (!isMobile) {
+        gsap.utils.toArray<HTMLElement>(".parallax-slow").forEach((el) => {
+          gsap.to(el, {
+            y: -100,
+            ease: "none",
+            scrollTrigger: {
+              trigger: el,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 1,
+            },
+          })
         })
-      })
 
-      gsap.utils.toArray<HTMLElement>(".parallax-fast").forEach((el) => {
-        gsap.to(el, {
-          y: -200,
-          ease: "none",
-          scrollTrigger: {
-            trigger: el,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 0.5,
-          },
+        gsap.utils.toArray<HTMLElement>(".parallax-fast").forEach((el) => {
+          gsap.to(el, {
+            y: -200,
+            ease: "none",
+            scrollTrigger: {
+              trigger: el,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 0.5,
+            },
+          })
         })
-      })
+      }
 
       // Value cards hover effect
       gsap.utils.toArray<HTMLElement>(".value-card").forEach((card) => {
@@ -375,11 +389,11 @@ export default function AboutPage() {
   }, [])
 
   return (
-    <div ref={containerRef} className="relative min-h-screen text-white overflow-x-hidden">
+    <div ref={containerRef} className="relative min-h-screen text-white overflow-x-hidden" style={{ WebkitOverflowScrolling: 'touch' }}>
       <Header />
 
       {/* 3D Background */}
-      <div className="fixed inset-0 z-0">
+      <div className="fixed inset-0 z-0 pointer-events-none">
         <Canvas camera={{ position: [0, 0, 30], fov: 75 }}>
           <Scene3D scrollProgress={scrollProgress} />
         </Canvas>
@@ -721,7 +735,7 @@ function LetsTalkSection() {
         <div className="flex items-end justify-between mt-8 md:mt-12">
           <h2
             ref={textRef}
-            className="text-4xl md:text-8xl lg:text-9xl font-bold text-primary-foreground tracking-tight"
+            className="text-5xl md:text-8xl lg:text-9xl font-bold text-primary-foreground tracking-tight"
           >
             Let's talk
           </h2>

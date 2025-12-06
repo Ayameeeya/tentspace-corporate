@@ -1322,7 +1322,7 @@ function LetsTalkSection() {
         <div className="flex items-end justify-between mt-8 md:mt-12">
           <h2
             ref={textRef}
-            className="text-4xl md:text-8xl lg:text-9xl font-bold text-primary-foreground tracking-tight"
+            className="text-5xl md:text-8xl lg:text-9xl font-bold text-primary-foreground tracking-tight"
           >
             Let's talk
           </h2>
