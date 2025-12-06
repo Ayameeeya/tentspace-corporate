@@ -9,13 +9,24 @@ export function PageFooter() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 md:gap-6">
         <div className="flex items-center gap-4 md:gap-8">
           <Link href="/">
-            <Image
-              src="/logo_black_symbol.png"
-              alt="tent space"
-              width={40}
-              height={40}
-              className="cursor-pointer hover:opacity-80 transition-opacity w-8 h-8 md:w-10 md:h-10"
-            />
+            <div className="hidden md:block">
+              <Image
+                src="/logo_black_symbol.png"
+                alt="tent space"
+                width={50}
+                height={50}
+                className="cursor-pointer hover:opacity-80 transition-opacity"
+              />
+            </div>
+            <div className="block md:hidden">
+              <Image
+                src="/logo_black_symbol.png"
+                alt="tent space"
+                width={40}
+                height={40}
+                className="cursor-pointer hover:opacity-80 transition-opacity"
+              />
+            </div>
           </Link>
           <div className="text-primary-foreground/80 space-y-0.5">
             <a
