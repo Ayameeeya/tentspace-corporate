@@ -542,7 +542,7 @@ function HUDTip({
   const fullText = typeof children === "string" ? children : ""
 
   const positionClasses: Record<string, string> = {
-    "top-left": "top-12 left-4 md:top-8 md:left-8",
+    "top-left": "top-16 left-4 md:top-8 md:left-8",
     "top-right": "top-16 right-4 md:top-24 md:right-8",
     "bottom-left": "bottom-4 left-4 md:bottom-8 md:left-8",
     "bottom-right": "bottom-4 right-4 md:bottom-8 md:right-8",
