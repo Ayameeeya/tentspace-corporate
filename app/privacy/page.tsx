@@ -59,21 +59,21 @@ export default function PrivacyPage() {
 
       <div className="relative z-10">
         {/* Hero */}
-        <div className="min-h-[50vh] flex flex-col justify-end px-6 md:px-12 lg:px-20 pb-16">
+        <div className="min-h-[50vh] flex flex-col justify-end px-6 md:px-12 lg:px-20 pb-12 md:pb-16">
           <div className="max-w-5xl">
-            <p className="privacy-subtitle text-blue-600 text-sm font-medium tracking-wider mb-6">
+            <p className="privacy-subtitle text-blue-600 text-xs md:text-sm font-medium tracking-wider mb-4 md:mb-6">
               PRIVACY POLICY
             </p>
-            <h1 className="privacy-title text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight overflow-hidden text-slate-900">
+            <h1 className="privacy-title text-3xl md:text-7xl lg:text-8xl font-bold tracking-tight overflow-hidden text-slate-900">
               {"プライバシーポリシー".split("").map((char, i) => (
                 <span key={i} className="inline-block">
                   {char}
                 </span>
               ))}
             </h1>
-            <div className="privacy-subtitle mt-8 flex items-center gap-6 text-slate-400 text-sm">
+            <div className="privacy-subtitle mt-6 md:mt-8 flex items-center gap-4 md:gap-6 text-slate-400 text-xs md:text-sm">
               <span>最終更新: 2024年12月1日</span>
-              <span className="w-1.5 h-1.5 bg-blue-500 rounded-full" />
+              <span className="w-1 h-1 md:w-1.5 md:h-1.5 bg-blue-500 rounded-full" />
               <span>株式会社tent space</span>
             </div>
           </div>
@@ -85,15 +85,15 @@ export default function PrivacyPage() {
         </div>
 
         {/* Content */}
-        <div ref={contentRef} className="px-6 md:px-12 lg:px-20 py-20">
+        <div ref={contentRef} className="px-6 md:px-12 lg:px-20 py-12 md:py-20">
           <div className="max-w-3xl">
             {/* はじめに */}
-            <section className="privacy-section mb-16">
-              <div className="flex items-start gap-6">
-                <span className="text-blue-500 text-sm font-mono mt-1.5">00</span>
+            <section className="privacy-section mb-12 md:mb-16">
+              <div className="flex items-start gap-4 md:gap-6">
+                <span className="text-blue-500 text-xs md:text-sm font-mono mt-1.5">00</span>
                 <div className="flex-1">
-                  <h2 className="text-xl font-semibold mb-4 text-slate-800">はじめに</h2>
-                  <p className="text-slate-600 leading-relaxed">
+                  <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-slate-800">はじめに</h2>
+                  <p className="text-slate-600 text-sm md:text-base leading-relaxed">
                     株式会社tent space（以下、「当社」といいます。）は、本ウェブサイト上で提供するサービスにおける個人情報保護の重要性について認識し、個人情報の保護に関する法律を遵守すると共に、以下のプライバシーポリシー（以下、「本ポリシー」といいます。）を定めます。
                   </p>
                 </div>
@@ -101,12 +101,12 @@ export default function PrivacyPage() {
             </section>
 
             {/* 第1条 */}
-            <section className="privacy-section mb-16">
-              <div className="flex items-start gap-6">
-                <span className="text-blue-500 text-sm font-mono mt-1.5">01</span>
+            <section className="privacy-section mb-12 md:mb-16">
+              <div className="flex items-start gap-4 md:gap-6">
+                <span className="text-blue-500 text-xs md:text-sm font-mono mt-1.5">01</span>
                 <div className="flex-1">
-                  <h2 className="text-xl font-semibold mb-4 text-slate-800">個人情報の定義</h2>
-                  <p className="text-slate-600 leading-relaxed">
+                  <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-slate-800">個人情報の定義</h2>
+                  <p className="text-slate-600 text-sm md:text-base leading-relaxed">
                     「個人情報」とは、個人情報保護法にいう「個人情報」を指すものとし、生存する個人に関する情報であって、当該情報に含まれる氏名、生年月日、住所、電話番号、連絡先その他の記述等により特定の個人を識別できる情報及び容貌、指紋、声紋にかかるデータ、及び健康保険証の保険者番号などの当該情報単体から特定の個人を識別できる情報（個人識別情報）を指します。
                   </p>
                 </div>
@@ -114,12 +114,12 @@ export default function PrivacyPage() {
             </section>
 
             {/* 第2条 */}
-            <section className="privacy-section mb-16">
-              <div className="flex items-start gap-6">
-                <span className="text-blue-500 text-sm font-mono mt-1.5">02</span>
+            <section className="privacy-section mb-12 md:mb-16">
+              <div className="flex items-start gap-4 md:gap-6">
+                <span className="text-blue-500 text-xs md:text-sm font-mono mt-1.5">02</span>
                 <div className="flex-1">
-                  <h2 className="text-xl font-semibold mb-4 text-slate-800">事業者情報</h2>
-                  <div className="space-y-2 text-slate-600 leading-relaxed">
+                  <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-slate-800">事業者情報</h2>
+                  <div className="space-y-2 text-slate-600 text-sm md:text-base leading-relaxed">
                     <p>法人名：株式会社tent space</p>
                     <p>住所：〒355-0316 埼玉県比企郡小川町大字角山323</p>
                     <p>代表者：石井 絢子</p>
@@ -129,12 +129,12 @@ export default function PrivacyPage() {
             </section>
 
             {/* 第3条 */}
-            <section className="privacy-section mb-16">
-              <div className="flex items-start gap-6">
-                <span className="text-blue-500 text-sm font-mono mt-1.5">03</span>
+            <section className="privacy-section mb-12 md:mb-16">
+              <div className="flex items-start gap-4 md:gap-6">
+                <span className="text-blue-500 text-xs md:text-sm font-mono mt-1.5">03</span>
                 <div className="flex-1">
-                  <h2 className="text-xl font-semibold mb-4 text-slate-800">個人情報の取得方法</h2>
-                  <p className="text-slate-600 leading-relaxed mb-4">
+                  <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-slate-800">個人情報の取得方法</h2>
+                  <p className="text-slate-600 text-sm md:text-base leading-relaxed mb-3 md:mb-4">
                     当社は、お客さまが利用登録をする際に氏名、生年月日、住所、電話番号、メールアドレス、銀行口座番号、クレジットカード番号、運転免許証番号などの個人情報をお尋ねすることがあります。
                   </p>
                   <p className="text-slate-600 leading-relaxed">
@@ -145,49 +145,49 @@ export default function PrivacyPage() {
             </section>
 
             {/* 第4条 */}
-            <section className="privacy-section mb-16">
-              <div className="flex items-start gap-6">
-                <span className="text-blue-500 text-sm font-mono mt-1.5">04</span>
+            <section className="privacy-section mb-12 md:mb-16">
+              <div className="flex items-start gap-4 md:gap-6">
+                <span className="text-blue-500 text-xs md:text-sm font-mono mt-1.5">04</span>
                 <div className="flex-1">
-                  <h2 className="text-xl font-semibold mb-4 text-slate-800">個人情報の利用目的</h2>
-                  <p className="text-slate-600 leading-relaxed mb-4">
+                  <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-slate-800">個人情報の利用目的</h2>
+                  <p className="text-slate-600 text-sm md:text-base leading-relaxed mb-3 md:mb-4">
                     当社が個人情報を利用する目的は、以下のとおりです。
                   </p>
                   <ul className="space-y-2">
-                    <li className="flex items-start gap-3 text-slate-600">
-                      <span className="w-1 h-1 bg-blue-500 rounded-full mt-2.5 shrink-0" />
+                    <li className="flex items-start gap-2 md:gap-3 text-slate-600 text-sm md:text-base">
+                      <span className="w-1 h-1 bg-blue-500 rounded-full mt-2 md:mt-2.5 shrink-0" />
                       <span>当社サービスの提供・運営のため</span>
                     </li>
-                    <li className="flex items-start gap-3 text-slate-600">
-                      <span className="w-1 h-1 bg-blue-500 rounded-full mt-2.5 shrink-0" />
+                    <li className="flex items-start gap-2 md:gap-3 text-slate-600 text-sm md:text-base">
+                      <span className="w-1 h-1 bg-blue-500 rounded-full mt-2 md:mt-2.5 shrink-0" />
                       <span>お客さまからのお問い合わせに回答するため（本人確認を行うことを含む）</span>
                     </li>
-                    <li className="flex items-start gap-3 text-slate-600">
-                      <span className="w-1 h-1 bg-blue-500 rounded-full mt-2.5 shrink-0" />
+                    <li className="flex items-start gap-2 md:gap-3 text-slate-600 text-sm md:text-base">
+                      <span className="w-1 h-1 bg-blue-500 rounded-full mt-2 md:mt-2.5 shrink-0" />
                       <span>
                         お客さまが利用中のサービスの新機能、更新情報、キャンペーン等及び当社が提供する他サービスの案内のメールを送付するため
                       </span>
                     </li>
-                    <li className="flex items-start gap-3 text-slate-600">
-                      <span className="w-1 h-1 bg-blue-500 rounded-full mt-2.5 shrink-0" />
+                    <li className="flex items-start gap-2 md:gap-3 text-slate-600 text-sm md:text-base">
+                      <span className="w-1 h-1 bg-blue-500 rounded-full mt-2 md:mt-2.5 shrink-0" />
                       <span>メンテナンス、重要なお知らせなど必要に応じたご連絡のため</span>
                     </li>
-                    <li className="flex items-start gap-3 text-slate-600">
-                      <span className="w-1 h-1 bg-blue-500 rounded-full mt-2.5 shrink-0" />
+                    <li className="flex items-start gap-2 md:gap-3 text-slate-600 text-sm md:text-base">
+                      <span className="w-1 h-1 bg-blue-500 rounded-full mt-2 md:mt-2.5 shrink-0" />
                       <span>
                         利用規約に違反したユーザーや、不正・不当な目的でサービスを利用しようとするユーザーの特定をし、ご利用をお断りするため
                       </span>
                     </li>
-                    <li className="flex items-start gap-3 text-slate-600">
-                      <span className="w-1 h-1 bg-blue-500 rounded-full mt-2.5 shrink-0" />
+                    <li className="flex items-start gap-2 md:gap-3 text-slate-600 text-sm md:text-base">
+                      <span className="w-1 h-1 bg-blue-500 rounded-full mt-2 md:mt-2.5 shrink-0" />
                       <span>お客さまにご自身の登録情報の閲覧や変更、削除、ご利用状況の閲覧を行っていただくため</span>
                     </li>
-                    <li className="flex items-start gap-3 text-slate-600">
-                      <span className="w-1 h-1 bg-blue-500 rounded-full mt-2.5 shrink-0" />
+                    <li className="flex items-start gap-2 md:gap-3 text-slate-600 text-sm md:text-base">
+                      <span className="w-1 h-1 bg-blue-500 rounded-full mt-2 md:mt-2.5 shrink-0" />
                       <span>有料サービスにおいて、お客さまに利用料金を請求するため</span>
                     </li>
-                    <li className="flex items-start gap-3 text-slate-600">
-                      <span className="w-1 h-1 bg-blue-500 rounded-full mt-2.5 shrink-0" />
+                    <li className="flex items-start gap-2 md:gap-3 text-slate-600 text-sm md:text-base">
+                      <span className="w-1 h-1 bg-blue-500 rounded-full mt-2 md:mt-2.5 shrink-0" />
                       <span>上記の利用目的に付随する目的</span>
                     </li>
                   </ul>
@@ -196,12 +196,12 @@ export default function PrivacyPage() {
             </section>
 
             {/* 第5条 - 第10条は省略して主要なセクションのみ表示 */}
-            <section className="privacy-section mb-16">
-              <div className="flex items-start gap-6">
-                <span className="text-blue-500 text-sm font-mono mt-1.5">05</span>
+            <section className="privacy-section mb-12 md:mb-16">
+              <div className="flex items-start gap-4 md:gap-6">
+                <span className="text-blue-500 text-xs md:text-sm font-mono mt-1.5">05</span>
                 <div className="flex-1">
-                  <h2 className="text-xl font-semibold mb-4 text-slate-800">個人データの安全対策</h2>
-                  <p className="text-slate-600 leading-relaxed">
+                  <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-slate-800">個人データの安全対策</h2>
+                  <p className="text-slate-600 text-sm md:text-base leading-relaxed">
                     当社は、個人情報を保護するため、情報セキュリティに関する規程に基づき、当該個人情報の管理、個人情報の持ち出し方法の指定、第三者からの不正アクセスの防止等の対策を行い、個人情報の漏洩、紛失、改ざん、破壊等の予防を図ります。
                   </p>
                 </div>
@@ -209,28 +209,28 @@ export default function PrivacyPage() {
             </section>
 
             {/* お問い合わせ */}
-            <section className="privacy-section mt-20 pt-16 border-t border-slate-200">
-              <div className="flex items-start gap-6">
-                <span className="text-blue-500 text-sm font-mono mt-1.5">06</span>
+            <section className="privacy-section mt-12 md:mt-20 pt-12 md:pt-16 border-t border-slate-200">
+              <div className="flex items-start gap-4 md:gap-6">
+                <span className="text-blue-500 text-xs md:text-sm font-mono mt-1.5">06</span>
                 <div className="flex-1">
-                  <h2 className="text-xl font-semibold mb-4 text-slate-800">お問い合わせ</h2>
-                  <p className="text-slate-600 mb-8">
+                  <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-slate-800">お問い合わせ</h2>
+                  <p className="text-slate-600 text-sm md:text-base mb-6 md:mb-8">
                     当社の個人情報の取扱いに関するご質問やご不明点、苦情、その他のお問い合わせは、下記の窓口までお願いいたします。
                   </p>
-                  <div className="grid md:grid-cols-3 gap-6">
+                  <div className="grid md:grid-cols-3 gap-4 md:gap-6">
                     <div>
-                      <p className="text-slate-400 text-xs uppercase tracking-wider mb-2">社名</p>
-                      <p className="text-slate-700">株式会社tent space</p>
+                      <p className="text-slate-400 text-[10px] md:text-xs uppercase tracking-wider mb-2">社名</p>
+                      <p className="text-slate-700 text-sm md:text-base">株式会社tent space</p>
                     </div>
                     <div>
-                      <p className="text-slate-400 text-xs uppercase tracking-wider mb-2">住所</p>
-                      <p className="text-slate-700 text-sm">〒355-0316 埼玉県比企郡小川町大字角山323</p>
+                      <p className="text-slate-400 text-[10px] md:text-xs uppercase tracking-wider mb-2">住所</p>
+                      <p className="text-slate-700 text-xs md:text-sm">〒355-0316 埼玉県比企郡小川町大字角山323</p>
                     </div>
                     <div>
-                      <p className="text-slate-400 text-xs uppercase tracking-wider mb-2">Email</p>
+                      <p className="text-slate-400 text-[10px] md:text-xs uppercase tracking-wider mb-2">Email</p>
                       <a
                         href="mailto:back-office@tentspace.net"
-                        className="text-blue-600 hover:text-blue-500 transition-colors"
+                        className="text-blue-600 hover:text-blue-500 transition-colors text-sm md:text-base"
                       >
                         back-office@tentspace.net
                       </a>
@@ -256,9 +256,9 @@ export default function PrivacyPage() {
 
 function Footer() {
   return (
-    <footer className="relative z-20 px-4 md:px-8 py-0.5">
+    <footer className="relative z-20 px-2 md:px-8 py-1">
       <div className="flex justify-end">
-        <p className="text-[9px] text-primary-foreground/60">© 2025 tent space Inc. All rights reserved.</p>
+        <p className="text-[8px] md:text-[9px] text-primary-foreground/60">© 2025 tent space Inc. All rights reserved.</p>
       </div>
     </footer>
   )

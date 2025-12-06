@@ -218,19 +218,19 @@ export default function TermsPage() {
 
       <div className="relative z-10">
         {/* Hero */}
-        <div className="min-h-[50vh] flex flex-col justify-end px-6 md:px-12 lg:px-20 pb-16">
+        <div className="min-h-[50vh] flex flex-col justify-end px-6 md:px-12 lg:px-20 pb-12 md:pb-16">
           <div className="max-w-5xl">
-            <p className="terms-subtitle text-blue-600 text-sm font-medium tracking-wider mb-6">TERMS OF SERVICE</p>
-            <h1 className="terms-title text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight overflow-hidden text-slate-900">
+            <p className="terms-subtitle text-blue-600 text-xs md:text-sm font-medium tracking-wider mb-4 md:mb-6">TERMS OF SERVICE</p>
+            <h1 className="terms-title text-3xl md:text-7xl lg:text-8xl font-bold tracking-tight overflow-hidden text-slate-900">
               {"利用規約".split("").map((char, i) => (
                 <span key={i} className="inline-block">
                   {char}
                 </span>
               ))}
             </h1>
-            <div className="terms-subtitle mt-8 flex items-center gap-6 text-slate-400 text-sm">
+            <div className="terms-subtitle mt-6 md:mt-8 flex items-center gap-4 md:gap-6 text-slate-400 text-xs md:text-sm">
               <span>最終更新: 2024年12月1日</span>
-              <span className="w-1.5 h-1.5 bg-blue-500 rounded-full" />
+              <span className="w-1 h-1 md:w-1.5 md:h-1.5 bg-blue-500 rounded-full" />
               <span>株式会社tent space</span>
             </div>
           </div>
@@ -242,20 +242,20 @@ export default function TermsPage() {
         </div>
 
         {/* Content */}
-        <div ref={contentRef} className="px-6 md:px-12 lg:px-20 py-20">
+        <div ref={contentRef} className="px-6 md:px-12 lg:px-20 py-12 md:py-20">
           <div className="max-w-3xl">
             {sections.map((section) => (
-              <section key={section.id} className="terms-section mb-16 last:mb-0">
-                <div className="flex items-start gap-6">
-                  <span className="text-blue-500 text-sm font-mono mt-1.5">{section.id}</span>
+              <section key={section.id} className="terms-section mb-12 md:mb-16 last:mb-0">
+                <div className="flex items-start gap-4 md:gap-6">
+                  <span className="text-blue-500 text-xs md:text-sm font-mono mt-1.5">{section.id}</span>
                   <div className="flex-1">
-                    <h2 className="text-xl font-semibold mb-4 text-slate-800">{section.title}</h2>
-                    <p className="text-slate-600 leading-relaxed">{section.content}</p>
+                    <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-slate-800">{section.title}</h2>
+                    <p className="text-slate-600 text-sm md:text-base leading-relaxed">{section.content}</p>
                     {section.list && (
-                      <ul className="mt-4 space-y-2">
+                      <ul className="mt-3 md:mt-4 space-y-2">
                         {section.list.map((item, i) => (
-                          <li key={i} className="flex items-start gap-3 text-slate-600">
-                            <span className="w-1 h-1 bg-blue-500 rounded-full mt-2.5 shrink-0" />
+                          <li key={i} className="flex items-start gap-2 md:gap-3 text-slate-600 text-sm md:text-base">
+                            <span className="w-1 h-1 bg-blue-500 rounded-full mt-2 md:mt-2.5 shrink-0" />
                             <span>{item}</span>
                           </li>
                         ))}
@@ -267,28 +267,28 @@ export default function TermsPage() {
             ))}
 
             {/* Contact */}
-            <section className="terms-section mt-20 pt-16 border-t border-slate-200">
-              <div className="flex items-start gap-6">
-                <span className="text-blue-500 text-sm font-mono mt-1.5">06</span>
+            <section className="terms-section mt-12 md:mt-20 pt-12 md:pt-16 border-t border-slate-200">
+              <div className="flex items-start gap-4 md:gap-6">
+                <span className="text-blue-500 text-xs md:text-sm font-mono mt-1.5">06</span>
                 <div className="flex-1">
-                  <h2 className="text-xl font-semibold mb-4 text-slate-800">お問い合わせ</h2>
-                  <p className="text-slate-600 mb-8">
+                  <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-slate-800">お問い合わせ</h2>
+                  <p className="text-slate-600 text-sm md:text-base mb-6 md:mb-8">
                     これらの規約についてのお問い合わせは、下記の窓口までお願いいたします。
                   </p>
-                  <div className="grid md:grid-cols-3 gap-6">
+                  <div className="grid md:grid-cols-3 gap-4 md:gap-6">
                     <div>
-                      <p className="text-slate-400 text-xs uppercase tracking-wider mb-2">社名</p>
-                      <p className="text-slate-700">株式会社tent space</p>
+                      <p className="text-slate-400 text-[10px] md:text-xs uppercase tracking-wider mb-2">社名</p>
+                      <p className="text-slate-700 text-sm md:text-base">株式会社tent space</p>
                     </div>
                     <div>
-                      <p className="text-slate-400 text-xs uppercase tracking-wider mb-2">住所</p>
-                      <p className="text-slate-700 text-sm">〒355-0316 埼玉県比企郡小川町大字角山323</p>
+                      <p className="text-slate-400 text-[10px] md:text-xs uppercase tracking-wider mb-2">住所</p>
+                      <p className="text-slate-700 text-xs md:text-sm">〒355-0316 埼玉県比企郡小川町大字角山323</p>
                     </div>
                     <div>
-                      <p className="text-slate-400 text-xs uppercase tracking-wider mb-2">Email</p>
+                      <p className="text-slate-400 text-[10px] md:text-xs uppercase tracking-wider mb-2">Email</p>
                       <a
                         href="mailto:back-office@tentspace.net"
-                        className="text-blue-600 hover:text-blue-500 transition-colors"
+                        className="text-blue-600 hover:text-blue-500 transition-colors text-sm md:text-base"
                       >
                         back-office@tentspace.net
                       </a>
@@ -314,9 +314,9 @@ export default function TermsPage() {
 
 function Footer() {
   return (
-    <footer className="relative z-20 px-4 md:px-8 py-0.5">
+    <footer className="relative z-20 px-2 md:px-8 py-1">
       <div className="flex justify-end">
-        <p className="text-[9px] text-primary-foreground/60">© 2025 tent space Inc. All rights reserved.</p>
+        <p className="text-[8px] md:text-[9px] text-primary-foreground/60">© 2025 tent space Inc. All rights reserved.</p>
       </div>
     </footer>
   )

@@ -95,7 +95,7 @@ export function Header({ scrollProgress = 0 }: { scrollProgress?: number }) {
               alt="tent"
               width={110}
               height={50}
-              className="transition-all duration-500 relative z-10 w-[70px] h-auto md:w-[110px]"
+              className="transition-all duration-500 relative z-10 w-[80px] h-auto md:w-[110px]"
               priority
             />
 
@@ -109,7 +109,7 @@ export function Header({ scrollProgress = 0 }: { scrollProgress?: number }) {
                 filter: "hue-rotate(90deg) saturate(2)",
               }}
             >
-              <Image src={logoSrc} alt="" width={110} height={50} aria-hidden="true" className="w-[70px] h-auto md:w-[110px]" />
+              <Image src={logoSrc} alt="" width={110} height={50} aria-hidden="true" className="w-[80px] h-auto md:w-[110px]" />
             </div>
 
             <div
@@ -121,7 +121,7 @@ export function Header({ scrollProgress = 0 }: { scrollProgress?: number }) {
                 filter: "hue-rotate(-90deg) saturate(2)",
               }}
             >
-              <Image src={logoSrc} alt="" width={110} height={50} aria-hidden="true" className="w-[70px] h-auto md:w-[110px]" />
+              <Image src={logoSrc} alt="" width={110} height={50} aria-hidden="true" className="w-[80px] h-auto md:w-[110px]" />
             </div>
           </Link>
         </div>
