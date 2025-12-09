@@ -43,6 +43,9 @@ export function PageFooter() {
             <Link href="/about" className="hover:text-primary-foreground transition-colors">
               About Us
             </Link>
+            <Link href="/blog" className="hover:text-primary-foreground transition-colors">
+              Blog
+            </Link>
             <Link href="/terms" className="hover:text-primary-foreground transition-colors">
               Terms
             </Link>
