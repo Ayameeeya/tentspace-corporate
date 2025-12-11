@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState, useCallback, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
@@ -182,8 +182,8 @@ function FeaturedCard({ post }: { post: WPPost }) {
   )
 }
 
-// Main Blog Page Component
-export default function BlogPage() {
+// Blog Page Content Component (uses useSearchParams)
+function BlogPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   
@@ -567,5 +567,48 @@ export default function BlogPage() {
         </footer>
       </main>
     </div>
+  )
+}
+
+// Loading component for Suspense fallback
+function BlogPageLoading() {
+  return (
+    <div className="min-h-screen bg-[#fafafa]">
+      <BlogHeader />
+      <main className="pt-20">
+        <div className="bg-white border-b border-gray-100">
+          <div className="max-w-5xl mx-auto px-4 py-12 md:py-16">
+            <div className="animate-pulse">
+              <div className="h-10 w-10 bg-gray-200 rounded-xl mb-4" />
+              <div className="h-8 w-48 bg-gray-200 rounded mb-3" />
+              <div className="h-6 w-96 bg-gray-200 rounded" />
+            </div>
+          </div>
+        </div>
+        <div className="max-w-5xl mx-auto px-4 py-8">
+          <div className="space-y-4">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="animate-pulse flex gap-4 py-5">
+                <div className="flex-1">
+                  <div className="h-4 w-24 bg-gray-200 rounded mb-2" />
+                  <div className="h-6 w-full bg-gray-200 rounded mb-2" />
+                  <div className="h-4 w-3/4 bg-gray-200 rounded" />
+                </div>
+                <div className="w-32 h-24 bg-gray-200 rounded-lg" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </main>
+    </div>
+  )
+}
+
+// Main Blog Page Component with Suspense boundary
+export default function BlogPage() {
+  return (
+    <Suspense fallback={<BlogPageLoading />}>
+      <BlogPageContent />
+    </Suspense>
   )
 }
