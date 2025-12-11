@@ -205,6 +205,21 @@ export default async function BlogPostPage({
   const canonicalUrl = `${SITE_URL}/blog/${post.slug}`
   const jsonLdData = generateJsonLd(post)
 
+  // Fetch related posts from the same category
+  let relatedPosts: Awaited<ReturnType<typeof getPosts>>["posts"] = []
+  if (categories.length > 0) {
+    try {
+      const { posts: categoryPosts } = await getPosts({
+        categories: [categories[0].id],
+        perPage: 4,
+      })
+      // Filter out current post
+      relatedPosts = categoryPosts.filter((p) => p.id !== post.id).slice(0, 3)
+    } catch (error) {
+      console.error("Error fetching related posts:", error)
+    }
+  }
+
   return (
     <>
       {/* JSON-LD Structured Data */}
@@ -225,6 +240,7 @@ export default async function BlogPostPage({
         author={author}
         readingTime={readingTime}
         canonicalUrl={canonicalUrl}
+        relatedPosts={relatedPosts}
       />
     </>
   )

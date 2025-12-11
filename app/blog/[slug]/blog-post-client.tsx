@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { BlogHeader } from "@/components/blog-header"
-import { formatDate, getReadingTime, stripHtml, type WPPost, type WPAuthor, type WPTerm } from "@/lib/wordpress"
+import { formatDate, getReadingTime, stripHtml, getFeaturedImageUrl, type WPPost, type WPAuthor, type WPTerm } from "@/lib/wordpress"
 
 // Heading structure type
 interface HeadingSection {
@@ -193,17 +193,18 @@ function ShareButtons({ url, title }: { url: string; title: string }) {
   )
 }
 
-// Process content to add IDs to headings
+// Process content to add IDs to headings (server-safe)
 function processContent(content: string): string {
-  const parser = new DOMParser()
-  const doc = parser.parseFromString(content, 'text/html')
-  const headings = doc.querySelectorAll('h2, h3')
-  
-  headings.forEach((el, index) => {
-    el.id = `heading-${index}`
+  // Add IDs to headings using regex (works on both server and client)
+  let headingIndex = 0
+  return content.replace(/<(h[23])([^>]*)>/gi, (match, tag, attrs) => {
+    const id = `heading-${headingIndex++}`
+    // Check if there's already an id attribute
+    if (attrs.includes('id=')) {
+      return match
+    }
+    return `<${tag}${attrs} id="${id}">`
   })
-  
-  return doc.body.innerHTML
 }
 
 // Props type
@@ -214,6 +215,7 @@ interface BlogPostClientProps {
   author: WPAuthor | undefined
   readingTime: number
   canonicalUrl: string
+  relatedPosts?: WPPost[]
 }
 
 // Main Blog Post Client Component
@@ -223,7 +225,8 @@ export default function BlogPostClient({
   categories, 
   author, 
   readingTime,
-  canonicalUrl 
+  canonicalUrl,
+  relatedPosts = []
 }: BlogPostClientProps) {
   const processedContent = processContent(post.content.rendered)
   const plainTitle = stripHtml(post.title.rendered)
@@ -349,6 +352,67 @@ export default function BlogPostClient({
                   dangerouslySetInnerHTML={{ __html: processedContent }}
                 />
               </div>
+
+              {/* Related Posts Section */}
+              {relatedPosts.length > 0 && (
+                <aside className="mt-8 bg-white rounded-xl border border-gray-100 p-6" aria-label="関連記事">
+                  <div className="flex items-center gap-2 mb-5">
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center">
+                      <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                      </svg>
+                    </div>
+                    <h3 className="font-bold text-gray-900">他の記事もどうぞ</h3>
+                    {categories[0] && (
+                      <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
+                        {categories[0].name}カテゴリより
+                      </span>
+                    )}
+                  </div>
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {relatedPosts.map((relatedPost) => {
+                      const relatedImageUrl = getFeaturedImageUrl(relatedPost, 'medium')
+                      const relatedCategories = relatedPost._embedded?.['wp:term']?.[0] || []
+                      return (
+                        <Link
+                          key={relatedPost.id}
+                          href={`/blog/${relatedPost.slug}`}
+                          className="group block"
+                        >
+                          <div className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-md transition-all border border-gray-100 hover:border-gray-200">
+                            {relatedImageUrl && (
+                              <div className="relative aspect-[16/9] bg-gray-200">
+                                <Image
+                                  src={relatedImageUrl}
+                                  alt={stripHtml(relatedPost.title.rendered)}
+                                  fill
+                                  className="object-cover"
+                                />
+                              </div>
+                            )}
+                            <div className="p-3">
+                              {relatedCategories[0] && (
+                                <span className="inline-block px-2 py-0.5 text-[10px] font-medium bg-blue-50 text-blue-600 rounded mb-1.5">
+                                  {relatedCategories[0].name}
+                                </span>
+                              )}
+                              <h4 
+                                className="text-sm font-medium text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors"
+                                dangerouslySetInnerHTML={{ __html: relatedPost.title.rendered }}
+                              />
+                              <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
+                                <time>{formatDate(relatedPost.date)}</time>
+                                <span>·</span>
+                                <span>{getReadingTime(relatedPost.content.rendered)}分</span>
+                              </div>
+                            </div>
+                          </div>
+                        </Link>
+                      )
+                    })}
+                  </div>
+                </aside>
+              )}
 
               {/* Author Card */}
               {author && (
