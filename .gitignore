@@ -27,3 +27,5 @@ dist-ssr
 .env.*
 .next
 .playwright-mcp
+.vercel
+.env*.local
