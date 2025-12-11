@@ -194,7 +194,6 @@ function BlogPageContent() {
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [totalPosts, setTotalPosts] = useState(0)
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [searchInput, setSearchInput] = useState('')
 
@@ -221,7 +220,6 @@ function BlogPageContent() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     setSearchQuery(searchInput)
-    setSelectedCategory(null)
     setCurrentPage(1)
     updateURL(searchInput)
   }
@@ -255,7 +253,6 @@ function BlogPageContent() {
         const { posts: fetchedPosts, totalPages: total, total: totalCount } = await getPosts({
           page: currentPage,
           perPage: 12,
-          categories: selectedCategory ? [selectedCategory] : undefined,
           search: searchQuery || undefined,
         })
         setPosts(fetchedPosts)
@@ -271,12 +268,12 @@ function BlogPageContent() {
     }
 
     fetchPosts()
-  }, [currentPage, selectedCategory, searchQuery])
+  }, [currentPage, searchQuery])
 
-  // Reset page when category or search changes
+  // Reset page when search changes
   useEffect(() => {
     setCurrentPage(1)
-  }, [selectedCategory, searchQuery])
+  }, [searchQuery])
 
   const featuredPosts = posts.slice(0, 2)
   const regularPosts = posts.slice(2)
@@ -375,9 +372,9 @@ function BlogPageContent() {
           <div className="max-w-5xl mx-auto px-4">
             <div className="flex items-center gap-1 overflow-x-auto py-3 -mx-4 px-4 scrollbar-hide">
               <button
-                onClick={() => setSelectedCategory(null)}
+                onClick={() => clearSearch()}
                 className={`flex-shrink-0 px-4 py-2 text-sm font-medium rounded-full transition-colors ${
-                  selectedCategory === null
+                  !searchQuery
                     ? 'bg-blue-600 text-white'
                     : 'text-gray-600 hover:bg-gray-100'
                 }`}
@@ -385,18 +382,14 @@ function BlogPageContent() {
                 すべて
               </button>
               {categories.map((category) => (
-                <button
+                <Link
                   key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
-                  className={`flex-shrink-0 px-4 py-2 text-sm font-medium rounded-full transition-colors ${
-                    selectedCategory === category.id
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-600 hover:bg-gray-100'
-                  }`}
+                  href={`/blog/categories/${category.slug}`}
+                  className="flex-shrink-0 px-4 py-2 text-sm font-medium rounded-full text-gray-600 hover:bg-gray-100 transition-colors"
                 >
                   {category.name}
                   <span className="ml-1.5 text-xs opacity-70">({category.count})</span>
-                </button>
+                </Link>
               ))}
             </div>
           </div>
@@ -458,7 +451,7 @@ function BlogPageContent() {
           ) : (
             <>
               {/* Featured Posts */}
-              {featuredPosts.length > 0 && currentPage === 1 && !selectedCategory && (
+              {featuredPosts.length > 0 && currentPage === 1 && !searchQuery && (
                 <div className="grid md:grid-cols-2 gap-6 mb-8">
                   {featuredPosts.map((post) => (
                     <FeaturedCard key={post.id} post={post} />
@@ -468,13 +461,13 @@ function BlogPageContent() {
 
               {/* Regular Posts */}
               <div className="bg-white rounded-xl border border-gray-100 px-4">
-                {(currentPage === 1 && !selectedCategory ? regularPosts : posts).map((post) => (
+                {(currentPage === 1 && !searchQuery ? regularPosts : posts).map((post) => (
                   <BlogCard key={post.id} post={post} />
                 ))}
               </div>
 
-              {/* Recommended Posts - Show only on first page without filters */}
-              {currentPage === 1 && !selectedCategory && !searchQuery && posts.length >= 3 && (
+              {/* Recommended Posts - Show only on first page without search */}
+              {currentPage === 1 && !searchQuery && posts.length >= 3 && (
                 <aside className="mt-10" aria-label="おすすめ記事">
                   <div className="flex items-center gap-2 mb-4">
                     <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">

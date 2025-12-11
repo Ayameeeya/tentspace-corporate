@@ -146,6 +146,20 @@ export async function getCategories(): Promise<WPCategory[]> {
   return response.json()
 }
 
+// Fetch a single category by slug
+export async function getCategoryBySlug(slug: string): Promise<WPCategory | null> {
+  const response = await fetch(`${WP_API_URL}/categories?slug=${encodeURIComponent(slug)}`, {
+    next: { revalidate: 3600 },
+  })
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch category: ${response.statusText}`)
+  }
+
+  const categories: WPCategory[] = await response.json()
+  return categories.length > 0 ? categories[0] : null
+}
+
 // Helper function to extract featured image URL
 export function getFeaturedImageUrl(post: WPPost, size: 'thumbnail' | 'medium' | 'large' | 'full' = 'large'): string | null {
   const media = post._embedded?.['wp:featuredmedia']?.[0]
