@@ -6,25 +6,50 @@ import Image from "next/image"
 import { Header } from "@/components/header"
 import { getPostBySlug, getFeaturedImageUrl, formatDate, getReadingTime, type WPPost } from "@/lib/wordpress"
 
-// Table of Contents Component
+// Heading structure type
+interface HeadingSection {
+  id: string
+  text: string
+  level: number
+  children: { id: string; text: string; level: number }[]
+}
+
+// Table of Contents Component with Accordion
 function TableOfContents({ content }: { content: string }) {
-  const [headings, setHeadings] = useState<{ id: string; text: string; level: number }[]>([])
+  const [sections, setSections] = useState<HeadingSection[]>([])
   const [activeId, setActiveId] = useState<string>('')
+  const [activeSection, setActiveSection] = useState<string>('')
 
   useEffect(() => {
-    // Extract headings from content
+    // Extract headings from content and group by h2
     const parser = new DOMParser()
     const doc = parser.parseFromString(content, 'text/html')
     const elements = doc.querySelectorAll('h2, h3')
     
-    const extracted = Array.from(elements).map((el, index) => {
+    const grouped: HeadingSection[] = []
+    let currentSection: HeadingSection | null = null
+
+    Array.from(elements).forEach((el, index) => {
       const id = `heading-${index}`
       const text = el.textContent || ''
       const level = el.tagName === 'H2' ? 2 : 3
-      return { id, text, level }
+
+      if (level === 2) {
+        // Start new section
+        currentSection = { id, text, level, children: [] }
+        grouped.push(currentSection)
+      } else if (level === 3 && currentSection) {
+        // Add to current section
+        currentSection.children.push({ id, text, level })
+      }
     })
     
-    setHeadings(extracted)
+    setSections(grouped)
+    // Set first section as active by default
+    if (grouped.length > 0) {
+      setActiveSection(grouped[0].id)
+      setActiveId(grouped[0].id)
+    }
   }, [content])
 
   useEffect(() => {
@@ -32,48 +57,106 @@ function TableOfContents({ content }: { content: string }) {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setActiveId(entry.target.id)
+            const id = entry.target.id
+            setActiveId(id)
+            
+            // Find which section this heading belongs to
+            for (const section of sections) {
+              if (section.id === id) {
+                setActiveSection(section.id)
+                break
+              }
+              for (const child of section.children) {
+                if (child.id === id) {
+                  setActiveSection(section.id)
+                  break
+                }
+              }
+            }
           }
         })
       },
       { rootMargin: '-100px 0px -80% 0px' }
     )
 
-    headings.forEach(({ id }) => {
-      const element = document.getElementById(id)
+    // Observe all headings
+    sections.forEach((section) => {
+      const element = document.getElementById(section.id)
       if (element) observer.observe(element)
+      section.children.forEach((child) => {
+        const childElement = document.getElementById(child.id)
+        if (childElement) observer.observe(childElement)
+      })
     })
 
     return () => observer.disconnect()
-  }, [headings])
+  }, [sections])
 
-  if (headings.length === 0) return null
+  if (sections.length === 0) return null
 
   return (
-    <nav className="sticky top-24 p-4 bg-gray-50 rounded-xl">
+    <nav className="sticky top-24 p-4 bg-gray-50 rounded-xl max-h-[calc(100vh-120px)] overflow-y-auto">
       <h3 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
         </svg>
         目次
       </h3>
-      <ul className="space-y-2">
-        {headings.map(({ id, text, level }) => (
-          <li key={id}>
-            <a
-              href={`#${id}`}
-              className={`block text-sm transition-colors ${
-                level === 3 ? 'pl-3' : ''
-              } ${
-                activeId === id
-                  ? 'text-blue-600 font-medium'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              {text}
-            </a>
-          </li>
-        ))}
+      <ul className="space-y-1">
+        {sections.map((section) => {
+          const isOpen = activeSection === section.id
+          const isActive = activeId === section.id
+
+          return (
+            <li key={section.id}>
+              {/* H2 Header */}
+              <a
+                href={`#${section.id}`}
+                className={`flex items-center gap-1 py-1.5 text-sm transition-colors ${
+                  isActive
+                    ? 'text-blue-600 font-medium'
+                    : 'text-gray-700 hover:text-gray-900'
+                }`}
+              >
+                {section.children.length > 0 && (
+                  <svg
+                    className={`w-3 h-3 flex-shrink-0 transition-transform duration-200 ${
+                      isOpen ? 'rotate-90' : ''
+                    }`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                )}
+                <span className={section.children.length === 0 ? 'ml-4' : ''}>
+                  {section.text}
+                </span>
+              </a>
+
+              {/* H3 Children (Accordion) - only show if section is active */}
+              {section.children.length > 0 && isOpen && (
+                <ul className="mt-1 space-y-0.5">
+                  {section.children.map((child) => (
+                    <li key={child.id}>
+                      <a
+                        href={`#${child.id}`}
+                        className={`block py-1 pl-7 text-xs transition-colors ${
+                          activeId === child.id
+                            ? 'text-blue-600 font-medium'
+                            : 'text-gray-500 hover:text-gray-700'
+                        }`}
+                      >
+                        {child.text}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          )
+        })}
       </ul>
     </nav>
   )
