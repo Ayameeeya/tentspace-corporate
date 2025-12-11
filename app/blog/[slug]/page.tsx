@@ -53,43 +53,64 @@ function TableOfContents({ content }: { content: string }) {
   }, [content])
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const id = entry.target.id
-            setActiveId(id)
-            
-            // Find which section this heading belongs to
-            for (const section of sections) {
-              if (section.id === id) {
-                setActiveSection(section.id)
-                break
-              }
-              for (const child of section.children) {
-                if (child.id === id) {
+    if (sections.length === 0) return
+
+    // Wait for DOM to be updated after client-side navigation
+    const timeoutId = setTimeout(() => {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const id = entry.target.id
+              setActiveId(id)
+              
+              // Find which section this heading belongs to
+              for (const section of sections) {
+                if (section.id === id) {
                   setActiveSection(section.id)
                   break
                 }
+                for (const child of section.children) {
+                  if (child.id === id) {
+                    setActiveSection(section.id)
+                    break
+                  }
+                }
               }
             }
+          })
+        },
+        { rootMargin: '-100px 0px -80% 0px' }
+      )
+
+      // Observe all headings
+      let observedCount = 0
+      sections.forEach((section) => {
+        const element = document.getElementById(section.id)
+        if (element) {
+          observer.observe(element)
+          observedCount++
+        }
+        section.children.forEach((child) => {
+          const childElement = document.getElementById(child.id)
+          if (childElement) {
+            observer.observe(childElement)
+            observedCount++
           }
         })
-      },
-      { rootMargin: '-100px 0px -80% 0px' }
-    )
-
-    // Observe all headings
-    sections.forEach((section) => {
-      const element = document.getElementById(section.id)
-      if (element) observer.observe(element)
-      section.children.forEach((child) => {
-        const childElement = document.getElementById(child.id)
-        if (childElement) observer.observe(childElement)
       })
-    })
 
-    return () => observer.disconnect()
+      // Store observer reference for cleanup
+      ;(window as unknown as { __tocObserver?: IntersectionObserver }).__tocObserver = observer
+    }, 100)
+
+    return () => {
+      clearTimeout(timeoutId)
+      const observer = (window as unknown as { __tocObserver?: IntersectionObserver }).__tocObserver
+      if (observer) {
+        observer.disconnect()
+      }
+    }
   }, [sections])
 
   if (sections.length === 0) return null
