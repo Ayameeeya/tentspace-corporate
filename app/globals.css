@@ -691,35 +691,71 @@ html {
   font-family: var(--font-mono);
 }
 
+/* Code blocks - all variations */
 .article-content pre {
-  background: #1f2937;
+  background: #1e293b !important;
   border-radius: 0.75rem;
-  padding: 1.25rem;
+  padding: 1.25rem !important;
   overflow-x: auto;
   margin: 1.5rem 0;
-}
-
-.article-content pre code {
-  background: transparent;
-  padding: 0;
-  color: #e5e7eb;
+  color: #f8fafc !important;
+  font-family: var(--font-mono);
   font-size: 0.875rem;
   line-height: 1.7;
 }
 
-.article-content ul,
+.article-content pre * {
+  color: #f8fafc !important;
+  background: transparent !important;
+}
+
+.article-content pre code {
+  background: transparent !important;
+  padding: 0 !important;
+  color: #f8fafc !important;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+/* WordPress Gutenberg code block */
+.article-content .wp-block-code,
+.article-content .wp-block-preformatted,
+.article-content figure.wp-block-code {
+  background: #1e293b !important;
+  border-radius: 0.75rem;
+  padding: 1.25rem !important;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  color: #f8fafc !important;
+}
+
+.article-content .wp-block-code *,
+.article-content .wp-block-preformatted *,
+.article-content figure.wp-block-code * {
+  color: #f8fafc !important;
+  background: transparent !important;
+}
+
+.article-content ul {
+  margin: 1.25rem 0;
+  padding-left: 1.5rem;
+  list-style-type: disc;
+}
+
 .article-content ol {
   margin: 1.25rem 0;
   padding-left: 1.5rem;
+  list-style-type: decimal;
 }
 
 .article-content li {
   margin-bottom: 0.5rem;
   color: #4b5563;
+  display: list-item;
 }
 
 .article-content li::marker {
-  color: #6b7280;
+  color: #3b82f6;
 }
 
 .article-content blockquote {
