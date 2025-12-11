@@ -52,22 +52,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error("Error fetching posts for sitemap:", error)
   }
 
-  // Categories (optional - if you have category pages)
-  // let categoryPages: MetadataRoute.Sitemap = []
-  // try {
-  //   const categories = await getCategories()
-  //   categoryPages = categories
-  //     .filter((cat) => cat.count > 0)
-  //     .map((cat) => ({
-  //       url: `${SITE_URL}/blog/category/${cat.slug}`,
-  //       lastModified: new Date(),
-  //       changeFrequency: "weekly" as const,
-  //       priority: 0.6,
-  //     }))
-  // } catch (error) {
-  //   console.error("Error fetching categories for sitemap:", error)
-  // }
+  // Category pages
+  let categoryPages: MetadataRoute.Sitemap = []
+  try {
+    const categories = await getCategories()
+    categoryPages = categories
+      .filter((cat) => cat.count > 0)
+      .map((cat) => ({
+        url: `${SITE_URL}/blog/categories/${cat.slug}`,
+        lastModified: new Date(),
+        changeFrequency: "weekly" as const,
+        priority: 0.6,
+      }))
+  } catch (error) {
+    console.error("Error fetching categories for sitemap:", error)
+  }
 
-  return [...staticPages, ...blogPosts]
+  return [...staticPages, ...blogPosts, ...categoryPages]
 }
 

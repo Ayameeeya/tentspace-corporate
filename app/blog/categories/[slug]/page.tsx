@@ -35,16 +35,46 @@ export async function generateMetadata({
     }
   }
 
+  const description = category.description || `${category.name}に関する記事一覧です。tent spaceのエンジニアが${category.name}について実践的な技術情報をお届けします。`
+
   return {
     title: `${category.name}の記事一覧`,
-    description: category.description || `${category.name}に関する記事一覧です。`,
+    description,
     openGraph: {
       title: `${category.name}の記事一覧 | tent space Blog`,
-      description: category.description || `${category.name}に関する記事一覧です。`,
+      description,
       url: `${SITE_URL}/blog/categories/${category.slug}`,
+      siteName: "tent space Blog",
+      locale: "ja_JP",
+      type: "website",
+      images: [
+        {
+          url: `${SITE_URL}/logo_gradation_yoko.png`,
+          width: 1200,
+          height: 630,
+          alt: `${category.name}の記事一覧`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${category.name}の記事一覧 | tent space Blog`,
+      description,
+      images: [`${SITE_URL}/logo_gradation_yoko.png`],
     },
     alternates: {
       canonical: `${SITE_URL}/blog/categories/${category.slug}`,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
     },
   }
 }
