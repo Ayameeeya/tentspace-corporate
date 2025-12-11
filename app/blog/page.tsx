@@ -24,9 +24,19 @@ function BlogCard({ post }: { post: WPPost }) {
             <div className="flex items-center gap-2 mb-2">
               {author && (
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-xs font-medium">
-                    {author.name.charAt(0)}
-                  </div>
+                  {author.avatar_urls?.['48'] ? (
+                    <Image
+                      src={author.avatar_urls['48']}
+                      alt={author.name}
+                      width={24}
+                      height={24}
+                      className="rounded-full"
+                    />
+                  ) : (
+                    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-xs font-medium">
+                      {author.name.charAt(0)}
+                    </div>
+                  )}
                   <span className="text-sm text-gray-600">{author.name}</span>
                 </div>
               )}
@@ -136,9 +146,19 @@ function FeaturedCard({ post }: { post: WPPost }) {
             <div className="flex items-center justify-between">
               {author && (
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-xs font-medium">
-                    {author.name.charAt(0)}
-                  </div>
+                  {author.avatar_urls?.['48'] ? (
+                    <Image
+                      src={author.avatar_urls['48']}
+                      alt={author.name}
+                      width={28}
+                      height={28}
+                      className="rounded-full"
+                    />
+                  ) : (
+                    <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-xs font-medium">
+                      {author.name.charAt(0)}
+                    </div>
+                  )}
                   <div className="flex flex-col">
                     <span className="text-sm font-medium text-gray-900">{author.name}</span>
                     <time className="text-xs text-gray-500">

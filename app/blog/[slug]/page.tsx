@@ -289,9 +289,19 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
                 <div className="flex items-center justify-between flex-wrap gap-4">
                   {author && (
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-medium">
-                        {author.name.charAt(0)}
-                      </div>
+                      {author.avatar_urls?.['96'] ? (
+                        <Image
+                          src={author.avatar_urls['96']}
+                          alt={author.name}
+                          width={40}
+                          height={40}
+                          className="rounded-full"
+                        />
+                      ) : (
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-medium">
+                          {author.name.charAt(0)}
+                        </div>
+                      )}
                       <div>
                         <p className="font-medium text-gray-900">{author.name}</p>
                         <div className="flex items-center gap-2 text-sm text-gray-500">
@@ -364,12 +374,28 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
                   {author && (
                     <div className="mt-8 bg-white rounded-xl border border-gray-100 p-6">
                       <div className="flex items-start gap-4">
-                        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-xl font-bold flex-shrink-0">
-                          {author.name.charAt(0)}
-                        </div>
-                        <div>
-                          <p className="font-bold text-gray-900 mb-1">{author.name}</p>
-                          <p className="text-sm text-gray-600">tent space Inc.</p>
+                        {/* Avatar */}
+                        {author.avatar_urls?.['96'] ? (
+                          <Image
+                            src={author.avatar_urls['96']}
+                            alt={author.name}
+                            width={64}
+                            height={64}
+                            className="rounded-full flex-shrink-0"
+                          />
+                        ) : (
+                          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
+                            {author.name.charAt(0)}
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="font-bold text-gray-900 text-lg">{author.name}</p>
+                          <p className="text-sm text-gray-500 mb-2">tent space Inc.</p>
+                          {author.description && (
+                            <p className="text-sm text-gray-600 leading-relaxed">
+                              {author.description}
+                            </p>
+                          )}
                         </div>
                       </div>
                     </div>

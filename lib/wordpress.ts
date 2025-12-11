@@ -60,6 +60,7 @@ export interface WPTerm {
 export interface WPAuthor {
   id: number
   name: string
+  description?: string
   avatar_urls?: {
     24: string
     48: string
