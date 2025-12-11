@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
+import { useSearchParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 import { BlogHeader } from "@/components/blog-header"
@@ -183,13 +184,55 @@ function FeaturedCard({ post }: { post: WPPost }) {
 
 // Main Blog Page Component
 export default function BlogPage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  
   const [posts, setPosts] = useState<WPPost[]>([])
   const [categories, setCategories] = useState<WPCategory[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
+  const [totalPosts, setTotalPosts] = useState(0)
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchInput, setSearchInput] = useState('')
+
+  // Initialize from URL params
+  useEffect(() => {
+    const search = searchParams.get('search')
+    if (search) {
+      setSearchQuery(search)
+      setSearchInput(search)
+    }
+  }, [searchParams])
+
+  // Update URL when search changes
+  const updateURL = useCallback((search: string) => {
+    const params = new URLSearchParams()
+    if (search) {
+      params.set('search', search)
+    }
+    const newURL = search ? `/blog?${params.toString()}` : '/blog'
+    router.push(newURL, { scroll: false })
+  }, [router])
+
+  // Handle search submit
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    setSearchQuery(searchInput)
+    setSelectedCategory(null)
+    setCurrentPage(1)
+    updateURL(searchInput)
+  }
+
+  // Clear search
+  const clearSearch = () => {
+    setSearchInput('')
+    setSearchQuery('')
+    setCurrentPage(1)
+    updateURL('')
+  }
 
   // Fetch categories
   useEffect(() => {
@@ -209,13 +252,15 @@ export default function BlogPage() {
     async function fetchPosts() {
       try {
         setLoading(true)
-        const { posts: fetchedPosts, totalPages: total } = await getPosts({
+        const { posts: fetchedPosts, totalPages: total, total: totalCount } = await getPosts({
           page: currentPage,
           perPage: 12,
           categories: selectedCategory ? [selectedCategory] : undefined,
+          search: searchQuery || undefined,
         })
         setPosts(fetchedPosts)
         setTotalPages(total)
+        setTotalPosts(totalCount)
         setError(null)
       } catch (err) {
         console.error('Failed to fetch posts:', err)
@@ -226,12 +271,12 @@ export default function BlogPage() {
     }
 
     fetchPosts()
-  }, [currentPage, selectedCategory])
+  }, [currentPage, selectedCategory, searchQuery])
 
-  // Reset page when category changes
+  // Reset page when category or search changes
   useEffect(() => {
     setCurrentPage(1)
-  }, [selectedCategory])
+  }, [selectedCategory, searchQuery])
 
   const featuredPosts = posts.slice(0, 2)
   const regularPosts = posts.slice(2)
@@ -256,11 +301,74 @@ export default function BlogPage() {
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
               tent space Blog
             </h1>
-            <p className="text-gray-600 text-lg">
+            <p className="text-gray-600 text-lg mb-6">
               AI開発、テクノロジー、最新の取り組みについて発信しています
             </p>
+
+            {/* Search Box */}
+            <form onSubmit={handleSearch} className="max-w-xl">
+              <div className="relative">
+                <input
+                  type="text"
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  placeholder="記事を検索..."
+                  className="w-full px-4 py-3 pl-12 pr-24 text-gray-900 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                />
+                <svg 
+                  className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                  {searchInput && (
+                    <button
+                      type="button"
+                      onClick={clearSearch}
+                      className="p-1.5 text-gray-400 hover:text-gray-600 transition-colors"
+                      aria-label="検索をクリア"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  )}
+                  <button
+                    type="submit"
+                    className="px-4 py-1.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    検索
+                  </button>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
+
+        {/* Search Results Info */}
+        {searchQuery && (
+          <div className="bg-blue-50 border-b border-blue-100">
+            <div className="max-w-5xl mx-auto px-4 py-3">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-blue-800">
+                  <span className="font-medium">&quot;{searchQuery}&quot;</span> の検索結果: {totalPosts}件
+                </p>
+                <button
+                  onClick={clearSearch}
+                  className="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1 transition-colors"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                  クリア
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Category Tabs */}
         <div className="bg-white border-b border-gray-100 sticky top-16 z-40">

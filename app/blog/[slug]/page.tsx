@@ -6,7 +6,10 @@ import BlogPostClient from "./blog-post-client"
 // Base URL for the site
 const SITE_URL = "https://tentspace.net"
 
-// Generate static params for all blog posts
+// Enable dynamic rendering for fresh data
+export const dynamic = "force-dynamic"
+
+// Generate static params for all blog posts (for prerendering)
 export async function generateStaticParams() {
   try {
     const { posts } = await getPosts({ perPage: 100 })
@@ -57,22 +60,20 @@ export async function generateMetadata({
       publishedTime: post.date,
       modifiedTime: post.modified,
       authors: author ? [author.name] : undefined,
-      images: imageUrl
-        ? [
-            {
-              url: imageUrl,
-              width: 1200,
-              height: 630,
-              alt: plainTitle,
-            },
-          ]
-        : undefined,
+      images: [
+        {
+          url: imageUrl || `${SITE_URL}/logo_gradation_yoko.png`,
+          width: 1200,
+          height: 630,
+          alt: plainTitle,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: plainTitle,
       description: plainExcerpt,
-      images: imageUrl ? [imageUrl] : undefined,
+      images: [imageUrl || `${SITE_URL}/logo_gradation_yoko.png`],
     },
     alternates: {
       canonical: canonicalUrl,
