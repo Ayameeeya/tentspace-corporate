@@ -1,113 +1,100 @@
 "use client"
 
-import { useEffect, useRef, useState, useMemo, use } from "react"
-import { Canvas, useFrame, useThree } from "@react-three/fiber"
-import * as THREE from "three"
-import gsap from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { useEffect, useState, use } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Header } from "@/components/header"
 import { getPostBySlug, getFeaturedImageUrl, formatDate, getReadingTime, type WPPost } from "@/lib/wordpress"
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger)
-}
+// Table of Contents Component
+function TableOfContents({ content }: { content: string }) {
+  const [headings, setHeadings] = useState<{ id: string; text: string; level: number }[]>([])
+  const [activeId, setActiveId] = useState<string>('')
 
-// Infinite Star Field
-function StarField({ scrollProgress }: { scrollProgress: number }) {
-  const pointsRef = useRef<THREE.Points>(null)
-  const count = 8000
+  useEffect(() => {
+    // Extract headings from content
+    const parser = new DOMParser()
+    const doc = parser.parseFromString(content, 'text/html')
+    const elements = doc.querySelectorAll('h2, h3')
+    
+    const extracted = Array.from(elements).map((el, index) => {
+      const id = `heading-${index}`
+      const text = el.textContent || ''
+      const level = el.tagName === 'H2' ? 2 : 3
+      return { id, text, level }
+    })
+    
+    setHeadings(extracted)
+  }, [content])
 
-  const [positions, colors, sizes] = useMemo(() => {
-    const pos = new Float32Array(count * 3)
-    const col = new Float32Array(count * 3)
-    const siz = new Float32Array(count)
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveId(entry.target.id)
+          }
+        })
+      },
+      { rootMargin: '-100px 0px -80% 0px' }
+    )
 
-    for (let i = 0; i < count; i++) {
-      const theta = Math.random() * Math.PI * 2
-      const phi = Math.acos(2 * Math.random() - 1)
-      const r = 30 + Math.random() * 150
+    headings.forEach(({ id }) => {
+      const element = document.getElementById(id)
+      if (element) observer.observe(element)
+    })
 
-      pos[i * 3] = r * Math.sin(phi) * Math.cos(theta)
-      pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta)
-      pos[i * 3 + 2] = r * Math.cos(phi)
+    return () => observer.disconnect()
+  }, [headings])
 
-      const isBlue = Math.random() > 0.75
-      col[i * 3] = isBlue ? 0.4 : 1
-      col[i * 3 + 1] = isBlue ? 0.6 : 1
-      col[i * 3 + 2] = 1
-
-      siz[i] = Math.random() * 1.5 + 0.3
-    }
-    return [pos, col, siz]
-  }, [])
-
-  useFrame((state) => {
-    if (!pointsRef.current) return
-    const t = state.clock.elapsedTime
-
-    pointsRef.current.rotation.y = t * 0.01 + scrollProgress * Math.PI * 0.5
-    pointsRef.current.rotation.x = Math.sin(t * 0.005) * 0.1 + scrollProgress * 0.2
-  })
+  if (headings.length === 0) return null
 
   return (
-    <points ref={pointsRef}>
-      <bufferGeometry>
-        <bufferAttribute attach="attributes-position" count={count} array={positions} itemSize={3} />
-        <bufferAttribute attach="attributes-color" count={count} array={colors} itemSize={3} />
-        <bufferAttribute attach="attributes-size" count={count} array={sizes} itemSize={1} />
-      </bufferGeometry>
-      <pointsMaterial
-        size={0.12}
-        vertexColors
-        transparent
-        opacity={0.7}
-        sizeAttenuation
-        blending={THREE.AdditiveBlending}
-      />
-    </points>
+    <nav className="sticky top-24 p-4 bg-gray-50 rounded-xl">
+      <h3 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
+        </svg>
+        目次
+      </h3>
+      <ul className="space-y-2">
+        {headings.map(({ id, text, level }) => (
+          <li key={id}>
+            <a
+              href={`#${id}`}
+              className={`block text-sm transition-colors ${
+                level === 3 ? 'pl-3' : ''
+              } ${
+                activeId === id
+                  ? 'text-blue-600 font-medium'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              {text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
   )
 }
 
-// Camera Controller
-function CameraController({ scrollProgress }: { scrollProgress: number }) {
-  const { camera } = useThree()
-
-  useFrame((state) => {
-    const t = state.clock.elapsedTime
-
-    camera.position.x = Math.sin(t * 0.15) * 1.5
-    camera.position.y = Math.cos(t * 0.1) * 1 + scrollProgress * 2
-    camera.position.z = 25 - scrollProgress * 8
-
-    camera.lookAt(0, 0, -15)
+// Process content to add IDs to headings
+function processContent(content: string): string {
+  const parser = new DOMParser()
+  const doc = parser.parseFromString(content, 'text/html')
+  const headings = doc.querySelectorAll('h2, h3')
+  
+  headings.forEach((el, index) => {
+    el.id = `heading-${index}`
   })
-
-  return null
-}
-
-// 3D Scene
-function Scene3D({ scrollProgress }: { scrollProgress: number }) {
-  return (
-    <>
-      <color attach="background" args={["#020212"]} />
-      <fog attach="fog" args={["#020212", 40, 180]} />
-
-      <CameraController scrollProgress={scrollProgress} />
-      <StarField scrollProgress={scrollProgress} />
-
-      <ambientLight intensity={0.2} />
-      <pointLight position={[10, 10, 10]} intensity={0.4} color="#60a5fa" />
-    </>
-  )
+  
+  return doc.body.innerHTML
 }
 
 // Main Blog Post Page Component
 export default function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = use(params)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [scrollProgress, setScrollProgress] = useState(0)
   const [post, setPost] = useState<WPPost | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -135,400 +122,234 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
     fetchPost()
   }, [resolvedParams.slug])
 
-  // Scroll progress tracking
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight
-      const progress = Math.min(scrollY / docHeight, 1)
-      setScrollProgress(progress)
-    }
-
-    window.addEventListener("scroll", handleScroll, { passive: true })
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
-
-  // GSAP animations
-  useEffect(() => {
-    if (!post) return
-
-    const ctx = gsap.context(() => {
-      const heroTl = gsap.timeline({ defaults: { ease: "power4.out" } })
-
-      heroTl
-        .from(".post-back", {
-          x: -30,
-          opacity: 0,
-          duration: 0.8,
-          delay: 0.2,
-        })
-        .from(
-          ".post-meta",
-          {
-            y: 30,
-            opacity: 0,
-            duration: 0.8,
-          },
-          "-=0.5",
-        )
-        .from(
-          ".post-title",
-          {
-            y: 60,
-            opacity: 0,
-            duration: 1,
-          },
-          "-=0.5",
-        )
-        .from(
-          ".post-image",
-          {
-            y: 40,
-            opacity: 0,
-            duration: 1,
-          },
-          "-=0.6",
-        )
-        .from(
-          ".post-content",
-          {
-            y: 40,
-            opacity: 0,
-            duration: 0.8,
-          },
-          "-=0.5",
-        )
-    }, containerRef)
-
-    return () => ctx.revert()
-  }, [post])
-
   const imageUrl = post ? getFeaturedImageUrl(post, 'large') : null
   const categories = post?._embedded?.['wp:term']?.[0] || []
+  const author = post?._embedded?.author?.[0]
   const readingTime = post ? getReadingTime(post.content.rendered) : 0
+  const processedContent = post ? processContent(post.content.rendered) : ''
 
   return (
-    <div ref={containerRef} className="relative min-h-screen text-white overflow-x-hidden" style={{ WebkitOverflowScrolling: 'touch' }}>
+    <div className="min-h-screen bg-[#fafafa]">
       <Header />
 
-      {/* 3D Background */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <Canvas camera={{ position: [0, 0, 25], fov: 75 }}>
-          <Scene3D scrollProgress={scrollProgress} />
-        </Canvas>
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10">
+      {/* Main Content */}
+      <main className="pt-20">
         {loading ? (
-          <div className="min-h-screen flex items-center justify-center">
-            <div className="animate-pulse text-center">
-              <div className="h-4 bg-white/10 rounded w-24 mx-auto mb-4" />
-              <div className="h-10 bg-white/10 rounded w-64 mx-auto mb-4" />
-              <div className="h-3 bg-white/10 rounded w-32 mx-auto" />
+          <div className="max-w-3xl mx-auto px-4 py-12">
+            <div className="animate-pulse space-y-6">
+              <div className="h-4 bg-gray-200 rounded w-1/4" />
+              <div className="h-10 bg-gray-200 rounded w-3/4" />
+              <div className="h-4 bg-gray-200 rounded w-1/2" />
+              <div className="aspect-[16/9] bg-gray-200 rounded-xl" />
+              <div className="space-y-3">
+                <div className="h-4 bg-gray-200 rounded w-full" />
+                <div className="h-4 bg-gray-200 rounded w-full" />
+                <div className="h-4 bg-gray-200 rounded w-3/4" />
+              </div>
             </div>
           </div>
         ) : error ? (
-          <div className="min-h-screen flex items-center justify-center">
-            <div className="text-center">
-              <p className="text-white/50 text-lg mb-6">{error}</p>
-              <Link
-                href="/blog"
-                className="inline-flex items-center gap-2 px-6 py-3 border border-blue-500 text-blue-400 hover:bg-blue-500/10 transition-colors font-mono text-sm"
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M19 12H5M12 19l-7-7 7-7" />
-                </svg>
-                ブログ一覧に戻る
-              </Link>
+          <div className="max-w-3xl mx-auto px-4 py-24 text-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-50 flex items-center justify-center">
+              <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
             </div>
+            <p className="text-gray-600 mb-6">{error}</p>
+            <Link
+              href="/blog"
+              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              ブログ一覧へ
+            </Link>
           </div>
         ) : post ? (
           <>
             {/* Article Header */}
-            <article className="pt-24 pb-16 px-6 md:px-12 lg:px-24">
-              <div className="max-w-4xl mx-auto">
-                {/* Back link */}
+            <div className="bg-white border-b border-gray-100">
+              <div className="max-w-3xl mx-auto px-4 py-8 md:py-12">
+                {/* Back Link */}
                 <Link
                   href="/blog"
-                  className="post-back inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors mb-8 group"
+                  className="inline-flex items-center text-sm text-gray-500 hover:text-gray-900 transition-colors mb-6"
                 >
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    className="group-hover:-translate-x-1 transition-transform"
-                  >
-                    <path d="M19 12H5M12 19l-7-7 7-7" />
+                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                   </svg>
-                  <span className="font-mono text-xs">BACK TO BLOG</span>
+                  ブログ一覧
                 </Link>
 
-                {/* Meta */}
-                <div className="post-meta flex flex-wrap items-center gap-3 mb-4">
-                  <time className="font-mono text-blue-400 text-xs md:text-sm">
-                    {formatDate(post.date)}
-                  </time>
-                  <span className="text-white/30 text-xs">•</span>
-                  <span className="font-mono text-white/50 text-xs md:text-sm">
-                    {readingTime} min read
-                  </span>
-                  {categories.length > 0 && (
-                    <>
-                      <span className="text-white/30 text-xs">•</span>
-                      <div className="flex flex-wrap gap-2">
-                        {categories.map((cat) => (
-                          <span
-                            key={cat.id}
-                            className="px-2 py-0.5 text-[10px] md:text-xs font-mono bg-blue-500/20 text-blue-400 uppercase tracking-wider"
-                          >
-                            {cat.name}
-                          </span>
-                        ))}
-                      </div>
-                    </>
-                  )}
-                </div>
-
-                {/* Title */}
-                <h1
-                  className="post-title text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-8 leading-tight"
-                  dangerouslySetInnerHTML={{ __html: post.title.rendered }}
-                />
-
-                {/* Featured Image */}
-                {imageUrl && (
-                  <div className="post-image relative aspect-[16/9] mb-12 border border-white/10 overflow-hidden">
-                    <Image
-                      src={imageUrl}
-                      alt={post.title.rendered}
-                      fill
-                      className="object-cover"
-                      priority
-                    />
-                    {/* Corner decorations */}
-                    <div className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-blue-500" />
-                    <div className="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-blue-500" />
-                    <div className="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-blue-500" />
-                    <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-blue-500" />
+                {/* Categories */}
+                {categories.length > 0 && (
+                  <div className="flex items-center gap-2 mb-4">
+                    {categories.map((cat) => (
+                      <span
+                        key={cat.id}
+                        className="inline-flex items-center px-3 py-1 text-xs font-medium bg-blue-50 text-blue-600 rounded-full"
+                      >
+                        {cat.name}
+                      </span>
+                    ))}
                   </div>
                 )}
 
-                {/* Content */}
-                <div
-                  className="post-content wp-content"
-                  dangerouslySetInnerHTML={{ __html: post.content.rendered }}
+                {/* Title */}
+                <h1
+                  className="text-2xl md:text-4xl font-bold text-gray-900 mb-6 leading-tight"
+                  dangerouslySetInnerHTML={{ __html: post.title.rendered }}
                 />
 
-                {/* Author / Share section */}
-                <div className="mt-16 pt-8 border-t border-white/10">
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div className="flex items-center gap-4">
-                      {post._embedded?.author?.[0] && (
-                        <>
-                          <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">
-                            {post._embedded.author[0].name.charAt(0)}
-                          </div>
-                          <div>
-                            <p className="font-medium">{post._embedded.author[0].name}</p>
-                            <p className="text-white/50 text-sm font-mono">tent space</p>
-                          </div>
-                        </>
-                      )}
+                {/* Author & Meta */}
+                <div className="flex items-center justify-between flex-wrap gap-4">
+                  {author && (
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-medium">
+                        {author.name.charAt(0)}
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900">{author.name}</p>
+                        <div className="flex items-center gap-2 text-sm text-gray-500">
+                          <time>{formatDate(post.date)}</time>
+                          <span>·</span>
+                          <span>{readingTime}分で読める</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-4">
-                      <span className="text-white/50 text-sm font-mono">SHARE:</span>
-                      <a
-                        href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(post.link)}&text=${encodeURIComponent(post.title.rendered)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-2 border border-white/10 hover:border-blue-500 hover:text-blue-400 transition-colors"
-                      >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                        </svg>
-                      </a>
-                    </div>
+                  )}
+
+                  {/* Share buttons */}
+                  <div className="flex items-center gap-2">
+                    <a
+                      href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(post.link)}&text=${encodeURIComponent(post.title.rendered)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
+                      title="Xでシェア"
+                    >
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                      </svg>
+                    </a>
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(post.link)
+                        alert('リンクをコピーしました')
+                      }}
+                      className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
+                      title="リンクをコピー"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                      </svg>
+                    </button>
                   </div>
                 </div>
+              </div>
+            </div>
 
-                {/* Back to blog */}
-                <div className="mt-12 text-center">
-                  <Link
-                    href="/blog"
-                    className="inline-flex items-center gap-3 text-lg font-medium text-blue-400 hover:text-blue-300 transition-colors group"
-                  >
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      className="group-hover:-translate-x-2 transition-transform"
-                    >
-                      <path d="M19 12H5M12 19l-7-7 7-7" />
-                    </svg>
-                    <span>他の記事を読む</span>
-                  </Link>
+            {/* Featured Image */}
+            {imageUrl && (
+              <div className="max-w-4xl mx-auto px-4 -mt-4 md:-mt-6">
+                <div className="relative aspect-[16/9] rounded-xl overflow-hidden shadow-lg">
+                  <Image
+                    src={imageUrl}
+                    alt={post.title.rendered}
+                    fill
+                    className="object-cover"
+                    priority
+                  />
                 </div>
               </div>
-            </article>
+            )}
 
-            {/* Spacer */}
-            <div className="h-32" />
+            {/* Article Content */}
+            <div className="max-w-5xl mx-auto px-4 py-8 md:py-12">
+              <div className="flex gap-8">
+                {/* Main Content */}
+                <article className="flex-1 min-w-0">
+                  <div className="bg-white rounded-xl border border-gray-100 p-6 md:p-10">
+                    <div
+                      className="article-content"
+                      dangerouslySetInnerHTML={{ __html: processedContent }}
+                    />
+                  </div>
 
-            {/* Let's Talk Section */}
-            <LetsTalkSection />
+                  {/* Author Card */}
+                  {author && (
+                    <div className="mt-8 bg-white rounded-xl border border-gray-100 p-6">
+                      <div className="flex items-start gap-4">
+                        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-xl font-bold flex-shrink-0">
+                          {author.name.charAt(0)}
+                        </div>
+                        <div>
+                          <p className="font-bold text-gray-900 mb-1">{author.name}</p>
+                          <p className="text-sm text-gray-600">tent space Inc.</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Back to list */}
+                  <div className="mt-8 text-center">
+                    <Link
+                      href="/blog"
+                      className="inline-flex items-center px-6 py-3 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors"
+                    >
+                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                      </svg>
+                      他の記事を読む
+                    </Link>
+                  </div>
+                </article>
+
+                {/* Sidebar - Table of Contents */}
+                <aside className="hidden lg:block w-64 flex-shrink-0">
+                  <TableOfContents content={post.content.rendered} />
+                </aside>
+              </div>
+            </div>
 
             {/* Footer */}
-            <Footer />
+            <footer className="bg-white border-t border-gray-100">
+              <div className="max-w-5xl mx-auto px-4 py-8">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <Image
+                      src="/logo_black_symbol.png"
+                      alt="tent space"
+                      width={32}
+                      height={32}
+                      className="opacity-60"
+                    />
+                    <span className="text-sm text-gray-500">© 2025 tent space Inc.</span>
+                  </div>
+                  <div className="flex items-center gap-6 text-sm text-gray-500">
+                    <Link href="/about" className="hover:text-gray-900 transition-colors">
+                      About
+                    </Link>
+                    <Link href="/terms" className="hover:text-gray-900 transition-colors">
+                      利用規約
+                    </Link>
+                    <Link href="/privacy" className="hover:text-gray-900 transition-colors">
+                      プライバシー
+                    </Link>
+                    <a 
+                      href="mailto:back-office@tentspace.net" 
+                      className="hover:text-gray-900 transition-colors"
+                    >
+                      お問い合わせ
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </footer>
           </>
         ) : null}
-      </div>
+      </main>
     </div>
   )
 }
-
-// Footer Component
-function Footer() {
-  return (
-    <footer className="relative z-20 px-2 md:px-8 py-1">
-      <div className="flex justify-end">
-        <p className="text-[8px] md:text-[9px] text-white/40">© 2025 tent space Inc. All rights reserved.</p>
-      </div>
-    </footer>
-  )
-}
-
-// Let's Talk Section Component
-function LetsTalkSection() {
-  const sectionRef = useRef<HTMLDivElement>(null)
-  const textRef = useRef<HTMLHeadingElement>(null)
-  const arrowRef = useRef<HTMLAnchorElement>(null)
-
-  useEffect(() => {
-    if (!sectionRef.current) return
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        sectionRef.current,
-        { y: 100, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 90%",
-            end: "top 50%",
-            scrub: 1,
-          },
-        },
-      )
-
-      if (textRef.current) {
-        gsap.fromTo(
-          textRef.current,
-          { x: -100, opacity: 0 },
-          {
-            x: 0,
-            opacity: 1,
-            duration: 1.2,
-            ease: "power4.out",
-            scrollTrigger: {
-              trigger: textRef.current,
-              start: "top 80%",
-              toggleActions: "play none none reverse",
-            },
-          },
-        )
-      }
-
-      if (arrowRef.current) {
-        gsap.to(arrowRef.current, {
-          x: 10,
-          repeat: -1,
-          yoyo: true,
-          duration: 0.8,
-          ease: "power2.inOut",
-        })
-      }
-    }, sectionRef)
-
-    return () => ctx.revert()
-  }, [])
-
-  return (
-    <div ref={sectionRef} className="relative z-20 mx-2 md:mx-8 mb-0">
-      <div className="bg-primary rounded-t-2xl md:rounded-t-3xl px-6 md:px-16 py-8 md:py-16 min-h-[350px] md:min-h-[400px] flex flex-col justify-between">
-        <div className="flex items-center gap-2 md:gap-3 text-primary-foreground/80">
-          <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg bg-primary-foreground/20 flex items-center justify-center">
-            <svg width="12" height="2" viewBox="0 0 16 2" fill="currentColor" className="md:w-4">
-              <rect width="16" height="2" rx="1" />
-            </svg>
-          </div>
-          <span className="text-xs md:text-sm font-medium tracking-wide">Next step</span>
-        </div>
-
-        <div className="flex items-end justify-between mt-8 md:mt-12">
-          <h2
-            ref={textRef}
-            className="text-5xl md:text-8xl lg:text-9xl font-bold text-primary-foreground tracking-tight"
-          >
-            Let's talk
-          </h2>
-          <a
-            href="mailto:back-office@tentspace.net"
-            ref={arrowRef}
-            className="w-12 h-12 md:w-20 md:h-20 rounded-full border-2 border-primary-foreground/30 flex items-center justify-center cursor-pointer hover:bg-primary-foreground/10 transition-colors shrink-0"
-            aria-label="Contact us via email"
-          >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              className="text-primary-foreground md:w-6 md:h-6"
-            >
-              <path d="M7 17L17 7M17 7H7M17 7V17" />
-            </svg>
-          </a>
-        </div>
-
-        <div className="flex flex-col md:flex-row md:items-end justify-between mt-8 md:mt-12 pt-6 md:pt-8 border-t border-primary-foreground/20">
-          <div className="text-primary-foreground/80 space-y-1">
-            <a
-              href="mailto:back-office@tentspace.net"
-              className="text-xs md:text-base font-medium hover:text-primary-foreground transition-colors inline-block"
-            >
-              back-office@tentspace.net
-            </a>
-            <p className="text-[10px] md:text-sm">323 Kadoyama, Ogawa, Hiki District, Saitama 355-0316, Japan</p>
-          </div>
-          <div className="flex items-center gap-3 md:gap-6 mt-4 md:mt-0 text-[10px] md:text-sm text-primary-foreground/60">
-            <Link href="/about" className="hover:text-primary-foreground transition-colors">
-              About Us
-            </Link>
-            <Link href="/blog" className="hover:text-primary-foreground transition-colors">
-              Blog
-            </Link>
-            <Link href="/terms" className="hover:text-primary-foreground transition-colors">
-              Terms
-            </Link>
-            <Link href="/privacy" className="hover:text-primary-foreground transition-colors">
-              Privacy
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
