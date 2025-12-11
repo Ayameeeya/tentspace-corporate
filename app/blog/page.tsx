@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Header } from "@/components/header"
+import { BlogHeader } from "@/components/blog-header"
 import { getPosts, getCategories, getFeaturedImageUrl, stripHtml, formatDate, getReadingTime, type WPPost, type WPCategory } from "@/lib/wordpress"
 
 // Blog Card Component
@@ -238,7 +238,7 @@ export default function BlogPage() {
 
   return (
     <div className="min-h-screen bg-[#fafafa]">
-      <Header />
+      <BlogHeader />
 
       {/* Main Content */}
       <main className="pt-20">
