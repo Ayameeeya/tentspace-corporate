@@ -6,9 +6,10 @@ import Link from "next/link"
 import Image from "next/image"
 import { BlogHeader } from "@/components/blog-header"
 import { getPosts, getCategories, getFeaturedImageUrl, stripHtml, formatDate, getReadingTime, type WPPost, type WPCategory } from "@/lib/wordpress"
+import { fetchLikeCounts, fetchTotalLikes } from "@/lib/blog-likes"
 
 // Blog Card Component
-function BlogCard({ post }: { post: WPPost }) {
+function BlogCard({ post, likes = 0 }: { post: WPPost; likes?: number }) {
   const imageUrl = getFeaturedImageUrl(post, 'medium')
   const excerpt = stripHtml(post.excerpt.rendered)
   const readingTime = getReadingTime(post.content.rendered)
@@ -73,6 +74,18 @@ function BlogCard({ post }: { post: WPPost }) {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
                 {readingTime}分で読める
+              <span className="text-xs text-gray-500 flex items-center gap-1">
+                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 21s-6.75-4.35-6.75-9.75A4.25 4.25 0 0112 7.25a4.25 4.25 0 016.75 4c0 5.4-6.75 9.75-6.75 9.75z" />
+                </svg>
+                {likes}
+              </span>
+              </span>
+              <span className="text-xs text-gray-500 flex items-center gap-1">
+                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 21s-6.75-4.35-6.75-9.75A4.25 4.25 0 0112 7.25a4.25 4.25 0 016.75 4c0 5.4-6.75 9.75-6.75 9.75z" />
+                </svg>
+                {likes}
               </span>
             </div>
           </div>
@@ -95,7 +108,7 @@ function BlogCard({ post }: { post: WPPost }) {
 }
 
 // Featured Card for top posts
-function FeaturedCard({ post }: { post: WPPost }) {
+function FeaturedCard({ post, likes = 0 }: { post: WPPost; likes?: number }) {
   const imageUrl = getFeaturedImageUrl(post, 'large')
   const excerpt = stripHtml(post.excerpt.rendered)
   const readingTime = getReadingTime(post.content.rendered)
@@ -196,6 +209,8 @@ function BlogPageContent() {
   const [totalPosts, setTotalPosts] = useState(0)
   const [searchQuery, setSearchQuery] = useState('')
   const [searchInput, setSearchInput] = useState('')
+  const [likeCounts, setLikeCounts] = useState<Record<string, number>>({})
+  const [totalLikes, setTotalLikes] = useState<number | null>(null)
 
   // Initialize from URL params
   useEffect(() => {
@@ -270,6 +285,29 @@ function BlogPageContent() {
     fetchPosts()
   }, [currentPage, searchQuery])
 
+  // Fetch total likes once
+  useEffect(() => {
+    async function loadTotalLikes() {
+      const total = await fetchTotalLikes()
+      setTotalLikes(total)
+    }
+    loadTotalLikes()
+  }, [])
+
+  // Fetch like counts for current posts
+  useEffect(() => {
+    async function loadLikeCounts() {
+      if (posts.length === 0) {
+        setLikeCounts({})
+        return
+      }
+      const slugs = posts.map((p) => p.slug)
+      const counts = await fetchLikeCounts(slugs)
+      setLikeCounts(counts)
+    }
+    loadLikeCounts()
+  }, [posts])
+
   // Reset page when search changes
   useEffect(() => {
     setCurrentPage(1)
@@ -301,6 +339,15 @@ function BlogPageContent() {
             <p className="text-gray-600 text-lg mb-6">
               AI開発、テクノロジー、最新の取り組みについて発信しています
             </p>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="inline-flex items-center gap-2 text-sm text-gray-700 bg-gray-100 px-3 py-2 rounded-full">
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 21s-6.75-4.35-6.75-9.75A4.25 4.25 0 0112 7.25a4.25 4.25 0 016.75 4c0 5.4-6.75 9.75-6.75 9.75z" />
+                </svg>
+                <span className="font-semibold">総いいね</span>
+                <span className="text-gray-900 font-bold">{totalLikes ?? "–"}</span>
+              </div>
+            </div>
 
             {/* Search Box */}
             <form onSubmit={handleSearch} className="max-w-xl">
@@ -454,7 +501,7 @@ function BlogPageContent() {
               {featuredPosts.length > 0 && currentPage === 1 && !searchQuery && (
                 <div className="grid md:grid-cols-2 gap-6 mb-8">
                   {featuredPosts.map((post) => (
-                    <FeaturedCard key={post.id} post={post} />
+                    <FeaturedCard key={post.id} post={post} likes={likeCounts[post.slug] || 0} />
                   ))}
                 </div>
               )}
@@ -462,7 +509,7 @@ function BlogPageContent() {
               {/* Regular Posts */}
               <div className="bg-white rounded-xl border border-gray-100 px-4">
                 {(currentPage === 1 && !searchQuery ? regularPosts : posts).map((post) => (
-                  <BlogCard key={post.id} post={post} />
+                  <BlogCard key={post.id} post={post} likes={likeCounts[post.slug] || 0} />
                 ))}
               </div>
 
@@ -482,6 +529,7 @@ function BlogPageContent() {
                     {posts.slice(0, 4).map((post) => {
                       const imageUrl = getFeaturedImageUrl(post, 'medium')
                       const postCategories = post._embedded?.['wp:term']?.[0] || []
+                      const likeCount = likeCounts[post.slug] || 0
                       return (
                         <Link
                           key={`recommend-${post.id}`}
@@ -509,8 +557,14 @@ function BlogPageContent() {
                                 className="text-sm font-medium text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors"
                                 dangerouslySetInnerHTML={{ __html: post.title.rendered }}
                               />
-                              <p className="text-xs text-gray-500 mt-1.5">
-                                {formatDate(post.date)}
+                              <p className="text-xs text-gray-500 mt-1.5 flex items-center gap-2">
+                                <span>{formatDate(post.date)}</span>
+                                <span className="flex items-center gap-1 text-gray-500">
+                                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 21s-6.75-4.35-6.75-9.75A4.25 4.25 0 0112 7.25a4.25 4.25 0 016.75 4c0 5.4-6.75 9.75-6.75 9.75z" />
+                                  </svg>
+                                  {likeCount}
+                                </span>
                               </p>
                             </div>
                           </div>
