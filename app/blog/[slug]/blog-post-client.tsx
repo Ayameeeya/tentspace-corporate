@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { BlogHeader } from "@/components/blog-header"
+import { BlogComments } from "@/components/blog-comments"
 import { formatDate, getReadingTime, stripHtml, getFeaturedImageUrl, type WPPost, type WPAuthor, type WPTerm } from "@/lib/wordpress"
 import { addLike, fetchHasLiked, fetchLikeCounts, getClientId } from "@/lib/blog-likes"
 
@@ -421,6 +422,9 @@ export default function BlogPostClient({
                   dangerouslySetInnerHTML={{ __html: processedContent }}
                 />
               </div>
+
+              {/* Comments Section */}
+              <BlogComments postSlug={post.slug} />
 
               {/* Related Posts Section */}
               {relatedPosts.length > 0 && (
