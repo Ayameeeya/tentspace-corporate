@@ -20,6 +20,15 @@ import {
 } from "@/components/ui/alert-dialog"
 import type { User, RealtimeChannel } from "@supabase/supabase-js"
 
+interface Reaction {
+  id: string
+  comment_id: string
+  user_id: string | null
+  anonymous_id: string | null
+  emoji: string
+  created_at: string
+}
+
 interface Comment {
   id: string
   post_slug: string
@@ -32,6 +41,7 @@ interface Comment {
   updated_at: string
   parent_id: string | null
   replies?: Comment[]
+  reactions?: Reaction[]
 }
 
 interface BlogCommentsProps {
@@ -55,7 +65,30 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
   const [page, setPage] = useState(0)
   const [hasMore, setHasMore] = useState(true)
   const [loadingMore, setLoadingMore] = useState(false)
+  const [reactions, setReactions] = useState<Record<string, Reaction[]>>({})
+  const [showEmojiPicker, setShowEmojiPicker] = useState<string | null>(null)
+  const [showTextEmojiPicker, setShowTextEmojiPicker] = useState<string | null>(null)
   const COMMENTS_PER_PAGE = 10
+  const COMMON_EMOJIS = ["👍", "❤️", "😄", "🎉", "🤔", "👏"]
+  const TEXT_EMOJIS = ["😊", "😂", "🥰", "😎", "🤔", "👍", "❤️", "🎉", "🔥", "✨", "💯", "👏"]
+
+  // Close emoji picker when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      
+      if (showEmojiPicker && !target.closest('.emoji-picker-container')) {
+        setShowEmojiPicker(null)
+      }
+      
+      if (showTextEmojiPicker && !target.closest('.text-emoji-picker-container')) {
+        setShowTextEmojiPicker(null)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [showEmojiPicker, showTextEmojiPicker])
 
   // Load user and comments
   useEffect(() => {
@@ -92,8 +125,6 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
           const limit = (currentPage + 1) * COMMENTS_PER_PAGE
           const endIndex = limit // Fetch +1 to check for more
           
-          console.log(`🔄 Realtime event: ${payload.eventType}, reloading pages 0-${currentPage} (items: ${limit}, range: ${offset}-${endIndex})`)
-          
           try {
             // Fetch all top-level comments we need (+1 to check if more exist)
             const { data: topLevelComments, error: topError } = await supabaseAuth
@@ -114,7 +145,6 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
 
             // Check if there are more
             const hasMoreAfterReload = topLevelComments.length > limit
-            console.log(`🔄 Realtime reload: fetched ${topLevelComments.length}, limit ${limit}, hasMore: ${hasMoreAfterReload}`)
             setHasMore(hasMoreAfterReload)
             const commentsToShow = topLevelComments.slice(0, limit)
             const topLevelIds = commentsToShow.map(c => c.id)
@@ -150,6 +180,21 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
             const tree = buildCommentTree([...commentsToShow, ...allReplies])
             const filteredTree = tree.filter(c => topLevelIds.includes(c.id))
             setComments(filteredTree)
+            
+            // Reload reactions for visible comments and their replies
+            const getAllCommentIds = (comments: Comment[]): string[] => {
+              return comments.flatMap(c => {
+                const ids = [c.id]
+                if (c.replies && c.replies.length > 0) {
+                  ids.push(...getAllCommentIds(c.replies))
+                }
+                return ids
+              })
+            }
+            
+            setReactions({})
+            const allIds = getAllCommentIds(filteredTree)
+            await loadReactions(allIds)
           } catch (error) {
             console.error("Error reloading comments:", error)
           }
@@ -157,8 +202,32 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
       )
       .subscribe()
 
+    // Subscribe to reactions changes
+    const reactionsChannel = supabaseAuth
+      .channel(`reactions:${postSlug}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "comment_reactions",
+        },
+        async (payload) => {
+          // Just reload the specific comment's reactions
+          const reaction = payload.new as any
+          const oldReaction = payload.old as any
+          const commentId = reaction?.comment_id || oldReaction?.comment_id
+          
+          if (commentId) {
+            await loadReactions([commentId])
+          }
+        }
+      )
+      .subscribe()
+
     return () => {
       supabaseAuth.removeChannel(channel)
+      supabaseAuth.removeChannel(reactionsChannel)
     }
   }, [postSlug])
 
@@ -172,6 +241,35 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
       }
     } catch (error) {
       console.error("Error loading user:", error)
+    }
+  }
+
+  const loadReactions = async (commentIds: string[]) => {
+    if (commentIds.length === 0) return
+
+    try {
+      const { data, error } = await supabaseAuth
+        .from("comment_reactions")
+        .select("*")
+        .in("comment_id", commentIds)
+
+      if (error) throw error
+
+      const reactionsMap: Record<string, Reaction[]> = {}
+      data?.forEach((reaction) => {
+        if (!reactionsMap[reaction.comment_id]) {
+          reactionsMap[reaction.comment_id] = []
+        }
+        reactionsMap[reaction.comment_id].push(reaction as Reaction)
+      })
+
+      // Merge with existing reactions (keep reactions for other comments)
+      setReactions(prev => ({
+        ...prev,
+        ...reactionsMap
+      }))
+    } catch (error) {
+      console.error("Error loading reactions:", error)
     }
   }
 
@@ -237,6 +335,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
       if (!topLevelComments || topLevelComments.length === 0) {
         if (pageNum === 0) {
           setComments([])
+          setReactions({})
         }
         // Only update hasMore on page 0 or when explicitly requested
         if (pageNum === 0 || resetComments) {
@@ -248,8 +347,6 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
       // Check if there are more comments (we fetched +1)
       const hasMoreComments = topLevelComments.length > COMMENTS_PER_PAGE
       const commentsToShow = hasMoreComments ? topLevelComments.slice(0, COMMENTS_PER_PAGE) : topLevelComments
-      
-      console.log(`📄 Page ${pageNum}: fetched ${topLevelComments.length} comments, showing ${commentsToShow.length}, hasMore: ${hasMoreComments}`)
       
       // Update hasMore state
       setHasMore(hasMoreComments)
@@ -300,10 +397,28 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
       
       if (pageNum === 0 || resetComments) {
         setComments(filteredTree)
+        if (resetComments) {
+          // Reset reactions when explicitly resetting
+          setReactions({})
+        }
       } else {
         // Append new comments to existing ones
         setComments(prev => [...prev, ...filteredTree])
       }
+
+      // Load reactions for these comments and their replies
+      const getAllCommentIds = (comments: Comment[]): string[] => {
+        return comments.flatMap(c => {
+          const ids = [c.id]
+          if (c.replies && c.replies.length > 0) {
+            ids.push(...getAllCommentIds(c.replies))
+          }
+          return ids
+        })
+      }
+      
+      const allIds = getAllCommentIds(filteredTree)
+      await loadReactions(allIds)
     } catch (error) {
       console.error("Error loading comments:", error)
       throw error
@@ -465,6 +580,76 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
     return false
   }
 
+  const toggleReaction = async (commentId: string, emoji: string) => {
+    const clientId = getClientId()
+    const commentReactions = reactions[commentId] || []
+    
+    // Check if user already reacted with this emoji
+    const existingReaction = commentReactions.find(r =>
+      user ? r.user_id === user.id && r.emoji === emoji : r.anonymous_id === clientId && r.emoji === emoji
+    )
+
+    try {
+      if (existingReaction) {
+        // Remove reaction
+        const { error } = await supabaseAuth
+          .from("comment_reactions")
+          .delete()
+          .eq("id", existingReaction.id)
+
+        if (error) throw error
+      } else {
+        // Add reaction
+        const reactionData = user
+          ? { comment_id: commentId, user_id: user.id, emoji }
+          : { comment_id: commentId, anonymous_id: clientId, emoji }
+
+        const { error } = await supabaseAuth
+          .from("comment_reactions")
+          .insert(reactionData)
+
+        if (error) throw error
+      }
+      
+      setShowEmojiPicker(null)
+    } catch (error) {
+      console.error("Error toggling reaction:", error)
+    }
+  }
+
+  const getReactionCounts = (commentId: string) => {
+    const commentReactions = reactions[commentId] || []
+    const counts: Record<string, { count: number; hasReacted: boolean }> = {}
+    const clientId = getClientId()
+
+    commentReactions.forEach(reaction => {
+      if (!counts[reaction.emoji]) {
+        counts[reaction.emoji] = { count: 0, hasReacted: false }
+      }
+      counts[reaction.emoji].count++
+
+      if (user && reaction.user_id === user.id) {
+        counts[reaction.emoji].hasReacted = true
+      } else if (!user && reaction.anonymous_id === clientId) {
+        counts[reaction.emoji].hasReacted = true
+      }
+    })
+
+    return counts
+  }
+
+  const insertEmoji = (emoji: string, target: 'new' | 'reply' | string) => {
+    if (target === 'new') {
+      setNewComment(prev => prev + emoji)
+    } else if (target === 'reply') {
+      setReplyContent(prev => prev + emoji)
+    } else {
+      // Edit mode
+      setEditContent(prev => prev + emoji)
+    }
+    setShowTextEmojiPicker(null)
+  }
+
   const getRelativeTime = (dateString: string) => {
     const now = new Date()
     const past = new Date(dateString)
@@ -504,14 +689,11 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
   const loadMore = async () => {
     if (loadingMore || !hasMore) return
     
-    console.log("📄 Loading more - current page:", page, "hasMore:", hasMore)
     setLoadingMore(true)
     try {
       const nextPage = page + 1
-      console.log("📄 Fetching page:", nextPage)
       await loadComments(nextPage)
       setPage(nextPage)
-      console.log("📄 Page updated to:", nextPage)
     } catch (error) {
       console.error("Error loading more comments:", error)
     } finally {
@@ -526,7 +708,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
     const maxDepth = 5 // Maximum nesting level
 
     return (
-      <div key={comment.id} className={depth > 0 ? "ml-6 mt-2" : ""}>
+      <div key={comment.id} className={`group ${depth > 0 ? "ml-6 mt-1.5" : ""}`}>
         <div className="flex gap-2.5">
           {/* Avatar */}
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-medium overflow-hidden flex-shrink-0">
@@ -566,7 +748,35 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
                   className="text-gray-900 border-gray-200 text-sm"
                 />
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs text-gray-400">Ctrl + Enter で保存</span>
+                  <div className="flex items-center gap-2">
+                    {/* Emoji picker for edit */}
+                    <div className="relative text-emoji-picker-container">
+                      <button
+                        type="button"
+                        onClick={() => setShowTextEmojiPicker(showTextEmojiPicker === comment.id ? null : comment.id)}
+                        className="text-gray-400 hover:text-gray-600 transition-colors"
+                        title="絵文字を追加"
+                      >
+                        <span className="text-base">😊</span>
+                      </button>
+                      
+                      {showTextEmojiPicker === comment.id && (
+                        <div className="absolute left-0 bottom-full mb-1 z-10 bg-white rounded-lg shadow-lg border border-gray-200 p-2 grid grid-cols-6 gap-1 w-max">
+                          {TEXT_EMOJIS.map((emoji) => (
+                            <button
+                              key={emoji}
+                              type="button"
+                              onClick={() => insertEmoji(emoji, comment.id)}
+                              className="w-8 h-8 rounded hover:bg-gray-100 flex items-center justify-center text-lg transition-colors"
+                            >
+                              {emoji}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <span className="text-xs text-gray-400">Ctrl + Enter で保存</span>
+                  </div>
                   <div className="flex gap-1.5">
                     <Button
                       size="sm"
@@ -595,8 +805,8 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
                   {comment.content}
                 </p>
 
-                {/* Action buttons */}
-                <div className="flex items-center gap-2.5 mt-1.5">
+                {/* Action buttons with emoji picker */}
+                <div className="flex items-center gap-2 mt-1">
                   {depth < maxDepth && (
                     <button
                       onClick={() => {
@@ -627,13 +837,61 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
                       </button>
                     </>
                   )}
+                  
+                  {/* Add reaction button - visible on hover or when picker is open */}
+                  <div className={`relative emoji-picker-container transition-opacity ${
+                    showEmojiPicker === comment.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                  }`}>
+                    <button
+                      onClick={() => setShowEmojiPicker(showEmojiPicker === comment.id ? null : comment.id)}
+                      className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600 transition-colors"
+                      title="リアクションを追加"
+                    >
+                      <span className="text-xs">😊</span>
+                    </button>
+                    
+                    {/* Emoji Picker */}
+                    {showEmojiPicker === comment.id && (
+                      <div className="absolute left-0 top-full mt-1 z-10 bg-white rounded-lg shadow-lg border border-gray-200 p-2 flex gap-1">
+                        {COMMON_EMOJIS.map((emoji) => (
+                          <button
+                            key={emoji}
+                            onClick={() => toggleReaction(comment.id, emoji)}
+                            className="w-8 h-8 rounded hover:bg-gray-100 flex items-center justify-center text-lg transition-colors"
+                          >
+                            {emoji}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
+
+                {/* Reactions - only show if there are reactions */}
+                {Object.keys(getReactionCounts(comment.id)).length > 0 && (
+                  <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                    {Object.entries(getReactionCounts(comment.id)).map(([emoji, { count, hasReacted }]) => (
+                      <button
+                        key={emoji}
+                        onClick={() => toggleReaction(comment.id, emoji)}
+                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs transition-colors ${
+                          hasReacted
+                            ? "bg-blue-100 text-blue-700 border border-blue-300"
+                            : "bg-gray-100 text-gray-600 border border-gray-200 hover:bg-gray-200"
+                        }`}
+                      >
+                        <span>{emoji}</span>
+                        <span className="font-medium">{count}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </>
             )}
 
             {/* Reply form */}
             {isReplying && (
-              <div className="mt-2 space-y-1.5">
+              <div className="mt-1.5 space-y-1.5">
                 <Textarea
                   placeholder="返信を入力..."
                   value={replyContent}
@@ -644,7 +902,35 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
                   autoFocus
                 />
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs text-gray-400">Ctrl + Enter で送信</span>
+                  <div className="flex items-center gap-2">
+                    {/* Emoji picker for reply */}
+                    <div className="relative text-emoji-picker-container">
+                      <button
+                        type="button"
+                        onClick={() => setShowTextEmojiPicker(showTextEmojiPicker === 'reply' ? null : 'reply')}
+                        className="text-gray-400 hover:text-gray-600 transition-colors"
+                        title="絵文字を追加"
+                      >
+                        <span className="text-base">😊</span>
+                      </button>
+                      
+                      {showTextEmojiPicker === 'reply' && (
+                        <div className="absolute left-0 bottom-full mb-1 z-10 bg-white rounded-lg shadow-lg border border-gray-200 p-2 grid grid-cols-6 gap-1 w-max">
+                          {TEXT_EMOJIS.map((emoji) => (
+                            <button
+                              key={emoji}
+                              type="button"
+                              onClick={() => insertEmoji(emoji, 'reply')}
+                              className="w-8 h-8 rounded hover:bg-gray-100 flex items-center justify-center text-lg transition-colors"
+                            >
+                              {emoji}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <span className="text-xs text-gray-400">Ctrl + Enter で送信</span>
+                  </div>
                   <div className="flex gap-1.5">
                     <Button
                       size="sm"
@@ -672,7 +958,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
 
             {/* Render nested replies */}
             {comment.replies && comment.replies.length > 0 && (
-              <div className="mt-2">
+              <div className="mt-1.5">
                 {comment.replies.map((reply) => renderComment(reply, depth + 1))}
               </div>
             )}
@@ -734,6 +1020,34 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
                     ログインして名前を表示
                   </button>
                 )}
+                
+                {/* Emoji picker for text */}
+                <div className="relative text-emoji-picker-container">
+                  <button
+                    type="button"
+                    onClick={() => setShowTextEmojiPicker(showTextEmojiPicker === 'new' ? null : 'new')}
+                    className="text-gray-400 hover:text-gray-600 transition-colors"
+                    title="絵文字を追加"
+                  >
+                    <span className="text-base">😊</span>
+                  </button>
+                  
+                  {showTextEmojiPicker === 'new' && (
+                    <div className="absolute left-0 bottom-full mb-1 z-10 bg-white rounded-lg shadow-lg border border-gray-200 p-2 grid grid-cols-6 gap-1 w-max">
+                      {TEXT_EMOJIS.map((emoji) => (
+                        <button
+                          key={emoji}
+                          type="button"
+                          onClick={() => insertEmoji(emoji, 'new')}
+                          className="w-8 h-8 rounded hover:bg-gray-100 flex items-center justify-center text-lg transition-colors"
+                        >
+                          {emoji}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                
                 <span className="text-xs text-gray-400">
                   Ctrl + Enter で送信
                 </span>
