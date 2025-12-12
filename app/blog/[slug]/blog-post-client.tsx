@@ -5,6 +5,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { BlogHeader } from "@/components/blog-header"
 import { formatDate, getReadingTime, stripHtml, getFeaturedImageUrl, type WPPost, type WPAuthor, type WPTerm } from "@/lib/wordpress"
+import { addLike, fetchHasLiked, fetchLikeCounts, getClientId } from "@/lib/blog-likes"
 
 // Heading structure type
 interface HeadingSection {
@@ -193,6 +194,71 @@ function ShareButtons({ url, title }: { url: string; title: string }) {
   )
 }
 
+// Like button (Supabase)
+function BlogLikeButton({ slug }: { slug: string }) {
+  const [count, setCount] = useState<number | null>(null)
+  const [hasLiked, setHasLiked] = useState(false)
+  const [pending, setPending] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const clientId = getClientId()
+    if (!clientId) return
+
+    async function load() {
+      try {
+        const counts = await fetchLikeCounts([slug])
+        setCount(counts[slug] || 0)
+        const liked = await fetchHasLiked(slug, clientId)
+        setHasLiked(liked)
+      } catch (err) {
+        console.error("Failed to fetch likes", err)
+      }
+    }
+    load()
+  }, [slug])
+
+  const handleLike = async () => {
+    if (pending || hasLiked) return
+    const clientId = getClientId()
+    if (!clientId) return
+
+    setPending(true)
+    setError(null)
+    try {
+      const { inserted } = await addLike(slug, clientId, typeof navigator !== "undefined" ? navigator.userAgent : undefined)
+      setHasLiked(true)
+      if (inserted) {
+        setCount((c) => (c ?? 0) + 1)
+      }
+    } catch (err) {
+      console.error("Failed to like post", err)
+      setError("いいねに失敗しました")
+    } finally {
+      setPending(false)
+    }
+  }
+
+  return (
+    <div className="flex flex-col items-start gap-1">
+      <button
+        type="button"
+        onClick={handleLike}
+        disabled={pending || hasLiked}
+        className={`inline-flex items-center gap-2 px-3 py-2 rounded-full border text-sm transition-colors ${hasLiked ? 'bg-red-50 border-red-200 text-red-600' : 'border-gray-200 text-gray-700 hover:bg-gray-50'}`}
+        aria-pressed={hasLiked}
+      >
+        <svg className="w-4 h-4" viewBox="0 0 24 24" fill={hasLiked ? 'currentColor' : 'none'} stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 21s-6.75-4.35-6.75-9.75A4.25 4.25 0 0112 7.25a4.25 4.25 0 016.75 4c0 5.4-6.75 9.75-6.75 9.75z" />
+        </svg>
+        <span className="font-medium">{count ?? '–'}</span>
+        <span className="text-xs text-gray-500">{hasLiked ? 'ありがとう！' : 'いいね'}</span>
+      </button>
+      {error && <span className="text-xs text-red-500">{error}</span>}
+    </div>
+  )
+}
+
 // Process content to add IDs to headings (server-safe)
 function processContent(content: string): string {
   // Add IDs to headings using regex (works on both server and client)
@@ -319,7 +385,10 @@ export default function BlogPostClient({
                 </address>
               )}
 
-              <ShareButtons url={canonicalUrl} title={plainTitle} />
+              <div className="flex items-center gap-3">
+                <BlogLikeButton slug={post.slug} />
+                <ShareButtons url={canonicalUrl} title={plainTitle} />
+              </div>
             </div>
           </div>
         </header>
@@ -654,4 +723,3 @@ export default function BlogPostClient({
     </div>
   )
 }
-
