@@ -7,11 +7,20 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error("Missing Supabase client environment variables")
 }
 
+// Client for anonymous operations (likes, etc.) - no auth persistence
 export const supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
-    // Do not persist auth state in browser storage for this corporate site
     autoRefreshToken: false,
     persistSession: false,
     detectSessionInUrl: false,
+  },
+})
+
+// Client for authenticated operations - with auth persistence
+export const supabaseAuth = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true,
   },
 })
