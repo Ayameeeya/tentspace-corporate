@@ -100,12 +100,12 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#fafafa]">
+      <div className="min-h-screen bg-background">
         <BlogHeader />
         <main className="pt-24 pb-12">
           <div className="animate-pulse space-y-4 max-w-6xl mx-auto px-4">
-            <div className="h-8 bg-gray-200 rounded w-1/4"></div>
-            <div className="h-64 bg-gray-200 rounded"></div>
+            <div className="h-8 bg-muted rounded w-1/4"></div>
+            <div className="h-64 bg-muted rounded"></div>
           </div>
         </main>
       </div>
@@ -120,15 +120,15 @@ export default function ProfilePage() {
   const avatarUrl = profile?.avatar_url
 
   return (
-    <div className="min-h-screen bg-[#fafafa]">
+    <div className="min-h-screen bg-background">
       <BlogHeader />
 
       <main className="pt-24 pb-12 max-w-6xl mx-auto px-4">
         {/* Breadcrumb */}
         <nav className="mb-6" aria-label="パンくずリスト">
-          <ol className="flex items-center gap-2 text-sm text-gray-500">
+          <ol className="flex items-center gap-2 text-sm text-muted-foreground">
             <li>
-              <Link href="/" className="hover:text-gray-900 transition-colors">
+              <Link href="/" className="hover:text-foreground transition-colors">
                 ホーム
               </Link>
             </li>
@@ -138,7 +138,7 @@ export default function ProfilePage() {
               </svg>
             </li>
             <li>
-              <Link href="/blog" className="hover:text-gray-900 transition-colors">
+              <Link href="/blog" className="hover:text-foreground transition-colors">
                 ブログ
               </Link>
             </li>
@@ -147,7 +147,7 @@ export default function ProfilePage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </li>
-            <li className="text-gray-900">ダッシュボード</li>
+            <li className="text-foreground">ダッシュボード</li>
           </ol>
         </nav>
 
@@ -168,12 +168,12 @@ export default function ProfilePage() {
               )}
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">{displayName}</h1>
-              <p className="text-gray-500">{user.email}</p>
+              <h1 className="text-3xl font-bold text-foreground">{displayName}</h1>
+              <p className="text-muted-foreground">{user.email}</p>
             </div>
           </div>
           <Link href="/settings/account">
-            <button className="px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
+            <button className="px-4 py-2 text-sm text-foreground border border-border rounded-md hover:bg-muted transition-colors">
               アカウント設定
             </button>
           </Link>
@@ -184,17 +184,17 @@ export default function ProfilePage() {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Activity Card */}
-            <div className="bg-white rounded-xl border border-gray-100 p-6">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">最近のアクティビティ</h2>
+            <div className="bg-card rounded-xl border border-border p-6">
+              <h2 className="text-lg font-bold text-foreground mb-4">最近のアクティビティ</h2>
               {activities.length > 0 ? (
                 <div className="space-y-3">
                   {activities.map((activity) => (
-                    <div key={activity.id} className="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+                    <div key={activity.id} className="flex items-start gap-3 p-3 hover:bg-muted rounded-lg transition-colors">
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                        activity.type === 'like' ? 'bg-red-100 text-red-600' :
-                        activity.type === 'comment' ? 'bg-blue-100 text-blue-600' :
-                        activity.type === 'favorite' ? 'bg-yellow-100 text-yellow-600' :
-                        'bg-green-100 text-green-600'
+                        activity.type === 'like' ? 'bg-red-500/10 text-red-500' :
+                        activity.type === 'comment' ? 'bg-blue-500/10 text-blue-500' :
+                        activity.type === 'favorite' ? 'bg-yellow-500/10 text-yellow-500' :
+                        'bg-green-500/10 text-green-500'
                       }`}>
                         {activity.type === 'like' && (
                           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -218,33 +218,33 @@ export default function ProfilePage() {
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm text-gray-900">{formatActivityMessage(activity)}</p>
-                        <p className="text-xs text-gray-500 mt-1">{formatDate(activity.created_at)}</p>
+                        <p className="text-sm text-foreground">{formatActivityMessage(activity)}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{formatDate(activity.created_at)}</p>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
                 <div className="text-center py-12">
-                  <svg className="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-16 h-16 mx-auto text-muted-foreground/30 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                   </svg>
-                  <p className="text-gray-500">アクティビティはまだありません</p>
-                  <p className="text-sm text-gray-400 mt-1">記事にいいねをしたり、お気に入りに追加すると表示されます</p>
+                  <p className="text-muted-foreground">アクティビティはまだありません</p>
+                  <p className="text-sm text-muted-foreground/70 mt-1">記事にいいねをしたり、お気に入りに追加すると表示されます</p>
                 </div>
               )}
             </div>
 
             {/* Followers' Posts */}
-            <div className="bg-white rounded-xl border border-gray-100 p-6">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">フォロー中のユーザーの新着記事</h2>
+            <div className="bg-card rounded-xl border border-border p-6">
+              <h2 className="text-lg font-bold text-foreground mb-4">フォロー中のユーザーの新着記事</h2>
               <div className="text-center py-12">
-                <svg className="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-16 h-16 mx-auto text-muted-foreground/30 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
-                <p className="text-gray-500">新着記事はありません</p>
-                <p className="text-sm text-gray-400 mt-1">他のユーザーをフォローすると、新着記事が表示されます</p>
-                <Link href="/blog" className="inline-block mt-4 text-sm text-blue-600 hover:underline">
+                <p className="text-muted-foreground">新着記事はありません</p>
+                <p className="text-sm text-muted-foreground/70 mt-1">他のユーザーをフォローすると、新着記事が表示されます</p>
+                <Link href="/blog" className="inline-block mt-4 text-sm text-blue-500 hover:underline">
                   ブログを見る →
                 </Link>
               </div>
@@ -254,18 +254,18 @@ export default function ProfilePage() {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Notifications */}
-            <div className="bg-white rounded-xl border border-gray-100 p-6">
+            <div className="bg-card rounded-xl border border-border p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold text-gray-900">通知</h2>
+                <h2 className="text-lg font-bold text-foreground">通知</h2>
                 <div className="flex items-center gap-2">
                   {unreadCount > 0 && (
                     <>
-                      <span className="px-2 py-0.5 text-xs font-medium bg-red-100 text-red-600 rounded-full">
+                      <span className="px-2 py-0.5 text-xs font-medium bg-red-500/10 text-red-500 rounded-full">
                         {unreadCount}件
                       </span>
                       <button 
                         onClick={handleMarkAllRead}
-                        className="text-xs text-blue-600 hover:underline"
+                        className="text-xs text-blue-500 hover:underline"
                       >
                         すべて既読
                       </button>
@@ -280,41 +280,41 @@ export default function ProfilePage() {
                       key={notification.id}
                       href={notification.link || '#'}
                       className={`block p-3 rounded-lg transition-colors ${
-                        notification.is_read ? 'hover:bg-gray-50' : 'bg-blue-50 hover:bg-blue-100'
+                        notification.is_read ? 'hover:bg-muted' : 'bg-blue-500/10 hover:bg-blue-500/20'
                       }`}
                     >
-                      <p className={`text-sm ${notification.is_read ? 'text-gray-700' : 'text-gray-900 font-medium'}`}>
+                      <p className={`text-sm ${notification.is_read ? 'text-foreground/80' : 'text-foreground font-medium'}`}>
                         {notification.title}
                       </p>
-                      <p className="text-xs text-gray-500 mt-1">{formatDate(notification.created_at)}</p>
+                      <p className="text-xs text-muted-foreground mt-1">{formatDate(notification.created_at)}</p>
                     </Link>
                   ))}
-                  <Link href="/settings/notifications" className="block text-center text-sm text-blue-600 hover:underline pt-2">
+                  <Link href="/settings/notifications" className="block text-center text-sm text-blue-500 hover:underline pt-2">
                     すべての通知を見る
                   </Link>
                 </div>
               ) : (
                 <div className="text-center py-8">
-                  <svg className="w-12 h-12 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-12 h-12 mx-auto text-muted-foreground/30 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                   </svg>
-                  <p className="text-sm text-gray-500">通知はありません</p>
+                  <p className="text-sm text-muted-foreground">通知はありません</p>
                 </div>
               )}
             </div>
 
             {/* Quick Stats */}
-            <div className="bg-white rounded-xl border border-gray-100 p-6">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">統計</h2>
+            <div className="bg-card rounded-xl border border-border p-6">
+              <h2 className="text-lg font-bold text-foreground mb-4">統計</h2>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                     </svg>
-                    <span className="text-sm text-gray-700">お気に入り</span>
+                    <span className="text-sm text-foreground/80">お気に入り</span>
                   </div>
-                  <Link href="/blog/favorites" className="text-sm font-medium text-blue-600 hover:underline">
+                  <Link href="/blog/favorites" className="text-sm font-medium text-blue-500 hover:underline">
                     {stats.favoritesCount}件
                   </Link>
                 </div>
@@ -323,39 +323,39 @@ export default function ProfilePage() {
                     <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
-                    <span className="text-sm text-gray-700">フォロワー</span>
+                    <span className="text-sm text-foreground/80">フォロワー</span>
                   </div>
-                  <span className="text-sm font-medium text-gray-900">{stats.followersCount}</span>
+                  <span className="text-sm font-medium text-foreground">{stats.followersCount}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <svg className="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                     </svg>
-                    <span className="text-sm text-gray-700">フォロー中</span>
+                    <span className="text-sm text-foreground/80">フォロー中</span>
                   </div>
-                  <span className="text-sm font-medium text-gray-900">{stats.followingCount}</span>
+                  <span className="text-sm font-medium text-foreground">{stats.followingCount}</span>
                 </div>
               </div>
             </div>
 
             {/* Quick Links */}
-            <div className="bg-white rounded-xl border border-gray-100 p-6">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">クイックリンク</h2>
+            <div className="bg-card rounded-xl border border-border p-6">
+              <h2 className="text-lg font-bold text-foreground mb-4">クイックリンク</h2>
               <div className="space-y-2">
-                <Link href="/blog" className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md transition-colors">
+                <Link href="/blog" className="block px-3 py-2 text-sm text-foreground/80 hover:bg-muted rounded-md transition-colors">
                   ブログ記事を見る
                 </Link>
-                <Link href="/blog/favorites" className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md transition-colors">
+                <Link href="/blog/favorites" className="block px-3 py-2 text-sm text-foreground/80 hover:bg-muted rounded-md transition-colors">
                   お気に入り
                 </Link>
-                <Link href="/settings/account" className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md transition-colors">
+                <Link href="/settings/account" className="block px-3 py-2 text-sm text-foreground/80 hover:bg-muted rounded-md transition-colors">
                   アカウント設定
                 </Link>
-                <Link href="/settings/security" className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md transition-colors">
+                <Link href="/settings/security" className="block px-3 py-2 text-sm text-foreground/80 hover:bg-muted rounded-md transition-colors">
                   セキュリティ設定
                 </Link>
-                <Link href="/settings/privacy" className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md transition-colors">
+                <Link href="/settings/privacy" className="block px-3 py-2 text-sm text-foreground/80 hover:bg-muted rounded-md transition-colors">
                   プライバシー設定
                 </Link>
               </div>

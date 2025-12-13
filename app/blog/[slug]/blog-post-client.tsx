@@ -103,8 +103,8 @@ function TableOfContents({ content }: { content: string }) {
   if (sections.length === 0) return null
 
   return (
-    <nav className="sticky top-24 p-4 bg-gray-50 rounded-xl max-h-[calc(100vh-120px)] overflow-y-auto" aria-label="目次">
-      <h3 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+    <nav className="sticky top-24 p-4 bg-muted rounded-xl max-h-[calc(100vh-120px)] overflow-y-auto" aria-label="目次">
+      <h3 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
         </svg>
@@ -120,7 +120,7 @@ function TableOfContents({ content }: { content: string }) {
               <a
                 href={`#${section.id}`}
                 className={`flex items-center gap-1 py-1.5 text-sm transition-colors ${
-                  isActive ? 'text-blue-600 font-medium' : 'text-gray-700 hover:text-gray-900'
+                  isActive ? 'text-blue-500 font-medium' : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 {section.children.length > 0 && (
@@ -144,7 +144,7 @@ function TableOfContents({ content }: { content: string }) {
                       <a
                         href={`#${child.id}`}
                         className={`block py-1 pl-7 text-xs transition-colors ${
-                          activeId === child.id ? 'text-blue-600 font-medium' : 'text-gray-500 hover:text-gray-700'
+                          activeId === child.id ? 'text-blue-500 font-medium' : 'text-muted-foreground hover:text-foreground'
                         }`}
                       >
                         {child.text}
@@ -174,7 +174,7 @@ function ShareButtons({ url, title }: { url: string; title: string }) {
         href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
+        className="w-9 h-9 flex items-center justify-center rounded-full bg-muted text-muted-foreground hover:bg-accent transition-colors"
         title="Xでシェア"
         aria-label="Xでシェア"
       >
@@ -184,7 +184,7 @@ function ShareButtons({ url, title }: { url: string; title: string }) {
       </a>
       <button
         onClick={handleCopy}
-        className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
+        className="w-9 h-9 flex items-center justify-center rounded-full bg-muted text-muted-foreground hover:bg-accent transition-colors"
         title="リンクをコピー"
         aria-label="リンクをコピー"
       >
@@ -247,14 +247,14 @@ function BlogLikeButton({ slug }: { slug: string }) {
         type="button"
         onClick={handleLike}
         disabled={pending || hasLiked}
-        className={`inline-flex items-center gap-2 px-3 py-2 rounded-full border text-sm transition-colors ${hasLiked ? 'bg-red-50 border-red-200 text-red-600' : 'border-gray-200 text-gray-700 hover:bg-gray-50'}`}
+        className={`inline-flex items-center gap-2 px-3 py-2 rounded-full border text-sm transition-colors ${hasLiked ? 'bg-red-500/10 border-red-500/20 text-red-500' : 'border-border text-muted-foreground hover:bg-muted'}`}
         aria-pressed={hasLiked}
       >
         <svg className="w-4 h-4" viewBox="0 0 24 24" fill={hasLiked ? 'currentColor' : 'none'} stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 21s-6.75-4.35-6.75-9.75A4.25 4.25 0 0112 7.25a4.25 4.25 0 016.75 4c0 5.4-6.75 9.75-6.75 9.75z" />
         </svg>
         <span className="font-medium">{count ?? '–'}</span>
-        <span className="text-xs text-gray-500">{hasLiked ? 'ありがとう！' : 'いいね'}</span>
+        <span className="text-xs text-muted-foreground">{hasLiked ? 'ありがとう！' : 'いいね'}</span>
       </button>
       {error && <span className="text-xs text-red-500">{error}</span>}
     </div>
@@ -300,15 +300,15 @@ export default function BlogPostClient({
   const plainTitle = stripHtml(post.title.rendered)
 
   return (
-    <div className="min-h-screen bg-[#fafafa]">
+    <div className="min-h-screen bg-background">
       <BlogHeader />
 
       <main className="pt-20">
         {/* Breadcrumb Navigation */}
         <nav className="max-w-5xl mx-auto px-4 py-4" aria-label="パンくずリスト">
-          <ol className="flex items-center gap-2 text-sm text-gray-500" itemScope itemType="https://schema.org/BreadcrumbList">
+          <ol className="flex items-center gap-2 text-sm text-muted-foreground" itemScope itemType="https://schema.org/BreadcrumbList">
             <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
-              <Link href="/" className="hover:text-gray-900 transition-colors" itemProp="item">
+              <Link href="/" className="hover:text-foreground transition-colors" itemProp="item">
                 <span itemProp="name">ホーム</span>
               </Link>
               <meta itemProp="position" content="1" />
@@ -319,7 +319,7 @@ export default function BlogPostClient({
               </svg>
             </li>
             <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
-              <Link href="/blog" className="hover:text-gray-900 transition-colors" itemProp="item">
+              <Link href="/blog" className="hover:text-foreground transition-colors" itemProp="item">
                 <span itemProp="name">ブログ</span>
               </Link>
               <meta itemProp="position" content="2" />
@@ -329,7 +329,7 @@ export default function BlogPostClient({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </li>
-            <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem" className="text-gray-900 truncate max-w-xs">
+            <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem" className="text-foreground truncate max-w-xs">
               <span itemProp="name">{plainTitle}</span>
               <meta itemProp="position" content="3" />
             </li>
@@ -337,7 +337,7 @@ export default function BlogPostClient({
         </nav>
 
         {/* Article Header */}
-        <header className="bg-white border-b border-gray-100">
+        <header className="bg-card border-b border-border">
           <div className="max-w-3xl mx-auto px-4 py-8 md:py-12">
             {/* Categories */}
             {categories.length > 0 && (
@@ -345,7 +345,7 @@ export default function BlogPostClient({
                 {categories.map((cat) => (
                   <span
                     key={cat.id}
-                    className="inline-flex items-center px-3 py-1 text-xs font-medium bg-blue-50 text-blue-600 rounded-full"
+                    className="inline-flex items-center px-3 py-1 text-xs font-medium bg-blue-500/10 text-blue-500 rounded-full"
                   >
                     {cat.name}
                   </span>
@@ -355,7 +355,7 @@ export default function BlogPostClient({
 
             {/* Title */}
             <h1
-              className="text-2xl md:text-4xl font-bold text-gray-900 mb-6 leading-tight"
+              className="text-2xl md:text-4xl font-bold text-foreground mb-6 leading-tight"
               dangerouslySetInnerHTML={{ __html: post.title.rendered }}
             />
 
@@ -377,8 +377,8 @@ export default function BlogPostClient({
                     </div>
                   )}
                   <div>
-                    <p className="font-medium text-gray-900" rel="author">{author.name}</p>
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
+                    <p className="font-medium text-foreground" rel="author">{author.name}</p>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <time dateTime={post.date}>{formatDate(post.date)}</time>
                       <span aria-hidden="true">·</span>
                       <span>{readingTime}分で読める</span>
@@ -417,7 +417,7 @@ export default function BlogPostClient({
           <div className="flex gap-8">
             {/* Main Content */}
             <article className="flex-1 min-w-0" itemScope itemType="https://schema.org/Article">
-              <div className="bg-white rounded-xl border border-gray-100 p-6 md:p-10">
+              <div className="bg-card rounded-xl border border-border p-6 md:p-10">
                 <div
                   className="article-content"
                   itemProp="articleBody"
@@ -430,16 +430,16 @@ export default function BlogPostClient({
 
               {/* Related Posts Section */}
               {relatedPosts.length > 0 && (
-                <aside className="mt-8 bg-white rounded-xl border border-gray-100 p-6" aria-label="関連記事">
+                <aside className="mt-8 bg-card rounded-xl border border-border p-6" aria-label="関連記事">
                   <div className="flex items-center gap-2 mb-5">
                     <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center">
                       <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
                       </svg>
                     </div>
-                    <h3 className="font-bold text-gray-900">他の記事もどうぞ</h3>
+                    <h3 className="font-bold text-foreground">他の記事もどうぞ</h3>
                     {categories[0] && (
-                      <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
+                      <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded">
                         {categories[0].name}カテゴリより
                       </span>
                     )}
@@ -454,9 +454,9 @@ export default function BlogPostClient({
                           href={`/blog/${relatedPost.slug}`}
                           className="group block"
                         >
-                          <div className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-md transition-all border border-gray-100 hover:border-gray-200">
+                          <div className="bg-muted rounded-lg overflow-hidden hover:shadow-md transition-all border border-border hover:border-primary/30">
                             {relatedImageUrl && (
-                              <div className="relative aspect-[16/9] bg-gray-200">
+                              <div className="relative aspect-[16/9] bg-muted">
                                 <Image
                                   src={relatedImageUrl}
                                   alt={stripHtml(relatedPost.title.rendered)}
@@ -467,15 +467,15 @@ export default function BlogPostClient({
                             )}
                             <div className="p-3">
                               {relatedCategories[0] && (
-                                <span className="inline-block px-2 py-0.5 text-[10px] font-medium bg-blue-50 text-blue-600 rounded mb-1.5">
+                                <span className="inline-block px-2 py-0.5 text-[10px] font-medium bg-blue-500/10 text-blue-500 rounded mb-1.5">
                                   {relatedCategories[0].name}
                                 </span>
                               )}
                               <h4 
-                                className="text-sm font-medium text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors"
+                                className="text-sm font-medium text-foreground line-clamp-2 group-hover:text-blue-500 transition-colors"
                                 dangerouslySetInnerHTML={{ __html: relatedPost.title.rendered }}
                               />
-                              <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
+                              <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
                                 <time>{formatDate(relatedPost.date)}</time>
                                 <span>·</span>
                                 <span>{getReadingTime(relatedPost.content.rendered)}分</span>
@@ -491,7 +491,7 @@ export default function BlogPostClient({
 
               {/* Author Card */}
               {author && (
-                <aside className="mt-8 bg-white rounded-xl border border-gray-100 p-6" aria-label="著者情報">
+                <aside className="mt-8 bg-card rounded-xl border border-border p-6" aria-label="著者情報">
                   <div className="flex items-start gap-4">
                     {author.avatar_urls?.['96'] ? (
                       <Image
@@ -507,10 +507,10 @@ export default function BlogPostClient({
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
-                      <p className="font-bold text-gray-900 text-lg">{author.name}</p>
-                      <p className="text-sm text-gray-500 mb-2">tent space Inc.</p>
+                      <p className="font-bold text-foreground text-lg">{author.name}</p>
+                      <p className="text-sm text-muted-foreground mb-2">tent space Inc.</p>
                       {author.description && (
-                        <p className="text-sm text-gray-600 leading-relaxed">
+                        <p className="text-sm text-muted-foreground leading-relaxed">
                           {author.description}
                         </p>
                       )}
@@ -520,8 +520,8 @@ export default function BlogPostClient({
               )}
 
               {/* Share CTA Section */}
-              <aside className="mt-8 bg-white rounded-xl border border-gray-100 p-6 md:p-8" aria-label="記事をシェア">
-                <h3 className="text-center font-bold text-gray-900 mb-6">
+              <aside className="mt-8 bg-card rounded-xl border border-border p-6 md:p-8" aria-label="記事をシェア">
+                <h3 className="text-center font-bold text-foreground mb-6">
                   📢 記事をシェアする
                 </h3>
                 <div className="flex flex-wrap justify-center gap-3">
@@ -674,7 +674,7 @@ export default function BlogPostClient({
               <nav className="mt-8 text-center" aria-label="記事一覧へ戻る">
                 <Link
                   href="/blog"
-                  className="inline-flex items-center px-6 py-3 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors"
+                  className="inline-flex items-center px-6 py-3 bg-primary text-primary-foreground text-sm font-medium rounded-lg hover:bg-primary/90 transition-colors"
                 >
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -692,7 +692,7 @@ export default function BlogPostClient({
         </div>
 
         {/* Footer */}
-        <footer className="bg-white border-t border-gray-100">
+        <footer className="bg-card border-t border-border">
           <div className="max-w-5xl mx-auto px-4 py-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="flex items-center gap-4">
@@ -701,23 +701,23 @@ export default function BlogPostClient({
                   alt="tent space"
                   width={32}
                   height={32}
-                  className="opacity-60"
+                  className="opacity-60 dark:invert"
                 />
-                <span className="text-sm text-gray-500">© 2025 tent space Inc.</span>
+                <span className="text-sm text-muted-foreground">© 2025 tent space Inc.</span>
               </div>
-              <nav className="flex items-center gap-6 text-sm text-gray-500" aria-label="フッターナビゲーション">
-                <Link href="/about" className="hover:text-gray-900 transition-colors">
+              <nav className="flex items-center gap-6 text-sm text-muted-foreground" aria-label="フッターナビゲーション">
+                <Link href="/about" className="hover:text-foreground transition-colors">
                   About
                 </Link>
-                <Link href="/terms" className="hover:text-gray-900 transition-colors">
+                <Link href="/terms" className="hover:text-foreground transition-colors">
                   利用規約
                 </Link>
-                <Link href="/privacy" className="hover:text-gray-900 transition-colors">
+                <Link href="/privacy" className="hover:text-foreground transition-colors">
                   プライバシー
                 </Link>
                 <a 
                   href="mailto:back-office@tentspace.net" 
-                  className="hover:text-gray-900 transition-colors"
+                  className="hover:text-foreground transition-colors"
                 >
                   お問い合わせ
                 </a>

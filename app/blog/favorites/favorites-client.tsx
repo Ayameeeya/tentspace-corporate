@@ -128,11 +128,11 @@ export default function FavoritesClient() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#fafafa]">
+      <div className="min-h-screen bg-background">
         <BlogHeader />
         <main className="pt-20">
           <div className="max-w-5xl mx-auto px-4 py-12 flex items-center justify-center">
-            <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+            <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
           </div>
         </main>
       </div>
@@ -141,18 +141,18 @@ export default function FavoritesClient() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-[#fafafa]">
+      <div className="min-h-screen bg-background">
         <BlogHeader />
         <main className="pt-20">
           <div className="max-w-5xl mx-auto px-4 py-12">
-            <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Heart className="w-8 h-8 text-gray-400" />
+            <div className="bg-card rounded-xl border border-border p-12 text-center">
+              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                <Heart className="w-8 h-8 text-muted-foreground" />
               </div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              <h1 className="text-2xl font-bold text-foreground mb-2">
                 お気に入り機能を使ってみませんか？
               </h1>
-              <p className="text-gray-600 mb-6">
+              <p className="text-muted-foreground mb-6">
                 ログインすると、お気に入りの記事を保存して後で簡単にアクセスできます。
               </p>
               <button
@@ -171,17 +171,17 @@ export default function FavoritesClient() {
   }
 
   return (
-    <div className="min-h-screen bg-[#fafafa]">
+    <div className="min-h-screen bg-background">
       <BlogHeader />
       <main className="pt-20">
         <div className="max-w-5xl mx-auto px-4 py-12">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2 flex items-center gap-2">
+            <h1 className="text-3xl font-bold text-foreground mb-2 flex items-center gap-2">
               <Heart className="w-8 h-8 text-red-500 fill-current" />
               お気に入り記事
             </h1>
-            <p className="text-gray-600">
+            <p className="text-muted-foreground">
               {favorites.length > 0
                 ? `${favorites.length}件の記事をお気に入りに登録しています`
                 : "まだお気に入りに登録された記事がありません"}
@@ -191,20 +191,20 @@ export default function FavoritesClient() {
           {/* Loading */}
           {loadingPosts && (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+              <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
             </div>
           )}
 
           {/* Empty State */}
           {!loadingPosts && favorites.length === 0 && (
-            <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Heart className="w-8 h-8 text-gray-400" />
+            <div className="bg-card rounded-xl border border-border p-12 text-center">
+              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                <Heart className="w-8 h-8 text-muted-foreground" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900 mb-2">
+              <h2 className="text-xl font-bold text-foreground mb-2">
                 お気に入りの記事がありません
               </h2>
-              <p className="text-gray-600 mb-6">
+              <p className="text-muted-foreground mb-6">
                 気になる記事を見つけたら、ハートアイコンをクリックしてお気に入りに追加しましょう。
               </p>
               <Link
@@ -227,7 +227,7 @@ export default function FavoritesClient() {
                 return (
                   <article
                     key={post.id}
-                    className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow group"
+                    className="bg-card rounded-xl border border-border overflow-hidden hover:shadow-lg transition-shadow group"
                   >
                     {/* Featured Image */}
                     {imageUrl && (
@@ -247,24 +247,24 @@ export default function FavoritesClient() {
                     <div className="p-5">
                       {/* Title */}
                       <Link href={`/blog/${post.slug}`}>
-                        <h2 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                        <h2 className="text-lg font-bold text-foreground mb-2 line-clamp-2 group-hover:text-blue-500 transition-colors">
                           {plainTitle}
                         </h2>
                       </Link>
 
                       {/* Excerpt */}
-                      <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                      <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
                         {plainExcerpt}
                       </p>
 
                       {/* Meta */}
                       <div className="flex items-center justify-between">
-                        <time className="text-xs text-gray-500">
+                        <time className="text-xs text-muted-foreground">
                           {formatDate(post.date)}
                         </time>
                         <button
                           onClick={() => handleRemoveFavorite(post.slug)}
-                          className="flex items-center gap-1 text-xs text-red-600 hover:text-red-700 transition-colors"
+                          className="flex items-center gap-1 text-xs text-red-500 hover:text-red-600 transition-colors"
                         >
                           <Heart className="w-4 h-4 fill-current" />
                           <span>削除</span>

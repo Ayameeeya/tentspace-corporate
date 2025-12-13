@@ -240,8 +240,8 @@ export default function AccountSettingsPage() {
     return (
       <div className="max-w-4xl">
         <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-gray-200 rounded w-1/3"></div>
-          <div className="h-64 bg-gray-200 rounded"></div>
+          <div className="h-8 bg-muted rounded w-1/3"></div>
+          <div className="h-64 bg-muted rounded"></div>
         </div>
       </div>
     )
@@ -253,27 +253,27 @@ export default function AccountSettingsPage() {
 
   return (
     <div className="max-w-4xl">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">アカウント</h1>
+      <h1 className="text-3xl font-bold text-foreground mb-8">アカウント</h1>
 
       <form onSubmit={handleSave} className="space-y-6">
         {message && (
           <div className={`rounded-lg p-3 text-sm ${
             message.type === "success" 
-              ? "bg-green-50 text-green-800" 
-              : "bg-red-50 text-red-600"
+              ? "bg-green-500/10 text-green-500" 
+              : "bg-red-500/10 text-red-500"
           }`}>
             {message.text}
           </div>
         )}
 
         {/* Avatar Upload Section */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">アバター画像</h2>
+        <div className="bg-card rounded-lg border border-border p-6">
+          <h2 className="text-lg font-semibold text-foreground mb-4">アバター画像</h2>
           <div 
             className={`relative border-2 border-dashed rounded-lg p-6 transition-colors ${
               isDragging 
-                ? "border-blue-500 bg-blue-50" 
-                : "border-gray-300 bg-gray-50"
+                ? "border-blue-500 bg-blue-500/10" 
+                : "border-border bg-muted"
             } ${uploadingAvatar ? "opacity-50 pointer-events-none" : ""}`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
@@ -303,10 +303,10 @@ export default function AccountSettingsPage() {
               </div>
 
               <div className="text-center">
-                <p className="text-sm text-gray-700 font-medium">
+                <p className="text-sm text-foreground font-medium">
                   {isDragging ? "ここにドロップ" : "画像をドラッグ＆ドロップ"}
                 </p>
-                <p className="text-xs text-gray-500 mt-1">または</p>
+                <p className="text-xs text-muted-foreground mt-1">または</p>
               </div>
 
               <div className="flex gap-2">
@@ -330,7 +330,7 @@ export default function AccountSettingsPage() {
                     size="sm"
                     onClick={handleRemoveAvatar}
                     disabled={uploadingAvatar}
-                    className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+                    className="text-red-500 hover:text-red-600 hover:bg-red-500/10 border-red-500/30"
                   >
                     削除
                   </Button>
@@ -338,56 +338,54 @@ export default function AccountSettingsPage() {
               </div>
             </div>
           </div>
-          <p className="text-xs text-gray-500 mt-2">
+          <p className="text-xs text-muted-foreground mt-2">
             JPG、PNG、GIF形式の画像（最大2MB）
           </p>
         </div>
 
         {/* Profile Information */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-4">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">プロフィール情報</h2>
+        <div className="bg-card rounded-lg border border-border p-6 space-y-4">
+          <h2 className="text-lg font-semibold text-foreground mb-4">プロフィール情報</h2>
           
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-gray-700">メールアドレス</Label>
+            <Label htmlFor="email">メールアドレス</Label>
             <Input
               id="email"
               type="email"
               value={user.email || ""}
               disabled
-              className="bg-gray-50 text-gray-600 border-gray-200"
+              className="bg-muted text-muted-foreground border-border"
             />
-            <p className="text-xs text-gray-500">メールアドレスは変更できません</p>
+            <p className="text-xs text-muted-foreground">メールアドレスは変更できません</p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="displayName" className="text-gray-700">表示名</Label>
+            <Label htmlFor="displayName">表示名</Label>
             <Input
               id="displayName"
               type="text"
               placeholder="ニックネーム"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              className="text-gray-900 border-gray-200 placeholder:text-gray-400"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="bio" className="text-gray-700">自己紹介</Label>
+            <Label htmlFor="bio">自己紹介</Label>
             <Textarea
               id="bio"
               placeholder="自己紹介を入力してください"
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               rows={4}
-              className="text-gray-900 border-gray-200 placeholder:text-gray-400"
             />
           </div>
 
-          <div className="flex items-center justify-between pt-4 border-t">
+          <div className="flex items-center justify-between pt-4 border-t border-border">
             <Button
               type="button"
               variant="ghost"
-              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+              className="text-red-500 hover:text-red-600 hover:bg-red-500/10"
               onClick={handleSignOut}
             >
               ログアウト
@@ -403,20 +401,20 @@ export default function AccountSettingsPage() {
         </div>
 
         {/* Account Info */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">アカウント情報</h2>
+        <div className="bg-card rounded-lg border border-border p-6">
+          <h2 className="text-lg font-semibold text-foreground mb-4">アカウント情報</h2>
           <dl className="space-y-3 text-sm">
             <div className="flex justify-between">
-              <dt className="text-gray-500">アカウント作成日</dt>
-              <dd className="text-gray-900">
+              <dt className="text-muted-foreground">アカウント作成日</dt>
+              <dd className="text-foreground">
                 {profile?.created_at 
                   ? new Date(profile.created_at).toLocaleDateString("ja-JP")
                   : "-"}
               </dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-gray-500">最終更新日</dt>
-              <dd className="text-gray-900">
+              <dt className="text-muted-foreground">最終更新日</dt>
+              <dd className="text-foreground">
                 {profile?.updated_at 
                   ? new Date(profile.updated_at).toLocaleDateString("ja-JP")
                   : "-"}
@@ -426,12 +424,12 @@ export default function AccountSettingsPage() {
         </div>
 
         {/* Danger Zone */}
-        <div className="bg-white rounded-lg border border-red-200 p-6">
-          <h2 className="text-lg font-semibold text-red-600 mb-4">危険な操作</h2>
+        <div className="bg-card rounded-lg border border-red-500/30 p-6">
+          <h2 className="text-lg font-semibold text-red-500 mb-4">危険な操作</h2>
           <div className="space-y-4">
             <div>
-              <h3 className="text-sm font-medium text-gray-900 mb-2">アカウントを削除</h3>
-              <p className="text-sm text-gray-600 mb-4">
+              <h3 className="text-sm font-medium text-foreground mb-2">アカウントを削除</h3>
+              <p className="text-sm text-muted-foreground mb-4">
                 アカウントを削除すると、すべてのデータが完全に削除されます。この操作は取り消せません。
               </p>
               <Button
@@ -450,11 +448,11 @@ export default function AccountSettingsPage() {
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <AlertDialogContent className="bg-white">
+        <AlertDialogContent className="bg-card">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-gray-900">本当にアカウントを削除しますか？</AlertDialogTitle>
+            <AlertDialogTitle className="text-foreground">本当にアカウントを削除しますか？</AlertDialogTitle>
             <AlertDialogDescription asChild>
-              <div className="text-gray-600">
+              <div className="text-muted-foreground">
                 <p className="text-sm">この操作は取り消せません。アカウントを削除すると、以下のデータがすべて完全に削除されます：</p>
                 <ul className="list-disc list-inside mt-2 space-y-1 text-sm">
                   <li>プロフィール情報</li>
@@ -467,7 +465,7 @@ export default function AccountSettingsPage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleting} className="text-gray-700 border-gray-300">
+            <AlertDialogCancel disabled={deleting}>
               キャンセル
             </AlertDialogCancel>
             <AlertDialogAction
