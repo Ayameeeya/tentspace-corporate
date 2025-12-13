@@ -258,3 +258,42 @@ export async function deleteAvatar(avatarUrl: string): Promise<void> {
   }
 }
 
+// Change password
+export async function changePassword(
+  currentPassword: string,
+  newPassword: string
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    // First, verify current password by re-authenticating
+    const { data: { user } } = await supabaseAuth.auth.getUser()
+    if (!user || !user.email) {
+      return { success: false, error: "ユーザー情報を取得できません" }
+    }
+
+    // Re-authenticate with current password
+    const { error: signInError } = await supabaseAuth.auth.signInWithPassword({
+      email: user.email,
+      password: currentPassword,
+    })
+
+    if (signInError) {
+      return { success: false, error: "現在のパスワードが正しくありません" }
+    }
+
+    // Update password
+    const { error: updateError } = await supabaseAuth.auth.updateUser({
+      password: newPassword,
+    })
+
+    if (updateError) {
+      console.error("Error updating password:", updateError)
+      return { success: false, error: "パスワードの更新に失敗しました" }
+    }
+
+    return { success: true }
+  } catch (error) {
+    console.error("Error in changePassword:", error)
+    return { success: false, error: "エラーが発生しました" }
+  }
+}
+
