@@ -20,6 +20,7 @@ export function BlogHeader() {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [signingOut, setSigningOut] = useState(false)
 
   useEffect(() => {
     // Initial load
@@ -83,9 +84,16 @@ export function BlogHeader() {
   }
 
   const handleSignOut = async () => {
-    await signOut()
-    setUser(null)
-    setProfile(null)
+    setSigningOut(true)
+    try {
+      await signOut()
+      setUser(null)
+      setProfile(null)
+      window.location.href = "/blog"
+    } catch (error) {
+      console.error("Error signing out:", error)
+      setSigningOut(false)
+    }
   }
 
   const displayName = profile?.display_name || user?.email?.split("@")[0] || ""
@@ -155,7 +163,7 @@ export function BlogHeader() {
                       </div>
                     </button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuContent align="end" className="w-48 bg-white border-gray-200">
                     <div className="px-2 py-1.5">
                       <p className="text-sm font-medium text-gray-900 truncate">
                         {displayName}
@@ -164,9 +172,9 @@ export function BlogHeader() {
                         {user.email}
                       </p>
                     </div>
-                    <DropdownMenuSeparator />
+                    <DropdownMenuSeparator className="bg-gray-200" />
                     <DropdownMenuItem asChild>
-                      <Link href="/profile" className="cursor-pointer">
+                      <Link href="/profile" className="cursor-pointer text-gray-700 hover:bg-gray-50">
                         <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
@@ -174,22 +182,35 @@ export function BlogHeader() {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link href="/blog/favorites" className="cursor-pointer">
+                      <Link href="/blog/favorites" className="cursor-pointer text-gray-700 hover:bg-gray-50">
                         <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                         </svg>
                         お気に入り
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuSeparator />
+                    <DropdownMenuSeparator className="bg-gray-200" />
                     <DropdownMenuItem 
                       onClick={handleSignOut}
-                      className="text-red-600 cursor-pointer focus:text-red-600 focus:bg-red-50"
+                      disabled={signingOut}
+                      className="text-red-600 cursor-pointer focus:text-red-600 focus:bg-red-50 hover:bg-red-50"
                     >
-                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                      </svg>
-                      ログアウト
+                      {signingOut ? (
+                        <>
+                          <svg className="w-4 h-4 mr-2 animate-spin" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                          </svg>
+                          ログアウト中...
+                        </>
+                      ) : (
+                        <>
+                          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                          </svg>
+                          ログアウト
+                        </>
+                      )}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -209,7 +230,7 @@ export function BlogHeader() {
       <AuthModal 
         isOpen={showAuthModal} 
         onClose={() => setShowAuthModal(false)}
-        onSuccess={loadUser}
+        onSuccess={() => window.location.reload()}
       />
     </>
   )
