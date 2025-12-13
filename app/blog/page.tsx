@@ -20,7 +20,7 @@ function BlogCard({ post, likes = 0 }: { post: WPPost; likes?: number }) {
   return (
     <article className="group">
       <Link href={`/blog/${post.slug}`} className="block">
-        <div className="flex gap-4 py-5 border-b border-gray-100 hover:bg-gray-50/50 transition-colors -mx-4 px-4 rounded-lg">
+        <div className="flex gap-4 py-5 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors -mx-4 px-4 rounded-lg">
           {/* Content */}
           <div className="flex-1 min-w-0">
             {/* Author & Date */}
@@ -40,23 +40,23 @@ function BlogCard({ post, likes = 0 }: { post: WPPost; likes?: number }) {
                       {author.name.charAt(0)}
                     </div>
                   )}
-                  <span className="text-sm text-gray-600">{author.name}</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">{author.name}</span>
                 </div>
               )}
-              <span className="text-gray-300">·</span>
-              <time className="text-sm text-gray-500">
+              <span className="text-gray-300 dark:text-gray-600">·</span>
+              <time className="text-sm text-gray-500 dark:text-gray-400">
                 {formatDate(post.date)}
               </time>
             </div>
 
             {/* Title */}
             <h2
-              className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors"
+              className="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
               dangerouslySetInnerHTML={{ __html: post.title.rendered }}
             />
 
             {/* Excerpt */}
-            <p className="text-gray-600 text-sm line-clamp-2 mb-3">
+            <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-2 mb-3">
               {excerpt}
             </p>
 
@@ -65,24 +65,24 @@ function BlogCard({ post, likes = 0 }: { post: WPPost; likes?: number }) {
               {categories.slice(0, 2).map((cat) => (
                 <span
                   key={cat.id}
-                  className="inline-flex items-center px-2.5 py-0.5 text-xs font-medium bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200 transition-colors"
+                  className="inline-flex items-center px-2.5 py-0.5 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                 >
                   {cat.name}
                 </span>
               ))}
-              <span className="text-xs text-gray-400 flex items-center gap-1">
+              <span className="text-xs text-gray-400 dark:text-gray-500 flex items-center gap-1">
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
                 {readingTime}分で読める
-              <span className="text-xs text-gray-500 flex items-center gap-1">
+              <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
                 <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 21s-6.75-4.35-6.75-9.75A4.25 4.25 0 0112 7.25a4.25 4.25 0 016.75 4c0 5.4-6.75 9.75-6.75 9.75z" />
                 </svg>
                 {likes}
               </span>
               </span>
-              <span className="text-xs text-gray-500 flex items-center gap-1">
+              <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
                 <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 21s-6.75-4.35-6.75-9.75A4.25 4.25 0 0112 7.25a4.25 4.25 0 016.75 4c0 5.4-6.75 9.75-6.75 9.75z" />
                 </svg>
@@ -93,7 +93,7 @@ function BlogCard({ post, likes = 0 }: { post: WPPost; likes?: number }) {
 
           {/* Thumbnail */}
           {imageUrl && (
-            <div className="relative w-24 h-24 md:w-32 md:h-24 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
+            <div className="relative w-24 h-24 md:w-32 md:h-24 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700">
               <Image
                 src={imageUrl}
                 alt={post.title.rendered}
@@ -318,13 +318,13 @@ function BlogPageContent() {
   const regularPosts = posts.slice(2)
 
   return (
-    <div className="min-h-screen bg-[#fafafa]">
+    <div className="min-h-screen bg-[#fafafa] dark:bg-gray-900">
       <BlogHeader />
 
       {/* Main Content */}
       <main className="pt-20">
         {/* Hero Section */}
-        <div className="bg-white border-b border-gray-100">
+        <div className="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
           <div className="max-w-5xl mx-auto px-4 py-12 md:py-16">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
@@ -332,21 +332,21 @@ function BlogPageContent() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
                 </svg>
               </div>
-              <span className="text-sm font-medium text-gray-500">Tech Blog</span>
+              <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Tech Blog</span>
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3">
               tent space Blog
             </h1>
-            <p className="text-gray-600 text-lg mb-6">
+            <p className="text-gray-600 dark:text-gray-300 text-lg mb-6">
               AI開発、テクノロジー、最新の取り組みについて発信しています
             </p>
             <div className="flex items-center gap-3 mb-4">
-              <div className="inline-flex items-center gap-2 text-sm text-gray-700 bg-gray-100 px-3 py-2 rounded-full">
+              <div className="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 px-3 py-2 rounded-full">
                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 21s-6.75-4.35-6.75-9.75A4.25 4.25 0 0112 7.25a4.25 4.25 0 016.75 4c0 5.4-6.75 9.75-6.75 9.75z" />
                 </svg>
                 <span className="font-semibold">総いいね</span>
-                <span className="text-gray-900 font-bold">{totalLikes ?? "–"}</span>
+                <span className="text-gray-900 dark:text-white font-bold">{totalLikes ?? "–"}</span>
               </div>
             </div>
 
@@ -358,7 +358,7 @@ function BlogPageContent() {
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
                   placeholder="記事を検索..."
-                  className="w-full px-4 py-3 pl-12 pr-24 text-gray-900 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 pl-12 pr-24 text-gray-900 dark:text-white bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500"
                 />
                 <svg 
                   className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" 
