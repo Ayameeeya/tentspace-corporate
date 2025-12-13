@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 import { BlogHeader } from "@/components/blog-header"
+import { BlogCarousel } from "@/components/blog-carousel"
 import { getPosts, getCategories, getFeaturedImageUrl, stripHtml, formatDate, getReadingTime, type WPPost, type WPCategory } from "@/lib/wordpress"
 import { fetchLikeCounts, fetchTotalLikes } from "@/lib/blog-likes"
 
@@ -525,53 +526,7 @@ function BlogPageContent() {
                     <h2 className="text-lg font-bold text-gray-900">こちらもおすすめ</h2>
                   </div>
                   
-                  <div className="flex gap-4 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
-                    {posts.slice(0, 4).map((post) => {
-                      const imageUrl = getFeaturedImageUrl(post, 'medium')
-                      const postCategories = post._embedded?.['wp:term']?.[0] || []
-                      const likeCount = likeCounts[post.slug] || 0
-                      return (
-                        <Link
-                          key={`recommend-${post.id}`}
-                          href={`/blog/${post.slug}`}
-                          className="flex-shrink-0 w-64 group"
-                        >
-                          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-md hover:border-gray-300 transition-all">
-                            {imageUrl && (
-                              <div className="relative aspect-[16/9] bg-gray-100">
-                                <Image
-                                  src={imageUrl}
-                                  alt={stripHtml(post.title.rendered)}
-                                  fill
-                                  className="object-cover"
-                                />
-                              </div>
-                            )}
-                            <div className="p-3">
-                              {postCategories[0] && (
-                                <span className="inline-block px-2 py-0.5 text-[10px] font-medium bg-blue-50 text-blue-600 rounded mb-1.5">
-                                  {postCategories[0].name}
-                                </span>
-                              )}
-                              <h3 
-                                className="text-sm font-medium text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors"
-                                dangerouslySetInnerHTML={{ __html: post.title.rendered }}
-                              />
-                              <p className="text-xs text-gray-500 mt-1.5 flex items-center gap-2">
-                                <span>{formatDate(post.date)}</span>
-                                <span className="flex items-center gap-1 text-gray-500">
-                                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 21s-6.75-4.35-6.75-9.75A4.25 4.25 0 0112 7.25a4.25 4.25 0 016.75 4c0 5.4-6.75 9.75-6.75 9.75z" />
-                                  </svg>
-                                  {likeCount}
-                                </span>
-                              </p>
-                            </div>
-                          </div>
-                        </Link>
-                      )
-                    })}
-                  </div>
+                  <BlogCarousel posts={posts} likeCounts={likeCounts} />
                 </aside>
               )}
 
