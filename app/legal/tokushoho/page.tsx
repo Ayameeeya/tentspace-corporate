@@ -299,6 +299,15 @@ export default function TokushohoPage() {
                   <p className="text-slate-900 text-sm">〒355-0316<br />埼玉県比企郡小川町大字角山323</p>
                 </div>
                 <div>
+                  <p className="text-xs text-slate-500 mb-1 uppercase tracking-wide">電話番号</p>
+                  <a
+                    href="tel:07085229335"
+                    className="text-slate-900 hover:text-blue-600 transition-colors"
+                  >
+                    070-8522-9335
+                  </a>
+                </div>
+                <div>
                   <p className="text-xs text-slate-500 mb-1 uppercase tracking-wide">メールアドレス</p>
                   <a
                     href="mailto:back-office@tentspace.net"
@@ -308,6 +317,9 @@ export default function TokushohoPage() {
                   </a>
                 </div>
               </div>
+              <p className="text-sm text-slate-500 mt-4">
+                ※お問い合わせは原則メールにて承っております
+              </p>
             </section>
           </CardContent>
         </Card>
