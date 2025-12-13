@@ -745,7 +745,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
                   onChange={(e) => setEditContent(e.target.value)}
                   onKeyDown={(e) => handleEditKeyDown(e, comment.id)}
                   rows={2}
-                  className="text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-sm"
+                  className="text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-background border-gray-200 dark:border-border text-sm"
                 />
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
@@ -761,7 +761,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
                       </button>
                       
                       {showTextEmojiPicker === comment.id && (
-                        <div className="absolute left-0 bottom-full mb-1 z-10 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-2 grid grid-cols-6 gap-1 w-max">
+                        <div className="absolute left-0 bottom-full mb-1 z-10 bg-white dark:bg-background rounded-lg shadow-lg border border-gray-200 dark:border-border p-2 grid grid-cols-6 gap-1 w-max">
                           {TEXT_EMOJIS.map((emoji) => (
                             <button
                               key={emoji}
@@ -852,7 +852,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
                     
                     {/* Emoji Picker */}
                     {showEmojiPicker === comment.id && (
-                      <div className="absolute left-0 top-full mt-1 z-10 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-2 flex gap-1">
+                      <div className="absolute left-0 top-full mt-1 z-10 bg-white dark:bg-background rounded-lg shadow-lg border border-gray-200 dark:border-border p-2 flex gap-1">
                         {COMMON_EMOJIS.map((emoji) => (
                           <button
                             key={emoji}
@@ -877,7 +877,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
                         className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs transition-colors ${
                           hasReacted
                             ? "bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-700"
-                            : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600"
+                            : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-border hover:bg-gray-200 dark:hover:bg-gray-600"
                         }`}
                       >
                         <span>{emoji}</span>
@@ -898,7 +898,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
                   onChange={(e) => setReplyContent(e.target.value)}
                   onKeyDown={(e) => handleReplyKeyDown(e, comment.id)}
                   rows={2}
-                  className="text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 text-sm"
+                  className="text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-background border-gray-200 dark:border-border placeholder:text-gray-400 dark:placeholder:text-gray-500 text-sm"
                   autoFocus
                 />
                 <div className="flex items-center justify-between gap-2">
@@ -915,7 +915,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
                       </button>
                       
                       {showTextEmojiPicker === 'reply' && (
-                        <div className="absolute left-0 bottom-full mb-1 z-10 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-2 grid grid-cols-6 gap-1 w-max">
+                        <div className="absolute left-0 bottom-full mb-1 z-10 bg-white dark:bg-background rounded-lg shadow-lg border border-gray-200 dark:border-border p-2 grid grid-cols-6 gap-1 w-max">
                           {TEXT_EMOJIS.map((emoji) => (
                             <button
                               key={emoji}
@@ -969,7 +969,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
   }
 
   return (
-    <aside className="mt-8 bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-5" aria-label="コメント">
+    <aside className="mt-8 bg-white dark:bg-background rounded-xl border border-gray-100 dark:border-border p-5" aria-label="コメント">
       <div className="flex items-center gap-2 mb-4">
         <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center">
           <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1007,7 +1007,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
               onChange={(e) => setNewComment(e.target.value)}
               onKeyDown={handleKeyDown}
               rows={2}
-              className="text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 resize-none text-sm"
+              className="text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-background border-gray-200 dark:border-border placeholder:text-gray-400 dark:placeholder:text-gray-500 resize-none text-sm"
             />
             <div className="flex items-center justify-between mt-1.5">
               <div className="flex items-center gap-2">
@@ -1033,7 +1033,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
                   </button>
                   
                   {showTextEmojiPicker === 'new' && (
-                    <div className="absolute left-0 bottom-full mb-1 z-10 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-2 grid grid-cols-6 gap-1 w-max">
+                    <div className="absolute left-0 bottom-full mb-1 z-10 bg-white dark:bg-background rounded-lg shadow-lg border border-gray-200 dark:border-border p-2 grid grid-cols-6 gap-1 w-max">
                       {TEXT_EMOJIS.map((emoji) => (
                         <button
                           key={emoji}
@@ -1114,7 +1114,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
       />
 
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
+        <AlertDialogContent className="bg-white dark:bg-background border-gray-200 dark:border-border">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-gray-900 dark:text-gray-100">コメントを削除しますか？</AlertDialogTitle>
             <AlertDialogDescription className="text-gray-600 dark:text-gray-400">
@@ -1122,7 +1122,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100">
+            <AlertDialogCancel className="bg-white dark:bg-background border-gray-300 dark:border-border text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100">
               キャンセル
             </AlertDialogCancel>
             <AlertDialogAction
