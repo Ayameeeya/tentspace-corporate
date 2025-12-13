@@ -4,6 +4,7 @@ import { Inter, Geist_Mono, Orbitron } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import Script from "next/script"
 import { CookieConsent } from "@/components/cookie-consent"
+import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css"
 
 const GA_MEASUREMENT_ID = "G-1XCFVFP5DX"
@@ -33,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="ja">
+    <html lang="ja" suppressHydrationWarning>
       <head>
         {/* Google Tag Consent Mode v2 - Default denied for EEA compliance */}
         <Script id="gtag-consent-default" strategy="beforeInteractive">
@@ -67,9 +68,16 @@ export default function RootLayout({
         </Script>
       </head>
       <body className="font-sans antialiased">
-        {children}
-        <Analytics />
-        <CookieConsent />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={false}
+          disableTransitionOnChange
+        >
+          {children}
+          <Analytics />
+          <CookieConsent />
+        </ThemeProvider>
       </body>
     </html>
   )

@@ -30,11 +30,16 @@ export function BlogHeader() {
       // Only consider user logged in if email is confirmed
       if (session?.user && session.user.email_confirmed_at) {
         setUser(session.user)
-        const userProfile = await getProfile(session.user.id)
-        setProfile(userProfile)
+        setLoading(false)
+        
+        // Load profile separately (non-blocking)
+        getProfile(session.user.id)
+          .then(userProfile => setProfile(userProfile))
+          .catch(error => console.error("Error loading profile:", error))
       } else {
         setUser(null)
         setProfile(null)
+        setLoading(false)
       }
     })
 
@@ -58,17 +63,21 @@ export function BlogHeader() {
       // Only consider user logged in if email is confirmed
       if (currentUser && currentUser.email_confirmed_at) {
         setUser(currentUser)
-        const userProfile = await getProfile(currentUser.id)
-        setProfile(userProfile)
+        setLoading(false) // Set loading to false immediately after user is loaded
+        
+        // Load profile separately (non-blocking)
+        getProfile(currentUser.id)
+          .then(userProfile => setProfile(userProfile))
+          .catch(error => console.error("Error loading profile:", error))
       } else {
         setUser(null)
         setProfile(null)
+        setLoading(false)
       }
     } catch (error) {
       console.error("Error loading user:", error)
       setUser(null)
       setProfile(null)
-    } finally {
       setLoading(false)
     }
   }

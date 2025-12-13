@@ -34,11 +34,17 @@ export default function FavoritesClient() {
   }, [user, loading])
 
   const loadUser = async () => {
-    const {
-      data: { user },
-    } = await supabaseAuth.auth.getUser()
-    setUser(user)
-    setLoading(false)
+    try {
+      const {
+        data: { user },
+      } = await supabaseAuth.auth.getUser()
+      setUser(user)
+    } catch (error) {
+      console.error("Error loading user:", error)
+      setUser(null)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const loadFavorites = async () => {

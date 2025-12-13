@@ -60,20 +60,22 @@ export default function ProfilePage() {
       }
 
       setUser(currentUser)
+      setDisplayName(currentUser.email?.split("@")[0] || "")
+      setLoading(false) // Set loading to false immediately after user is loaded
 
-      const userProfile = await getProfile(currentUser.id)
-      if (userProfile) {
-        setProfile(userProfile)
-        setDisplayName(userProfile.display_name || "")
-        setBio(userProfile.bio || "")
-      } else {
-        // Set defaults if profile not found yet
-        setDisplayName(currentUser.email?.split("@")[0] || "")
-      }
+      // Load profile separately (non-blocking)
+      getProfile(currentUser.id)
+        .then(userProfile => {
+          if (userProfile) {
+            setProfile(userProfile)
+            setDisplayName(userProfile.display_name || currentUser.email?.split("@")[0] || "")
+            setBio(userProfile.bio || "")
+          }
+        })
+        .catch(error => console.error("Error loading profile:", error))
     } catch (error) {
       console.error("Error loading user data:", error)
       router.push("/blog")
-    } finally {
       setLoading(false)
     }
   }
