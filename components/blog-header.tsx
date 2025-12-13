@@ -167,15 +167,15 @@ export function BlogHeader() {
                 About
               </Link>
               
-              {/* AI執筆CTAボタン */}
+              {/* AI執筆CTAボタン（準備中） */}
               <button
-                onClick={handleWriteWithAI}
-                className="hidden md:flex items-center gap-1.5 text-sm px-3 py-1.5 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white rounded-lg hover:from-violet-600 hover:to-fuchsia-600 transition-all shadow-md hover:shadow-lg"
+                disabled
+                className="hidden md:flex items-center gap-1.5 text-sm px-3 py-1.5 bg-gray-400 dark:bg-gray-600 text-white rounded-lg cursor-not-allowed opacity-70"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <span className="whitespace-nowrap">あなたも執筆しませんか？</span>
+                <span className="whitespace-nowrap">準備中</span>
               </button>
 
               {/* Theme Toggle */}
