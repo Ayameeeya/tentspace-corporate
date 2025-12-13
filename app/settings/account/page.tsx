@@ -13,10 +13,21 @@ import {
   updateProfile, 
   uploadAvatar,
   deleteAvatar,
+  deleteAccount,
   signOut,
   type Profile 
 } from "@/lib/auth"
 import type { User } from "@supabase/supabase-js"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
 export default function AccountSettingsPage() {
   const router = useRouter()
@@ -33,6 +44,8 @@ export default function AccountSettingsPage() {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
   const [isDragging, setIsDragging] = useState(false)
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
     loadUserData()
@@ -202,6 +215,25 @@ export default function AccountSettingsPage() {
   const handleSignOut = async () => {
     await signOut()
     window.location.href = "/blog"
+  }
+
+  const handleDeleteAccount = async () => {
+    setDeleting(true)
+    setMessage(null)
+
+    try {
+      await deleteAccount()
+      // Redirect to blog after successful deletion
+      window.location.href = "/blog"
+    } catch (error) {
+      console.error("Error deleting account:", error)
+      setMessage({ 
+        type: "error", 
+        text: error instanceof Error ? error.message : "アカウントの削除に失敗しました" 
+      })
+      setDeleting(false)
+      setShowDeleteDialog(false)
+    }
   }
 
   if (loading) {
@@ -392,7 +424,62 @@ export default function AccountSettingsPage() {
             </div>
           </dl>
         </div>
+
+        {/* Danger Zone */}
+        <div className="bg-white rounded-lg border border-red-200 p-6">
+          <h2 className="text-lg font-semibold text-red-600 mb-4">危険な操作</h2>
+          <div className="space-y-4">
+            <div>
+              <h3 className="text-sm font-medium text-gray-900 mb-2">アカウントを削除</h3>
+              <p className="text-sm text-gray-600 mb-4">
+                アカウントを削除すると、すべてのデータが完全に削除されます。この操作は取り消せません。
+              </p>
+              <Button
+                type="button"
+                variant="destructive"
+                onClick={() => setShowDeleteDialog(true)}
+                disabled={deleting}
+                className="bg-red-600 hover:bg-red-700 text-white"
+              >
+                アカウントを削除する
+              </Button>
+            </div>
+          </div>
+        </div>
       </form>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent className="bg-white">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-gray-900">本当にアカウントを削除しますか？</AlertDialogTitle>
+            <AlertDialogDescription asChild>
+              <div className="text-gray-600">
+                <p className="text-sm">この操作は取り消せません。アカウントを削除すると、以下のデータがすべて完全に削除されます：</p>
+                <ul className="list-disc list-inside mt-2 space-y-1 text-sm">
+                  <li>プロフィール情報</li>
+                  <li>アバター画像</li>
+                  <li>お気に入りした記事</li>
+                  <li>投稿したコメント（実装時）</li>
+                  <li>その他すべてのアカウント関連データ</li>
+                </ul>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleting} className="text-gray-700 border-gray-300">
+              キャンセル
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteAccount}
+              disabled={deleting}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              {deleting ? "削除中..." : "削除する"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

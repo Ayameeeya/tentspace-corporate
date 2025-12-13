@@ -220,6 +220,9 @@ export default function ProfilePage() {
                 <Link href="/settings/account" className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md transition-colors">
                   アカウント設定
                 </Link>
+                <Link href="/settings/security" className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md transition-colors">
+                  セキュリティ設定
+                </Link>
                 <Link href="/settings/privacy" className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md transition-colors">
                   プライバシー設定
                 </Link>

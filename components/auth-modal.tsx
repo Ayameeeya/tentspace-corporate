@@ -32,6 +32,10 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
   const [message, setMessage] = useState<string | null>(null)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [mfaRequired, setMfaRequired] = useState(false)
+  const [mfaFactorId, setMfaFactorId] = useState<string | null>(null)
+  const [mfaChallengeId, setMfaChallengeId] = useState<string | null>(null)
+  const [mfaCode, setMfaCode] = useState("")
 
   const validatePassword = (password: string): string | null => {
     if (password.length < 8) {
@@ -61,6 +65,10 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
     setMessage(null)
     setShowPassword(false)
     setShowConfirmPassword(false)
+    setMfaRequired(false)
+    setMfaFactorId(null)
+    setMfaChallengeId(null)
+    setMfaCode("")
   }
 
   const handleClose = () => {
@@ -74,22 +82,91 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
     setLoading(true)
     setError(null)
 
-    const { error } = await supabaseAuth.auth.signInWithPassword({
-      email,
-      password,
-    })
+    try {
+      const { data, error } = await supabaseAuth.auth.signInWithPassword({
+        email,
+        password,
+      })
 
-    setLoading(false)
+      if (error) {
+        setLoading(false)
+        setError(error.message === "Invalid login credentials" 
+          ? "メールアドレスまたはパスワードが正しくありません" 
+          : error.message)
+        return
+      }
 
-    if (error) {
-      setError(error.message === "Invalid login credentials" 
-        ? "メールアドレスまたはパスワードが正しくありません" 
-        : error.message)
-      return
+      // Check if MFA is enabled (skip on localhost for development)
+      const isLocalhost = typeof window !== 'undefined' && 
+        (window.location.hostname === 'localhost' || 
+         window.location.hostname === '127.0.0.1' ||
+         window.location.hostname.startsWith('192.168.'))
+      
+      const mfaEnabled = process.env.NEXT_PUBLIC_ENABLE_MFA !== 'false' && !isLocalhost
+
+      // Check if MFA is required by listing factors
+      const { data: factorsData, error: factorsError } = await supabaseAuth.auth.mfa.listFactors()
+      
+      if (mfaEnabled && !factorsError && factorsData?.totp && factorsData.totp.length > 0) {
+        const verifiedFactor = factorsData.totp.find(f => f.status === 'verified')
+        if (verifiedFactor) {
+          // Create MFA challenge
+          const { data: challengeData, error: challengeError } = await supabaseAuth.auth.mfa.challenge({
+            factorId: verifiedFactor.id
+          })
+
+          setLoading(false)
+
+          if (challengeError) {
+            setError("二段階認証のチャレンジ作成に失敗しました")
+            return
+          }
+
+          setMfaFactorId(verifiedFactor.id)
+          setMfaChallengeId(challengeData.id)
+          setMfaRequired(true)
+          return
+        }
+      }
+
+      setLoading(false)
+
+      // No MFA required, login successful
+      handleClose()
+      onSuccess?.()
+    } catch (err) {
+      setLoading(false)
+      setError("ログインに失敗しました")
     }
+  }
 
-    handleClose()
-    onSuccess?.()
+  const handleVerifyMFA = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!mfaFactorId || !mfaChallengeId || !mfaCode) return
+
+    setLoading(true)
+    setError(null)
+
+    try {
+      const { error } = await supabaseAuth.auth.mfa.verify({
+        factorId: mfaFactorId,
+        challengeId: mfaChallengeId,
+        code: mfaCode,
+      })
+
+      setLoading(false)
+
+      if (error) {
+        setError("認証コードが正しくありません")
+        return
+      }
+
+      handleClose()
+      onSuccess?.()
+    } catch (err) {
+      setLoading(false)
+      setError("認証に失敗しました")
+    }
   }
 
   const handleSignup = async (e: React.FormEvent) => {
@@ -157,14 +234,16 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
       <DialogContent className="sm:max-w-md bg-white border-gray-200">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-gray-900">
-            {mode === "login" && "ログイン"}
-            {mode === "signup" && "アカウント登録"}
-            {mode === "forgot" && "パスワードリセット"}
+            {mfaRequired ? "二段階認証" : 
+              mode === "login" ? "ログイン" :
+              mode === "signup" ? "アカウント登録" :
+              "パスワードリセット"}
           </DialogTitle>
           <DialogDescription className="text-gray-600">
-            {mode === "login" && "メールアドレスとパスワードでログインしてください"}
-            {mode === "signup" && "新しいアカウントを作成します"}
-            {mode === "forgot" && "登録したメールアドレスを入力してください"}
+            {mfaRequired ? "認証アプリに表示されている6桁のコードを入力してください" :
+              mode === "login" ? "メールアドレスとパスワードでログインしてください" :
+              mode === "signup" ? "新しいアカウントを作成します" :
+              "登録したメールアドレスを入力してください"}
           </DialogDescription>
         </DialogHeader>
 
@@ -183,6 +262,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
           </div>
         ) : (
           <form onSubmit={
+            mfaRequired ? handleVerifyMFA :
             mode === "login" ? handleLogin :
             mode === "signup" ? handleSignup :
             handleForgotPassword
@@ -193,6 +273,33 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                   {error}
                 </div>
               )}
+
+              {mfaRequired ? (
+                // MFA Code Input
+                <div className="space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <p className="text-sm text-blue-900 mb-2">
+                      認証アプリ（Google Authenticator、Authyなど）に表示されている6桁のコードを入力してください
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="mfaCode" className="text-gray-700">認証コード</Label>
+                    <Input
+                      id="mfaCode"
+                      type="text"
+                      placeholder="000000"
+                      value={mfaCode}
+                      onChange={(e) => setMfaCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                      maxLength={6}
+                      required
+                      className="text-center text-2xl font-mono tracking-wider bg-white border-gray-300 text-gray-900"
+                      autoFocus
+                    />
+                  </div>
+                </div>
+              ) : (
+                // Normal login/signup/forgot form
+                <>
 
               {mode === "signup" && (
                 <div className="space-y-2">
@@ -295,6 +402,8 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                   </div>
                 </div>
               )}
+              </>
+            )}
             </div>
 
             <div className="space-y-3">
@@ -313,14 +422,23 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                   </span>
                 ) : (
                   <>
-                    {mode === "login" && "ログイン"}
-                    {mode === "signup" && "登録する"}
-                    {mode === "forgot" && "リセットメールを送信"}
+                    {mfaRequired ? "確認" :
+                      mode === "login" ? "ログイン" :
+                      mode === "signup" ? "登録する" :
+                      "リセットメールを送信"}
                   </>
                 )}
               </Button>
 
-              {mode === "login" && (
+              {mfaRequired ? (
+                <button
+                  type="button"
+                  className="w-full text-sm text-gray-600 hover:text-gray-800 transition-colors"
+                  onClick={() => { resetForm(); setMode("login") }}
+                >
+                  ← ログイン画面に戻る
+                </button>
+              ) : mode === "login" ? (
                 <>
                   <button
                     type="button"
@@ -340,7 +458,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                     </button>
                   </div>
                 </>
-              )}
+              ) : null}
 
               {mode === "signup" && (
                 <div className="text-center text-sm text-gray-600">
