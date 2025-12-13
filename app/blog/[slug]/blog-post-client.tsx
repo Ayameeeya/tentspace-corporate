@@ -5,6 +5,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { BlogHeader } from "@/components/blog-header"
 import { BlogComments } from "@/components/blog-comments"
+import { BlogFavorite } from "@/components/blog-favorite"
 import { formatDate, getReadingTime, stripHtml, getFeaturedImageUrl, type WPPost, type WPAuthor, type WPTerm } from "@/lib/wordpress"
 import { addLike, fetchHasLiked, fetchLikeCounts, getClientId } from "@/lib/blog-likes"
 
@@ -388,6 +389,7 @@ export default function BlogPostClient({
 
               <div className="flex items-center gap-3">
                 <BlogLikeButton slug={post.slug} />
+                <BlogFavorite postSlug={post.slug} />
                 <ShareButtons url={canonicalUrl} title={plainTitle} />
               </div>
             </div>

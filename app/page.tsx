@@ -1371,6 +1371,9 @@ function LetsTalkSection() {
             <Link href="/privacy" className="hover:text-primary-foreground transition-colors">
               Privacy
             </Link>
+            <Link href="/legal/tokushoho" className="hover:text-primary-foreground transition-colors">
+              Legal
+            </Link>
           </div>
         </div>
       </div>

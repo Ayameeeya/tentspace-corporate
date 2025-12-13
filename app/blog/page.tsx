@@ -657,6 +657,9 @@ function BlogPageContent() {
                 <Link href="/privacy" className="hover:text-gray-900 transition-colors">
                   プライバシー
                 </Link>
+                <Link href="/legal/tokushoho" className="hover:text-gray-900 transition-colors">
+                  特定商取引法
+                </Link>
                 <a 
                   href="mailto:back-office@tentspace.net" 
                   className="hover:text-gray-900 transition-colors"

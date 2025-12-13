@@ -52,6 +52,9 @@ export function PageFooter() {
             <Link href="/privacy" className="hover:text-primary-foreground transition-colors">
               Privacy
             </Link>
+            <Link href="/legal/tokushoho" className="hover:text-primary-foreground transition-colors">
+              特定商取引法
+            </Link>
           </div>
         </div>
       </div>
