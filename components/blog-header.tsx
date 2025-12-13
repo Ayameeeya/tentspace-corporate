@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
 import { AuthModal } from "@/components/auth-modal"
 import { getCurrentUser, getProfile, onAuthStateChange, type Profile } from "@/lib/auth"
@@ -17,9 +18,11 @@ import {
 import { signOut } from "@/lib/auth"
 
 export function BlogHeader() {
+  const router = useRouter()
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [showAuthModal, setShowAuthModal] = useState(false)
+  const [pendingRedirect, setPendingRedirect] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [signingOut, setSigningOut] = useState(false)
   const [mounted, setMounted] = useState(false)
@@ -106,6 +109,28 @@ export function BlogHeader() {
   const displayName = profile?.display_name || user?.email?.split("@")[0] || ""
   const avatarUrl = profile?.avatar_url
 
+  // AIと一緒に執筆ボタンのクリックハンドラ
+  const handleWriteWithAI = () => {
+    if (user) {
+      // ログイン済みなら直接プラン選択ページへ
+      router.push("/pricing")
+    } else {
+      // 未ログインならサインアップモーダルを開いて、成功後にリダイレクト
+      setPendingRedirect("/pricing")
+      setShowAuthModal(true)
+    }
+  }
+
+  // 認証成功時のハンドラ
+  const handleAuthSuccess = () => {
+    if (pendingRedirect) {
+      router.push(pendingRedirect)
+      setPendingRedirect(null)
+    } else {
+      window.location.reload()
+    }
+  }
+
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
@@ -128,7 +153,7 @@ export function BlogHeader() {
             </Link>
 
             {/* Navigation */}
-            <nav className="flex items-center gap-3 md:gap-5">
+            <nav className="flex items-center gap-2 md:gap-4">
               <Link
                 href="/blog"
                 className="text-sm font-medium text-foreground hover:text-blue-500 transition-colors"
@@ -141,12 +166,17 @@ export function BlogHeader() {
               >
                 About
               </Link>
-              <a
-                href="mailto:back-office@tentspace.net"
-                className="text-sm px-3 py-1.5 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors hidden sm:block"
+              
+              {/* AI執筆CTAボタン */}
+              <button
+                onClick={handleWriteWithAI}
+                className="hidden md:flex items-center gap-1.5 text-sm px-3 py-1.5 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white rounded-lg hover:from-violet-600 hover:to-fuchsia-600 transition-all shadow-md hover:shadow-lg"
               >
-                お問い合わせ
-              </a>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                </svg>
+                <span className="whitespace-nowrap">あなたも執筆しませんか？</span>
+              </button>
 
               {/* Theme Toggle */}
               {mounted && (
@@ -272,8 +302,11 @@ export function BlogHeader() {
 
       <AuthModal 
         isOpen={showAuthModal} 
-        onClose={() => setShowAuthModal(false)}
-        onSuccess={() => window.location.reload()}
+        onClose={() => {
+          setShowAuthModal(false)
+          setPendingRedirect(null)
+        }}
+        onSuccess={handleAuthSuccess}
       />
     </>
   )
