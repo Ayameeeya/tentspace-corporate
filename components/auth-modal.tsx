@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { supabaseAuth } from "@/lib/supabase/client"
+import { recordLoginHistory } from "@/lib/dashboard"
 import {
   Dialog,
   DialogContent,
@@ -20,6 +21,34 @@ interface AuthModalProps {
 }
 
 type AuthMode = "login" | "signup" | "forgot"
+
+// ブラウザ・デバイス情報を取得
+function getDeviceInfo() {
+  const ua = navigator.userAgent
+  
+  // ブラウザ検出
+  let browser = "不明"
+  if (ua.includes("Firefox")) browser = "Firefox"
+  else if (ua.includes("Edg")) browser = "Edge"
+  else if (ua.includes("Chrome")) browser = "Chrome"
+  else if (ua.includes("Safari")) browser = "Safari"
+  else if (ua.includes("Opera")) browser = "Opera"
+  
+  // OS検出
+  let os = "不明"
+  if (ua.includes("Windows")) os = "Windows"
+  else if (ua.includes("Mac")) os = "macOS"
+  else if (ua.includes("Linux")) os = "Linux"
+  else if (ua.includes("Android")) os = "Android"
+  else if (ua.includes("iPhone") || ua.includes("iPad")) os = "iOS"
+  
+  // デバイスタイプ検出
+  let deviceType = "desktop"
+  if (/Mobi|Android/i.test(ua)) deviceType = "mobile"
+  else if (/Tablet|iPad/i.test(ua)) deviceType = "tablet"
+  
+  return { browser, os, deviceType, userAgent: ua }
+}
 
 export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
   const [mode, setMode] = useState<AuthMode>("login")
@@ -132,6 +161,18 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
       setLoading(false)
 
       // No MFA required, login successful
+      // ログイン履歴を記録
+      if (data.user) {
+        const deviceInfo = getDeviceInfo()
+        recordLoginHistory(data.user.id, {
+          user_agent: deviceInfo.userAgent,
+          device_type: deviceInfo.deviceType,
+          browser: deviceInfo.browser,
+          os: deviceInfo.os,
+          success: true
+        })
+      }
+      
       handleClose()
       onSuccess?.()
     } catch (err) {
@@ -159,6 +200,19 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
       if (error) {
         setError("認証コードが正しくありません")
         return
+      }
+
+      // MFA認証成功後、ログイン履歴を記録
+      const { data: { user } } = await supabaseAuth.auth.getUser()
+      if (user) {
+        const deviceInfo = getDeviceInfo()
+        recordLoginHistory(user.id, {
+          user_agent: deviceInfo.userAgent,
+          device_type: deviceInfo.deviceType,
+          browser: deviceInfo.browser,
+          os: deviceInfo.os,
+          success: true
+        })
       }
 
       handleClose()
@@ -231,15 +285,15 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md bg-white border-gray-200">
+      <DialogContent className="sm:max-w-md bg-background border-border">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-gray-900">
+          <DialogTitle className="text-xl font-bold text-foreground">
             {mfaRequired ? "二段階認証" : 
               mode === "login" ? "ログイン" :
               mode === "signup" ? "アカウント登録" :
               "パスワードリセット"}
           </DialogTitle>
-          <DialogDescription className="text-gray-600">
+          <DialogDescription className="text-muted-foreground">
             {mfaRequired ? "認証アプリに表示されている6桁のコードを入力してください" :
               mode === "login" ? "メールアドレスとパスワードでログインしてください" :
               mode === "signup" ? "新しいアカウントを作成します" :
@@ -249,7 +303,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
 
         {message ? (
           <div className="py-4">
-            <div className="bg-green-50 text-green-800 rounded-lg p-4 text-sm">
+            <div className="bg-green-50 dark:bg-green-950 text-green-800 dark:text-green-200 rounded-lg p-4 text-sm">
               {message}
             </div>
             <Button 
@@ -269,7 +323,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
           }>
             <div className="space-y-4 py-4">
               {error && (
-                <div className="bg-red-50 text-red-600 rounded-lg p-3 text-sm">
+                <div className="bg-red-50 dark:bg-red-950 text-red-600 dark:text-red-300 rounded-lg p-3 text-sm">
                   {error}
                 </div>
               )}
@@ -277,13 +331,13 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
               {mfaRequired ? (
                 // MFA Code Input
                 <div className="space-y-4">
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <p className="text-sm text-blue-900 mb-2">
+                  <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                    <p className="text-sm text-blue-900 dark:text-blue-200 mb-2">
                       認証アプリ（Google Authenticator、Authyなど）に表示されている6桁のコードを入力してください
                     </p>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="mfaCode" className="text-gray-700">認証コード</Label>
+                    <Label htmlFor="mfaCode" className="text-foreground">認証コード</Label>
                     <Input
                       id="mfaCode"
                       type="text"
@@ -292,7 +346,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                       onChange={(e) => setMfaCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                       maxLength={6}
                       required
-                      className="text-center text-2xl font-mono tracking-wider bg-white border-gray-300 text-gray-900"
+                      className="text-center text-2xl font-mono tracking-wider bg-background border-border text-foreground"
                       autoFocus
                     />
                   </div>
@@ -303,20 +357,20 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
 
               {mode === "signup" && (
                 <div className="space-y-2">
-                  <Label htmlFor="displayName" className="text-gray-700">表示名</Label>
+                  <Label htmlFor="displayName" className="text-foreground">表示名</Label>
                   <Input
                     id="displayName"
                     type="text"
                     placeholder="ニックネーム"
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
-                    className="bg-white border-gray-300 text-gray-900"
+                    className="bg-background border-border text-foreground"
                   />
                 </div>
               )}
 
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-gray-700">メールアドレス</Label>
+                <Label htmlFor="email" className="text-foreground">メールアドレス</Label>
                 <Input
                   id="email"
                   type="email"
@@ -324,13 +378,13 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="bg-white border-gray-300 text-gray-900"
+                  className="bg-background border-border text-foreground"
                 />
               </div>
 
               {mode !== "forgot" && (
                 <div className="space-y-2">
-                  <Label htmlFor="password" className="text-gray-700">パスワード</Label>
+                  <Label htmlFor="password" className="text-foreground">パスワード</Label>
                   <div className="relative">
                     <Input
                       id="password"
@@ -340,12 +394,12 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       minLength={8}
-                      className="pr-10 bg-white border-gray-300 text-gray-900"
+                      className="pr-10 bg-background border-border text-foreground"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none"
                       tabIndex={-1}
                     >
                       {showPassword ? (
@@ -361,7 +415,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                     </button>
                   </div>
                   {mode === "signup" && (
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-muted-foreground mt-1">
                       8文字以上、小文字・大文字・数字・特殊文字をそれぞれ1文字以上含める必要があります
                     </p>
                   )}
@@ -370,7 +424,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
 
               {mode === "signup" && (
                 <div className="space-y-2">
-                  <Label htmlFor="confirmPassword" className="text-gray-700">パスワード（確認）</Label>
+                  <Label htmlFor="confirmPassword" className="text-foreground">パスワード（確認）</Label>
                   <div className="relative">
                     <Input
                       id="confirmPassword"
@@ -380,12 +434,12 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       required
                       minLength={8}
-                      className="pr-10 bg-white border-gray-300 text-gray-900"
+                      className="pr-10 bg-background border-border text-foreground"
                     />
                     <button
                       type="button"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none"
                       tabIndex={-1}
                     >
                       {showConfirmPassword ? (
@@ -433,7 +487,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
               {mfaRequired ? (
                 <button
                   type="button"
-                  className="w-full text-sm text-gray-600 hover:text-gray-800 transition-colors"
+                  className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors"
                   onClick={() => { resetForm(); setMode("login") }}
                 >
                   ← ログイン画面に戻る
@@ -442,16 +496,16 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                 <>
                   <button
                     type="button"
-                    className="w-full text-sm text-gray-600 hover:text-gray-800 transition-colors"
+                    className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors"
                     onClick={() => { resetForm(); setMode("forgot") }}
                   >
                     パスワードをお忘れですか？
                   </button>
-                  <div className="text-center text-sm text-gray-600">
+                  <div className="text-center text-sm text-muted-foreground">
                     アカウントをお持ちでない方は{" "}
                     <button
                       type="button"
-                      className="text-blue-600 hover:text-blue-700 hover:underline font-medium"
+                      className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:underline font-medium"
                       onClick={() => { resetForm(); setMode("signup") }}
                     >
                       新規登録
@@ -461,11 +515,11 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
               ) : null}
 
               {mode === "signup" && (
-                <div className="text-center text-sm text-gray-600">
+                <div className="text-center text-sm text-muted-foreground">
                   既にアカウントをお持ちの方は{" "}
                   <button
                     type="button"
-                    className="text-blue-600 hover:text-blue-700 hover:underline font-medium"
+                    className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:underline font-medium"
                     onClick={() => { resetForm(); setMode("login") }}
                   >
                     ログイン
@@ -476,7 +530,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
               {mode === "forgot" && (
                 <button
                   type="button"
-                  className="w-full text-sm text-gray-600 hover:text-gray-800 transition-colors"
+                  className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors"
                   onClick={() => { resetForm(); setMode("login") }}
                 >
                   ログインに戻る

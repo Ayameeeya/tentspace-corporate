@@ -109,10 +109,10 @@ export function BlogCarousel({ posts, likeCounts }: BlogCarouselProps) {
       {showLeftArrow && (
         <button
           onClick={() => scroll("left")}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white rounded-full shadow-lg border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors"
+          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white dark:bg-background rounded-full shadow-lg border border-gray-200 dark:border-border flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           aria-label="前へ"
         >
-          <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </button>
@@ -142,9 +142,9 @@ export function BlogCarousel({ posts, likeCounts }: BlogCarouselProps) {
               className="flex-shrink-0 w-64 group"
               draggable={false}
             >
-              <div className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-md hover:border-gray-300 transition-all">
+              <div className="bg-white dark:bg-background rounded-xl border border-gray-200 dark:border-border overflow-hidden hover:shadow-md hover:border-gray-300 dark:hover:border-gray-600 transition-all">
                 {imageUrl && (
-                  <div className="relative aspect-[16/9] bg-gray-100">
+                  <div className="relative aspect-[16/9] bg-gray-100 dark:bg-gray-700">
                     <Image
                       src={imageUrl}
                       alt={stripHtml(post.title.rendered)}
@@ -156,17 +156,17 @@ export function BlogCarousel({ posts, likeCounts }: BlogCarouselProps) {
                 )}
                 <div className="p-3">
                   {postCategories[0] && (
-                    <span className="inline-block px-2 py-0.5 text-[10px] font-medium bg-blue-50 text-blue-600 rounded mb-1.5">
+                    <span className="inline-block px-2 py-0.5 text-[10px] font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded mb-1.5">
                       {postCategories[0].name}
                     </span>
                   )}
                   <h3
-                    className="text-sm font-medium text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors"
+                    className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
                     dangerouslySetInnerHTML={{ __html: post.title.rendered }}
                   />
-                  <p className="text-xs text-gray-500 mt-1.5 flex items-center gap-2">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1.5 flex items-center gap-2">
                     <span>{formatDate(post.date)}</span>
-                    <span className="flex items-center gap-1 text-gray-500">
+                    <span className="flex items-center gap-1 text-gray-500 dark:text-gray-400">
                       <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <path
                           strokeLinecap="round"
@@ -189,10 +189,10 @@ export function BlogCarousel({ posts, likeCounts }: BlogCarouselProps) {
       {showRightArrow && (
         <button
           onClick={() => scroll("right")}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white rounded-full shadow-lg border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors"
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white dark:bg-background rounded-full shadow-lg border border-gray-200 dark:border-border flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           aria-label="次へ"
         >
-          <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </button>
