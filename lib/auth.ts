@@ -75,3 +75,59 @@ export function onAuthStateChange(
   return supabaseAuth.auth.onAuthStateChange(callback)
 }
 
+// Upload avatar image to Supabase Storage
+export async function uploadAvatar(
+  userId: string,
+  file: File
+): Promise<string | null> {
+  try {
+    // Generate unique filename
+    const fileExt = file.name.split(".").pop()
+    const fileName = `${userId}-${Date.now()}.${fileExt}`
+    const filePath = `avatars/${fileName}`
+
+    // Upload file to Supabase Storage
+    const { error: uploadError } = await supabaseAuth.storage
+      .from("avatars")
+      .upload(filePath, file, {
+        cacheControl: "3600",
+        upsert: false,
+      })
+
+    if (uploadError) {
+      console.error("Error uploading avatar:", uploadError)
+      throw uploadError
+    }
+
+    // Get public URL
+    const { data: urlData } = supabaseAuth.storage
+      .from("avatars")
+      .getPublicUrl(filePath)
+
+    return urlData.publicUrl
+  } catch (error) {
+    console.error("Error in uploadAvatar:", error)
+    return null
+  }
+}
+
+// Delete avatar image from Supabase Storage
+export async function deleteAvatar(avatarUrl: string): Promise<void> {
+  try {
+    // Extract file path from URL
+    const url = new URL(avatarUrl)
+    const pathParts = url.pathname.split("/")
+    const filePath = pathParts.slice(pathParts.indexOf("avatars")).join("/")
+
+    const { error } = await supabaseAuth.storage
+      .from("avatars")
+      .remove([filePath])
+
+    if (error) {
+      console.error("Error deleting avatar:", error)
+    }
+  } catch (error) {
+    console.error("Error in deleteAvatar:", error)
+  }
+}
+
