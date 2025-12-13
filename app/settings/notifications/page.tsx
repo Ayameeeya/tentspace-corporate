@@ -84,6 +84,7 @@ export default function NotificationsSettingsPage() {
     try {
       const response = await fetch('/api/email/test', {
         method: 'POST',
+        credentials: 'include',
       })
 
       const data = await response.json()

@@ -6,13 +6,17 @@ import { sendTestEmail } from '@/lib/email'
 export async function POST() {
   try {
     const cookieStore = await cookies()
+    const allCookies = cookieStore.getAll()
+    
+    console.log('=== Test Email API Debug ===')
+    console.log('Available cookies:', allCookies.map(c => c.name))
     
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
         cookies: {
-          getAll: () => cookieStore.getAll(),
+          getAll: () => allCookies,
           setAll: (cookiesToSet) => {
             cookiesToSet.forEach(({ name, value, options }) => {
               cookieStore.set(name, value, options)
@@ -23,10 +27,13 @@ export async function POST() {
     )
 
     const { data: { user }, error: userError } = await supabase.auth.getUser()
+    
+    console.log('User error:', userError)
+    console.log('User:', user?.id, user?.email)
 
     if (userError || !user || !user.email) {
       return NextResponse.json(
-        { message: 'ユーザーが見つかりません' },
+        { message: 'ユーザーが見つかりません', debug: { error: userError?.message, cookies: allCookies.map(c => c.name) } },
         { status: 401 }
       )
     }

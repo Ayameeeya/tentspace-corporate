@@ -1,30 +1,70 @@
 import nodemailer from 'nodemailer'
 import { render } from '@react-email/components'
+import crypto from 'crypto'
 import NotificationEmail from '@/emails/notification-email'
 
 export type NotificationType = 'new_follower' | 'new_comment' | 'new_like' | 'new_post'
 
+/**
+ * AWS SESのSMTP認証情報を生成
+ * IAMのシークレットアクセスキーからSMTPパスワードを生成する
+ */
+function generateSESSmtpPassword(secretAccessKey: string): string {
+  const message = 'SendRawEmail'
+  const versionInBytes = Buffer.from([0x02])
+  
+  const signatureInBytes = crypto
+    .createHmac('sha256', secretAccessKey)
+    .update(message)
+    .digest()
+  
+  const signatureAndVersion = Buffer.concat([versionInBytes, signatureInBytes])
+  return signatureAndVersion.toString('base64')
+}
+
 // Create SMTP transporter for Amazon SES
 const getTransporter = () => {
-  const host = process.env.SMTP_HOST
-  const port = process.env.SMTP_PORT
-  const user = process.env.SMTP_USER
-  const pass = process.env.SMTP_PASS
+  // AWS SES用の設定（AWS_ACCESS_KEY_ID と AWS_SECRET_ACCESS_KEY を使用）
+  const awsAccessKeyId = process.env.AWS_ACCESS_KEY_ID
+  const awsSecretAccessKey = process.env.AWS_SECRET_ACCESS_KEY
+  const awsRegion = process.env.AWS_REGION || 'ap-northeast-1'
+  
+  // 従来のSMTP設定（カスタムSMTPサーバー用）
+  const customHost = process.env.SMTP_HOST
+  const customPort = process.env.SMTP_PORT
+  const customUser = process.env.SMTP_USER
+  const customPass = process.env.SMTP_PASS
 
-  if (!host || !user || !pass) {
-    console.warn('SMTP credentials not configured')
-    return null
+  // AWS SESを使用する場合
+  if (awsAccessKeyId && awsSecretAccessKey) {
+    const smtpPassword = generateSESSmtpPassword(awsSecretAccessKey)
+    
+    return nodemailer.createTransport({
+      host: `email-smtp.${awsRegion}.amazonaws.com`,
+      port: 587,
+      secure: false, // TLS (STARTTLS)
+      auth: {
+        user: awsAccessKeyId,
+        pass: smtpPassword,
+      },
+    })
   }
 
-  return nodemailer.createTransport({
-    host,
-    port: parseInt(port || '587'),
-    secure: port === '465', // true for 465, false for other ports
-    auth: {
-      user,
-      pass,
-    },
-  })
+  // カスタムSMTPサーバーを使用する場合
+  if (customHost && customUser && customPass) {
+    return nodemailer.createTransport({
+      host: customHost,
+      port: parseInt(customPort || '587'),
+      secure: customPort === '465',
+      auth: {
+        user: customUser,
+        pass: customPass,
+      },
+    })
+  }
+
+  console.warn('SMTP credentials not configured. Set AWS_ACCESS_KEY_ID/AWS_SECRET_ACCESS_KEY for SES, or SMTP_HOST/SMTP_USER/SMTP_PASS for custom SMTP.')
+  return null
 }
 
 interface SendNotificationEmailParams {
