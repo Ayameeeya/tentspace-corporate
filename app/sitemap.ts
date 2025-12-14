@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next"
 import { getPosts, getCategories } from "@/lib/wordpress"
 
-const SITE_URL = "https://tentspace.net"
+const SITE_URL = "https://www.tentspace.net"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Static pages
