@@ -136,7 +136,7 @@ function FeaturedHeroCard({ post, likes = 0 }: { post: WPPost; likes?: number })
                 src={imageUrl}
                 alt={post.title.rendered}
                 fill
-                className="object-contain group-hover:scale-105 transition-transform duration-700"
+                className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
 
@@ -275,7 +275,7 @@ function FeaturedCard({ post, likes = 0 }: { post: WPPost; likes?: number }) {
                 src={imageUrl}
                 alt={post.title.rendered}
                 fill
-                className="object-contain group-hover:scale-105 transition-transform duration-500"
+                className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
               />
               {/* Overlay gradient */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
