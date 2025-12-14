@@ -4,7 +4,6 @@ import { Inter, Geist_Mono, Orbitron } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import Script from "next/script"
 import { CookieConsent } from "@/components/cookie-consent"
-import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css"
 
 const GA_MEASUREMENT_ID = "G-1XCFVFP5DX"
@@ -52,7 +51,7 @@ export default function RootLayout({
             });
           `}
         </Script>
-        
+
         {/* Google Analytics */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
@@ -68,16 +67,9 @@ export default function RootLayout({
         </Script>
       </head>
       <body className="font-sans antialiased">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-          <Analytics />
-          <CookieConsent />
-        </ThemeProvider>
+        {children}
+        <Analytics />
+        <CookieConsent />
       </body>
     </html>
   )

@@ -3,16 +3,18 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 import { BlogHeader } from "@/components/blog-header"
-import { 
-  getPosts, 
-  getCategories, 
-  getCategoryBySlug, 
-  getFeaturedImageUrl, 
-  stripHtml, 
-  formatDate, 
+import { BlogFooter } from "@/components/blog-footer"
+import { CategoryTabsClient } from "@/components/category-tabs-client"
+import {
+  getPosts,
+  getCategories,
+  getCategoryBySlug,
+  getFeaturedImageUrl,
+  stripHtml,
+  formatDate,
   getReadingTime,
   type WPPost,
-  type WPCategory 
+  type WPCategory
 } from "@/lib/wordpress"
 
 const SITE_URL = "https://tentspace.net"
@@ -21,14 +23,14 @@ const SITE_URL = "https://tentspace.net"
 export const dynamic = "force-dynamic"
 
 // Generate metadata
-export async function generateMetadata({ 
-  params 
-}: { 
-  params: Promise<{ slug: string }> 
+export async function generateMetadata({
+  params
+}: {
+  params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
   const category = await getCategoryBySlug(slug)
-  
+
   if (!category) {
     return {
       title: "カテゴリが見つかりません",
@@ -92,173 +94,52 @@ export async function generateStaticParams() {
   }
 }
 
-// Blog Card Component
+// Blog Card Component - Matches main blog page style
 function BlogCard({ post }: { post: WPPost }) {
-  const imageUrl = getFeaturedImageUrl(post, 'medium')
-  const excerpt = stripHtml(post.excerpt.rendered)
-  const readingTime = getReadingTime(post.content.rendered)
-  const categories = post._embedded?.['wp:term']?.[0] || []
-  const author = post._embedded?.author?.[0]
-
-  return (
-    <article className="group">
-      <Link href={`/blog/${post.slug}`} className="block">
-        <div className="flex gap-4 py-5 border-b border-gray-100 hover:bg-gray-50/50 transition-colors -mx-4 px-4 rounded-lg">
-          {/* Content */}
-          <div className="flex-1 min-w-0">
-            {/* Author & Date */}
-            <div className="flex items-center gap-2 mb-2">
-              {author && (
-                <div className="flex items-center gap-2">
-                  {author.avatar_urls?.['48'] ? (
-                    <Image
-                      src={author.avatar_urls['48']}
-                      alt={author.name}
-                      width={24}
-                      height={24}
-                      className="rounded-full"
-                    />
-                  ) : (
-                    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-xs font-medium">
-                      {author.name.charAt(0)}
-                    </div>
-                  )}
-                  <span className="text-sm text-gray-600">{author.name}</span>
-                </div>
-              )}
-              <span className="text-gray-300">·</span>
-              <time className="text-sm text-gray-500">
-                {formatDate(post.date)}
-              </time>
-            </div>
-
-            {/* Title */}
-            <h2
-              className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors"
-              dangerouslySetInnerHTML={{ __html: post.title.rendered }}
-            />
-
-            {/* Excerpt */}
-            <p className="text-gray-600 text-sm line-clamp-2 mb-3">
-              {excerpt}
-            </p>
-
-            {/* Meta */}
-            <div className="flex items-center gap-3 flex-wrap">
-              {categories.slice(0, 2).map((cat) => (
-                <span
-                  key={cat.id}
-                  className="inline-flex items-center px-2.5 py-0.5 text-xs font-medium bg-blue-50 text-blue-600 rounded-full"
-                >
-                  {cat.name}
-                </span>
-              ))}
-              <span className="text-xs text-gray-400 flex items-center gap-1">
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
-                {readingTime}分で読める
-              </span>
-            </div>
-          </div>
-
-          {/* Thumbnail */}
-          {imageUrl && (
-            <div className="relative w-24 h-24 md:w-32 md:h-24 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
-              <Image
-                src={imageUrl}
-                alt={post.title.rendered}
-                fill
-                className="object-cover"
-              />
-            </div>
-          )}
-        </div>
-      </Link>
-    </article>
-  )
-}
-
-// Featured Card for top posts
-function FeaturedCard({ post }: { post: WPPost }) {
   const imageUrl = getFeaturedImageUrl(post, 'large')
   const excerpt = stripHtml(post.excerpt.rendered)
   const readingTime = getReadingTime(post.content.rendered)
   const categories = post._embedded?.['wp:term']?.[0] || []
-  const author = post._embedded?.author?.[0]
 
   return (
     <article className="group">
-      <Link href={`/blog/${post.slug}`} className="block">
-        <div className="bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-lg hover:border-gray-200 transition-all duration-300">
+      <Link href={`/blog/${post.slug}`} className="block h-full">
+        <div className="h-full flex flex-col">
           {/* Image */}
           {imageUrl && (
-            <div className="relative aspect-[16/9] bg-gray-100">
+            <div className="relative aspect-[4/3] bg-slate-100 dark:bg-gray-800 overflow-hidden mb-5">
               <Image
                 src={imageUrl}
                 alt={post.title.rendered}
                 fill
-                className="object-cover group-hover:scale-105 transition-transform duration-300"
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
               />
             </div>
           )}
-          
+
           {/* Content */}
-          <div className="p-5">
-            {/* Categories */}
-            <div className="flex items-center gap-2 mb-3">
-              {categories.slice(0, 2).map((cat) => (
-                <span
-                  key={cat.id}
-                  className="inline-flex items-center px-2.5 py-0.5 text-xs font-medium bg-blue-50 text-blue-600 rounded-full"
-                >
-                  {cat.name}
-                </span>
-              ))}
+          <div className="flex-1 flex flex-col">
+            {/* Category & Date */}
+            <div className="flex items-center gap-2 mb-3 text-xs text-slate-500 dark:text-gray-400 font-medium uppercase tracking-wider">
+              {categories[0] && <span>{categories[0].name}</span>}
             </div>
 
             {/* Title */}
-            <h2
-              className="text-xl font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors"
+            <h3
+              className="text-xl md:text-2xl font-bold text-foreground mb-3 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-tight"
               dangerouslySetInnerHTML={{ __html: post.title.rendered }}
             />
 
             {/* Excerpt */}
-            <p className="text-gray-600 text-sm line-clamp-2 mb-4">
+            <p className="text-slate-600 dark:text-gray-300 text-sm line-clamp-3 mb-4 leading-relaxed flex-1">
               {excerpt}
             </p>
 
-            {/* Author & Meta */}
-            <div className="flex items-center justify-between">
-              {author && (
-                <div className="flex items-center gap-2">
-                  {author.avatar_urls?.['48'] ? (
-                    <Image
-                      src={author.avatar_urls['48']}
-                      alt={author.name}
-                      width={28}
-                      height={28}
-                      className="rounded-full"
-                    />
-                  ) : (
-                    <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-xs font-medium">
-                      {author.name.charAt(0)}
-                    </div>
-                  )}
-                  <div className="flex flex-col">
-                    <span className="text-sm font-medium text-gray-900">{author.name}</span>
-                    <time className="text-xs text-gray-500">
-                      {formatDate(post.date)}
-                    </time>
-                  </div>
-                </div>
-              )}
-              <span className="text-xs text-gray-400 flex items-center gap-1">
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
-                {readingTime}分
-              </span>
+            {/* Meta Footer */}
+            <div className="flex items-center gap-3 text-sm text-slate-500 dark:text-gray-400 pt-4 border-t border-slate-200 dark:border-gray-800">
+              <time>{formatDate(post.date)}</time>
+              <span>•</span>
+              <span>{readingTime} min</span>
             </div>
           </div>
         </div>
@@ -267,86 +148,86 @@ function FeaturedCard({ post }: { post: WPPost }) {
   )
 }
 
-// Pagination Component
-function Pagination({ 
-  currentPage, 
-  totalPages, 
-  categorySlug 
-}: { 
+// Pagination Component - Matches main blog page style
+function Pagination({
+  currentPage,
+  totalPages,
+  categorySlug
+}: {
   currentPage: number
   totalPages: number
   categorySlug: string
 }) {
   if (totalPages <= 1) return null
 
-  const pages = Array.from({ length: totalPages }, (_, i) => i + 1)
-  const visiblePages = pages.filter(page => 
-    page === 1 || 
-    page === totalPages || 
-    Math.abs(page - currentPage) <= 1
-  )
-
   return (
-    <nav className="flex items-center justify-center gap-2 mt-8" aria-label="ページネーション">
-      {currentPage > 1 && (
-        <Link
-          href={`/blog/categories/${categorySlug}?page=${currentPage - 1}`}
-          className="px-3 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-        >
-          前へ
-        </Link>
-      )}
-      
-      <div className="flex items-center gap-1">
-        {visiblePages.map((page, index) => {
-          const prevPage = visiblePages[index - 1]
-          const showEllipsis = prevPage && page - prevPage > 1
+    <div className="mt-20 md:mt-32 pt-12 border-t-2 border-foreground flex items-center justify-between">
+      <Link
+        href={currentPage > 1 ? `/blog/categories/${categorySlug}?page=${currentPage - 1}` : '#'}
+        className={`group inline-flex items-center gap-3 text-base font-bold text-foreground hover:gap-2 transition-all ${currentPage === 1 ? 'opacity-20 cursor-not-allowed pointer-events-none' : ''
+          }`}
+      >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+        </svg>
+        <span>Previous</span>
+      </Link>
+
+      <div className="hidden md:flex items-center gap-2">
+        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+          let pageNum: number
+          if (totalPages <= 5) {
+            pageNum = i + 1
+          } else if (currentPage <= 3) {
+            pageNum = i + 1
+          } else if (currentPage >= totalPages - 2) {
+            pageNum = totalPages - 4 + i
+          } else {
+            pageNum = currentPage - 2 + i
+          }
 
           return (
-            <span key={page} className="flex items-center gap-1">
-              {showEllipsis && (
-                <span className="px-2 text-gray-400">...</span>
-              )}
-              <Link
-                href={`/blog/categories/${categorySlug}?page=${page}`}
-                className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                  currentPage === page
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-600 bg-white border border-gray-200 hover:bg-gray-50'
+            <Link
+              key={pageNum}
+              href={`/blog/categories/${categorySlug}?page=${pageNum}`}
+              className={`w-10 h-10 flex items-center justify-center text-sm font-bold transition-all ${currentPage === pageNum
+                ? 'bg-foreground text-background'
+                : 'text-slate-600 dark:text-gray-400 hover:text-foreground'
                 }`}
-              >
-                {page}
-              </Link>
-            </span>
+            >
+              {pageNum}
+            </Link>
           )
         })}
       </div>
 
-      {currentPage < totalPages && (
-        <Link
-          href={`/blog/categories/${categorySlug}?page=${currentPage + 1}`}
-          className="px-3 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-        >
-          次へ
-        </Link>
-      )}
-    </nav>
+      <Link
+        href={currentPage < totalPages ? `/blog/categories/${categorySlug}?page=${currentPage + 1}` : '#'}
+        className={`group inline-flex items-center gap-3 text-base font-bold text-foreground hover:gap-4 transition-all ${currentPage === totalPages ? 'opacity-20 cursor-not-allowed pointer-events-none' : ''
+          }`}
+      >
+        <span>Next</span>
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+        </svg>
+      </Link>
+    </div>
   )
 }
 
 // Main Category Page
-export default async function CategoryPage({ 
+export default async function CategoryPage({
   params,
   searchParams
-}: { 
+}: {
   params: Promise<{ slug: string }>
   searchParams: Promise<{ page?: string }>
 }) {
   const { slug } = await params
   const { page } = await searchParams
-  
+
   const category = await getCategoryBySlug(slug)
-  
+
   if (!category) {
     notFound()
   }
@@ -383,121 +264,72 @@ export default async function CategoryPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      
-      <div className="min-h-screen bg-[#fafafa]">
+
+      <div className="min-h-screen bg-white dark:bg-background">
         <BlogHeader />
 
-        {/* Main Content */}
-        <main className="pt-20">
-          {/* Hero Section */}
-          <div className="bg-white border-b border-gray-100">
-            <div className="max-w-5xl mx-auto px-4 py-12 md:py-16">
-              {/* Breadcrumb */}
-              <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
-                <Link href="/" className="hover:text-gray-900 transition-colors">
-                  ホーム
-                </Link>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-                <Link href="/blog" className="hover:text-gray-900 transition-colors">
-                  ブログ
-                </Link>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-                <span className="text-gray-900 font-medium">{category.name}</span>
-              </nav>
+        {/* Subtle gradient background */}
+        <div className="fixed inset-0 pointer-events-none">
+          <div className="absolute inset-0 bg-gradient-to-b from-white via-slate-50 to-white dark:from-background dark:via-gray-900 dark:to-background" />
+          <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-blue-500/5 blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-blue-500/3 blur-3xl" />
+        </div>
 
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                  </svg>
-                </div>
-                <span className="text-sm font-medium text-gray-500">カテゴリ</span>
-              </div>
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+        {/* Main Content */}
+        <main className="pt-16 md:pt-20 relative z-10">
+          {/* Hero Section */}
+          <div className="border-b border-slate-200 dark:border-border">
+            <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-16 md:py-24">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground leading-none mb-6">
                 {category.name}
               </h1>
               {category.description && (
-                <p className="text-gray-600 text-lg mb-4">
+                <p className="text-lg md:text-xl text-slate-600 dark:text-gray-300 mb-4 max-w-3xl">
                   {category.description}
                 </p>
               )}
-              <p className="text-gray-500">
-                {total}件の記事
+              <p className="text-sm text-slate-500 dark:text-gray-400">
+                {total} {total === 1 ? 'Article' : 'Articles'}
               </p>
             </div>
           </div>
 
           {/* Category Tabs */}
-          <div className="bg-white border-b border-gray-100 sticky top-16 z-40">
-            <div className="max-w-5xl mx-auto px-4">
-              <div className="flex items-center gap-1 overflow-x-auto py-3 -mx-4 px-4 scrollbar-hide">
-                <Link
-                  href="/blog"
-                  className="flex-shrink-0 px-4 py-2 text-sm font-medium rounded-full text-gray-600 hover:bg-gray-100 transition-colors"
-                >
-                  すべて
-                </Link>
-                {allCategories.filter(c => c.count > 0).map((cat) => (
-                  <Link
-                    key={cat.id}
-                    href={`/blog/categories/${cat.slug}`}
-                    className={`flex-shrink-0 px-4 py-2 text-sm font-medium rounded-full transition-colors ${
-                      cat.id === category.id
-                        ? 'bg-blue-600 text-white'
-                        : 'text-gray-600 hover:bg-gray-100'
-                    }`}
-                  >
-                    {cat.name}
-                    <span className="ml-1.5 text-xs opacity-70">({cat.count})</span>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
+          <CategoryTabsClient
+            categories={allCategories}
+            currentCategoryId={category.id}
+          />
 
           {/* Posts */}
-          <div className="max-w-5xl mx-auto px-4 py-8">
+          <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-12 md:py-20">
             {posts.length === 0 ? (
               <div className="text-center py-16">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
-                  <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                  <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
                   </svg>
                 </div>
-                <p className="text-gray-600 mb-4">このカテゴリにはまだ記事がありません</p>
+                <p className="text-slate-600 dark:text-gray-300 mb-4">No articles in this category yet</p>
                 <Link
                   href="/blog"
-                  className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                  className="inline-flex items-center px-6 py-2.5 border border-foreground text-foreground text-sm font-bold hover:bg-foreground hover:text-background transition-all"
                 >
-                  すべての記事を見る
+                  View All Articles
                 </Link>
               </div>
             ) : (
               <>
-                {/* Featured Posts */}
-                {featuredPosts.length > 0 && currentPage === 1 && (
-                  <div className="grid md:grid-cols-2 gap-6 mb-8">
-                    {featuredPosts.map((post) => (
-                      <FeaturedCard key={post.id} post={post} />
-                    ))}
-                  </div>
-                )}
-
-                {/* Regular Posts */}
-                <div className="bg-white rounded-xl border border-gray-100 px-4">
-                  {(currentPage === 1 ? regularPosts : posts).map((post) => (
+                {/* Regular Posts Grid */}
+                <div className="grid md:grid-cols-2 gap-8 md:gap-12 lg:gap-16">
+                  {posts.map((post) => (
                     <BlogCard key={post.id} post={post} />
                   ))}
                 </div>
 
                 {/* Pagination */}
-                <Pagination 
-                  currentPage={currentPage} 
-                  totalPages={totalPages} 
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
                   categorySlug={category.slug}
                 />
               </>
@@ -505,39 +337,9 @@ export default async function CategoryPage({
           </div>
 
           {/* Footer */}
-          <footer className="bg-white border-t border-gray-100 mt-12">
-            <div className="max-w-5xl mx-auto px-4 py-8">
-              <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <Image
-                    src="/logo_black_yoko.png"
-                    alt="tent space"
-                    width={100}
-                    height={32}
-                    className="h-auto"
-                  />
-                  <span className="text-sm text-gray-500">© 2025 tent space Inc.</span>
-                </div>
-                <nav className="flex items-center gap-6 text-sm text-gray-500" aria-label="フッターナビゲーション">
-                  <Link href="/about" className="hover:text-gray-900 transition-colors">
-                    About
-                  </Link>
-                  <Link href="/terms" className="hover:text-gray-900 transition-colors">
-                    利用規約
-                  </Link>
-                  <Link href="/privacy" className="hover:text-gray-900 transition-colors">
-                    プライバシー
-                  </Link>
-                  <a
-                    href="mailto:back-office@tentspace.net"
-                    className="hover:text-gray-900 transition-colors"
-                  >
-                    お問い合わせ
-                  </a>
-                </nav>
-              </div>
-            </div>
-          </footer>
+          <div className="mt-24 md:mt-32">
+            <BlogFooter />
+          </div>
         </main>
       </div>
     </>

@@ -9,7 +9,7 @@ import * as THREE from "three"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { Header } from "@/components/header"
-import { BlogFloatingCTA } from "@/components/blog-floating-cta"
+// import { BlogFloatingCTA } from "@/components/blog-floating-cta"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -1371,7 +1371,7 @@ function LetsTalkSection() {
             <Link href="/privacy" className="hover:text-primary-foreground transition-colors">
               Privacy
             </Link>
-            <Link href="/legal/tokushoho" className="hover:text-primary-foreground transition-colors">
+            <Link href="/legal" className="hover:text-primary-foreground transition-colors">
               Legal
             </Link>
           </div>
@@ -1427,7 +1427,7 @@ export default function Home() {
   const brightnessOpacity = getBrightnessOverlay()
 
   return (
-    <div className="relative bg-background">
+    <div className="relative bg-[#020212]">
       {/* Fixed 3D Canvas */}
       <div className="fixed inset-0 z-0">
         <Canvas camera={{ position: [0, 0, 50], fov: 60 }} gl={{ antialias: true, alpha: false }} dpr={[1, 2]}>
@@ -1454,7 +1454,7 @@ export default function Home() {
       <StatusBar currentSection={activeSection} scrollProgress={scrollProgress} />
 
       {/* Floating Blog CTA */}
-      <BlogFloatingCTA scrollProgress={scrollProgress} />
+      {/* <BlogFloatingCTA scrollProgress={scrollProgress} /> */}
 
       {/* Let's Talk section and Footer */}
       <LetsTalkSection />

@@ -272,27 +272,43 @@ export default function TermsPage() {
                 <span className="text-blue-500 text-xs md:text-sm font-mono mt-1.5">06</span>
                 <div className="flex-1">
                   <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-slate-800">お問い合わせ</h2>
-                  <p className="text-slate-600 text-sm md:text-base mb-6 md:mb-8">
+                  <p className="text-slate-600 text-sm md:text-base mb-4 md:mb-6">
                     これらの規約についてのお問い合わせは、下記の窓口までお願いいたします。
                   </p>
-                  <div className="grid md:grid-cols-3 gap-4 md:gap-6">
-                    <div>
-                      <p className="text-slate-400 text-[10px] md:text-xs uppercase tracking-wider mb-2">社名</p>
-                      <p className="text-slate-700 text-sm md:text-base">株式会社tent space</p>
-                    </div>
-                    <div>
-                      <p className="text-slate-400 text-[10px] md:text-xs uppercase tracking-wider mb-2">住所</p>
-                      <p className="text-slate-700 text-xs md:text-sm">〒355-0316 埼玉県比企郡小川町大字角山323</p>
-                    </div>
-                    <div>
-                      <p className="text-slate-400 text-[10px] md:text-xs uppercase tracking-wider mb-2">Email</p>
-                      <a
-                        href="mailto:back-office@tentspace.net"
-                        className="text-blue-600 hover:text-blue-500 transition-colors text-sm md:text-base"
-                      >
-                        back-office@tentspace.net
-                      </a>
-                    </div>
+                  <div className="overflow-hidden rounded-lg border border-slate-200 bg-gradient-to-br from-blue-50/30 to-slate-50/50">
+                    <table className="w-full">
+                      <tbody className="divide-y divide-slate-200">
+                        <tr className="hover:bg-white/50 transition-colors">
+                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm font-medium text-slate-500 w-1/3 md:w-1/4">
+                            事業者名
+                          </td>
+                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-slate-700">
+                            株式会社tent space
+                          </td>
+                        </tr>
+                        <tr className="hover:bg-white/50 transition-colors">
+                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm font-medium text-slate-500 w-1/3 md:w-1/4">
+                            所在地
+                          </td>
+                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-slate-700">
+                            〒355-0316 埼玉県比企郡小川町大字角山323
+                          </td>
+                        </tr>
+                        <tr className="hover:bg-white/50 transition-colors">
+                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm font-medium text-slate-500 w-1/3 md:w-1/4">
+                            Email
+                          </td>
+                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-slate-700">
+                            <a
+                              href="mailto:back-office@tentspace.net"
+                              className="text-blue-600 hover:text-blue-500 transition-colors"
+                            >
+                              back-office@tentspace.net
+                            </a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>
