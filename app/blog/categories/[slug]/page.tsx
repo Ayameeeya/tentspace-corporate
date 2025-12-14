@@ -112,7 +112,7 @@ function BlogCard({ post }: { post: WPPost }) {
                 src={imageUrl}
                 alt={post.title.rendered}
                 fill
-                className="object-cover group-hover:scale-105 transition-transform duration-500"
+                className="object-contain group-hover:scale-105 transition-transform duration-500"
               />
             </div>
           )}
