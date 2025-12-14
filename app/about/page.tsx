@@ -611,23 +611,6 @@ export default function AboutPage() {
                 the future
               </h2>
               <p className="text-white/50 text-sm md:text-lg mb-8 md:mb-12">AIがビジネスをどう変革できるか、一緒に考えましょう。</p>
-              <Link
-                href="/#contact"
-                className="inline-flex items-center gap-3 md:gap-4 text-base md:text-xl font-medium text-blue-400 hover:text-blue-300 transition-colors group"
-              >
-                <span>Get in touch</span>
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  className="group-hover:translate-x-2 transition-transform md:w-6 md:h-6"
-                >
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </Link>
             </div>
           </div>
         </section>
