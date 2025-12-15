@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { BlogHeader } from "@/components/blog-header"
@@ -8,6 +8,66 @@ import { BlogComments } from "@/components/blog-comments"
 import { BlogFavorite } from "@/components/blog-favorite"
 import { formatDate, getReadingTime, stripHtml, getFeaturedImageUrl, type WPPost, type WPAuthor, type WPTerm } from "@/lib/wordpress"
 import { addLike, fetchHasLiked, fetchLikeCounts, getClientId } from "@/lib/blog-likes"
+
+// Highlight.js for syntax highlighting
+import hljs from 'highlight.js/lib/core'
+import javascript from 'highlight.js/lib/languages/javascript'
+import typescript from 'highlight.js/lib/languages/typescript'
+import python from 'highlight.js/lib/languages/python'
+import go from 'highlight.js/lib/languages/go'
+import rust from 'highlight.js/lib/languages/rust'
+import java from 'highlight.js/lib/languages/java'
+import kotlin from 'highlight.js/lib/languages/kotlin'
+import swift from 'highlight.js/lib/languages/swift'
+import php from 'highlight.js/lib/languages/php'
+import ruby from 'highlight.js/lib/languages/ruby'
+import bash from 'highlight.js/lib/languages/bash'
+import json from 'highlight.js/lib/languages/json'
+import yaml from 'highlight.js/lib/languages/yaml'
+import sql from 'highlight.js/lib/languages/sql'
+import css from 'highlight.js/lib/languages/css'
+import scss from 'highlight.js/lib/languages/scss'
+import xml from 'highlight.js/lib/languages/xml'
+import csharp from 'highlight.js/lib/languages/csharp'
+import c from 'highlight.js/lib/languages/c'
+import cpp from 'highlight.js/lib/languages/cpp'
+import dockerfile from 'highlight.js/lib/languages/dockerfile'
+import graphql from 'highlight.js/lib/languages/graphql'
+import 'highlight.js/styles/github-dark.css'
+
+// Register languages
+hljs.registerLanguage('javascript', javascript)
+hljs.registerLanguage('js', javascript)
+hljs.registerLanguage('typescript', typescript)
+hljs.registerLanguage('ts', typescript)
+hljs.registerLanguage('python', python)
+hljs.registerLanguage('py', python)
+hljs.registerLanguage('go', go)
+hljs.registerLanguage('rust', rust)
+hljs.registerLanguage('java', java)
+hljs.registerLanguage('kotlin', kotlin)
+hljs.registerLanguage('swift', swift)
+hljs.registerLanguage('php', php)
+hljs.registerLanguage('ruby', ruby)
+hljs.registerLanguage('bash', bash)
+hljs.registerLanguage('shell', bash)
+hljs.registerLanguage('sh', bash)
+hljs.registerLanguage('json', json)
+hljs.registerLanguage('yaml', yaml)
+hljs.registerLanguage('yml', yaml)
+hljs.registerLanguage('sql', sql)
+hljs.registerLanguage('css', css)
+hljs.registerLanguage('scss', scss)
+hljs.registerLanguage('html', xml)
+hljs.registerLanguage('xml', xml)
+hljs.registerLanguage('csharp', csharp)
+hljs.registerLanguage('cs', csharp)
+hljs.registerLanguage('c', c)
+hljs.registerLanguage('cpp', cpp)
+hljs.registerLanguage('dockerfile', dockerfile)
+hljs.registerLanguage('docker', dockerfile)
+hljs.registerLanguage('graphql', graphql)
+
 
 // Heading structure type
 interface HeadingSection {
@@ -261,6 +321,65 @@ function BlogLikeButton({ slug }: { slug: string }) {
   )
 }
 
+// Language display names mapping
+const LANGUAGE_NAMES: Record<string, string> = {
+  javascript: 'JavaScript',
+  js: 'JavaScript',
+  typescript: 'TypeScript',
+  ts: 'TypeScript',
+  python: 'Python',
+  py: 'Python',
+  java: 'Java',
+  csharp: 'C#',
+  cs: 'C#',
+  cpp: 'C++',
+  c: 'C',
+  go: 'Go',
+  rust: 'Rust',
+  ruby: 'Ruby',
+  php: 'PHP',
+  swift: 'Swift',
+  kotlin: 'Kotlin',
+  scala: 'Scala',
+  html: 'HTML',
+  css: 'CSS',
+  scss: 'SCSS',
+  sass: 'Sass',
+  less: 'Less',
+  json: 'JSON',
+  xml: 'XML',
+  yaml: 'YAML',
+  yml: 'YAML',
+  markdown: 'Markdown',
+  md: 'Markdown',
+  sql: 'SQL',
+  bash: 'Bash',
+  shell: 'Shell',
+  sh: 'Shell',
+  powershell: 'PowerShell',
+  ps1: 'PowerShell',
+  dockerfile: 'Dockerfile',
+  docker: 'Docker',
+  nginx: 'Nginx',
+  apache: 'Apache',
+  graphql: 'GraphQL',
+  vue: 'Vue',
+  react: 'React',
+  jsx: 'JSX',
+  tsx: 'TSX',
+  dart: 'Dart',
+  r: 'R',
+  matlab: 'MATLAB',
+  perl: 'Perl',
+  lua: 'Lua',
+  haskell: 'Haskell',
+  elixir: 'Elixir',
+  erlang: 'Erlang',
+  clojure: 'Clojure',
+  text: 'Text',
+  plaintext: 'Plain Text',
+}
+
 // Process content to add IDs to headings (server-safe)
 function processContent(content: string): string {
   // Add IDs to headings using regex (works on both server and client)
@@ -274,6 +393,152 @@ function processContent(content: string): string {
     return `<${tag}${attrs} id="${id}">`
   })
 }
+
+
+// Clean up code text - remove extra blank lines and normalize whitespace
+function cleanCodeText(text: string): string {
+  // Split into lines
+  const lines = text.split('\n')
+  
+  // Remove leading/trailing empty lines
+  while (lines.length > 0 && lines[0].trim() === '') {
+    lines.shift()
+  }
+  while (lines.length > 0 && lines[lines.length - 1].trim() === '') {
+    lines.pop()
+  }
+  
+  // Remove excessive consecutive blank lines (keep max 1)
+  const cleanedLines: string[] = []
+  let prevWasEmpty = false
+  
+  for (const line of lines) {
+    const isEmpty = line.trim() === ''
+    if (isEmpty && prevWasEmpty) {
+      continue // Skip consecutive empty lines
+    }
+    cleanedLines.push(line)
+    prevWasEmpty = isEmpty
+  }
+  
+  return cleanedLines.join('\n')
+}
+
+// Code Block Enhancement Component
+function useCodeBlockEnhancement(containerRef: React.RefObject<HTMLElement | null>) {
+  useEffect(() => {
+    if (!containerRef.current) return
+
+    const codeBlocks = containerRef.current.querySelectorAll('pre.ts-code')
+    
+    codeBlocks.forEach((block) => {
+      // Skip if already enhanced
+      if (block.classList.contains('enhanced')) return
+      block.classList.add('enhanced')
+      
+      const pre = block as HTMLPreElement
+      const lang = pre.dataset.lang || 'text'
+      const title = pre.dataset.title || ''
+      const codeElement = pre.querySelector('code')
+      
+      // Get and clean code text
+      const rawCode = codeElement?.textContent || ''
+      const code = cleanCodeText(rawCode)
+      
+      // Create wrapper
+      const wrapper = document.createElement('div')
+      wrapper.className = 'ts-code-wrapper'
+      
+      // Create header
+      const header = document.createElement('div')
+      header.className = 'ts-code-header'
+      
+      // Language badge
+      const langBadge = document.createElement('span')
+      langBadge.className = 'ts-code-lang'
+      langBadge.textContent = LANGUAGE_NAMES[lang.toLowerCase()] || lang.toUpperCase()
+      header.appendChild(langBadge)
+      
+      // Title if exists
+      if (title) {
+        const titleSpan = document.createElement('span')
+        titleSpan.className = 'ts-code-title'
+        titleSpan.textContent = title
+        header.appendChild(titleSpan)
+      }
+      
+      // Copy button
+      const copyBtn = document.createElement('button')
+      copyBtn.className = 'ts-code-copy'
+      copyBtn.innerHTML = `
+        <svg class="copy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+        <svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span class="copy-text">コピー</span>
+      `
+      copyBtn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(code)
+          const copyIcon = copyBtn.querySelector('.copy-icon') as HTMLElement
+          const checkIcon = copyBtn.querySelector('.check-icon') as HTMLElement
+          const copyText = copyBtn.querySelector('.copy-text') as HTMLElement
+          
+          copyIcon.style.display = 'none'
+          checkIcon.style.display = 'block'
+          copyText.textContent = 'コピー完了!'
+          copyBtn.classList.add('copied')
+          
+          setTimeout(() => {
+            copyIcon.style.display = 'block'
+            checkIcon.style.display = 'none'
+            copyText.textContent = 'コピー'
+            copyBtn.classList.remove('copied')
+          }, 2000)
+        } catch (err) {
+          console.error('Failed to copy:', err)
+        }
+      })
+      header.appendChild(copyBtn)
+      
+      // Wrap everything
+      pre.parentNode?.insertBefore(wrapper, pre)
+      wrapper.appendChild(header)
+      wrapper.appendChild(pre)
+      
+      // Set language attribute for CSS styling
+      pre.dataset.language = lang.toLowerCase()
+      
+      if (codeElement) {
+        // Set cleaned code
+        codeElement.textContent = code
+        pre.className = 'ts-code enhanced'
+        
+        // Apply syntax highlighting with highlight.js
+        const langLower = lang.toLowerCase()
+        try {
+          if (hljs.getLanguage(langLower)) {
+            const result = hljs.highlight(code, { language: langLower })
+            codeElement.innerHTML = result.value
+            codeElement.classList.add('hljs')
+          } else {
+            // Auto-detect language if not found
+            const result = hljs.highlightAuto(code)
+            codeElement.innerHTML = result.value
+            codeElement.classList.add('hljs')
+          }
+        } catch (err) {
+          console.warn(`Highlight.js failed for language: ${langLower}`, err)
+          codeElement.textContent = code
+        }
+      }
+    })
+  }, [containerRef])
+}
+
 
 // Props type
 interface BlogPostClientProps {
@@ -298,6 +563,10 @@ export default function BlogPostClient({
 }: BlogPostClientProps) {
   const processedContent = processContent(post.content.rendered)
   const plainTitle = stripHtml(post.title.rendered)
+  const articleRef = useRef<HTMLDivElement>(null)
+  
+  // Enhance code blocks after content is rendered
+  useCodeBlockEnhancement(articleRef)
 
   return (
     <div className="min-h-screen bg-background">
@@ -419,6 +688,7 @@ export default function BlogPostClient({
             <article className="flex-1 min-w-0" itemScope itemType="https://schema.org/Article">
               <div className="bg-card rounded-xl border border-border p-6 md:p-10">
                 <div
+                  ref={articleRef}
                   className="article-content"
                   itemProp="articleBody"
                   dangerouslySetInnerHTML={{ __html: processedContent }}

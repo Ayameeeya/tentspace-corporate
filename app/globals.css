@@ -903,6 +903,622 @@ html {
   background: transparent;
 }
 
+/* ======================================
+   ts-code Block Styles (WordPress Custom Code Block)
+   ====================================== */
+.ts-code-wrapper {
+  margin: 1.5rem 0;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: #1e1e1e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+/* Code block header */
+.ts-code-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 1rem;
+  background: #2d2d2d;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Language badge */
+.ts-code-lang {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  border-radius: 0.375rem;
+  color: #f8fafc;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Title */
+.ts-code-title {
+  font-size: 0.8125rem;
+  color: #94a3b8;
+  font-family: var(--font-mono);
+}
+
+/* Copy button */
+.ts-code-copy {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  background: rgba(148, 163, 184, 0.1);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ts-code-copy:hover {
+  color: #f8fafc;
+  background: rgba(148, 163, 184, 0.2);
+  border-color: rgba(148, 163, 184, 0.3);
+}
+
+.ts-code-copy.copied {
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.ts-code-copy svg {
+  flex-shrink: 0;
+}
+
+.ts-code-copy .copy-text {
+  font-family: var(--font-sans);
+}
+
+/* Pre element inside wrapper */
+.ts-code-wrapper pre.ts-code {
+  margin: 0 !important;
+  padding: 1rem 1.25rem !important;
+  background: #1e1e1e !important;
+  border-radius: 0 0 0.75rem 0.75rem !important;
+  border: none !important;
+  overflow-x: auto;
+}
+
+.ts-code-wrapper pre.ts-code code {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.75;
+  color: #d4d4d4;
+  background: transparent !important;
+  padding: 0 !important;
+  white-space: pre;
+  tab-size: 2;
+  text-shadow: none !important;
+}
+
+/* Highlight.js override - ensure hljs styles take precedence */
+.ts-code-wrapper pre.ts-code code.hljs {
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+/* Prism.js Token Colors (VS Code Dark+ inspired) */
+.ts-code-wrapper .token.comment,
+.ts-code-wrapper .token.prolog,
+.ts-code-wrapper .token.doctype,
+.ts-code-wrapper .token.cdata {
+  color: #6a9955 !important;
+}
+
+.ts-code-wrapper .token.punctuation {
+  color: #d4d4d4 !important;
+}
+
+.ts-code-wrapper .token.property,
+.ts-code-wrapper .token.tag,
+.ts-code-wrapper .token.boolean,
+.ts-code-wrapper .token.number,
+.ts-code-wrapper .token.constant,
+.ts-code-wrapper .token.symbol {
+  color: #b5cea8 !important;
+}
+
+.ts-code-wrapper .token.selector,
+.ts-code-wrapper .token.attr-name,
+.ts-code-wrapper .token.string,
+.ts-code-wrapper .token.char,
+.ts-code-wrapper .token.builtin {
+  color: #ce9178 !important;
+}
+
+.ts-code-wrapper .token.operator,
+.ts-code-wrapper .token.entity,
+.ts-code-wrapper .token.url,
+.ts-code-wrapper .language-css .token.string,
+.ts-code-wrapper .style .token.string {
+  color: #d4d4d4 !important;
+}
+
+.ts-code-wrapper .token.atrule,
+.ts-code-wrapper .token.attr-value,
+.ts-code-wrapper .token.keyword {
+  color: #569cd6 !important;
+}
+
+.ts-code-wrapper .token.function,
+.ts-code-wrapper .token.method {
+  color: #dcdcaa !important;
+}
+
+.ts-code-wrapper .token.class-name,
+.ts-code-wrapper .token.type-name {
+  color: #4ec9b0 !important;
+}
+
+.ts-code-wrapper .token.regex,
+.ts-code-wrapper .token.important,
+.ts-code-wrapper .token.variable {
+  color: #d16969 !important;
+}
+
+.ts-code-wrapper .token.important,
+.ts-code-wrapper .token.bold {
+  font-weight: bold;
+}
+
+.ts-code-wrapper .token.italic {
+  font-style: italic;
+}
+
+.ts-code-wrapper .token.namespace {
+  color: #4ec9b0 !important;
+}
+
+.ts-code-wrapper .token.parameter {
+  color: #9cdcfe !important;
+}
+
+.ts-code-wrapper .token.control-flow-keyword {
+  color: #c586c0 !important;
+}
+
+/* Additional token types */
+.ts-code-wrapper .token.annotation {
+  color: #dcdcaa !important;
+}
+
+.ts-code-wrapper .token.deleted {
+  color: #ce9178 !important;
+}
+
+.ts-code-wrapper .token.inserted {
+  color: #b5cea8 !important;
+}
+
+/* Highlight.js Token Colors (VS Code Dark+ inspired) */
+.ts-code-wrapper code.hljs {
+  color: #d4d4d4 !important;
+}
+
+/* Comments */
+.ts-code-wrapper .hljs-comment,
+.ts-code-wrapper .hljs-quote {
+  color: #6a9955 !important;
+  font-style: italic;
+}
+
+/* Keywords and control flow */
+.ts-code-wrapper .hljs-keyword,
+.ts-code-wrapper .hljs-selector-tag,
+.ts-code-wrapper .hljs-addition {
+  color: #569cd6 !important;
+}
+
+/* Numbers and literals */
+.ts-code-wrapper .hljs-number,
+.ts-code-wrapper .hljs-literal {
+  color: #b5cea8 !important;
+}
+
+/* Strings */
+.ts-code-wrapper .hljs-string,
+.ts-code-wrapper .hljs-doctag,
+.ts-code-wrapper .hljs-regexp {
+  color: #ce9178 !important;
+}
+
+/* Function and class names */
+.ts-code-wrapper .hljs-title,
+.ts-code-wrapper .hljs-section,
+.ts-code-wrapper .hljs-selector-id {
+  color: #dcdcaa !important;
+}
+
+/* Function titles with subclass */
+.ts-code-wrapper .hljs-title.function_,
+.ts-code-wrapper .hljs-title.class_,
+.ts-code-wrapper [class*="hljs-title"] {
+  color: #dcdcaa !important;
+}
+
+/* Types and built-ins */
+.ts-code-wrapper .hljs-type,
+.ts-code-wrapper .hljs-class .hljs-title,
+.ts-code-wrapper .hljs-built_in {
+  color: #4ec9b0 !important;
+}
+
+/* Variables */
+.ts-code-wrapper .hljs-variable,
+.ts-code-wrapper .hljs-template-variable,
+.ts-code-wrapper [class*="hljs-variable"] {
+  color: #9cdcfe !important;
+}
+
+/* Attributes */
+.ts-code-wrapper .hljs-attr,
+.ts-code-wrapper .hljs-attribute {
+  color: #9cdcfe !important;
+}
+
+/* Function parameters */
+.ts-code-wrapper .hljs-params {
+  color: #9cdcfe !important;
+}
+
+/* Properties */
+.ts-code-wrapper .hljs-property {
+  color: #9cdcfe !important;
+}
+
+/* Punctuation and operators */
+.ts-code-wrapper .hljs-punctuation,
+.ts-code-wrapper .hljs-operator {
+  color: #d4d4d4 !important;
+}
+
+/* Function definitions */
+.ts-code-wrapper .hljs-function {
+  color: inherit !important;
+}
+
+.ts-code-wrapper .hljs-function .hljs-keyword {
+  color: #569cd6 !important;
+}
+
+.ts-code-wrapper .hljs-function .hljs-title {
+  color: #dcdcaa !important;
+}
+
+.ts-code-wrapper .hljs-function .hljs-params {
+  color: #9cdcfe !important;
+}
+
+/* Meta and preprocessor */
+.ts-code-wrapper .hljs-meta {
+  color: #569cd6 !important;
+}
+
+.ts-code-wrapper .hljs-meta .hljs-keyword {
+  color: #569cd6 !important;
+}
+
+.ts-code-wrapper .hljs-meta .hljs-string {
+  color: #ce9178 !important;
+}
+
+/* Symbols and misc */
+.ts-code-wrapper .hljs-symbol,
+.ts-code-wrapper .hljs-bullet,
+.ts-code-wrapper .hljs-link {
+  color: #b5cea8 !important;
+}
+
+.ts-code-wrapper .hljs-deletion {
+  color: #ce9178 !important;
+}
+
+.ts-code-wrapper .hljs-selector-class {
+  color: #d7ba7d !important;
+}
+
+/* HTML/XML tags */
+.ts-code-wrapper .hljs-name,
+.ts-code-wrapper .hljs-tag {
+  color: #569cd6 !important;
+}
+
+.ts-code-wrapper .hljs-subst {
+  color: #d4d4d4 !important;
+}
+
+/* Emphasis */
+.ts-code-wrapper .hljs-emphasis {
+  font-style: italic;
+}
+
+.ts-code-wrapper .hljs-strong {
+  font-weight: bold;
+}
+
+/* Invocation calls (like Rust macros) */
+.ts-code-wrapper [class*="invoke__"] {
+  color: #dcdcaa !important;
+}
+
+/* Language specific variable */
+.ts-code-wrapper .language_ {
+  color: #9cdcfe !important;
+}
+
+/* Line numbers and content layout */
+.ts-code-content {
+  display: flex;
+}
+
+.ts-code-line-numbers {
+  display: flex;
+  flex-direction: column;
+  padding-right: 1rem;
+  margin-right: 1rem;
+  border-right: 1px solid rgba(148, 163, 184, 0.1);
+  user-select: none;
+}
+
+.ts-line-num {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  color: #475569;
+  text-align: right;
+  min-width: 1.5rem;
+}
+
+.ts-line-num.highlighted {
+  color: #fbbf24;
+}
+
+.ts-code-lines {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-x: auto;
+}
+
+.ts-code-line {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: #e2e8f0;
+  white-space: pre;
+}
+
+.ts-code-line.highlighted {
+  background: rgba(251, 191, 36, 0.1);
+  margin: 0 -1.25rem;
+  padding: 0 1.25rem;
+  border-left: 3px solid #fbbf24;
+}
+
+/* Language-specific color accents */
+.ts-code-wrapper pre[data-language="javascript"] + .ts-code-header .ts-code-lang,
+.ts-code-wrapper pre[data-language="js"] + .ts-code-header .ts-code-lang {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #0f172a;
+}
+
+/* Fix: header comes before pre, so use :has() */
+.ts-code-wrapper:has(pre[data-language="javascript"]) .ts-code-lang,
+.ts-code-wrapper:has(pre[data-language="js"]) .ts-code-lang {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #0f172a;
+}
+
+.ts-code-wrapper:has(pre[data-language="typescript"]) .ts-code-lang,
+.ts-code-wrapper:has(pre[data-language="ts"]) .ts-code-lang {
+  background: linear-gradient(135deg, #3178c6, #235a97);
+}
+
+.ts-code-wrapper:has(pre[data-language="python"]) .ts-code-lang,
+.ts-code-wrapper:has(pre[data-language="py"]) .ts-code-lang {
+  background: linear-gradient(135deg, #3776ab, #ffd43b);
+}
+
+.ts-code-wrapper:has(pre[data-language="java"]) .ts-code-lang {
+  background: linear-gradient(135deg, #f89820, #5382a1);
+}
+
+.ts-code-wrapper:has(pre[data-language="go"]) .ts-code-lang {
+  background: linear-gradient(135deg, #00add8, #007d9c);
+}
+
+.ts-code-wrapper:has(pre[data-language="rust"]) .ts-code-lang {
+  background: linear-gradient(135deg, #ce422b, #a72145);
+}
+
+.ts-code-wrapper:has(pre[data-language="ruby"]) .ts-code-lang {
+  background: linear-gradient(135deg, #cc342d, #9b1c1c);
+}
+
+.ts-code-wrapper:has(pre[data-language="php"]) .ts-code-lang {
+  background: linear-gradient(135deg, #777bb4, #4f5b93);
+}
+
+.ts-code-wrapper:has(pre[data-language="swift"]) .ts-code-lang {
+  background: linear-gradient(135deg, #f05138, #d93a26);
+}
+
+.ts-code-wrapper:has(pre[data-language="kotlin"]) .ts-code-lang {
+  background: linear-gradient(135deg, #7f52ff, #c711e1);
+}
+
+.ts-code-wrapper:has(pre[data-language="csharp"]) .ts-code-lang,
+.ts-code-wrapper:has(pre[data-language="cs"]) .ts-code-lang {
+  background: linear-gradient(135deg, #512bd4, #953dac);
+}
+
+.ts-code-wrapper:has(pre[data-language="cpp"]) .ts-code-lang,
+.ts-code-wrapper:has(pre[data-language="c"]) .ts-code-lang {
+  background: linear-gradient(135deg, #00599c, #044f88);
+}
+
+.ts-code-wrapper:has(pre[data-language="html"]) .ts-code-lang {
+  background: linear-gradient(135deg, #e34f26, #c73d1c);
+}
+
+.ts-code-wrapper:has(pre[data-language="css"]) .ts-code-lang {
+  background: linear-gradient(135deg, #1572b6, #33a9dc);
+}
+
+.ts-code-wrapper:has(pre[data-language="scss"]) .ts-code-lang,
+.ts-code-wrapper:has(pre[data-language="sass"]) .ts-code-lang {
+  background: linear-gradient(135deg, #cc6699, #bf4080);
+}
+
+.ts-code-wrapper:has(pre[data-language="json"]) .ts-code-lang {
+  background: linear-gradient(135deg, #292929, #444444);
+}
+
+.ts-code-wrapper:has(pre[data-language="sql"]) .ts-code-lang {
+  background: linear-gradient(135deg, #e38d13, #cc7000);
+}
+
+.ts-code-wrapper:has(pre[data-language="bash"]) .ts-code-lang,
+.ts-code-wrapper:has(pre[data-language="shell"]) .ts-code-lang,
+.ts-code-wrapper:has(pre[data-language="sh"]) .ts-code-lang {
+  background: linear-gradient(135deg, #4eaa25, #3d8c1e);
+}
+
+.ts-code-wrapper:has(pre[data-language="dockerfile"]) .ts-code-lang,
+.ts-code-wrapper:has(pre[data-language="docker"]) .ts-code-lang {
+  background: linear-gradient(135deg, #2496ed, #1a6fb3);
+}
+
+.ts-code-wrapper:has(pre[data-language="yaml"]) .ts-code-lang,
+.ts-code-wrapper:has(pre[data-language="yml"]) .ts-code-lang {
+  background: linear-gradient(135deg, #cb171e, #a3131a);
+}
+
+.ts-code-wrapper:has(pre[data-language="graphql"]) .ts-code-lang {
+  background: linear-gradient(135deg, #e10098, #b8007a);
+}
+
+.ts-code-wrapper:has(pre[data-language="vue"]) .ts-code-lang {
+  background: linear-gradient(135deg, #42b883, #35495e);
+}
+
+.ts-code-wrapper:has(pre[data-language="react"]) .ts-code-lang,
+.ts-code-wrapper:has(pre[data-language="jsx"]) .ts-code-lang,
+.ts-code-wrapper:has(pre[data-language="tsx"]) .ts-code-lang {
+  background: linear-gradient(135deg, #61dafb, #00c4e6);
+  color: #0f172a;
+}
+
+.ts-code-wrapper:has(pre[data-language="dart"]) .ts-code-lang {
+  background: linear-gradient(135deg, #0175c2, #02569b);
+}
+
+/* Non-wrapped ts-code blocks fallback */
+pre.ts-code:not(.enhanced) {
+  position: relative;
+  margin: 1.5rem 0;
+  padding: 1.25rem !important;
+  background: #0f172a !important;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  overflow-x: auto;
+}
+
+pre.ts-code:not(.enhanced)::before {
+  content: attr(data-lang);
+  position: absolute;
+  top: 0.5rem;
+  right: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  color: #94a3b8;
+  background: rgba(148, 163, 184, 0.1);
+  border-radius: 0.25rem;
+}
+
+pre.ts-code code {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: #e2e8f0 !important;
+  background: transparent !important;
+}
+
+/* Dark mode - already dark, so minimal changes */
+.dark .ts-code-wrapper {
+  border-color: rgba(148, 163, 184, 0.15);
+}
+
+/* Scrollbar for code blocks */
+.ts-code-wrapper pre::-webkit-scrollbar {
+  height: 6px;
+}
+
+.ts-code-wrapper pre::-webkit-scrollbar-track {
+  background: rgba(148, 163, 184, 0.05);
+  border-radius: 3px;
+}
+
+.ts-code-wrapper pre::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.2);
+  border-radius: 3px;
+}
+
+.ts-code-wrapper pre::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.3);
+}
+
+/* Mobile adjustments */
+@media (max-width: 640px) {
+  .ts-code-wrapper {
+    margin: 1rem -1rem;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+  
+  .ts-code-header {
+    padding: 0.5rem 0.75rem;
+    gap: 0.5rem;
+  }
+  
+  .ts-code-lang {
+    font-size: 0.625rem;
+    padding: 0.1875rem 0.5rem;
+  }
+  
+  .ts-code-copy .copy-text {
+    display: none;
+  }
+  
+  .ts-code-wrapper pre.ts-code {
+    padding: 0.875rem 1rem !important;
+  }
+  
+  .ts-code-wrapper pre.ts-code code,
+  .ts-code-line {
+    font-size: 0.8125rem;
+  }
+}
+
 /* Hide scrollbar for category tabs */
 .scrollbar-hide {
   -ms-overflow-style: none;
