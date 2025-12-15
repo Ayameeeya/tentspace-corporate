@@ -138,6 +138,7 @@ function FeaturedHeroCard({ post, likes = 0 }: { post: WPPost; likes?: number })
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-700"
               />
+              <div className="absolute inset-0 bg-black/10" />
 
               {/* Category Badge on Image */}
               {categories[0] && (
@@ -214,6 +215,7 @@ function BlogCard({ post, likes = 0 }: { post: WPPost; likes?: number }) {
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-500"
               />
+              <div className="absolute inset-0 bg-black/10" />
             </div>
           )}
 
@@ -482,7 +484,7 @@ function BlogPageContent() {
         setLoading(true)
         const { posts: fetchedPosts, totalPages: total, total: totalCount } = await getPosts({
           page: currentPage,
-          perPage: 12,
+          perPage: 11,
           search: searchQuery || undefined,
         })
         setPosts(fetchedPosts)
