@@ -271,8 +271,10 @@ function BlogLikeButton({ slug }: { slug: string }) {
       try {
         const counts = await fetchLikeCounts([slug])
         setCount(counts[slug] || 0)
-        const liked = await fetchHasLiked(slug, clientId)
-        setHasLiked(liked)
+        if (clientId != null) {
+          const liked = await fetchHasLiked(slug, clientId)
+          setHasLiked(liked)
+        }
       } catch (err) {
         console.error("Failed to fetch likes", err)
       }
@@ -395,33 +397,21 @@ function processContent(content: string): string {
 }
 
 
-// Clean up code text - remove extra blank lines and normalize whitespace
+// Clean up code text - remove leading/trailing empty lines
 function cleanCodeText(text: string): string {
   // Split into lines
   const lines = text.split('\n')
   
-  // Remove leading/trailing empty lines
+  // Remove leading empty lines
   while (lines.length > 0 && lines[0].trim() === '') {
     lines.shift()
   }
+  // Remove trailing empty lines
   while (lines.length > 0 && lines[lines.length - 1].trim() === '') {
     lines.pop()
   }
   
-  // Remove excessive consecutive blank lines (keep max 1)
-  const cleanedLines: string[] = []
-  let prevWasEmpty = false
-  
-  for (const line of lines) {
-    const isEmpty = line.trim() === ''
-    if (isEmpty && prevWasEmpty) {
-      continue // Skip consecutive empty lines
-    }
-    cleanedLines.push(line)
-    prevWasEmpty = isEmpty
-  }
-  
-  return cleanedLines.join('\n')
+  return lines.join('\n')
 }
 
 // Code Block Enhancement Component
@@ -442,7 +432,15 @@ function useCodeBlockEnhancement(containerRef: React.RefObject<HTMLElement | nul
       const codeElement = pre.querySelector('code')
       
       // Get and clean code text
-      const rawCode = codeElement?.textContent || ''
+      // Replace <br> tags with newlines before getting text content
+      let rawCode = ''
+      if (codeElement) {
+        // Clone the element to avoid modifying the original
+        const tempElement = codeElement.cloneNode(true) as HTMLElement
+        // Replace <br> tags with newlines
+        tempElement.innerHTML = tempElement.innerHTML.replace(/<br\s*\/?>/gi, '\n')
+        rawCode = tempElement.textContent || ''
+      }
       const code = cleanCodeText(rawCode)
       
       // Create wrapper
@@ -471,11 +469,11 @@ function useCodeBlockEnhancement(containerRef: React.RefObject<HTMLElement | nul
       const copyBtn = document.createElement('button')
       copyBtn.className = 'ts-code-copy'
       copyBtn.innerHTML = `
-        <svg class="copy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg class="copy-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
           <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
         </svg>
-        <svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+        <svg class="check-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
           <polyline points="20 6 9 17 4 12"></polyline>
         </svg>
         <span class="copy-text">コピー</span>

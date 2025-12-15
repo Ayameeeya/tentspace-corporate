@@ -919,8 +919,8 @@ html {
 .ts-code-header {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.625rem 1rem;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
   background: #2d2d2d;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -929,12 +929,12 @@ html {
 .ts-code-lang {
   display: inline-flex;
   align-items: center;
-  padding: 0.25rem 0.625rem;
-  font-size: 0.6875rem;
+  padding: 0.125rem 0.4rem;
+  font-size: 0.6rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.025em;
-  border-radius: 0.375rem;
+  letter-spacing: 0.02em;
+  border-radius: 0.25rem;
   color: #f8fafc;
   background: linear-gradient(135deg, #3b82f6, #2563eb);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
@@ -952,9 +952,9 @@ html {
   margin-left: auto;
   display: inline-flex;
   align-items: center;
-  gap: 0.375rem;
-  padding: 0.375rem 0.75rem;
-  font-size: 0.75rem;
+  gap: 0.25rem;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.65rem;
   color: #94a3b8;
   background: rgba(148, 163, 184, 0.1);
   border: 1px solid rgba(148, 163, 184, 0.2);
@@ -1469,21 +1469,27 @@ pre.ts-code code {
 
 /* Scrollbar for code blocks */
 .ts-code-wrapper pre::-webkit-scrollbar {
-  height: 6px;
+  height: 4px;
 }
 
 .ts-code-wrapper pre::-webkit-scrollbar-track {
-  background: rgba(148, 163, 184, 0.05);
-  border-radius: 3px;
+  background: transparent;
 }
 
 .ts-code-wrapper pre::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.2);
-  border-radius: 3px;
+  background: rgba(148, 163, 184, 0.15);
+  border-radius: 2px;
+  transition: background 0.2s ease;
 }
 
 .ts-code-wrapper pre::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.3);
+  background: rgba(148, 163, 184, 0.35);
+}
+
+/* Firefox scrollbar */
+.ts-code-wrapper pre {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.15) transparent;
 }
 
 /* Mobile adjustments */
@@ -1496,13 +1502,17 @@ pre.ts-code code {
   }
   
   .ts-code-header {
-    padding: 0.5rem 0.75rem;
-    gap: 0.5rem;
+    padding: 0.3rem 0.5rem;
+    gap: 0.375rem;
   }
   
   .ts-code-lang {
-    font-size: 0.625rem;
-    padding: 0.1875rem 0.5rem;
+    font-size: 0.55rem;
+    padding: 0.1rem 0.35rem;
+  }
+  
+  .ts-code-copy {
+    padding: 0.15rem 0.35rem;
   }
   
   .ts-code-copy .copy-text {
