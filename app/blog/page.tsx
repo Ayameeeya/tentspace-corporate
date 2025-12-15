@@ -131,14 +131,13 @@ function FeaturedHeroCard({ post, likes = 0 }: { post: WPPost; likes?: number })
         <div className="relative overflow-hidden">
           {/* Image */}
           {imageUrl && (
-            <div className="relative aspect-[21/9] bg-slate-100 dark:bg-gray-800 overflow-hidden mb-8">
+            <div className="relative aspect-video overflow-hidden mb-8">
               <Image
                 src={imageUrl}
                 alt={post.title.rendered}
                 fill
-                className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                className="object-cover group-hover:scale-105 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
 
               {/* Category Badge on Image */}
               {categories[0] && (
@@ -208,12 +207,12 @@ function BlogCard({ post, likes = 0 }: { post: WPPost; likes?: number }) {
         <div className="h-full flex flex-col">
           {/* Image */}
           {imageUrl && (
-            <div className="relative aspect-[4/3] bg-slate-100 dark:bg-gray-800 overflow-hidden mb-5">
+            <div className="relative aspect-video overflow-hidden mb-5">
               <Image
                 src={imageUrl}
                 alt={post.title.rendered}
                 fill
-                className="object-contain group-hover:scale-105 transition-transform duration-500"
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
               />
             </div>
           )}
@@ -649,7 +648,7 @@ function BlogPageContent() {
               <div className="grid md:grid-cols-2 gap-8 md:gap-12">
                 {[1, 2, 3, 4].map((i) => (
                   <div key={i} className="animate-pulse">
-                    <div className="aspect-[4/3] bg-slate-200 dark:bg-gray-700 mb-5" />
+                    <div className="aspect-video bg-slate-200 dark:bg-gray-700 mb-5" />
                     <div className="space-y-3">
                       <div className="h-3 bg-slate-200 dark:bg-gray-700 rounded w-1/4" />
                       <div className="h-8 bg-slate-200 dark:bg-gray-700 rounded w-full" />
