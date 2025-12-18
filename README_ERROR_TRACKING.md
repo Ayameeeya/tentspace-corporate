@@ -67,10 +67,10 @@ npm install
 `.env.local` ファイルに以下を追加:
 
 ```env
-# AWS認証情報
-AWS_ACCESS_KEY_ID=AKIAXXXXXXXXX
-AWS_SECRET_ACCESS_KEY=your_secret_key_here
-AWS_REGION=ap-northeast-1
+# CloudWatch AWS認証情報
+CLOUDWATCH_AWS_ACCESS_KEY_ID=AKIAXXXXXXXXX
+CLOUDWATCH_AWS_SECRET_ACCESS_KEY=your_secret_key_here
+CLOUDWATCH_AWS_REGION=ap-northeast-1
 
 # CloudWatch設定
 CLOUDWATCH_LOG_GROUP_NAME=/tentspace/frontend-errors

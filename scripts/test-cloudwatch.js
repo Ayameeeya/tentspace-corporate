@@ -8,27 +8,27 @@ async function testCloudWatchConnection() {
 
   // 1. 環境変数チェック
   console.log('📋 環境変数チェック:');
-  console.log(`  AWS_ACCESS_KEY_ID: ${process.env.AWS_ACCESS_KEY_ID ? '✅ 設定済み' : '❌ 未設定'}`);
-  console.log(`  AWS_SECRET_ACCESS_KEY: ${process.env.AWS_SECRET_ACCESS_KEY ? '✅ 設定済み' : '❌ 未設定'}`);
-  console.log(`  AWS_REGION: ${process.env.AWS_REGION || 'ap-northeast-1'}`);
+  console.log(`  CLOUDWATCH_AWS_ACCESS_KEY_ID: ${process.env.CLOUDWATCH_AWS_ACCESS_KEY_ID ? '✅ 設定済み' : '❌ 未設定'}`);
+  console.log(`  CLOUDWATCH_AWS_SECRET_ACCESS_KEY: ${process.env.CLOUDWATCH_AWS_SECRET_ACCESS_KEY ? '✅ 設定済み' : '❌ 未設定'}`);
+  console.log(`  CLOUDWATCH_AWS_REGION: ${process.env.CLOUDWATCH_AWS_REGION || 'ap-northeast-1'}`);
   console.log(`  CLOUDWATCH_LOG_GROUP_NAME: ${process.env.CLOUDWATCH_LOG_GROUP_NAME || '/tentspace/frontend-errors'}`);
   console.log(`  NODE_ENV: ${process.env.NODE_ENV || 'development'}\n`);
 
-  if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
+  if (!process.env.CLOUDWATCH_AWS_ACCESS_KEY_ID || !process.env.CLOUDWATCH_AWS_SECRET_ACCESS_KEY) {
     console.error('❌ AWS認証情報が設定されていません');
     console.log('\n.env.local に以下を追加してください:');
-    console.log('AWS_ACCESS_KEY_ID=your_access_key');
-    console.log('AWS_SECRET_ACCESS_KEY=your_secret_key');
+    console.log('CLOUDWATCH_AWS_ACCESS_KEY_ID=your_access_key');
+    console.log('CLOUDWATCH_AWS_SECRET_ACCESS_KEY=your_secret_key');
     return;
   }
 
   // 2. CloudWatch接続テスト
   try {
     const client = new CloudWatchLogsClient({
-      region: process.env.AWS_REGION || 'ap-northeast-1',
+      region: process.env.CLOUDWATCH_AWS_REGION || 'ap-northeast-1',
       credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+        accessKeyId: process.env.CLOUDWATCH_AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.CLOUDWATCH_AWS_SECRET_ACCESS_KEY,
       },
     });
 

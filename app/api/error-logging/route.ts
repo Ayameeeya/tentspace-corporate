@@ -9,10 +9,10 @@ import {
 
 // CloudWatch Logs クライアント初期化
 const cloudWatchClient = new CloudWatchLogsClient({
-  region: process.env.AWS_REGION || 'ap-northeast-1',
+  region: process.env.CLOUDWATCH_AWS_REGION || 'ap-northeast-1',
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
+    accessKeyId: process.env.CLOUDWATCH_AWS_ACCESS_KEY_ID || '',
+    secretAccessKey: process.env.CLOUDWATCH_AWS_SECRET_ACCESS_KEY || '',
   },
 });
 
@@ -273,7 +273,7 @@ async function sendToCloudWatch(errorLog: ErrorLog) {
 export async function POST(request: NextRequest) {
   try {
     // AWS認証情報チェック
-    if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
+    if (!process.env.CLOUDWATCH_AWS_ACCESS_KEY_ID || !process.env.CLOUDWATCH_AWS_SECRET_ACCESS_KEY) {
       console.error('AWS credentials are not configured');
       // 開発環境の場合はコンソールに出力のみ
       if (process.env.NODE_ENV === 'development') {
@@ -339,7 +339,7 @@ export async function GET() {
     logStreamName: generateLogStreamName(), // 今日のログストリーム名
     logStreamPrefix: LOG_STREAM_PREFIX,
     environment: process.env.NODE_ENV || 'development',
-    awsConfigured: !!(process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY),
+    awsConfigured: !!(process.env.CLOUDWATCH_AWS_ACCESS_KEY_ID && process.env.CLOUDWATCH_AWS_SECRET_ACCESS_KEY),
   });
 }
 

@@ -31,10 +31,10 @@
 `.env.local`に以下を追加：
 
 ```bash
-# AWS認証情報
-AWS_REGION=ap-northeast-1
-AWS_ACCESS_KEY_ID=your_access_key_id
-AWS_SECRET_ACCESS_KEY=your_secret_access_key
+# CloudWatch AWS認証情報
+CLOUDWATCH_AWS_REGION=ap-northeast-1
+CLOUDWATCH_AWS_ACCESS_KEY_ID=your_access_key_id
+CLOUDWATCH_AWS_SECRET_ACCESS_KEY=your_secret_access_key
 
 # ロググループ設定（オプション）
 CLOUDWATCH_LOG_GROUP_NAME=/tentspace/frontend-errors
@@ -353,9 +353,9 @@ logError(error, {
 
 ### エラーが送信されない
 
-1. AWS認証情報を確認：
+1. CloudWatch AWS認証情報を確認：
 ```bash
-echo $AWS_ACCESS_KEY_ID
+echo $CLOUDWATCH_AWS_ACCESS_KEY_ID
 ```
 
 2. APIエンドポイントの動作確認：

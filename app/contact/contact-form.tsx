@@ -1,13 +1,45 @@
+"use client"
+
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Send } from "lucide-react"
 
 export function ContactForm() {
+  const router = useRouter()
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+
+    const form = e.currentTarget
+    const formData = new FormData(form)
+
+    try {
+      const response = await fetch(
+        process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL || "",
+        {
+          method: "POST",
+          body: formData,
+        }
+      )
+
+      if (response.ok) {
+        router.push("/contact/completed")
+      } else {
+        alert("送信に失敗しました。もう一度お試しください。")
+        setIsSubmitting(false)
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error)
+      alert("送信に失敗しました。もう一度お試しください。")
+      setIsSubmitting(false)
+    }
+  }
+
   return (
     <div className="rounded-2xl bg-white p-8 shadow-2xl md:p-12">
-      <form
-        action={process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL}
-        method="POST"
-        className="space-y-6"
-      >
+      <form onSubmit={handleSubmit} className="space-y-6">
         {/* Name and Email */}
         <div className="grid gap-6 md:grid-cols-2">
           <div className="space-y-2">
@@ -22,7 +54,8 @@ export function ContactForm() {
               id="name"
               name="name"
               required
-              className="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={isSubmitting}
+              className="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
               placeholder="山田 太郎"
             />
           </div>
@@ -38,7 +71,8 @@ export function ContactForm() {
               id="email"
               name="email"
               required
-              className="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={isSubmitting}
+              className="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
               placeholder="taro@example.com"
             />
           </div>
@@ -53,7 +87,8 @@ export function ContactForm() {
             type="text"
             id="company"
             name="company"
-            className="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            disabled={isSubmitting}
+            className="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
             placeholder="株式会社Example"
           />
         </div>
@@ -67,7 +102,8 @@ export function ContactForm() {
             type="tel"
             id="phone"
             name="phone"
-            className="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            disabled={isSubmitting}
+            className="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
             placeholder="03-1234-5678"
           />
         </div>
@@ -84,7 +120,8 @@ export function ContactForm() {
             id="inquiry_type"
             name="inquiry_type"
             required
-            className="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 transition-colors focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            disabled={isSubmitting}
+            className="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 transition-colors focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <option value="">選択してください</option>
             <option value="ai-development">AI開発・導入のご相談</option>
@@ -111,7 +148,8 @@ export function ContactForm() {
             name="message"
             rows={6}
             required
-            className="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            disabled={isSubmitting}
+            className="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
             placeholder="新規サービスの開発について相談したい..."
           />
         </div>
@@ -136,10 +174,38 @@ export function ContactForm() {
         <div className="text-center">
           <button
             type="submit"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-12 py-4 text-lg font-bold text-white shadow-lg transition-all hover:from-blue-700 hover:to-purple-700 hover:shadow-xl md:w-auto"
+            disabled={isSubmitting}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-12 py-4 text-lg font-bold text-white shadow-lg transition-all hover:from-blue-700 hover:to-purple-700 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 md:w-auto"
           >
-            <Send className="h-5 w-5" />
-            送信する
+            {isSubmitting ? (
+              <>
+                <svg
+                  className="h-5 w-5 animate-spin"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  />
+                </svg>
+                送信中...
+              </>
+            ) : (
+              <>
+                <Send className="h-5 w-5" />
+                送信する
+              </>
+            )}
           </button>
         </div>
       </form>
