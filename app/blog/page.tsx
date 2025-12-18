@@ -4,14 +4,15 @@ import { useEffect, useState, useCallback, Suspense, useRef } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
+import Masonry from 'react-masonry-css'
 import { gsap } from "gsap"
 import { BlogHeader } from "@/components/blog-header"
-import { BlogCarousel } from "@/components/blog-carousel"
 import { BlogFooter } from "@/components/blog-footer"
+import { EyeLoader } from "@/components/eye-loader"
 import { getPosts, getCategories, getFeaturedImageUrl, stripHtml, formatDate, getReadingTime, type WPPost, type WPCategory } from "@/lib/wordpress"
-import { fetchLikeCounts, fetchTotalLikes } from "@/lib/blog-likes"
+import { fetchLikeCounts } from "@/lib/blog-likes"
 
-// Category Filter Component with scroll detection
+// Category Filter Component
 function CategoryFilter({
   categories,
   searchQuery,
@@ -55,19 +56,18 @@ function CategoryFilter({
   }, [checkScroll])
 
   return (
-    <div className="bg-white dark:bg-background border-b border-slate-200 dark:border-border">
+    <div className="bg-background border-b border-border sticky top-[113px] md:top-[121px] z-30">
       <div className="max-w-[1400px] mx-auto">
         <div className="relative group">
-          {/* Fade Gradients & Scroll Buttons */}
           {showLeftFade && (
             <>
-              <div className="absolute left-0 top-0 bottom-0 w-12 md:w-16 bg-gradient-to-r from-white dark:from-background to-transparent pointer-events-none z-10" />
+              <div className="absolute left-0 top-0 bottom-0 w-12 md:w-16 bg-gradient-to-r from-background to-transparent pointer-events-none z-10" />
               <button
                 onClick={() => scroll('left')}
-                className="hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white dark:bg-background rounded-full shadow-lg border border-gray-200 dark:border-border items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-all opacity-0 group-hover:opacity-100"
+                className="hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-background rounded-full shadow-lg border border-border items-center justify-center hover:bg-muted transition-all opacity-0 group-hover:opacity-100"
                 aria-label="Scroll left"
               >
-                <svg className="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
               </button>
@@ -75,13 +75,13 @@ function CategoryFilter({
           )}
           {showRightFade && (
             <>
-              <div className="absolute right-0 top-0 bottom-0 w-12 md:w-16 bg-gradient-to-l from-white dark:from-background to-transparent pointer-events-none z-10" />
+              <div className="absolute right-0 top-0 bottom-0 w-12 md:w-16 bg-gradient-to-l from-background to-transparent pointer-events-none z-10" />
               <button
                 onClick={() => scroll('right')}
-                className="hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white dark:bg-background rounded-full shadow-lg border border-gray-200 dark:border-border items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-all opacity-0 group-hover:opacity-100"
+                className="hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-background rounded-full shadow-lg border border-border items-center justify-center hover:bg-muted transition-all opacity-0 group-hover:opacity-100"
                 aria-label="Scroll right"
               >
-                <svg className="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </button>
@@ -90,23 +90,22 @@ function CategoryFilter({
 
           <div
             ref={scrollRef}
-            className="flex items-center gap-3 overflow-x-auto py-5 scrollbar-hide scroll-smooth px-6 md:px-12 lg:px-16"
+            className="flex items-center gap-2 overflow-x-auto py-4 scrollbar-hide scroll-smooth px-6 md:px-12 lg:px-16"
           >
             <button
               onClick={() => clearSearch()}
-              className={`flex-shrink-0 px-5 py-2.5 text-sm font-semibold transition-all whitespace-nowrap ${!searchQuery
+              className={`flex-shrink-0 px-4 py-2 text-xs md:text-sm font-medium transition-all whitespace-nowrap rounded-full ${!searchQuery
                 ? 'bg-foreground text-background'
-                : 'text-slate-600 dark:text-gray-400 hover:text-foreground'
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                 }`}
             >
-              All Topics
+              All
             </button>
-            <div className="w-px h-6 bg-slate-200 dark:bg-gray-700 flex-shrink-0" />
             {categories.map((category) => (
               <Link
                 key={category.id}
                 href={`/blog/categories/${category.slug}`}
-                className="flex-shrink-0 px-5 py-2.5 text-sm font-semibold text-slate-600 dark:text-gray-400 hover:text-foreground transition-colors whitespace-nowrap"
+                className="flex-shrink-0 px-4 py-2 text-xs md:text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors whitespace-nowrap rounded-full"
               >
                 {category.name}
               </Link>
@@ -118,138 +117,137 @@ function CategoryFilter({
   )
 }
 
-// Featured Hero Card - Large
-function FeaturedHeroCard({ post, likes = 0 }: { post: WPPost; likes?: number }) {
+// Get random card variant for visual variety
+function getCardVariant(index: number): 'tall' | 'wide' | 'square' {
+  const patterns = ['tall', 'wide', 'square', 'tall', 'square', 'wide', 'square', 'tall', 'wide']
+  return patterns[index % patterns.length] as 'tall' | 'wide' | 'square'
+}
+
+// Get random fallback image - no duplicates within 10 posts, consistent for each post
+function getFallbackImage(postId: number, index: number): string {
+  const images = [
+    '/blog-placeholders/annie-spratt-oCqCLEPOf40.jpg',
+    '/blog-placeholders/krystal-ng-1PlVbeOCd78.jpg',
+    '/blog-placeholders/bharath-kumar-biXeua5P7ZU.jpg',
+    '/blog-placeholders/olli-kilpi-K7EEEPFFjh0.jpg',
+    '/blog-placeholders/resource-database-KhPkJtxuYg0.jpg',
+    '/blog-placeholders/alex-sherstnev-MnJy18t6Doo.jpg',
+    '/blog-placeholders/katie-doherty-6RRtOg4AI28.jpg',
+    '/blog-placeholders/russ-lee-vJmW9KI9-ig.jpg',
+    '/blog-placeholders/krystal-ng-PrQqQVPzmlw.jpg',
+    '/blog-placeholders/maxim-tolchinskiy-MJB86VteX64.jpg'
+  ]
+
+  // Calculate block and position within block
+  const blockIndex = Math.floor(index / 10)
+  const positionInBlock = index % 10
+
+  // Create pseudo-random offset for each block using blockIndex
+  // Using prime number (7) to ensure good distribution
+  const blockOffset = (blockIndex * 7) % 10
+
+  // Use postId to ensure same post always gets same image
+  const postOffset = Math.abs(postId * 2654435761) % 10
+
+  // Combine offsets to get final image index
+  const imageIndex = (positionInBlock + blockOffset + postOffset) % 10
+
+  return images[imageIndex]
+}
+
+// Get content display variant (title only, title + excerpt, or full)
+function getContentVariant(index: number): 'title-only' | 'with-excerpt' | 'full' {
+  const patterns: Array<'title-only' | 'with-excerpt' | 'full'> = [
+    'with-excerpt', 'title-only', 'full', 'with-excerpt', 'title-only', 'full', 'with-excerpt', 'full', 'title-only'
+  ]
+  return patterns[index % patterns.length]
+}
+
+// Masonry Blog Card with varying heights
+function MasonryBlogCard({ post, likes = 0, index = 0 }: { post: WPPost; likes?: number; index?: number }) {
   const imageUrl = getFeaturedImageUrl(post, 'large')
   const excerpt = stripHtml(post.excerpt.rendered)
   const readingTime = getReadingTime(post.content.rendered)
   const categories = post._embedded?.['wp:term']?.[0] || []
 
+  const variant = getCardVariant(index)
+  const contentVariant = getContentVariant(index)
+
+  // Wide uses actual thumbnail, Tall/Square use dummy images (random based on post ID and index)
+  const finalImageUrl = variant === 'wide' && imageUrl ? imageUrl : getFallbackImage(post.id, index)
+  const finalVariant = variant
+
+  // Define aspect ratios for different variants
+  const aspectRatios = {
+    tall: 'aspect-[3/4]',
+    wide: 'aspect-[16/9]',
+    square: 'aspect-[4/5]'
+  }
+
+  // Extract a quote from the excerpt for "full" variant
+  const getQuote = (text: string) => {
+    const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 20)
+    return sentences[0]?.trim() || text.substring(0, 100)
+  }
+
   return (
-    <article className="group">
+    <article className="group animate-fadeIn break-inside-avoid mb-6 md:mb-8">
       <Link href={`/blog/${post.slug}`} className="block">
-        <div className="relative overflow-hidden">
-          {/* Image */}
-          {imageUrl && (
-            <div className="relative aspect-video overflow-hidden mb-8">
-              <Image
-                src={imageUrl}
-                alt={post.title.rendered}
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-700"
-              />
-              <div className="absolute inset-0 bg-black/10" />
+        <div className="bg-card rounded-xl overflow-hidden border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
+          {/* Image Area */}
+          <div className={`relative ${aspectRatios[finalVariant]} overflow-hidden bg-muted`}>
+            <Image
+              src={finalImageUrl}
+              alt={post.title.rendered}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-700"
+            />
 
-              {/* Category Badge on Image */}
-              {categories[0] && (
-                <div className="absolute top-6 left-6">
-                  <span className="px-4 py-2 bg-background text-foreground text-xs font-bold uppercase tracking-wider">
-                    {categories[0].name}
-                  </span>
-                </div>
-              )}
-            </div>
-          )}
+            {/* Category Badge - ホバー時に画像左下に表示 */}
+            {categories[0] && (
+              <div className="absolute bottom-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <span className="inline-flex items-center px-3 py-1.5 text-xs font-bold text-accent bg-background/95 backdrop-blur-sm rounded-full shadow-lg border border-border/50">
+                  {categories[0].name}
+                </span>
+              </div>
+            )}
+          </div>
 
-          {/* Content */}
-          <div className="max-w-3xl">
-            {/* Meta */}
-            <div className="flex items-center gap-3 mb-4 text-sm text-slate-500 dark:text-gray-400">
+          {/* Text Area */}
+          <div className="p-5 md:p-6 bg-card">
+            {/* Meta - always show */}
+            <div className="flex items-center gap-2 mb-3 text-xs text-muted-foreground">
               <time>{formatDate(post.date)}</time>
               <span>•</span>
               <span>{readingTime} min read</span>
             </div>
 
-            {/* Title */}
-            <h2
-              className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-5 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-tight"
-              dangerouslySetInnerHTML={{ __html: post.title.rendered }}
-            />
-
-            {/* Excerpt */}
-            <p className="text-lg text-slate-600 dark:text-gray-300 line-clamp-2 mb-6 leading-relaxed">
-              {excerpt}
-            </p>
-
-            {/* Meta Footer */}
-            <div className="flex items-center gap-2 mb-6">
-              <div className="flex items-center gap-1 text-sm text-slate-500 dark:text-gray-400">
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                </svg>
-                <span>{likes}</span>
-              </div>
-            </div>
-
-            {/* Read More */}
-            <div className="inline-flex items-center gap-2 text-base font-semibold text-foreground group-hover:gap-4 transition-all">
-              <span>Continue Reading</span>
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </div>
-          </div>
-        </div>
-      </Link>
-    </article>
-  )
-}
-
-// Regular Blog Card - Grid Item
-function BlogCard({ post, likes = 0 }: { post: WPPost; likes?: number }) {
-  const imageUrl = getFeaturedImageUrl(post, 'large')
-  const excerpt = stripHtml(post.excerpt.rendered)
-  const readingTime = getReadingTime(post.content.rendered)
-  const categories = post._embedded?.['wp:term']?.[0] || []
-
-  return (
-    <article className="group">
-      <Link href={`/blog/${post.slug}`} className="block h-full">
-        <div className="h-full flex flex-col">
-          {/* Image */}
-          {imageUrl && (
-            <div className="relative aspect-video overflow-hidden mb-5">
-              <Image
-                src={imageUrl}
-                alt={post.title.rendered}
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-black/10" />
-            </div>
-          )}
-
-          {/* Content */}
-          <div className="flex-1 flex flex-col">
-            {/* Category & Date */}
-            <div className="flex items-center gap-2 mb-3 text-xs text-slate-500 dark:text-gray-400 font-medium uppercase tracking-wider">
-              {categories[0] && <span>{categories[0].name}</span>}
-            </div>
-
-            {/* Title */}
+            {/* Title - always show */}
             <h3
-              className="text-xl md:text-2xl font-bold text-foreground mb-3 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-tight"
+              className="font-bold text-foreground group-hover:text-accent leading-tight text-lg md:text-xl line-clamp-2 mb-3 transition-colors duration-300"
               dangerouslySetInnerHTML={{ __html: post.title.rendered }}
             />
 
-            {/* Excerpt */}
-            <p className="text-slate-600 dark:text-gray-300 text-sm line-clamp-3 mb-4 leading-relaxed flex-1">
-              {excerpt}
-            </p>
+            {/* Pattern 2: with-excerpt - show description */}
+            {contentVariant === 'with-excerpt' && (
+              <p className="text-muted-foreground text-sm line-clamp-2 leading-relaxed">
+                {excerpt}
+              </p>
+            )}
 
-            {/* Meta Footer */}
-            <div className="flex items-center gap-3 text-sm text-slate-500 dark:text-gray-400 pt-4 border-t border-slate-200 dark:border-gray-800">
-              <time>{formatDate(post.date)}</time>
-              <span>•</span>
-              <span>{readingTime} min</span>
-              <span>•</span>
-              <div className="flex items-center gap-1">
-                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                </svg>
-                <span>{likes}</span>
-              </div>
-            </div>
+            {/* Pattern 3: full - show description + quote */}
+            {contentVariant === 'full' && (
+              <>
+                <p className="text-muted-foreground text-sm line-clamp-2 leading-relaxed mb-3">
+                  {excerpt}
+                </p>
+                <blockquote className="border-l-2 border-border pl-3 py-1">
+                  <p className="text-muted-foreground/70 text-xs italic line-clamp-2">
+                    &quot;{getQuote(excerpt)}...&quot;
+                  </p>
+                </blockquote>
+              </>
+            )}
           </div>
         </div>
       </Link>
@@ -257,170 +255,33 @@ function BlogCard({ post, likes = 0 }: { post: WPPost; likes?: number }) {
   )
 }
 
-// Featured Card for top posts
-function FeaturedCard({ post, likes = 0 }: { post: WPPost; likes?: number }) {
-  const imageUrl = getFeaturedImageUrl(post, 'large')
-  const excerpt = stripHtml(post.excerpt.rendered)
-  const readingTime = getReadingTime(post.content.rendered)
-  const categories = post._embedded?.['wp:term']?.[0] || []
-  const author = post._embedded?.author?.[0]
-
-  return (
-    <article className="group">
-      <Link href={`/blog/${post.slug}`} className="block">
-        <div className="bg-white dark:bg-background rounded-xl border border-slate-200 dark:border-border overflow-hidden hover:shadow-xl hover:shadow-blue-500/10 hover:-translate-y-1 hover:border-blue-200 dark:hover:border-blue-900 transition-all duration-300">
-          {/* Image */}
-          {imageUrl && (
-            <div className="relative aspect-[16/9] bg-gradient-to-br from-slate-100 to-slate-200 dark:from-gray-800 dark:to-gray-700 overflow-hidden">
-              <Image
-                src={imageUrl}
-                alt={post.title.rendered}
-                fill
-                className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
-              />
-              {/* Overlay gradient */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-              {/* Featured badge */}
-              <div className="absolute top-3 left-3">
-                <span className="inline-flex items-center px-3 py-1 text-xs font-semibold bg-blue-600 text-white rounded-full shadow-lg">
-                  注目
-                </span>
-              </div>
-            </div>
-          )}
-
-          {/* Content */}
-          <div className="p-5">
-            {/* Categories */}
-            <div className="flex items-center gap-2 mb-3">
-              {categories.slice(0, 2).map((cat) => (
-                <span
-                  key={cat.id}
-                  className="inline-flex items-center px-2.5 py-1 text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full"
-                >
-                  {cat.name}
-                </span>
-              ))}
-            </div>
-
-            {/* Title */}
-            <h2
-              className="text-lg md:text-xl font-bold text-foreground mb-2 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
-              dangerouslySetInnerHTML={{ __html: post.title.rendered }}
-            />
-
-            {/* Excerpt */}
-            <p className="text-slate-600 dark:text-gray-300 text-sm line-clamp-2 mb-4">
-              {excerpt}
-            </p>
-
-            {/* Author & Meta */}
-            <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-gray-800">
-              {author && (
-                <div className="flex items-center gap-2">
-                  {author.avatar_urls?.['48'] ? (
-                    <Image
-                      src={author.avatar_urls['48']}
-                      alt={author.name}
-                      width={28}
-                      height={28}
-                      className="rounded-full"
-                    />
-                  ) : (
-                    <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-xs font-medium">
-                      {author.name.charAt(0)}
-                    </div>
-                  )}
-                  <div className="flex flex-col">
-                    <span className="text-sm font-medium text-slate-700 dark:text-gray-300">{author.name}</span>
-                    <time className="text-xs text-slate-500 dark:text-gray-400">
-                      {formatDate(post.date)}
-                    </time>
-                  </div>
-                </div>
-              )}
-              <div className="flex items-center gap-3">
-                <span className="text-xs text-slate-500 dark:text-gray-400 flex items-center gap-1">
-                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                  {readingTime}分
-                </span>
-                <span className="text-xs text-slate-500 dark:text-gray-400 flex items-center gap-1">
-                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 21s-6.75-4.35-6.75-9.75A4.25 4.25 0 0112 7.25a4.25 4.25 0 016.75 4c0 5.4-6.75 9.75-6.75 9.75z" />
-                  </svg>
-                  {likes}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Link>
-    </article>
-  )
-}
-
-// Blog Page Content Component (uses useSearchParams)
+// Blog Page Content Component with Infinite Scroll & Masonry
 function BlogPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const heroRef = useRef<HTMLDivElement>(null)
+  const loadMoreRef = useRef<HTMLDivElement>(null)
 
   const [posts, setPosts] = useState<WPPost[]>([])
   const [categories, setCategories] = useState<WPCategory[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
+  const [hasMore, setHasMore] = useState(true)
   const [totalPosts, setTotalPosts] = useState(0)
   const [searchQuery, setSearchQuery] = useState('')
   const [searchInput, setSearchInput] = useState('')
   const [likeCounts, setLikeCounts] = useState<Record<string, number>>({})
-  const [totalLikes, setTotalLikes] = useState<number | null>(null)
 
   // Hero animation
   useEffect(() => {
     if (heroRef.current) {
       const ctx = gsap.context(() => {
-        gsap.from(".blog-subtitle", {
-          y: 20,
-          opacity: 0,
-          duration: 0.6,
-          ease: "power3.out",
-        })
-
-        gsap.from(".blog-title span", {
-          y: 100,
+        gsap.from(".blog-hero-content", {
+          y: 30,
           opacity: 0,
           duration: 0.8,
-          stagger: 0.05,
-          ease: "power4.out",
-          delay: 0.2,
-        })
-
-        gsap.from(".blog-description", {
-          y: 20,
-          opacity: 0,
-          duration: 0.6,
-          delay: 0.6,
-          ease: "power3.out",
-        })
-
-        gsap.from(".blog-stats", {
-          y: 20,
-          opacity: 0,
-          duration: 0.6,
-          delay: 0.8,
-          ease: "power3.out",
-        })
-
-        gsap.from(".blog-search", {
-          y: 20,
-          opacity: 0,
-          duration: 0.6,
-          delay: 1,
           ease: "power3.out",
         })
       }, heroRef)
@@ -452,7 +313,9 @@ function BlogPageContent() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     setSearchQuery(searchInput)
+    setPosts([])
     setCurrentPage(1)
+    setHasMore(true)
     updateURL(searchInput)
   }
 
@@ -460,7 +323,9 @@ function BlogPageContent() {
   const clearSearch = () => {
     setSearchInput('')
     setSearchQuery('')
+    setPosts([])
     setCurrentPage(1)
+    setHasMore(true)
     updateURL('')
   }
 
@@ -478,107 +343,133 @@ function BlogPageContent() {
   }, [])
 
   // Fetch posts
-  useEffect(() => {
-    async function fetchPosts() {
-      try {
+  const fetchPosts = useCallback(async (page: number, isLoadMore: boolean = false) => {
+    try {
+      if (isLoadMore) {
+        setLoadingMore(true)
+      } else {
         setLoading(true)
-        const { posts: fetchedPosts, totalPages: total, total: totalCount } = await getPosts({
-          page: currentPage,
-          perPage: 11,
-          search: searchQuery || undefined,
-        })
-        setPosts(fetchedPosts)
-        setTotalPages(total)
-        setTotalPosts(totalCount)
-        setError(null)
-      } catch (err) {
-        console.error('Failed to fetch posts:', err)
-        setError('記事の取得に失敗しました')
-      } finally {
-        setLoading(false)
       }
+
+      const { posts: fetchedPosts, totalPages, total: totalCount } = await getPosts({
+        page,
+        perPage: 12,
+        search: searchQuery || undefined,
+      })
+
+      if (isLoadMore) {
+        setPosts(prev => [...prev, ...fetchedPosts])
+      } else {
+        setPosts(fetchedPosts)
+      }
+
+      setHasMore(page < totalPages)
+      setTotalPosts(totalCount)
+      setError(null)
+    } catch (err) {
+      console.error('Failed to fetch posts:', err)
+      setError('記事の取得に失敗しました')
+    } finally {
+      setLoading(false)
+      setLoadingMore(false)
     }
+  }, [searchQuery])
 
-    fetchPosts()
-  }, [currentPage, searchQuery])
-
-  // Fetch total likes once
+  // Initial fetch
   useEffect(() => {
-    async function loadTotalLikes() {
-      const total = await fetchTotalLikes()
-      setTotalLikes(total)
-    }
-    loadTotalLikes()
-  }, [])
+    setPosts([])
+    setCurrentPage(1)
+    setHasMore(true)
+    fetchPosts(1, false)
+  }, [searchQuery, fetchPosts])
 
   // Fetch like counts for current posts
   useEffect(() => {
     async function loadLikeCounts() {
-      if (posts.length === 0) {
-        setLikeCounts({})
-        return
+      if (posts.length === 0) return
+      try {
+        const slugs = posts.map((p) => p.slug)
+        const counts = await fetchLikeCounts(slugs)
+        setLikeCounts(prev => ({ ...prev, ...counts }))
+      } catch (err) {
+        // Silently fail - likes are optional feature
+        console.warn("Could not load like counts")
       }
-      const slugs = posts.map((p) => p.slug)
-      const counts = await fetchLikeCounts(slugs)
-      setLikeCounts(counts)
     }
     loadLikeCounts()
   }, [posts])
 
-  // Reset page when search changes
+  // Infinite scroll observer
   useEffect(() => {
-    setCurrentPage(1)
-  }, [searchQuery])
+    if (!hasMore || loadingMore || loading) return
 
-  const featuredPosts = posts.slice(0, 2)
-  const regularPosts = posts.slice(2)
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          const nextPage = currentPage + 1
+          setCurrentPage(nextPage)
+          fetchPosts(nextPage, true)
+        }
+      },
+      { threshold: 0.1, rootMargin: '100px' }
+    )
+
+    const currentRef = loadMoreRef.current
+    if (currentRef) {
+      observer.observe(currentRef)
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef)
+      }
+    }
+  }, [hasMore, loadingMore, loading, currentPage, fetchPosts])
+
+  // Masonry breakpoint columns
+  const breakpointColumns = {
+    default: 3,
+    1100: 2,
+    700: 1
+  }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-background">
+    <div className="min-h-screen bg-background">
       <BlogHeader />
 
       {/* Subtle gradient background */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-b from-white via-slate-50 to-white dark:from-background dark:via-gray-900 dark:to-background" />
-        <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-blue-500/5 blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-blue-500/3 blur-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/30 to-background" />
       </div>
 
       {/* Main Content */}
-      <main className="pt-16 md:pt-20 relative z-10">
-        {/* Hero Section - Editorial Style */}
-        <div ref={heroRef} className="border-b border-slate-200 dark:border-border">
-          <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-16 md:py-24">
-            {/* Top Bar */}
-            <div className="mb-12 md:mb-16">
-              {/* Title */}
-              <div className="blog-title">
-                <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground leading-none">
-                  {"Insights".split("").map((char, i) => (
-                    <span key={i} className="inline-block">
-                      {char}
-                    </span>
-                  ))}
-                </h1>
-              </div>
-            </div>
+      <main className="pt-[104px] md:pt-[120px] relative z-10">
+        {/* Hero Section */}
+        <div ref={heroRef} className="border-b border-border">
+          <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-12 md:py-16">
+            <div className="blog-hero-content text-center max-w-3xl mx-auto">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4">
+                Insights & Ideas
+              </h1>
+              <p className="text-base md:text-lg text-muted-foreground mb-8">
+                Exploring the intersection of AI, design, and technology. Deep dives into innovation that shapes the future.
+              </p>
 
-            {/* Search & Filter Bar */}
-            <div className="blog-search flex flex-col md:flex-row gap-4 md:gap-6 items-stretch md:items-center">
-              <form onSubmit={handleSearch} className="flex-1 max-w-md">
+              {/* Search */}
+              <form onSubmit={handleSearch} className="max-w-xl mx-auto mb-8">
                 <div className="relative">
                   <input
                     type="text"
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
-                    placeholder="Search articles..."
-                    className="w-full px-5 py-3.5 pr-12 text-sm text-foreground bg-background border-2 border-foreground focus:outline-none focus:ring-4 focus:ring-foreground/20 transition-all placeholder:text-slate-400 dark:placeholder:text-gray-500"
+                    placeholder="Search Articles"
+                    className="w-full px-6 py-4 pr-12 text-base text-foreground bg-background border-2 border-border rounded-full focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-muted-foreground"
                   />
                   {searchInput ? (
                     <button
                       type="button"
                       onClick={clearSearch}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-foreground transition-colors"
+                      className="absolute right-5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                       aria-label="Clear search"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -587,7 +478,7 @@ function BlogPageContent() {
                     </button>
                   ) : (
                     <svg
-                      className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none"
+                      className="absolute right-5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -597,27 +488,21 @@ function BlogPageContent() {
                   )}
                 </div>
               </form>
-
-              <div className="blog-subtitle">
-                <span className="text-sm text-slate-500 dark:text-gray-400">
-                  {totalPosts} {totalPosts === 1 ? 'Article' : 'Articles'}
-                </span>
-              </div>
             </div>
           </div>
         </div>
 
         {/* Search Results Info */}
         {searchQuery && (
-          <div className="bg-slate-50 dark:bg-gray-900 border-b border-slate-200 dark:border-border">
-            <div className="max-w-7xl mx-auto px-6 md:px-12 py-4">
+          <div className="bg-primary/5 border-b border-primary/20">
+            <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-3">
               <div className="flex items-center justify-between">
-                <p className="text-sm text-slate-600 dark:text-gray-400">
-                  <span className="font-medium text-foreground">{totalPosts}</span> results for &quot;{searchQuery}&quot;
+                <p className="text-sm text-foreground">
+                  <span className="font-semibold text-primary">{totalPosts}</span> results for &quot;{searchQuery}&quot;
                 </p>
                 <button
                   onClick={clearSearch}
-                  className="text-sm text-slate-600 dark:text-gray-400 hover:text-foreground font-medium transition-colors"
+                  className="text-sm text-muted-foreground hover:text-foreground font-medium transition-colors"
                 >
                   Clear
                 </button>
@@ -626,218 +511,123 @@ function BlogPageContent() {
           </div>
         )}
 
-        {/* Category Filter - Clean Design */}
+        {/* Category Filter */}
         <CategoryFilter
           categories={categories}
           searchQuery={searchQuery}
           clearSearch={clearSearch}
         />
 
-        {/* SEO Special Site Banner */}
-        {!searchQuery && currentPage === 1 && (
-          <div className="border-b border-slate-200 dark:border-border">
-            <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-8">
-              <Link href="/blog/seo" className="block group">
-                <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-xl p-8 md:p-10 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-                  {/* Background Pattern */}
-                  <div className="absolute inset-0 opacity-10">
-                    <div className="absolute inset-0" style={{
-                      backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-                    }}></div>
-                  </div>
-
-                  <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center gap-6">
-                    {/* Icon */}
-                    <div className="flex-shrink-0">
-                      <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
-                      </div>
-                    </div>
-
-                    {/* Content */}
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="inline-flex items-center px-3 py-1 text-xs font-bold bg-yellow-400 text-yellow-900 rounded-full">
-                          🔥 特設サイト
-                        </span>
-                        <span className="text-white/80 text-sm">NEW</span>
-                      </div>
-                      <h3 className="text-2xl md:text-3xl font-bold text-white mb-2 group-hover:translate-x-1 transition-transform">
-                        SEO初心者向けマニュアル
-                      </h3>
-                      <p className="text-white/90 text-sm md:text-base leading-relaxed mb-4">
-                        AI時代の新常識から従来のSEO対策まで、6つの章で体系的に解説。検索エンジンで上位表示を目指すための完全ガイド
-                      </p>
-                      <div className="flex items-center gap-4 text-white/80 text-xs md:text-sm">
-                        <span className="flex items-center gap-1">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                          </svg>
-                          6章構成
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                          </svg>
-                          初心者向け
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                          </svg>
-                          体系的な学習
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Arrow */}
-                    <div className="flex-shrink-0">
-                      <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center group-hover:translate-x-2 transition-transform">
-                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            </div>
-          </div>
-        )}
-
-        {/* Posts */}
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-12 md:py-20">
+        {/* Masonry Posts Grid */}
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-12 md:py-16">
           {loading ? (
-            <div className="space-y-16">
-              {/* Featured skeleton */}
-              <div className="animate-pulse">
-                <div className="aspect-[21/9] bg-slate-200 dark:bg-gray-700 mb-8" />
-                <div className="space-y-4 max-w-3xl">
-                  <div className="h-4 bg-slate-200 dark:bg-gray-700 rounded w-1/4" />
-                  <div className="h-12 bg-slate-200 dark:bg-gray-700 rounded w-3/4" />
-                  <div className="h-4 bg-slate-200 dark:bg-gray-700 rounded w-full" />
-                </div>
-              </div>
-              {/* Grid skeleton */}
-              <div className="grid md:grid-cols-2 gap-8 md:gap-12">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="animate-pulse">
-                    <div className="aspect-video bg-slate-200 dark:bg-gray-700 mb-5" />
-                    <div className="space-y-3">
-                      <div className="h-3 bg-slate-200 dark:bg-gray-700 rounded w-1/4" />
-                      <div className="h-8 bg-slate-200 dark:bg-gray-700 rounded w-full" />
-                      <div className="h-4 bg-slate-200 dark:bg-gray-700 rounded w-3/4" />
-                    </div>
-                  </div>
-                ))}
-              </div>
+            <div className="flex justify-center items-center min-h-[400px]">
+              <EyeLoader />
             </div>
           ) : error ? (
             <div className="text-center py-20">
-              <div className="w-20 h-20 mx-auto mb-6 bg-red-50 dark:bg-red-900/20 flex items-center justify-center">
+              <div className="w-20 h-20 mx-auto mb-6 bg-destructive/10 rounded-full flex items-center justify-center">
                 <svg className="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <p className="text-slate-600 dark:text-gray-300 mb-6 text-lg">{error}</p>
+              <p className="text-muted-foreground mb-6 text-lg">{error}</p>
               <button
                 onClick={() => window.location.reload()}
-                className="inline-flex items-center px-6 py-3 bg-foreground text-background text-sm font-semibold hover:opacity-90 transition-opacity"
+                className="inline-flex items-center px-6 py-3 bg-foreground text-background text-sm font-semibold rounded-lg hover:opacity-90 transition-opacity"
               >
-                Reload Page
+                Reload
               </button>
             </div>
           ) : posts.length === 0 ? (
             <div className="text-center py-20">
-              <div className="w-20 h-20 mx-auto mb-6 bg-slate-100 dark:bg-gray-800 flex items-center justify-center">
-                <svg className="w-10 h-10 text-slate-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+              <div className="w-20 h-20 mx-auto mb-6 bg-muted rounded-full flex items-center justify-center">
+                <svg className="w-10 h-10 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h10a2 2 0 012 2v11a2 2 0 01-2 2z" />
                 </svg>
               </div>
-              <p className="text-slate-600 dark:text-gray-300 text-lg">No articles found</p>
+              <p className="text-muted-foreground text-lg">No articles found</p>
             </div>
           ) : (
             <>
-              {/* Featured Hero Post */}
-              {posts.length > 0 && currentPage === 1 && !searchQuery && (
-                <div className="mb-16 md:mb-24">
-                  <FeaturedHeroCard post={posts[0]} likes={likeCounts[posts[0].slug] || 0} />
+              {/* Masonry Grid */}
+              <Masonry
+                breakpointCols={breakpointColumns}
+                className="flex -ml-6 md:-ml-8 w-auto"
+                columnClassName="pl-6 md:pl-8 bg-clip-padding"
+              >
+                {/* SEO特設サイトバナー - Unsplash+スタイル */}
+                <div className="mb-6 md:mb-8 break-inside-avoid">
+                  <Link href="/blog/seo" className="block">
+                    <div className="bg-background rounded-3xl border border-border overflow-hidden hover:border-primary/50 transition-all duration-300 hover:shadow-xl">
+                      <div className="relative">
+                        {/* グリッドレイアウト：左テキスト、右ビジュアル */}
+                        <div className="grid grid-cols-2">
+                          {/* 左側テキスト（半分） - パディング付き */}
+                          <div className="flex flex-col justify-between p-4 md:p-6">
+                            <div className="space-y-3">
+                              {/* ロゴ */}
+                              <div className="w-6 h-6 md:w-8 md:h-8 relative">
+                                <Image
+                                  src="/logo_black_symbol.png"
+                                  alt="tent space"
+                                  fill
+                                  className="object-contain"
+                                />
+                              </div>
+
+                              {/* テキスト */}
+                              <div className="space-y-1">
+                                <h3 className="text-sm md:text-base font-medium text-foreground leading-relaxed">
+                                  AI時代のSEO戦略にアクセス。
+                                </h3>
+                                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">いつでも無料で学習可能。</p>
+                              </div>
+                            </div>
+
+                            {/* 下部CTA */}
+                            <div className="mt-6">
+                              <span className="inline-flex items-center px-5 py-1.5 bg-foreground text-background rounded-lg font-medium text-xs hover:bg-foreground/90 transition-all">
+                                SEO特設サイトを見る
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* 右側ビジュアル（半分） - 余白なし */}
+                          <div className="relative h-full min-h-[180px] md:min-h-[200px]">
+                            {/* 背景の写真 */}
+                            <Image
+                              src="/blog-placeholders/oleg-laptev-QRKJwE6yfJo.jpg"
+                              alt="SEO Learning"
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+
+                {posts.map((post, index) => (
+                  <MasonryBlogCard key={post.id} post={post} likes={likeCounts[post.slug] || 0} index={index} />
+                ))}
+              </Masonry>
+
+              {/* Load More Trigger */}
+              {hasMore && (
+                <div ref={loadMoreRef} className="mt-12 flex justify-center">
+                  {loadingMore && (
+                    <EyeLoader />
+                  )}
                 </div>
               )}
 
-              {/* Regular Posts Grid */}
-              <div className="grid md:grid-cols-2 gap-8 md:gap-12 lg:gap-16">
-                {(currentPage === 1 && !searchQuery ? posts.slice(1) : posts).map((post) => (
-                  <BlogCard key={post.id} post={post} likes={likeCounts[post.slug] || 0} />
-                ))}
-              </div>
-
-              {/* Recommended Posts - Show only on first page without search */}
-              {currentPage === 1 && !searchQuery && posts.length >= 3 && (
-                <aside className="mt-20 md:mt-32 pt-12 border-t-2 border-foreground" aria-label="おすすめ記事">
-                  <div className="mb-12">
-                    <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                      More Insights
-                    </h2>
-                  </div>
-
-                  <BlogCarousel posts={posts} likeCounts={likeCounts} />
-                </aside>
-              )}
-
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <div className="mt-20 md:mt-32 pt-12 border-t-2 border-foreground flex items-center justify-between">
-                  <button
-                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                    disabled={currentPage === 1}
-                    className="group inline-flex items-center gap-3 text-base font-bold text-foreground hover:gap-2 disabled:opacity-20 disabled:cursor-not-allowed transition-all"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
-                    </svg>
-                    <span>Previous</span>
-                  </button>
-
-                  <div className="hidden md:flex items-center gap-2">
-                    {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                      let pageNum: number
-                      if (totalPages <= 5) {
-                        pageNum = i + 1
-                      } else if (currentPage <= 3) {
-                        pageNum = i + 1
-                      } else if (currentPage >= totalPages - 2) {
-                        pageNum = totalPages - 4 + i
-                      } else {
-                        pageNum = currentPage - 2 + i
-                      }
-                      return (
-                        <button
-                          key={pageNum}
-                          onClick={() => setCurrentPage(pageNum)}
-                          className={`w-12 h-12 text-sm font-bold transition-all ${currentPage === pageNum
-                            ? 'bg-foreground text-background'
-                            : 'text-slate-400 dark:text-gray-600 hover:text-foreground'
-                            }`}
-                        >
-                          {pageNum}
-                        </button>
-                      )
-                    })}
-                  </div>
-
-                  <button
-                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                    disabled={currentPage === totalPages}
-                    className="group inline-flex items-center gap-3 text-base font-bold text-foreground hover:gap-4 disabled:opacity-20 disabled:cursor-not-allowed transition-all"
-                  >
-                    <span>Next</span>
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
+              {/* End Message */}
+              {!hasMore && posts.length > 0 && (
+                <div className="mt-12 flex flex-col items-center gap-4">
+                  <EyeLoader variant="end" />
+                  <p className="text-sm text-muted-foreground">You've reached the end</p>
                 </div>
               )}
             </>
@@ -845,10 +635,27 @@ function BlogPageContent() {
         </div>
 
         {/* Footer */}
-        <div className="mt-24 md:mt-32">
+        <div className="mt-12 md:mt-16">
           <BlogFooter />
         </div>
       </main>
+
+      <style jsx global>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .animate-fadeIn {
+          animation: fadeIn 0.6s ease-out forwards;
+        }
+      `}</style>
     </div>
   )
 }
@@ -856,35 +663,34 @@ function BlogPageContent() {
 // Loading component for Suspense fallback
 function BlogPageLoading() {
   return (
-    <div className="min-h-screen bg-white dark:bg-background">
+    <div className="min-h-screen bg-background">
       <BlogHeader />
 
-      {/* Subtle gradient background */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-b from-white via-slate-50 to-white dark:from-background dark:via-gray-900 dark:to-background" />
-        <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-blue-500/5 blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-blue-500/3 blur-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/30 to-background" />
       </div>
 
-      <main className="pt-20 relative z-10">
-        <div className="border-b border-slate-200 dark:border-border">
-          <div className="max-w-5xl mx-auto px-6 md:px-12 py-12 md:py-16">
-            <div className="animate-pulse">
-              <div className="h-8 w-32 bg-slate-200 dark:bg-gray-700 rounded mb-4" />
-              <div className="h-10 w-64 bg-slate-200 dark:bg-gray-700 rounded mb-3" />
-              <div className="h-6 w-96 bg-slate-200 dark:bg-gray-700 rounded" />
+      <main className="pt-[120px] relative z-10">
+        <div className="border-b border-border">
+          <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-12 md:py-16">
+            <div className="text-center max-w-3xl mx-auto animate-pulse">
+              <div className="h-12 bg-muted rounded w-3/4 mx-auto mb-4" />
+              <div className="h-6 bg-muted rounded w-full mb-8" />
+              <div className="h-12 bg-muted rounded-full max-w-xl mx-auto" />
             </div>
           </div>
         </div>
-        <div className="max-w-4xl mx-auto px-6 md:px-12 py-12">
-          <div className="divide-y divide-slate-200 dark:divide-border">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="py-8 md:py-10 animate-pulse">
-                <div className="aspect-[16/9] bg-slate-200 dark:bg-gray-700 mb-6" />
-                <div className="space-y-3">
-                  <div className="h-4 bg-slate-200 dark:bg-gray-700 rounded w-1/4" />
-                  <div className="h-7 bg-slate-200 dark:bg-gray-700 rounded w-3/4" />
-                  <div className="h-4 bg-slate-200 dark:bg-gray-700 rounded w-full" />
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-12">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="animate-pulse">
+                <div className="bg-card rounded-xl border border-border">
+                  <div className="aspect-[16/10] bg-muted" />
+                  <div className="p-6 space-y-3">
+                    <div className="h-3 bg-muted rounded w-1/3" />
+                    <div className="h-6 bg-muted rounded w-full" />
+                    <div className="h-4 bg-muted rounded w-3/4" />
+                  </div>
                 </div>
               </div>
             ))}

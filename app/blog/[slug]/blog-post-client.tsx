@@ -88,7 +88,7 @@ function TableOfContents({ content }: { content: string }) {
     const parser = new DOMParser()
     const doc = parser.parseFromString(content, 'text/html')
     const elements = doc.querySelectorAll('h2, h3')
-    
+
     const grouped: HeadingSection[] = []
     let currentSection: HeadingSection | null = null
 
@@ -104,7 +104,7 @@ function TableOfContents({ content }: { content: string }) {
         currentSection.children.push({ id, text, level })
       }
     })
-    
+
     setSections(grouped)
     if (grouped.length > 0) {
       setActiveSection(grouped[0].id)
@@ -122,7 +122,7 @@ function TableOfContents({ content }: { content: string }) {
             if (entry.isIntersecting) {
               const id = entry.target.id
               setActiveId(id)
-              
+
               for (const section of sections) {
                 if (section.id === id) {
                   setActiveSection(section.id)
@@ -150,7 +150,7 @@ function TableOfContents({ content }: { content: string }) {
         })
       })
 
-      ;(window as unknown as { __tocObserver?: IntersectionObserver }).__tocObserver = observer
+        ; (window as unknown as { __tocObserver?: IntersectionObserver }).__tocObserver = observer
     }, 100)
 
     return () => {
@@ -179,9 +179,8 @@ function TableOfContents({ content }: { content: string }) {
             <li key={section.id}>
               <a
                 href={`#${section.id}`}
-                className={`flex items-center gap-1 py-1.5 text-sm transition-colors ${
-                  isActive ? 'text-blue-500 font-medium' : 'text-muted-foreground hover:text-foreground'
-                }`}
+                className={`flex items-center gap-1 py-1.5 text-sm transition-colors ${isActive ? 'text-blue-500 font-medium' : 'text-muted-foreground hover:text-foreground'
+                  }`}
               >
                 {section.children.length > 0 && (
                   <svg
@@ -203,9 +202,8 @@ function TableOfContents({ content }: { content: string }) {
                     <li key={child.id}>
                       <a
                         href={`#${child.id}`}
-                        className={`block py-1 pl-7 text-xs transition-colors ${
-                          activeId === child.id ? 'text-blue-500 font-medium' : 'text-muted-foreground hover:text-foreground'
-                        }`}
+                        className={`block py-1 pl-7 text-xs transition-colors ${activeId === child.id ? 'text-blue-500 font-medium' : 'text-muted-foreground hover:text-foreground'
+                          }`}
                       >
                         {child.text}
                       </a>
@@ -401,7 +399,7 @@ function processContent(content: string): string {
 function cleanCodeText(text: string): string {
   // Split into lines
   const lines = text.split('\n')
-  
+
   // Remove leading empty lines
   while (lines.length > 0 && lines[0].trim() === '') {
     lines.shift()
@@ -410,7 +408,7 @@ function cleanCodeText(text: string): string {
   while (lines.length > 0 && lines[lines.length - 1].trim() === '') {
     lines.pop()
   }
-  
+
   return lines.join('\n')
 }
 
@@ -420,17 +418,17 @@ function useCodeBlockEnhancement(containerRef: React.RefObject<HTMLElement | nul
     if (!containerRef.current) return
 
     const codeBlocks = containerRef.current.querySelectorAll('pre.ts-code')
-    
+
     codeBlocks.forEach((block) => {
       // Skip if already enhanced
       if (block.classList.contains('enhanced')) return
       block.classList.add('enhanced')
-      
+
       const pre = block as HTMLPreElement
       const lang = pre.dataset.lang || 'text'
       const title = pre.dataset.title || ''
       const codeElement = pre.querySelector('code')
-      
+
       // Get and clean code text
       // Replace <br> tags with newlines before getting text content
       let rawCode = ''
@@ -442,21 +440,21 @@ function useCodeBlockEnhancement(containerRef: React.RefObject<HTMLElement | nul
         rawCode = tempElement.textContent || ''
       }
       const code = cleanCodeText(rawCode)
-      
+
       // Create wrapper
       const wrapper = document.createElement('div')
       wrapper.className = 'ts-code-wrapper'
-      
+
       // Create header
       const header = document.createElement('div')
       header.className = 'ts-code-header'
-      
+
       // Language badge
       const langBadge = document.createElement('span')
       langBadge.className = 'ts-code-lang'
       langBadge.textContent = LANGUAGE_NAMES[lang.toLowerCase()] || lang.toUpperCase()
       header.appendChild(langBadge)
-      
+
       // Title if exists
       if (title) {
         const titleSpan = document.createElement('span')
@@ -464,7 +462,7 @@ function useCodeBlockEnhancement(containerRef: React.RefObject<HTMLElement | nul
         titleSpan.textContent = title
         header.appendChild(titleSpan)
       }
-      
+
       // Copy button
       const copyBtn = document.createElement('button')
       copyBtn.className = 'ts-code-copy'
@@ -484,12 +482,12 @@ function useCodeBlockEnhancement(containerRef: React.RefObject<HTMLElement | nul
           const copyIcon = copyBtn.querySelector('.copy-icon') as HTMLElement
           const checkIcon = copyBtn.querySelector('.check-icon') as HTMLElement
           const copyText = copyBtn.querySelector('.copy-text') as HTMLElement
-          
+
           copyIcon.style.display = 'none'
           checkIcon.style.display = 'block'
           copyText.textContent = 'コピー完了!'
           copyBtn.classList.add('copied')
-          
+
           setTimeout(() => {
             copyIcon.style.display = 'block'
             checkIcon.style.display = 'none'
@@ -501,20 +499,20 @@ function useCodeBlockEnhancement(containerRef: React.RefObject<HTMLElement | nul
         }
       })
       header.appendChild(copyBtn)
-      
+
       // Wrap everything
       pre.parentNode?.insertBefore(wrapper, pre)
       wrapper.appendChild(header)
       wrapper.appendChild(pre)
-      
+
       // Set language attribute for CSS styling
       pre.dataset.language = lang.toLowerCase()
-      
+
       if (codeElement) {
         // Set cleaned code
         codeElement.textContent = code
         pre.className = 'ts-code enhanced'
-        
+
         // Apply syntax highlighting with highlight.js
         const langLower = lang.toLowerCase()
         try {
@@ -550,11 +548,11 @@ interface BlogPostClientProps {
 }
 
 // Main Blog Post Client Component
-export default function BlogPostClient({ 
-  post, 
-  imageUrl, 
-  categories, 
-  author, 
+export default function BlogPostClient({
+  post,
+  imageUrl,
+  categories,
+  author,
   readingTime,
   canonicalUrl,
   relatedPosts = []
@@ -562,7 +560,7 @@ export default function BlogPostClient({
   const processedContent = processContent(post.content.rendered)
   const plainTitle = stripHtml(post.title.rendered)
   const articleRef = useRef<HTMLDivElement>(null)
-  
+
   // Enhance code blocks after content is rendered
   useCodeBlockEnhancement(articleRef)
 
@@ -570,7 +568,7 @@ export default function BlogPostClient({
     <div className="min-h-screen bg-background">
       <BlogHeader />
 
-      <main className="pt-20">
+      <main className="pt-[120px]">
         {/* Breadcrumb Navigation */}
         <nav className="max-w-5xl mx-auto px-4 py-4" aria-label="パンくずリスト">
           <ol className="flex items-center gap-2 text-sm text-muted-foreground" itemScope itemType="https://schema.org/BreadcrumbList">
@@ -739,7 +737,7 @@ export default function BlogPostClient({
                                   {relatedCategories[0].name}
                                 </span>
                               )}
-                              <h4 
+                              <h4
                                 className="text-sm font-medium text-foreground line-clamp-2 group-hover:text-blue-500 transition-colors"
                                 dangerouslySetInnerHTML={{ __html: relatedPost.title.rendered }}
                               />
@@ -806,7 +804,7 @@ export default function BlogPostClient({
                     </svg>
                     <span className="text-sm font-medium">X</span>
                   </a>
-                  
+
                   {/* Facebook */}
                   <a
                     href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(canonicalUrl)}`}
@@ -820,7 +818,7 @@ export default function BlogPostClient({
                     </svg>
                     <span className="text-sm font-medium">Facebook</span>
                   </a>
-                  
+
                   {/* Hatena Bookmark */}
                   <a
                     href={`https://b.hatena.ne.jp/add?mode=confirm&url=${encodeURIComponent(canonicalUrl)}&title=${encodeURIComponent(plainTitle)}`}
@@ -832,7 +830,7 @@ export default function BlogPostClient({
                     <span className="font-bold text-sm">B!</span>
                     <span className="text-sm font-medium">はてブ</span>
                   </a>
-                  
+
                   {/* LinkedIn */}
                   <a
                     href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(canonicalUrl)}&title=${encodeURIComponent(plainTitle)}`}
@@ -846,7 +844,7 @@ export default function BlogPostClient({
                     </svg>
                     <span className="text-sm font-medium">LinkedIn</span>
                   </a>
-                  
+
                   {/* LINE */}
                   <a
                     href={`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(canonicalUrl)}`}
@@ -860,7 +858,7 @@ export default function BlogPostClient({
                     </svg>
                     <span className="text-sm font-medium">LINE</span>
                   </a>
-                  
+
                   {/* Copy URL */}
                   <button
                     onClick={() => {
@@ -883,7 +881,7 @@ export default function BlogPostClient({
                 {/* Background decoration */}
                 <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
                 <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
-                
+
                 <div className="relative z-10">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
@@ -896,7 +894,7 @@ export default function BlogPostClient({
                       <p className="font-bold text-lg">AI開発でお困りですか？</p>
                     </div>
                   </div>
-                  
+
                   <p className="text-white/90 mb-6 leading-relaxed">
                     tent spaceでは、ChatGPT・Claude・Geminiなどの生成AIを活用した
                     <strong className="text-white">業務効率化ツール</strong>や
@@ -905,7 +903,7 @@ export default function BlogPostClient({
                     <br />
                     <span className="text-white/80 text-sm">「こんなことできる？」というご相談だけでもお気軽にどうぞ。</span>
                   </p>
-                  
+
                   <div className="flex flex-col sm:flex-row gap-3">
                     <a
                       href="mailto:back-office@tentspace.net"
@@ -926,7 +924,7 @@ export default function BlogPostClient({
                       </svg>
                     </Link>
                   </div>
-                  
+
                   <div className="mt-6 pt-4 border-t border-white/20">
                     <div className="flex flex-wrap gap-2">
                       <span className="px-3 py-1 bg-white/10 rounded-full text-xs">ChatGPT連携</span>
@@ -983,8 +981,8 @@ export default function BlogPostClient({
                 <Link href="/privacy" className="hover:text-foreground transition-colors">
                   プライバシー
                 </Link>
-                <a 
-                  href="mailto:back-office@tentspace.net" 
+                <a
+                  href="mailto:back-office@tentspace.net"
                   className="hover:text-foreground transition-colors"
                 >
                   お問い合わせ

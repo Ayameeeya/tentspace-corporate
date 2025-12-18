@@ -78,7 +78,7 @@ export default function FavoritesClient() {
   const fetchPosts = async (slugs: string[]) => {
     try {
       const WP_API_URL = 'https://blog.tentspace.net/wp-json/wp/v2'
-      
+
       // Decode slugs if they are already encoded
       const decodedSlugs = slugs.map(slug => {
         try {
@@ -88,7 +88,7 @@ export default function FavoritesClient() {
           return slug
         }
       })
-      
+
       // WordPress REST APIで各記事を個別に取得
       const postPromises = decodedSlugs.map(async (slug) => {
         const response = await fetch(
@@ -98,7 +98,7 @@ export default function FavoritesClient() {
         const data = await response.json()
         return data[0] || null
       })
-      
+
       const postsData = await Promise.all(postPromises)
       const validPosts = postsData.filter((post): post is WPPost => post !== null)
       setPosts(validPosts)
@@ -130,7 +130,7 @@ export default function FavoritesClient() {
     return (
       <div className="min-h-screen bg-background">
         <BlogHeader />
-        <main className="pt-20">
+        <main className="pt-[120px]">
           <div className="max-w-5xl mx-auto px-4 py-12 flex items-center justify-center">
             <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
           </div>
@@ -143,7 +143,7 @@ export default function FavoritesClient() {
     return (
       <div className="min-h-screen bg-background">
         <BlogHeader />
-        <main className="pt-20">
+        <main className="pt-[120px]">
           <div className="max-w-5xl mx-auto px-4 py-12">
             <div className="bg-card rounded-xl border border-border p-12 text-center">
               <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">

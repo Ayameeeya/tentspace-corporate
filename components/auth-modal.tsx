@@ -524,8 +524,8 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
           {/* Right Side - Image */}
           <div className="hidden md:block md:w-1/2 relative bg-slate-900">
             <Image
-              src="/krystal-ng-1PlVbeOCd78.jpg"
-              alt="Technology"
+              src="/blog-placeholders/krystal-ng-1PlVbeOCd78.jpg"
+              alt=""
               fill
               className="object-cover"
               priority

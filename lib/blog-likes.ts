@@ -19,13 +19,15 @@ export async function fetchLikeCounts(slugs: string[]): Promise<Record<string, n
   if (slugs.length === 0) return {}
   const uniqueSlugs = Array.from(new Set(slugs))
 
+  try {
   const { data, error } = await supabaseClient
     .from("blog_like_counts")
     .select("post_slug, likes")
     .in("post_slug", uniqueSlugs)
 
   if (error) {
-    console.error("Failed to fetch like counts", error)
+      // Silently handle errors - blog_like_counts table might not exist yet
+      console.warn("Like counts unavailable:", error.message)
     return {}
   }
 
@@ -33,6 +35,11 @@ export async function fetchLikeCounts(slugs: string[]): Promise<Record<string, n
     acc[row.post_slug] = Number(row.likes) || 0
     return acc
   }, {})
+  } catch (err) {
+    // Network or other unexpected errors
+    console.warn("Could not fetch like counts:", err)
+    return {}
+  }
 }
 
 // Check if current client already liked the post

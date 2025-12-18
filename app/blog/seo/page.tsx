@@ -77,7 +77,7 @@ function BlogCard({ post }: { post: WPPost }) {
         <div className="flex gap-4">
           {/* Image */}
           {imageUrl && (
-            <div className="relative w-24 h-24 flex-shrink-0 bg-slate-100 dark:bg-gray-800 overflow-hidden">
+            <div className="relative w-24 h-24 flex-shrink-0 bg-muted overflow-hidden">
               <Image
                 src={imageUrl}
                 alt={post.title.rendered}
@@ -90,10 +90,10 @@ function BlogCard({ post }: { post: WPPost }) {
           {/* Content */}
           <div className="flex-1 min-w-0">
             <h4
-              className="text-base font-bold text-foreground mb-2 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
+              className="text-base font-bold text-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors"
               dangerouslySetInnerHTML={{ __html: post.title.rendered }}
             />
-            <p className="text-sm text-slate-500 dark:text-gray-400">
+            <p className="text-sm text-muted-foreground">
               {formatDate(post.date)}
             </p>
           </div>
@@ -115,7 +115,7 @@ function LargeBlogCard({ post }: { post: WPPost }) {
         <div className="h-full flex flex-col">
           {/* Image */}
           {imageUrl && (
-            <div className="relative aspect-[16/9] bg-slate-100 dark:bg-gray-800 overflow-hidden mb-4">
+            <div className="relative aspect-[16/9] bg-muted overflow-hidden mb-4">
               <Image
                 src={imageUrl}
                 alt={post.title.rendered}
@@ -129,17 +129,17 @@ function LargeBlogCard({ post }: { post: WPPost }) {
           <div className="flex-1 flex flex-col">
             {/* Title */}
             <h3
-              className="text-lg md:text-xl font-bold text-foreground mb-2 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-tight"
+              className="text-lg md:text-xl font-bold text-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors leading-tight"
               dangerouslySetInnerHTML={{ __html: post.title.rendered }}
             />
 
             {/* Excerpt */}
-            <p className="text-slate-600 dark:text-gray-300 text-sm line-clamp-2 mb-3 leading-relaxed flex-1">
+            <p className="text-muted-foreground text-sm line-clamp-2 mb-3 leading-relaxed flex-1">
               {excerpt}
             </p>
 
             {/* Meta Footer */}
-            <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-gray-400 pt-3 border-t border-slate-200 dark:border-gray-800">
+            <div className="flex items-center gap-3 text-xs text-muted-foreground pt-3 border-t border-border">
               <time>{formatDate(post.date)}</time>
               <span>•</span>
               <span>{readingTime} min</span>
@@ -166,13 +166,13 @@ function ChapterSection({
   return (
     <section id={`chapter-${chapterNumber}`} className="mb-16 md:mb-24">
       <div className="mb-8">
-        <p className="text-sm font-bold text-blue-600 dark:text-blue-400 mb-2">
+        <p className="text-sm font-bold text-primary mb-2">
           第{chapterNumber}章
         </p>
         <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
           {title}
         </h2>
-        <p className="text-slate-600 dark:text-gray-300 leading-relaxed max-w-3xl">
+        <p className="text-muted-foreground leading-relaxed max-w-3xl">
           {description}
         </p>
       </div>
@@ -184,7 +184,7 @@ function ChapterSection({
           ))}
         </div>
       ) : (
-        <p className="text-slate-500 dark:text-gray-400 text-sm">
+        <p className="text-muted-foreground text-sm">
           この章の記事は準備中です
         </p>
       )}
@@ -197,15 +197,15 @@ export default async function SEOPage() {
   try {
     // SEOカテゴリを取得
     const category = await getCategoryBySlug("seo")
-    
+
     if (!category) {
       return (
-        <div className="min-h-screen bg-white dark:bg-background">
+        <div className="min-h-screen bg-background">
           <BlogHeader />
-          <main className="pt-16 md:pt-20">
+          <main className="pt-[104px] md:pt-[120px]">
             <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-16">
               <h1 className="text-4xl font-bold mb-4">カテゴリが見つかりません</h1>
-              <p className="text-slate-600 dark:text-gray-300 mb-6">
+              <p className="text-muted-foreground mb-6">
                 SEOカテゴリが存在しません。
               </p>
               <Link
@@ -240,8 +240,8 @@ export default async function SEOPage() {
       return posts.filter(post => {
         const decodedSlug = decodeURIComponent(post.slug).toLowerCase()
         const title = post.title.rendered.toLowerCase()
-        return keywords.some(keyword => 
-          decodedSlug.includes(keyword.toLowerCase()) || 
+        return keywords.some(keyword =>
+          decodedSlug.includes(keyword.toLowerCase()) ||
           title.includes(keyword.toLowerCase())
         )
       })
@@ -390,12 +390,12 @@ export default async function SEOPage() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
 
-        <div className="min-h-screen bg-white dark:bg-background">
+        <div className="min-h-screen bg-background">
           <BlogHeader />
 
           {/* Subtle gradient background */}
           <div className="fixed inset-0 pointer-events-none">
-            <div className="absolute inset-0 bg-gradient-to-b from-white via-slate-50 to-white dark:from-background dark:via-gray-900 dark:to-background" />
+            <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/30 to-background" />
             <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-blue-500/5 blur-3xl" />
             <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-blue-500/3 blur-3xl" />
           </div>
@@ -403,35 +403,35 @@ export default async function SEOPage() {
           {/* Main Content */}
           <main className="pt-16 md:pt-20 relative z-10">
             {/* Hero Section */}
-            <div className="border-b border-slate-200 dark:border-border">
+            <div className="border-b border-border">
               <div className="max-w-[1000px] mx-auto px-6 md:px-12 lg:px-16 py-16 md:py-24">
-                <div className="text-sm text-blue-600 dark:text-blue-400 font-bold mb-4 uppercase tracking-wider">
+                <div className="text-sm text-primary font-bold mb-4 uppercase tracking-wider">
                   CONTENT SEO
                 </div>
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-none mb-6">
                   SEO初心者向けマニュアル
                 </h1>
-                
-                <div className="prose prose-slate dark:prose-invert max-w-none mb-8">
-                  <p className="text-lg text-slate-600 dark:text-gray-300 leading-relaxed">
+
+                <div className="prose prose-slate max-w-none mb-8">
+                  <p className="text-lg text-muted-foreground leading-relaxed">
                     SEOとは、「Search Engine Optimization」（検索エンジン最適化）という意味で、今の日本においては主にGoogleの検索エンジンで上位に表示されるための一連の施策のことです。わかりやすくいえば「自社サイトを1位に表示させるための対策」とも言えます。
                   </p>
-                  <p className="text-slate-600 dark:text-gray-300 leading-relaxed">
+                  <p className="text-muted-foreground leading-relaxed">
                     このページでは、よりビジネスを成長させたい方にSEOを攻略するために必要な具体的な知識とスキルを解説しています。
                   </p>
-                  <p className="text-slate-600 dark:text-gray-300 leading-relaxed">
+                  <p className="text-muted-foreground leading-relaxed">
                     真剣に取り組んでもらえれば、どのような業種の方でも今までをはるかに上回る流入と、コンバージョンを実現することができるようになるでしょう。
                   </p>
                 </div>
 
-                <p className="text-sm text-slate-500 dark:text-gray-400 mb-8">
+                <p className="text-sm text-muted-foreground mb-8">
                   最終更新日 {new Date().toLocaleDateString('ja-JP')} / {total} 件の記事
                 </p>
               </div>
             </div>
 
             {/* AI時代のSEO - 比較記事セクション */}
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 border-y border-blue-200 dark:border-blue-900">
+            <div className="bg-gradient-to-br from-primary/5 to-primary/10 border-y border-primary/20">
               <div className="max-w-[1000px] mx-auto px-6 md:px-12 lg:px-16 py-12 md:py-16">
                 <div className="mb-6">
                   <div className="inline-block px-4 py-2 bg-blue-600 text-white text-sm font-bold mb-4">
@@ -440,7 +440,7 @@ export default async function SEOPage() {
                   <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
                     AI時代でもブログを書くべき理由
                   </h2>
-                  <p className="text-slate-600 dark:text-gray-300 leading-relaxed mb-8">
+                  <p className="text-muted-foreground leading-relaxed mb-8">
                     ChatGPTやGeminiなどのAIツールが普及する中、「もうブログやSEOは終わりでは？」という声も聞かれます。
                     しかし、AI時代だからこそ、より一層SEOとコンテンツマーケティングの重要性が高まっています。
                     従来のSEO対策に加えて、AI時代特有の新しい視点と戦略が必要です。
@@ -449,12 +449,12 @@ export default async function SEOPage() {
 
                 {/* 旧SEO vs AI時代のSEO 比較表 */}
                 <div className="grid md:grid-cols-2 gap-6 mb-8">
-                  <div className="bg-white dark:bg-background p-6 border-2 border-slate-300 dark:border-gray-700">
+                  <div className="bg-background p-6 border-2 border-border">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-3 h-3 bg-slate-400 rounded-full"></div>
-                      <h3 className="text-lg font-bold text-slate-600 dark:text-gray-400">従来のSEO</h3>
+                      <h3 className="text-lg font-bold text-muted-foreground">従来のSEO</h3>
                     </div>
-                    <ul className="space-y-3 text-sm text-slate-600 dark:text-gray-300">
+                    <ul className="space-y-3 text-sm text-muted-foreground">
                       <li className="flex items-start gap-2">
                         <span className="text-slate-400 mt-1">•</span>
                         <span>キーワード詰め込み重視</span>
@@ -502,26 +502,26 @@ export default async function SEOPage() {
 
                 {/* 関連記事 */}
                 {posts.find(post => decodeURIComponent(post.slug).includes('cloudflare-pay-per-crawl') || decodeURIComponent(post.slug).includes('ai')) && (
-                  <div className="bg-white dark:bg-background p-6 border border-blue-300 dark:border-blue-800">
-                    <h4 className="text-sm font-bold text-blue-600 dark:text-blue-400 mb-3 uppercase tracking-wider">
+                  <div className="bg-background p-6 border border-primary/30">
+                    <h4 className="text-sm font-bold text-primary mb-3 uppercase tracking-wider">
                       📖 詳しく読む
                     </h4>
                     {posts
-                      .filter(post => 
-                        decodeURIComponent(post.slug).includes('cloudflare-pay-per-crawl') || 
+                      .filter(post =>
+                        decodeURIComponent(post.slug).includes('cloudflare-pay-per-crawl') ||
                         decodeURIComponent(post.slug).includes('ai時代')
                       )
                       .slice(0, 1)
                       .map(post => {
                         const imageUrl = getFeaturedImageUrl(post, 'medium')
                         return (
-                          <Link 
-                            key={post.id} 
+                          <Link
+                            key={post.id}
                             href={`/blog/${post.slug}`}
                             className="flex gap-4 group"
                           >
                             {imageUrl && (
-                              <div className="relative w-32 h-32 flex-shrink-0 bg-slate-100 dark:bg-gray-800 overflow-hidden">
+                              <div className="relative w-32 h-32 flex-shrink-0 bg-muted overflow-hidden">
                                 <Image
                                   src={imageUrl}
                                   alt={post.title.rendered}
@@ -531,11 +531,11 @@ export default async function SEOPage() {
                               </div>
                             )}
                             <div className="flex-1">
-                              <h5 
-                                className="text-lg font-bold text-foreground mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
+                              <h5
+                                className="text-lg font-bold text-foreground mb-2 group-hover:text-primary transition-colors"
                                 dangerouslySetInnerHTML={{ __html: post.title.rendered }}
                               />
-                              <p className="text-sm text-slate-600 dark:text-gray-300 line-clamp-2">
+                              <p className="text-sm text-muted-foreground line-clamp-2">
                                 {stripHtml(post.excerpt.rendered)}
                               </p>
                             </div>
@@ -548,12 +548,12 @@ export default async function SEOPage() {
             </div>
 
             {/* Chapter Navigation */}
-            <div className="bg-slate-50 dark:bg-gray-900/50 border-b border-slate-200 dark:border-border">
+            <div className="bg-muted/50 border-b border-border">
               <div className="max-w-[1000px] mx-auto px-6 md:px-12 lg:px-16 py-8">
                 <h2 className="text-xl font-bold text-foreground mb-2">
                   CONTENT コンテンツ
                 </h2>
-                <p className="text-sm text-slate-600 dark:text-gray-400 mb-6">
+                <p className="text-sm text-muted-foreground mb-6">
                   従来のSEO対策の基礎から応用まで、6つの章で体系的に解説します
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -561,12 +561,12 @@ export default async function SEOPage() {
                     <Link
                       key={chapter.number}
                       href={`#chapter-${chapter.number}`}
-                      className="group block p-6 bg-white dark:bg-background border border-slate-200 dark:border-border hover:border-blue-500 dark:hover:border-blue-500 transition-all"
+                      className="group block p-6 bg-background border border-border hover:border-primary transition-all"
                     >
-                      <p className="text-sm text-slate-500 dark:text-gray-400 mb-2">
+                      <p className="text-sm text-muted-foreground mb-2">
                         第{chapter.number}章
                       </p>
-                      <p className="text-base font-bold text-foreground group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                      <p className="text-base font-bold text-foreground group-hover:text-primary transition-colors">
                         {chapter.title}
                       </p>
                     </Link>
@@ -584,7 +584,7 @@ export default async function SEOPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
                     </svg>
                   </div>
-                  <p className="text-slate-600 dark:text-gray-300 mb-4">まだSEO関連の記事がありません</p>
+                  <p className="text-muted-foreground mb-4">まだSEO関連の記事がありません</p>
                   <Link
                     href="/blog"
                     className="inline-flex items-center px-6 py-2.5 border border-foreground text-foreground text-sm font-bold hover:bg-foreground hover:text-background transition-all"
@@ -609,7 +609,7 @@ export default async function SEOPage() {
 
             {/* All Articles Section */}
             {posts.length > 0 && (
-              <div className="bg-slate-50 dark:bg-gray-900/50 py-12 md:py-20">
+              <div className="bg-muted/50 py-12 md:py-20">
                 <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-16">
                   <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-8">
                     SEOの記事一覧
@@ -633,14 +633,14 @@ export default async function SEOPage() {
     )
   } catch (error) {
     console.error("Error loading SEO page:", error)
-    
+
     return (
-      <div className="min-h-screen bg-white dark:bg-background">
+      <div className="min-h-screen bg-background">
         <BlogHeader />
         <main className="pt-16 md:pt-20">
           <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-16">
             <h1 className="text-4xl font-bold mb-4">エラーが発生しました</h1>
-            <p className="text-slate-600 dark:text-gray-300 mb-6">
+            <p className="text-muted-foreground mb-6">
               ページの読み込み中にエラーが発生しました。しばらくしてから再度お試しください。
             </p>
             <Link

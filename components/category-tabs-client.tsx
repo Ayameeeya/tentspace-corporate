@@ -6,10 +6,10 @@ import type { WPCategory } from "@/lib/wordpress"
 
 export function CategoryTabsClient({
   categories,
-  currentCategoryId
+  currentSlug
 }: {
   categories: WPCategory[]
-  currentCategoryId: number
+  currentSlug: string
 }) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [showLeftFade, setShowLeftFade] = useState(false)
@@ -45,7 +45,7 @@ export function CategoryTabsClient({
   }, [checkScroll])
 
   return (
-    <div className="bg-white dark:bg-background border-b border-slate-200 dark:border-border">
+    <div className="bg-white dark:bg-background border-b border-slate-200 dark:border-border sticky top-[73px] md:top-[81px] z-30">
       <div className="max-w-[1400px] mx-auto">
         <div className="relative group">
           {/* Fade Gradients & Scroll Buttons */}
@@ -80,22 +80,21 @@ export function CategoryTabsClient({
 
           <div
             ref={scrollRef}
-            className="flex items-center gap-3 overflow-x-auto py-5 scrollbar-hide scroll-smooth px-6 md:px-12 lg:px-16"
+            className="flex items-center gap-2 overflow-x-auto py-4 scrollbar-hide scroll-smooth px-6 md:px-12 lg:px-16"
           >
             <Link
               href="/blog"
-              className="flex-shrink-0 px-5 py-2.5 text-sm font-semibold text-slate-600 dark:text-gray-400 hover:text-foreground transition-colors whitespace-nowrap"
+              className="flex-shrink-0 px-4 py-2 text-xs md:text-sm font-medium text-slate-600 dark:text-gray-400 hover:text-foreground hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors whitespace-nowrap rounded-full"
             >
-              All Topics
+              すべて
             </Link>
-            <div className="w-px h-6 bg-slate-200 dark:bg-gray-700 flex-shrink-0" />
             {categories.filter(c => c.count > 0).map((cat) => (
               <Link
                 key={cat.id}
                 href={`/blog/categories/${cat.slug}`}
-                className={`flex-shrink-0 px-5 py-2.5 text-sm font-semibold transition-all whitespace-nowrap ${cat.id === currentCategoryId
+                className={`flex-shrink-0 px-4 py-2 text-xs md:text-sm font-medium transition-all whitespace-nowrap rounded-full ${cat.slug === currentSlug
                   ? 'bg-foreground text-background'
-                  : 'text-slate-600 dark:text-gray-400 hover:text-foreground'
+                  : 'text-slate-600 dark:text-gray-400 hover:text-foreground hover:bg-slate-100 dark:hover:bg-gray-800'
                   }`}
               >
                 {cat.name}
