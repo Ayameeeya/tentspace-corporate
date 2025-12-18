@@ -159,7 +159,7 @@ function MasonryBlogCard({ post, likes = 0, index = 0 }: { post: WPPost; likes?:
             {categories.length > 0 && (
               <div className="absolute bottom-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-wrap gap-1.5">
                 {categories.map((category) => (
-                  <span key={category.id} className="inline-flex items-center px-2 py-1 text-[8px] md:text-[10px] font-bold text-accent bg-background/95 backdrop-blur-sm rounded-full shadow-lg border border-border/50">
+                  <span key={category.id} className="inline-flex items-center px-2 py-1 text-[8px] md:text-[10px] font-bold text-accent bg-background/90 backdrop-blur-sm rounded-full shadow-lg border border-border/50">
                     {category.name}
                   </span>
                 ))}
