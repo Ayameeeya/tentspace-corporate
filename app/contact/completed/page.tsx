@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { Header } from "@/components/header"
-import { Footer } from "@/components/Footer"
+import { Footer } from "@/components/footer"
 import { CheckCircle2 } from "lucide-react"
 import Link from "next/link"
 
