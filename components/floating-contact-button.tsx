@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Link from "next/link"
 
 export function FloatingContactButton() {
   const [isExpanded, setIsExpanded] = useState(true)
@@ -40,8 +41,8 @@ export function FloatingContactButton() {
 
   return (
     <div className="fixed bottom-6 right-6 z-50 group">
-      <a
-        href="mailto:back-office@tentspace.net?subject=n8n導入についてのお問い合わせ"
+      <Link
+        href="/contact"
         className="block"
         aria-label="お問い合わせ"
       >
@@ -79,7 +80,7 @@ export function FloatingContactButton() {
             />
           </svg>
         </div>
-      </a>
+      </Link>
       <button
         onClick={() => setIsExpanded(false)}
         className="absolute -top-2 -right-2 bg-gray-800 hover:bg-gray-900 text-white rounded-full p-1.5 shadow-lg transition-all duration-200 hover:scale-110"
