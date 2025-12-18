@@ -88,7 +88,7 @@ export default function NotFound() {
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
               記事が見つかりませんでした
             </h1>
-
+            
             <p className="text-gray-600 mb-2 max-w-lg mx-auto">
               お探しの記事は削除されたか、URLが変更された可能性があります。
             </p>

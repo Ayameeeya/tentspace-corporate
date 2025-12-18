@@ -78,7 +78,7 @@ export function CookieConsent() {
         {/* Text Content */}
         <div className="flex-1">
           <h3 className="text-sm font-bold text-gray-900 mb-1">
-            🍪 Cookieの使用について
+            Cookieの使用について
           </h3>
           <p className="text-sm text-gray-600 leading-relaxed">
             当サイトでは、サイトの利用状況を分析し、より良いサービスを提供するためにCookieを使用しています。

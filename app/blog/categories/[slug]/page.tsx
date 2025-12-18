@@ -1,14 +1,16 @@
 "use client"
 
-import { useEffect, useState, useCallback, useRef } from "react"
+import { useEffect, useState, useCallback, useRef, useMemo } from "react"
 import { useParams } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
-import Masonry from 'react-masonry-css'
+// import Masonry from 'react-masonry-css' // Replaced with custom masonry
 import { BlogHeader } from "@/components/blog-header"
 import { Footer } from "@/components/footer"
 import { CategoryTabsClient } from "@/components/category-tabs-client"
 import { EyeLoader } from "@/components/eye-loader"
+import { SeoBanner } from "@/components/seo-banner"
+import { N8nBanner } from "@/components/n8n-banner"
 import {
   getPosts,
   getCategories,
@@ -26,6 +28,52 @@ import { fetchLikeCounts } from "@/lib/blog-likes"
 function getCardVariant(index: number): 'tall' | 'wide' | 'square' {
   const patterns = ['tall', 'wide', 'square', 'tall', 'square', 'wide', 'square', 'tall', 'wide']
   return patterns[index % patterns.length] as 'tall' | 'wide' | 'square'
+}
+
+// Get estimated height for each variant (in relative units)
+function getVariantHeight(variant: 'tall' | 'wide' | 'square'): number {
+  return {
+    tall: 4,      // aspect-[3/4] = taller
+    wide: 2.25,   // aspect-[16/9] = shorter
+    square: 3     // aspect-square = medium
+  }[variant]
+}
+
+// Reorder posts to balance column heights using "shortest column first" algorithm
+function balanceMasonryPosts<T>(
+  posts: T[],
+  columns: number,
+  getHeight: (post: T, index: number) => number
+): T[] {
+  if (columns <= 1) return posts
+
+  // Track height of each column
+  const colHeights = new Array(columns).fill(0)
+  // Track which posts go to which column
+  const colPosts: T[][] = Array.from({ length: columns }, () => [])
+
+  posts.forEach((post, index) => {
+    const height = getHeight(post, index)
+    // Find the shortest column
+    const shortestCol = colHeights.indexOf(Math.min(...colHeights))
+    // Add post to that column
+    colPosts[shortestCol].push(post)
+    // Update column height
+    colHeights[shortestCol] += height
+  })
+
+  // Flatten posts back into single array, interleaving columns for masonry
+  const result: T[] = []
+  let maxLength = Math.max(...colPosts.map(col => col.length))
+  for (let i = 0; i < maxLength; i++) {
+    for (let col = 0; col < columns; col++) {
+      if (colPosts[col][i]) {
+        result.push(colPosts[col][i])
+      }
+    }
+  }
+
+  return result
 }
 
 // Get random fallback image - no duplicates within 10 posts, consistent for each post
@@ -107,12 +155,14 @@ function MasonryBlogCard({ post, likes = 0, index = 0 }: { post: WPPost; likes?:
               className="object-cover group-hover:scale-105 transition-transform duration-700"
             />
 
-            {/* Category Badge - ホバー時に画像左下に表示 */}
-            {categories[0] && (
-              <div className="absolute bottom-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <span className="inline-flex items-center px-3 py-1.5 text-xs font-bold text-accent bg-background/95 backdrop-blur-sm rounded-full shadow-lg border border-border/50">
-                  {categories[0].name}
-                </span>
+            {/* Category Badges - ホバー時に画像左下に表示 */}
+            {categories.length > 0 && (
+              <div className="absolute bottom-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-wrap gap-1.5">
+                {categories.map((category) => (
+                  <span key={category.id} className="inline-flex items-center px-2 py-1 text-[8px] md:text-[10px] font-bold text-accent bg-background/95 backdrop-blur-sm rounded-full shadow-lg border border-border/50">
+                    {category.name}
+                  </span>
+                ))}
               </div>
             )}
           </div>
@@ -281,11 +331,51 @@ export default function CategoryPage() {
     }
   }, [hasMore, loadingMore, loading, currentPage, fetchPosts])
 
-  const breakpointColumns = {
-    default: 3,
-    1100: 2,
-    700: 1
-  }
+  // Detect current column count based on window width
+  const [currentColumns, setCurrentColumns] = useState(3)
+
+  useEffect(() => {
+    const updateColumns = () => {
+      const width = window.innerWidth
+      if (width <= 700) {
+        setCurrentColumns(1)
+      } else if (width <= 1100) {
+        setCurrentColumns(2)
+      } else {
+        setCurrentColumns(3)
+      }
+    }
+
+    updateColumns()
+    window.addEventListener('resize', updateColumns)
+    return () => window.removeEventListener('resize', updateColumns)
+  }, [])
+
+  // Distribute posts into columns using "shortest column first" algorithm
+  const columnPosts = useMemo(() => {
+    if (currentColumns === 1) {
+      return [posts]
+    }
+
+    const colHeights = new Array(currentColumns).fill(0)
+    const columns: WPPost[][] = Array.from({ length: currentColumns }, () => [])
+
+    posts.forEach((post, index) => {
+      const variant = getCardVariant(index)
+      const height = getVariantHeight(variant)
+
+      // Find the shortest column
+      const shortestCol = colHeights.indexOf(Math.min(...colHeights))
+
+      // Add post to that column
+      columns[shortestCol].push(post)
+
+      // Update column height
+      colHeights[shortestCol] += height
+    })
+
+    return columns
+  }, [posts, currentColumns])
 
   return (
     <div className="min-h-screen bg-background">
@@ -316,7 +406,7 @@ export default function CategoryPage() {
                   {category.description && (
                     <p className="text-base md:text-lg text-muted-foreground mb-4" dangerouslySetInnerHTML={{ __html: category.description }} />
                   )}
-                  <p className="text-sm text-muted-foreground/70">
+                  <p className="text-base text-muted-foreground/70 font-pixel">
                     {totalPosts} {totalPosts === 1 ? 'Article' : 'Articles'}
                   </p>
                 </>
@@ -355,15 +445,33 @@ export default function CategoryPage() {
             </div>
           ) : (
             <>
-              <Masonry
-                breakpointCols={breakpointColumns}
-                className="flex -ml-6 md:-ml-8 w-auto"
-                columnClassName="pl-6 md:pl-8 bg-clip-padding"
-              >
-                {posts.map((post, index) => (
-                  <MasonryBlogCard key={post.id} post={post} likes={likeCounts[post.slug] || 0} index={index} />
+              {/* Category-specific Banner */}
+              {category && (
+                <div className="mb-6 md:mb-8">
+                  {category.slug === 'seo' && <SeoBanner layout="horizontal" />}
+                  {category.slug === 'n8n' && <N8nBanner />}
+                </div>
+              )}
+
+              {/* Custom Masonry Grid */}
+              <div className="flex gap-6 md:gap-8 items-start">
+                {columnPosts.map((columnItems, colIndex) => (
+                  <div key={colIndex} className="flex-1 space-y-6 md:space-y-8">
+                    {/* Posts in this column */}
+                    {columnItems.map((post) => {
+                      const globalIndex = posts.indexOf(post)
+                      return (
+                        <MasonryBlogCard
+                          key={post.id}
+                          post={post}
+                          likes={likeCounts[post.slug] || 0}
+                          index={globalIndex}
+                        />
+                      )
+                    })}
+                  </div>
                 ))}
-              </Masonry>
+              </div>
 
               {hasMore && (
                 <div ref={loadMoreRef} className="mt-12 flex justify-center">
@@ -376,7 +484,7 @@ export default function CategoryPage() {
               {!hasMore && posts.length > 0 && (
                 <div className="mt-12 flex flex-col items-center gap-4">
                   <EyeLoader variant="end" />
-                  <p className="text-sm text-muted-foreground">That’s all for now!</p>
+                  <p className="text-xs md:text-sm text-muted-foreground font-pixel">That's all for now!</p>
                 </div>
               )}
             </>

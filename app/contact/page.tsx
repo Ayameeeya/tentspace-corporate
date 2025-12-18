@@ -28,14 +28,14 @@ export default function ContactPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
+      <main className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
         <div className="mx-auto max-w-4xl px-6 py-24 pt-32">
           {/* Header Section */}
           <div className="mb-16 text-center">
-            <h1 className="mb-4 text-4xl font-bold text-slate-900 sm:text-5xl">
+            <h1 className="mb-4 text-4xl font-bold text-foreground sm:text-5xl">
               お問い合わせ
             </h1>
-            <p className="text-lg text-slate-600">
+            <p className="text-lg text-muted-foreground">
               開発のご相談、お見積もりなど、お気軽にお問い合わせください。
               <br />
               AI活用の可能性について、まずは無料でお話ししましょう。
@@ -47,7 +47,7 @@ export default function ContactPage() {
 
           {/* Additional Contact Info */}
           <div className="mt-12 text-center">
-            <p className="text-slate-600">
+            <p className="text-muted-foreground">
               お急ぎの場合は、直接メールでお問い合わせください
             </p>
             <a

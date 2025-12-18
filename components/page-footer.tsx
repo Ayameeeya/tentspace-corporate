@@ -3,61 +3,73 @@
 import Link from "next/link"
 import Image from "next/image"
 
-export function PageFooter() {
+export function PageFooter({ copyrightClassName = "text-primary-foreground/60" }: { copyrightClassName?: string }) {
   return (
-    <div className="bg-primary rounded-t-2xl md:rounded-t-3xl px-6 md:px-10 py-3 md:py-4 relative">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 md:gap-6">
-        <div className="flex items-center gap-4 md:gap-8">
-          <Link href="/">
-            <div className="hidden md:block">
-              <Image
-                src="/logo_white_symbol.png"
-                alt="tent space"
-                width={50}
-                height={50}
-                className="cursor-pointer hover:opacity-80 transition-opacity"
-              />
+    <div className="relative z-20 px-6 md:px-12 lg:px-20">
+      {/* Footer */}
+      <div className="bg-primary rounded-t-2xl md:rounded-t-3xl px-6 md:px-10 py-3 md:py-4 relative">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 md:gap-6">
+          <div className="flex items-center gap-4 md:gap-8">
+            <Link href="/">
+              <div className="hidden md:block">
+                <Image
+                  src="/logo_white_symbol.png"
+                  alt="tent space"
+                  width={50}
+                  height={50}
+                  className="cursor-pointer hover:opacity-80 transition-opacity"
+                />
+              </div>
+              <div className="block md:hidden">
+                <Image
+                  src="/logo_white_symbol.png"
+                  alt="tent space"
+                  width={40}
+                  height={40}
+                  className="cursor-pointer hover:opacity-80 transition-opacity"
+                />
+              </div>
+            </Link>
+            <div className="text-background/80 space-y-0.5">
+              <a
+                href="mailto:back-office@tentspace.net"
+                className="text-xs md:text-sm font-medium hover:text-background transition-colors inline-block"
+              >
+                back-office@tentspace.net
+              </a>
+              <p className="text-[10px] md:text-xs text-background/60">323 Kadoyama, Ogawa, Hiki District, Saitama 355-0316, Japan</p>
             </div>
-            <div className="block md:hidden">
-              <Image
-                src="/logo_white_symbol.png"
-                alt="tent space"
-                width={40}
-                height={40}
-                className="cursor-pointer hover:opacity-80 transition-opacity"
-              />
-            </div>
-          </Link>
-          <div className="text-background/80 space-y-0.5">
-            <a
-              href="mailto:back-office@tentspace.net"
-              className="text-xs md:text-sm font-medium hover:text-background transition-colors inline-block"
-            >
-              back-office@tentspace.net
-            </a>
-            <p className="text-[10px] md:text-xs text-background/60">323 Kadoyama, Ogawa, Hiki District, Saitama 355-0316, Japan</p>
           </div>
-        </div>
-        <div className="flex flex-col items-start md:items-end gap-2 md:gap-3 md:pb-2">
-          <div className="flex items-center gap-3 md:gap-4 text-[10px] md:text-xs text-background/60">
-            <Link href="/about" className="hover:text-background transition-colors">
-              About Us
-            </Link>
-            <Link href="/blog" className="hover:text-background transition-colors">
-              Blog
-            </Link>
-            <Link href="/terms" className="hover:text-background transition-colors">
-              Terms
-            </Link>
-            <Link href="/privacy" className="hover:text-background transition-colors">
-              Privacy
-            </Link>
-            <Link href="/legal" className="hover:text-background transition-colors">
-              Legal
-            </Link>
+          <div className="flex flex-col items-start md:items-end gap-2 md:gap-3 md:pb-2">
+            <div className="flex items-center gap-3 md:gap-4 text-[10px] md:text-xs text-background/60">
+              <Link href="/about" className="hover:text-background transition-colors">
+                About Us
+              </Link>
+              <Link href="/blog" className="hover:text-background transition-colors">
+                Blog
+              </Link>
+              <Link href="/terms" className="hover:text-background transition-colors">
+                Terms
+              </Link>
+              <Link href="/privacy" className="hover:text-background transition-colors">
+                Privacy
+              </Link>
+              <Link href="/legal" className="hover:text-background transition-colors">
+                Legal
+              </Link>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Copyright */}
+      <footer className="px-2 md:px-8 py-1">
+        <div className="flex justify-end">
+          <p className={`text-[8px] md:text-[9px] ${copyrightClassName}`}>
+            © 2025 tent space Inc. All rights reserved.
+          </p>
+        </div>
+      </footer>
     </div>
   )
 }

@@ -1,12 +1,43 @@
-type EyeLoaderProps = {
-  variant?: 'loading' | 'end'
+import { gsap } from 'gsap'
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
+
+// Register ScrollToPlugin
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollToPlugin)
 }
 
-export function EyeLoader({ variant = 'loading' }: EyeLoaderProps) {
+type EyeLoaderProps = {
+  variant?: 'loading' | 'end'
+  onClick?: () => void
+}
+
+export function EyeLoader({ variant = 'loading', onClick }: EyeLoaderProps) {
   const isEnd = variant === 'end'
 
+  const handleClick = () => {
+    // GSAPでカスタムイージング（最初ゆっくり、徐々に加速）
+    gsap.to(window, {
+      duration: 1.5,
+      scrollTo: { y: 0, autoKill: true },
+      ease: 'power2.in', // 最初ゆっくり → 徐々に加速
+    })
+    onClick?.()
+  }
+
   return (
-    <div className="eye-loader">
+    <div
+      className="eye-loader cursor-pointer hover:opacity-80 transition-opacity"
+      onClick={handleClick}
+      role="button"
+      aria-label="トップに戻る"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          handleClick()
+        }
+      }}
+    >
       <style jsx>{`
         .eye-loader {
           position: relative;

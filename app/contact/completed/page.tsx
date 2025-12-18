@@ -18,7 +18,7 @@ export default function ContactCompletedPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
+      <main className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
         <div className="mx-auto max-w-4xl px-6 py-24 pt-32">
           {/* Success Icon and Message */}
           <div className="text-center">
@@ -28,21 +28,21 @@ export default function ContactCompletedPage() {
               </div>
             </div>
 
-            <h1 className="mb-4 text-4xl font-bold text-slate-900 sm:text-5xl">
+            <h1 className="mb-4 text-4xl font-bold text-foreground sm:text-5xl">
               送信完了
             </h1>
-            <p className="mb-8 text-lg text-slate-600">
+            <p className="mb-8 text-lg text-muted-foreground">
               お問い合わせいただき、ありがとうございます。
             </p>
           </div>
 
           {/* Details Card */}
-          <div className="mb-12 rounded-2xl bg-white p-8 shadow-2xl md:p-12">
+          <div className="mb-12 rounded-2xl bg-card border border-border p-8 shadow-2xl md:p-12">
             <div className="space-y-6">
               <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 rounded-full bg-blue-100 p-2">
+                <div className="flex-shrink-0 rounded-full bg-blue-100 dark:bg-blue-500/20 p-2">
                   <svg
-                    className="h-6 w-6 text-blue-600"
+                    className="h-6 w-6 text-blue-600 dark:text-blue-400"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -56,19 +56,19 @@ export default function ContactCompletedPage() {
                   </svg>
                 </div>
                 <div>
-                  <h2 className="mb-2 text-xl font-bold text-slate-900">
+                  <h2 className="mb-2 text-xl font-bold text-foreground">
                     お問い合わせを受け付けました
                   </h2>
-                  <p className="text-slate-600">
+                  <p className="text-muted-foreground">
                     内容を確認次第、担当者より2営業日以内にご連絡いたします。
                   </p>
                 </div>
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 rounded-full bg-purple-100 p-2">
+                <div className="flex-shrink-0 rounded-full bg-purple-100 dark:bg-purple-500/20 p-2">
                   <svg
-                    className="h-6 w-6 text-purple-600"
+                    className="h-6 w-6 text-purple-600 dark:text-purple-400"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -82,10 +82,10 @@ export default function ContactCompletedPage() {
                   </svg>
                 </div>
                 <div>
-                  <h2 className="mb-2 text-xl font-bold text-slate-900">
+                  <h2 className="mb-2 text-xl font-bold text-foreground">
                     確認メールをご確認ください
                   </h2>
-                  <p className="text-slate-600">
+                  <p className="text-muted-foreground">
                     ご入力いただいたメールアドレス宛に、受付確認メールを送信しました。
                     <br />
                     メールが届かない場合は、迷惑メールフォルダもご確認ください。
@@ -94,9 +94,9 @@ export default function ContactCompletedPage() {
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 rounded-full bg-orange-100 p-2">
+                <div className="flex-shrink-0 rounded-full bg-orange-100 dark:bg-orange-500/20 p-2">
                   <svg
-                    className="h-6 w-6 text-orange-600"
+                    className="h-6 w-6 text-orange-600 dark:text-orange-400"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -110,10 +110,10 @@ export default function ContactCompletedPage() {
                   </svg>
                 </div>
                 <div>
-                  <h2 className="mb-2 text-xl font-bold text-slate-900">
+                  <h2 className="mb-2 text-xl font-bold text-foreground">
                     お急ぎの場合
                   </h2>
-                  <p className="text-slate-600">
+                  <p className="text-muted-foreground">
                     お急ぎの場合は、直接メールでお問い合わせください。
                     <br />
                     <a
@@ -151,7 +151,7 @@ export default function ContactCompletedPage() {
             </Link>
             <Link
               href="/blog"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-lg border-2 border-slate-300 bg-white px-8 py-4 text-lg font-bold text-slate-700 transition-all hover:border-slate-400 hover:bg-slate-50 sm:w-auto"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-lg border-2 border-border bg-card px-8 py-4 text-lg font-bold text-foreground transition-all hover:border-foreground/30 hover:bg-muted sm:w-auto"
             >
               <svg
                 className="h-5 w-5"

@@ -1,6 +1,6 @@
 import type React from "react"
 import type { Metadata, Viewport } from "next"
-import { Inter, Geist_Mono, Orbitron } from "next/font/google"
+import { Inter, VT323, Audiowide, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import Script from "next/script"
 import { CookieConsent } from "@/components/cookie-consent"
@@ -10,12 +10,30 @@ import "./globals.css"
 
 const GA_MEASUREMENT_ID = "G-1XCFVFP5DX"
 
-const _inter = Inter({ subsets: ["latin"] })
-const _geistMono = Geist_Mono({ subsets: ["latin"] })
-const _orbitron = Orbitron({ subsets: ["latin"], weight: ["400", "500", "700"] })
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter"
+})
+
+const audiowide = Audiowide({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-audiowide"
+})
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono"
+})
+
+const vt323 = VT323({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-vt323"
+})
 
 export const metadata: Metadata = {
-  title: "tent␣ - AI Driven Development",
+  title: "tent␣ - AI-Driven Development",
   description: "tent space(テントスペース)は、AI駆動開発と実績のある専門知識を組み合わせて、より迅速でスマートなソリューションを提供するテックスタジオです。",
   generator: "v0.app",
   icons: {
@@ -35,7 +53,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="ja" suppressHydrationWarning>
+    <html lang="ja" suppressHydrationWarning className={`${inter.variable} ${audiowide.variable} ${geistMono.variable} ${vt323.variable}`}>
       <head>
         {/* Google Tag Consent Mode v2 - Default denied for EEA compliance */}
         <Script id="gtag-consent-default" strategy="beforeInteractive">
