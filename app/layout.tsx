@@ -4,6 +4,8 @@ import { Inter, Geist_Mono, Orbitron } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import Script from "next/script"
 import { CookieConsent } from "@/components/cookie-consent"
+import { ErrorBoundary } from "@/components/error-boundary"
+import { ClientErrorTracker } from "@/components/client-error-tracker"
 import "./globals.css"
 
 const GA_MEASUREMENT_ID = "G-1XCFVFP5DX"
@@ -67,9 +69,12 @@ export default function RootLayout({
         </Script>
       </head>
       <body className="font-sans antialiased">
-        {children}
-        <Analytics />
-        <CookieConsent />
+        <ErrorBoundary>
+          <ClientErrorTracker />
+          {children}
+          <Analytics />
+          <CookieConsent />
+        </ErrorBoundary>
       </body>
     </html>
   )
