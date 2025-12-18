@@ -4,6 +4,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { BlogHeader } from "@/components/blog-header"
 import { BlogFooter } from "@/components/blog-footer"
+import { FloatingContactButton } from "@/components/floating-contact-button"
 import {
   getPosts,
   getCategoryBySlug,
@@ -401,6 +402,9 @@ export default async function N8nFeaturedPage() {
             <BlogFooter />
           </div>
         </main>
+
+        {/* Floating Contact Button */}
+        <FloatingContactButton />
       </div>
     </>
   )
