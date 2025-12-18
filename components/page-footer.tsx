@@ -11,7 +11,7 @@ export function PageFooter() {
           <Link href="/">
             <div className="hidden md:block">
               <Image
-                src="/logo_black_symbol.png"
+                src="/logo_white_symbol.png"
                 alt="tent space"
                 width={50}
                 height={50}
@@ -20,7 +20,7 @@ export function PageFooter() {
             </div>
             <div className="block md:hidden">
               <Image
-                src="/logo_black_symbol.png"
+                src="/logo_white_symbol.png"
                 alt="tent space"
                 width={40}
                 height={40}
@@ -28,31 +28,31 @@ export function PageFooter() {
               />
             </div>
           </Link>
-          <div className="text-primary-foreground/80 space-y-0.5">
+          <div className="text-background/80 space-y-0.5">
             <a
               href="mailto:back-office@tentspace.net"
-              className="text-xs md:text-sm font-medium hover:text-primary-foreground transition-colors inline-block"
+              className="text-xs md:text-sm font-medium hover:text-background transition-colors inline-block"
             >
               back-office@tentspace.net
             </a>
-            <p className="text-[10px] md:text-xs text-primary-foreground/60">323 Kadoyama, Ogawa, Hiki District, Saitama 355-0316, Japan</p>
+            <p className="text-[10px] md:text-xs text-background/60">323 Kadoyama, Ogawa, Hiki District, Saitama 355-0316, Japan</p>
           </div>
         </div>
         <div className="flex flex-col items-start md:items-end gap-2 md:gap-3 md:pb-2">
-          <div className="flex items-center gap-3 md:gap-4 text-[10px] md:text-xs text-primary-foreground/60">
-            <Link href="/about" className="hover:text-primary-foreground transition-colors">
+          <div className="flex items-center gap-3 md:gap-4 text-[10px] md:text-xs text-background/60">
+            <Link href="/about" className="hover:text-background transition-colors">
               About Us
             </Link>
-            <Link href="/blog" className="hover:text-primary-foreground transition-colors">
+            <Link href="/blog" className="hover:text-background transition-colors">
               Blog
             </Link>
-            <Link href="/terms" className="hover:text-primary-foreground transition-colors">
+            <Link href="/terms" className="hover:text-background transition-colors">
               Terms
             </Link>
-            <Link href="/privacy" className="hover:text-primary-foreground transition-colors">
+            <Link href="/privacy" className="hover:text-background transition-colors">
               Privacy
             </Link>
-            <Link href="/legal" className="hover:text-primary-foreground transition-colors">
+            <Link href="/legal" className="hover:text-background transition-colors">
               Legal
             </Link>
           </div>

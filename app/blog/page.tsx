@@ -7,7 +7,7 @@ import Image from "next/image"
 import Masonry from 'react-masonry-css'
 import { gsap } from "gsap"
 import { BlogHeader } from "@/components/blog-header"
-import { BlogFooter } from "@/components/blog-footer"
+import { Footer } from "@/components/footer"
 import { EyeLoader } from "@/components/eye-loader"
 import { getPosts, getCategories, getFeaturedImageUrl, stripHtml, formatDate, getReadingTime, type WPPost, type WPCategory } from "@/lib/wordpress"
 import { fetchLikeCounts } from "@/lib/blog-likes"
@@ -636,7 +636,7 @@ function BlogPageContent() {
 
         {/* Footer */}
         <div className="mt-12 md:mt-16">
-          <BlogFooter />
+          <Footer />
         </div>
       </main>
 

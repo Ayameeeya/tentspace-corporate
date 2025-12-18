@@ -6,7 +6,7 @@ import Link from "next/link"
 import Image from "next/image"
 import Masonry from 'react-masonry-css'
 import { BlogHeader } from "@/components/blog-header"
-import { BlogFooter } from "@/components/blog-footer"
+import { Footer } from "@/components/footer"
 import { CategoryTabsClient } from "@/components/category-tabs-client"
 import { EyeLoader } from "@/components/eye-loader"
 import {
@@ -384,7 +384,7 @@ export default function CategoryPage() {
         </div>
 
         <div className="mt-12 md:mt-16">
-          <BlogFooter />
+          <Footer />
         </div>
       </main>
 
