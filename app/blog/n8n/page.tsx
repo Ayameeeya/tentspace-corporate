@@ -38,7 +38,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: `${category.name}完全ガイド | tent space Blog`,
       description,
-      url: `${SITE_URL}/blog/featured/n8n`,
+      url: `${SITE_URL}/blog/n8n`,
       siteName: "tent space Blog",
       locale: "ja_JP",
       type: "website",
@@ -58,7 +58,7 @@ export async function generateMetadata(): Promise<Metadata> {
       images: [`${SITE_URL}/logo_gradation_yoko.png`],
     },
     alternates: {
-      canonical: `${SITE_URL}/blog/featured/n8n`,
+      canonical: `${SITE_URL}/blog/n8n`,
     },
     robots: {
       index: true,
@@ -233,7 +233,7 @@ export default async function N8nFeaturedPage() {
     "@type": "CollectionPage",
     name: `${category.name}完全ガイド`,
     description: `${category.name}に関する記事一覧です。`,
-    url: `${SITE_URL}/blog/featured/n8n`,
+    url: `${SITE_URL}/blog/n8n`,
     isPartOf: {
       "@type": "Blog",
       name: "tent space Blog",
