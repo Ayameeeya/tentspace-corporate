@@ -7,7 +7,7 @@ import Image from "next/image"
 import Masonry from 'react-masonry-css'
 import { gsap } from "gsap"
 import { BlogHeader } from "@/components/blog-header"
-import { BlogFooter } from "@/components/blog-footer"
+import { Footer } from "@/components/footer"
 import { EyeLoader } from "@/components/eye-loader"
 import { getPosts, getCategories, getFeaturedImageUrl, stripHtml, formatDate, getReadingTime, type WPPost, type WPCategory } from "@/lib/wordpress"
 import { fetchLikeCounts } from "@/lib/blog-likes"
@@ -627,17 +627,19 @@ function BlogPageContent() {
               {!hasMore && posts.length > 0 && (
                 <div className="mt-12 flex flex-col items-center gap-4">
                   <EyeLoader variant="end" />
-                  <p className="text-sm text-muted-foreground">You've reached the end</p>
+                  <p className="text-sm text-muted-foreground">That’s a wrap!</p>
                 </div>
               )}
             </>
           )}
         </div>
 
-        {/* Footer */}
-        <div className="mt-12 md:mt-16">
-          <BlogFooter />
-        </div>
+        {/* Footer - 最後の記事が表示された後のみ表示 */}
+        {!hasMore && posts.length > 0 && (
+          <div className="mt-12 md:mt-16">
+            <Footer />
+          </div>
+        )}
       </main>
 
       <style jsx global>{`

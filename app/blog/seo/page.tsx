@@ -2,7 +2,7 @@ import { Metadata } from "next"
 import Link from "next/link"
 import Image from "next/image"
 import { BlogHeader } from "@/components/blog-header"
-import { BlogFooter } from "@/components/blog-footer"
+import { Footer } from "@/components/footer"
 import {
   getPosts,
   getCategoryBySlug,
@@ -625,7 +625,7 @@ export default async function SEOPage() {
 
             {/* Footer */}
             <div className="mt-24 md:mt-32">
-              <BlogFooter />
+              <Footer />
             </div>
           </main>
         </div>
