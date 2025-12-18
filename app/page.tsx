@@ -1122,7 +1122,7 @@ function TextOverlay({ scrollProgress }: { scrollProgress: number }) {
         scrollProgress={scrollProgress}
         data={[
           { label: "ESTABLISHED", value: "2023" },
-          { label: "PROJECTS", value: "120+" },
+          { label: "PROJECTS", value: "50+" },
           { label: "AI MODELS", value: "INTEGRATED" },
         ]}
       />

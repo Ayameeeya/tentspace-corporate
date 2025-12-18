@@ -1,18 +1,17 @@
 "use client"
 
 import { useState } from "react"
+import Image from "next/image"
 import { supabaseAuth } from "@/lib/supabase/client"
 import { recordLoginHistory } from "@/lib/dashboard"
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 
 interface AuthModalProps {
   isOpen: boolean
@@ -25,7 +24,7 @@ type AuthMode = "login" | "signup" | "forgot"
 // ブラウザ・デバイス情報を取得
 function getDeviceInfo() {
   const ua = navigator.userAgent
-  
+
   // ブラウザ検出
   let browser = "不明"
   if (ua.includes("Firefox")) browser = "Firefox"
@@ -33,7 +32,7 @@ function getDeviceInfo() {
   else if (ua.includes("Chrome")) browser = "Chrome"
   else if (ua.includes("Safari")) browser = "Safari"
   else if (ua.includes("Opera")) browser = "Opera"
-  
+
   // OS検出
   let os = "不明"
   if (ua.includes("Windows")) os = "Windows"
@@ -41,12 +40,12 @@ function getDeviceInfo() {
   else if (ua.includes("Linux")) os = "Linux"
   else if (ua.includes("Android")) os = "Android"
   else if (ua.includes("iPhone") || ua.includes("iPad")) os = "iOS"
-  
+
   // デバイスタイプ検出
   let deviceType = "desktop"
   if (/Mobi|Android/i.test(ua)) deviceType = "mobile"
   else if (/Tablet|iPad/i.test(ua)) deviceType = "tablet"
-  
+
   return { browser, os, deviceType, userAgent: ua }
 }
 
@@ -119,23 +118,23 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
 
       if (error) {
         setLoading(false)
-        setError(error.message === "Invalid login credentials" 
-          ? "メールアドレスまたはパスワードが正しくありません" 
+        setError(error.message === "Invalid login credentials"
+          ? "メールアドレスまたはパスワードが正しくありません"
           : error.message)
         return
       }
 
       // Check if MFA is enabled (skip on localhost for development)
-      const isLocalhost = typeof window !== 'undefined' && 
-        (window.location.hostname === 'localhost' || 
-         window.location.hostname === '127.0.0.1' ||
-         window.location.hostname.startsWith('192.168.'))
-      
+      const isLocalhost = typeof window !== 'undefined' &&
+        (window.location.hostname === 'localhost' ||
+          window.location.hostname === '127.0.0.1' ||
+          window.location.hostname.startsWith('192.168.'))
+
       const mfaEnabled = process.env.NEXT_PUBLIC_ENABLE_MFA !== 'false' && !isLocalhost
 
       // Check if MFA is required by listing factors
       const { data: factorsData, error: factorsError } = await supabaseAuth.auth.mfa.listFactors()
-      
+
       if (mfaEnabled && !factorsError && factorsData?.totp && factorsData.totp.length > 0) {
         const verifiedFactor = factorsData.totp.find(f => f.status === 'verified')
         if (verifiedFactor) {
@@ -172,7 +171,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
           success: true
         })
       }
-      
+
       handleClose()
       onSuccess?.()
     } catch (err) {
@@ -285,262 +284,255 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md bg-background border-border">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-foreground">
-            {mfaRequired ? "二段階認証" : 
+      <DialogContent className="sm:max-w-5xl p-0 bg-white dark:bg-background border-none overflow-hidden">
+        <VisuallyHidden>
+          <DialogTitle>
+            {mfaRequired ? "二段階認証" :
               mode === "login" ? "ログイン" :
-              mode === "signup" ? "アカウント登録" :
-              "パスワードリセット"}
+                mode === "signup" ? "アカウント登録" :
+                  "パスワードリセット"}
           </DialogTitle>
-          <DialogDescription className="text-muted-foreground">
-            {mfaRequired ? "認証アプリに表示されている6桁のコードを入力してください" :
-              mode === "login" ? "メールアドレスとパスワードでログインしてください" :
-              mode === "signup" ? "新しいアカウントを作成します" :
-              "登録したメールアドレスを入力してください"}
-          </DialogDescription>
-        </DialogHeader>
-
-        {message ? (
-          <div className="py-4">
-            <div className="bg-green-50 dark:bg-green-950 text-green-800 dark:text-green-200 rounded-lg p-4 text-sm">
-              {message}
-            </div>
-            <Button 
-              className="w-full mt-4" 
-              variant="outline"
-              onClick={handleClose}
-            >
-              閉じる
-            </Button>
-          </div>
-        ) : (
-          <form onSubmit={
-            mfaRequired ? handleVerifyMFA :
-            mode === "login" ? handleLogin :
-            mode === "signup" ? handleSignup :
-            handleForgotPassword
-          }>
-            <div className="space-y-4 py-4">
-              {error && (
-                <div className="bg-red-50 dark:bg-red-950 text-red-600 dark:text-red-300 rounded-lg p-3 text-sm">
-                  {error}
-                </div>
-              )}
-
-              {mfaRequired ? (
-                // MFA Code Input
-                <div className="space-y-4">
-                  <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-                    <p className="text-sm text-blue-900 dark:text-blue-200 mb-2">
-                      認証アプリ（Google Authenticator、Authyなど）に表示されている6桁のコードを入力してください
-                    </p>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="mfaCode" className="text-foreground">認証コード</Label>
-                    <Input
-                      id="mfaCode"
-                      type="text"
-                      placeholder="000000"
-                      value={mfaCode}
-                      onChange={(e) => setMfaCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                      maxLength={6}
-                      required
-                      className="text-center text-2xl font-mono tracking-wider bg-background border-border text-foreground"
-                      autoFocus
-                    />
-                  </div>
-                </div>
-              ) : (
-                // Normal login/signup/forgot form
-                <>
-
-              {mode === "signup" && (
-                <div className="space-y-2">
-                  <Label htmlFor="displayName" className="text-foreground">表示名</Label>
-                  <Input
-                    id="displayName"
-                    type="text"
-                    placeholder="ニックネーム"
-                    value={displayName}
-                    onChange={(e) => setDisplayName(e.target.value)}
-                    className="bg-background border-border text-foreground"
-                  />
-                </div>
-              )}
-
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-foreground">メールアドレス</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="email@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="bg-background border-border text-foreground"
-                />
+        </VisuallyHidden>
+        <div className="flex flex-col md:flex-row min-h-[600px]">
+          {/* Left Side - Form */}
+          <div className="flex-1 p-8 md:p-12 flex flex-col justify-center">
+            <div className="max-w-md mx-auto w-full">
+              {/* Header */}
+              <div className="mb-8">
+                <p className="text-[10px] md:text-xs font-bold tracking-wider uppercase text-slate-900 dark:text-white mb-4">
+                  DON'T MISS A THING
+                </p>
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-serif text-slate-900 dark:text-white leading-tight">
+                  {mfaRequired ? "認証コードを入力" :
+                    mode === "login" ? "Welcome back to our blog" :
+                      mode === "signup" ? "Join our community" :
+                        "Reset your password"}
+                </h2>
               </div>
 
-              {mode !== "forgot" && (
-                <div className="space-y-2">
-                  <Label htmlFor="password" className="text-foreground">パスワード</Label>
-                  <div className="relative">
-                    <Input
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      minLength={8}
-                      className="pr-10 bg-background border-border text-foreground"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none"
-                      tabIndex={-1}
-                    >
-                      {showPassword ? (
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                        </svg>
-                      ) : (
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </svg>
-                      )}
-                    </button>
-                  </div>
-                  {mode === "signup" && (
-                    <p className="text-xs text-muted-foreground mt-1">
-                      8文字以上、小文字・大文字・数字・特殊文字をそれぞれ1文字以上含める必要があります
-                    </p>
+              {/* Success Message */}
+              {message ? (
+                <div className="space-y-6">
+                  <p className="text-slate-600 dark:text-gray-300">{message}</p>
+                  <button
+                    onClick={handleClose}
+                    className="w-full py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-semibold hover:opacity-90 transition-opacity"
+                  >
+                    閉じる
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={
+                  mfaRequired ? handleVerifyMFA :
+                    mode === "login" ? handleLogin :
+                      mode === "signup" ? handleSignup :
+                        handleForgotPassword
+                } className="space-y-6">
+                  {/* Error Message */}
+                  {error && (
+                    <div className="bg-red-50 dark:bg-red-950 text-red-600 dark:text-red-300 p-3 text-sm">
+                      {error}
+                    </div>
                   )}
-                </div>
-              )}
 
-              {mode === "signup" && (
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword" className="text-foreground">パスワード（確認）</Label>
-                  <div className="relative">
-                    <Input
-                      id="confirmPassword"
-                      type={showConfirmPassword ? "text" : "password"}
-                      placeholder="••••••••"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      required
-                      minLength={8}
-                      className="pr-10 bg-background border-border text-foreground"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none"
-                      tabIndex={-1}
-                    >
-                      {showConfirmPassword ? (
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                        </svg>
-                      ) : (
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </svg>
+                  {/* MFA Code Input */}
+                  {mfaRequired ? (
+                    <div className="space-y-4">
+                      <Input
+                        type="text"
+                        placeholder="000000"
+                        value={mfaCode}
+                        onChange={(e) => setMfaCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                        maxLength={6}
+                        required
+                        className="w-full py-3 px-4 border border-slate-300 dark:border-gray-700 text-center text-2xl font-mono tracking-wider"
+                        autoFocus
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      {/* Display Name (Signup only) */}
+                      {mode === "signup" && (
+                        <Input
+                          type="text"
+                          placeholder="ニックネーム"
+                          value={displayName}
+                          onChange={(e) => setDisplayName(e.target.value)}
+                          className="w-full py-3 px-4 border border-slate-300 dark:border-gray-700"
+                        />
                       )}
-                    </button>
-                  </div>
-                </div>
-              )}
-              </>
-            )}
-            </div>
 
-            <div className="space-y-3">
-              <Button 
-                type="submit" 
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                disabled={loading}
-              >
-                {loading ? (
-                  <span className="flex items-center gap-2">
-                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                    </svg>
-                    処理中...
-                  </span>
-                ) : (
-                  <>
-                    {mfaRequired ? "確認" :
-                      mode === "login" ? "ログイン" :
-                      mode === "signup" ? "登録する" :
-                      "リセットメールを送信"}
-                  </>
-                )}
-              </Button>
+                      {/* Email Input */}
+                      <Input
+                        type="email"
+                        placeholder="EMAIL ADDRESS"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        className="w-full py-3 px-4 border border-slate-300 dark:border-gray-700 uppercase placeholder:text-slate-400"
+                      />
 
-              {mfaRequired ? (
-                <button
-                  type="button"
-                  className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  onClick={() => { resetForm(); setMode("login") }}
-                >
-                  ← ログイン画面に戻る
-                </button>
-              ) : mode === "login" ? (
-                <>
+                      {/* Password Input */}
+                      {mode !== "forgot" && (
+                        <div className="relative">
+                          <Input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="PASSWORD"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                            minLength={8}
+                            className="w-full py-3 px-4 pr-12 border border-slate-300 dark:border-gray-700 uppercase placeholder:text-slate-400"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                            tabIndex={-1}
+                          >
+                            {showPassword ? (
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                              </svg>
+                            ) : (
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                              </svg>
+                            )}
+                          </button>
+                        </div>
+                      )}
+
+                      {/* Confirm Password (Signup only) */}
+                      {mode === "signup" && (
+                        <div className="relative">
+                          <Input
+                            type={showConfirmPassword ? "text" : "password"}
+                            placeholder="CONFIRM PASSWORD"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            required
+                            minLength={8}
+                            className="w-full py-3 px-4 pr-12 border border-slate-300 dark:border-gray-700 uppercase placeholder:text-slate-400"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                            tabIndex={-1}
+                          >
+                            {showConfirmPassword ? (
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                              </svg>
+                            ) : (
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                              </svg>
+                            )}
+                          </button>
+                        </div>
+                      )}
+                    </>
+                  )}
+
+                  {/* Submit Button */}
                   <button
-                    type="button"
-                    className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors"
-                    onClick={() => { resetForm(); setMode("forgot") }}
+                    type="submit"
+                    disabled={loading}
+                    className="group relative w-full py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold uppercase tracking-wider hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
                   >
-                    パスワードをお忘れですか？
+                    {loading ? (
+                      <>
+                        <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                        </svg>
+                        処理中...
+                      </>
+                    ) : (
+                      <>
+                        {mfaRequired ? "確認" :
+                          mode === "login" ? "Sign In" :
+                            mode === "signup" ? "Sign Up" :
+                              "Send Reset Link"}
+                        <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                      </>
+                    )}
                   </button>
-                  <div className="text-center text-sm text-muted-foreground">
-                    アカウントをお持ちでない方は{" "}
-                    <button
-                      type="button"
-                      className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:underline font-medium"
-                      onClick={() => { resetForm(); setMode("signup") }}
-                    >
-                      新規登録
-                    </button>
+
+                  {/* Links */}
+                  <div className="space-y-3 text-center text-sm">
+                    {mfaRequired ? (
+                      <button
+                        type="button"
+                        className="text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white"
+                        onClick={() => { resetForm(); setMode("login") }}
+                      >
+                        ← ログイン画面に戻る
+                      </button>
+                    ) : mode === "login" ? (
+                      <>
+                        <button
+                          type="button"
+                          className="block w-full text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white"
+                          onClick={() => { resetForm(); setMode("forgot") }}
+                        >
+                          パスワードをお忘れですか？
+                        </button>
+                        <p className="text-slate-600 dark:text-gray-400">
+                          アカウントをお持ちでない方は{" "}
+                          <button
+                            type="button"
+                            className="text-slate-900 dark:text-white font-semibold hover:underline"
+                            onClick={() => { resetForm(); setMode("signup") }}
+                          >
+                            新規登録
+                          </button>
+                        </p>
+                      </>
+                    ) : mode === "signup" ? (
+                      <p className="text-slate-600 dark:text-gray-400">
+                        既にアカウントをお持ちの方は{" "}
+                        <button
+                          type="button"
+                          className="text-slate-900 dark:text-white font-semibold hover:underline"
+                          onClick={() => { resetForm(); setMode("login") }}
+                        >
+                          ログイン
+                        </button>
+                      </p>
+                    ) : (
+                      <button
+                        type="button"
+                        className="text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white"
+                        onClick={() => { resetForm(); setMode("login") }}
+                      >
+                        ログインに戻る
+                      </button>
+                    )}
                   </div>
-                </>
-              ) : null}
-
-              {mode === "signup" && (
-                <div className="text-center text-sm text-muted-foreground">
-                  既にアカウントをお持ちの方は{" "}
-                  <button
-                    type="button"
-                    className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:underline font-medium"
-                    onClick={() => { resetForm(); setMode("login") }}
-                  >
-                    ログイン
-                  </button>
-                </div>
-              )}
-
-              {mode === "forgot" && (
-                <button
-                  type="button"
-                  className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  onClick={() => { resetForm(); setMode("login") }}
-                >
-                  ログインに戻る
-                </button>
+                </form>
               )}
             </div>
-          </form>
-        )}
+          </div>
+
+          {/* Right Side - Image */}
+          <div className="hidden md:block md:w-1/2 relative bg-slate-900">
+            <Image
+              src="/krystal-ng-1PlVbeOCd78.jpg"
+              alt="Technology"
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   )
 }
-

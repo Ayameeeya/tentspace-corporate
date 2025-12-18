@@ -229,7 +229,7 @@ export default function TermsPage() {
               ))}
             </h1>
             <div className="terms-subtitle mt-6 md:mt-8 flex items-center gap-4 md:gap-6 text-slate-400 text-xs md:text-sm">
-              <span>最終更新: 2024年12月1日</span>
+              <span>最終更新: 2025年12月1日</span>
               <span className="w-1 h-1 md:w-1.5 md:h-1.5 bg-blue-500 rounded-full" />
               <span>株式会社tent space</span>
             </div>
