@@ -284,7 +284,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-5xl p-0 bg-white dark:bg-background border-none overflow-hidden">
+      <DialogContent className="sm:max-w-5xl p-0 bg-card border-none overflow-hidden">
         <VisuallyHidden>
           <DialogTitle>
             {mfaRequired ? "二段階認証" :
@@ -299,10 +299,10 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
             <div className="max-w-md mx-auto w-full">
               {/* Header */}
               <div className="mb-8">
-                <p className="text-[10px] md:text-xs font-bold tracking-wider uppercase text-slate-900 dark:text-white mb-4">
+                <p className="text-[10px] md:text-xs font-bold tracking-wider uppercase text-foreground mb-4">
                   DON'T MISS A THING
                 </p>
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-serif text-slate-900 dark:text-white leading-tight">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-serif text-foreground leading-tight">
                   {mfaRequired ? "認証コードを入力" :
                     mode === "login" ? "Welcome back to our blog" :
                       mode === "signup" ? "Join our community" :
@@ -313,10 +313,10 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
               {/* Success Message */}
               {message ? (
                 <div className="space-y-6">
-                  <p className="text-slate-600 dark:text-gray-300">{message}</p>
+                  <p className="text-muted-foreground">{message}</p>
                   <button
                     onClick={handleClose}
-                    className="w-full py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-semibold hover:opacity-90 transition-opacity"
+                    className="w-full py-3 bg-foreground text-background font-semibold hover:opacity-90 transition-opacity"
                   >
                     閉じる
                   </button>
@@ -345,7 +345,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                         onChange={(e) => setMfaCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                         maxLength={6}
                         required
-                        className="w-full py-3 px-4 border border-slate-300 dark:border-gray-700 text-center text-2xl font-mono tracking-wider"
+                        className="w-full py-3 px-4 border border-border text-center text-2xl font-mono tracking-wider"
                         autoFocus
                       />
                     </div>
@@ -355,10 +355,10 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                       {mode === "signup" && (
                         <Input
                           type="text"
-                          placeholder="ニックネーム"
+                          placeholder="DISPLAY NAME"
                           value={displayName}
                           onChange={(e) => setDisplayName(e.target.value)}
-                          className="w-full py-3 px-4 border border-slate-300 dark:border-gray-700"
+                          className="w-full py-3 px-4 border border-border"
                         />
                       )}
 
@@ -369,7 +369,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
-                        className="w-full py-3 px-4 border border-slate-300 dark:border-gray-700 uppercase placeholder:text-slate-400"
+                        className="w-full py-3 px-4 border border-border uppercase placeholder:text-muted-foreground"
                       />
 
                       {/* Password Input */}
@@ -382,12 +382,12 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                             onChange={(e) => setPassword(e.target.value)}
                             required
                             minLength={8}
-                            className="w-full py-3 px-4 pr-12 border border-slate-300 dark:border-gray-700 uppercase placeholder:text-slate-400"
+                            className="w-full py-3 px-4 pr-12 border border-border uppercase placeholder:text-muted-foreground"
                           />
                           <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                            className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                             tabIndex={-1}
                           >
                             {showPassword ? (
@@ -414,12 +414,12 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             required
                             minLength={8}
-                            className="w-full py-3 px-4 pr-12 border border-slate-300 dark:border-gray-700 uppercase placeholder:text-slate-400"
+                            className="w-full py-3 px-4 pr-12 border border-border uppercase placeholder:text-muted-foreground"
                           />
                           <button
                             type="button"
                             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                            className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                             tabIndex={-1}
                           >
                             {showConfirmPassword ? (
@@ -442,7 +442,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="group relative w-full py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold uppercase tracking-wider hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+                    className="group relative w-full py-3 bg-foreground text-background font-bold uppercase tracking-wider hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
                   >
                     {loading ? (
                       <>
@@ -470,7 +470,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                     {mfaRequired ? (
                       <button
                         type="button"
-                        className="text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white"
+                        className="text-muted-foreground hover:text-foreground"
                         onClick={() => { resetForm(); setMode("login") }}
                       >
                         ← ログイン画面に戻る
@@ -479,16 +479,16 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                       <>
                         <button
                           type="button"
-                          className="block w-full text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white"
+                          className="block w-full text-muted-foreground hover:text-foreground"
                           onClick={() => { resetForm(); setMode("forgot") }}
                         >
                           パスワードをお忘れですか？
                         </button>
-                        <p className="text-slate-600 dark:text-gray-400">
+                        <p className="text-muted-foreground">
                           アカウントをお持ちでない方は{" "}
                           <button
                             type="button"
-                            className="text-slate-900 dark:text-white font-semibold hover:underline"
+                            className="text-foreground font-semibold hover:underline"
                             onClick={() => { resetForm(); setMode("signup") }}
                           >
                             新規登録
@@ -496,11 +496,11 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                         </p>
                       </>
                     ) : mode === "signup" ? (
-                      <p className="text-slate-600 dark:text-gray-400">
+                      <p className="text-muted-foreground">
                         既にアカウントをお持ちの方は{" "}
                         <button
                           type="button"
-                          className="text-slate-900 dark:text-white font-semibold hover:underline"
+                          className="text-foreground font-semibold hover:underline"
                           onClick={() => { resetForm(); setMode("login") }}
                         >
                           ログイン
@@ -509,7 +509,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                     ) : (
                       <button
                         type="button"
-                        className="text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white"
+                        className="text-muted-foreground hover:text-foreground"
                         onClick={() => { resetForm(); setMode("login") }}
                       >
                         ログインに戻る
@@ -522,7 +522,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
           </div>
 
           {/* Right Side - Image */}
-          <div className="hidden md:block md:w-1/2 relative bg-slate-900">
+          <div className="hidden md:block md:w-1/2 relative bg-primary">
             <Image
               src="/blog-placeholders/krystal-ng-1PlVbeOCd78.jpg"
               alt=""

@@ -10,7 +10,6 @@ import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-// import { BlogFloatingCTA } from "@/components/blog-floating-cta"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -1305,9 +1304,6 @@ export default function Home() {
 
       {/* Status Bar */}
       <StatusBar currentSection={activeSection} scrollProgress={scrollProgress} />
-
-      {/* Floating Blog CTA */}
-      {/* <BlogFloatingCTA scrollProgress={scrollProgress} /> */}
 
       {/* Footer */}
       <Footer />

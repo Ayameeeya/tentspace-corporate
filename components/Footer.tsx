@@ -135,7 +135,7 @@ export function Footer({ copyrightClassName = "text-primary-foreground/60" }: Fo
               <div className="flex items-center gap-3">
                 {/* LinkedIn */}
                 <a
-                  href="https://www.linkedin.com/company/tent-space"
+                  href="https://www.linkedin.com/in/hiroshige-negishi-4b5255135/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-8 h-8 rounded-full border border-background/30 flex items-center justify-center hover:bg-background/10 transition-colors"
@@ -148,7 +148,7 @@ export function Footer({ copyrightClassName = "text-primary-foreground/60" }: Fo
 
                 {/* X (Twitter) */}
                 <a
-                  href="https://x.com/tentspace"
+                  href="https://x.com/hirokuma_negio/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-8 h-8 rounded-full border border-background/30 flex items-center justify-center hover:bg-background/10 transition-colors"
@@ -161,7 +161,7 @@ export function Footer({ copyrightClassName = "text-primary-foreground/60" }: Fo
 
                 {/* Instagram */}
                 <a
-                  href="https://www.instagram.com/tentspace"
+                  href="https://www.instagram.com/hirokumaxhiro/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-8 h-8 rounded-full border border-background/30 flex items-center justify-center hover:bg-background/10 transition-colors"
@@ -216,5 +216,5 @@ export function Footer({ copyrightClassName = "text-primary-foreground/60" }: Fo
         </div>
       </footer>
     </div>
-  ) 
+  )
 }

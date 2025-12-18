@@ -56,7 +56,7 @@ function CategoryFilter({
   }, [checkScroll])
 
   return (
-    <div className="bg-background border-b border-border sticky top-[113px] md:top-[121px] z-30">
+    <div className="bg-background border-b border-border">
       <div className="max-w-[1400px] mx-auto">
         <div className="relative group">
           {showLeftFade && (

@@ -8,6 +8,21 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 import Link from "next/link"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import {
+  SiReact,
+  SiNextdotjs,
+  SiTypescript,
+  SiTailwindcss,
+  SiAmazonwebservices,
+  SiSupabase,
+  SiThreedotjs,
+  SiVercel,
+  SiNodedotjs,
+  SiPostgresql,
+  SiPython,
+  SiDocker,
+  SiGit
+} from "react-icons/si"
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger)
@@ -597,6 +612,58 @@ export default function AboutPage() {
                   <p className="hidden md:block text-white/40 max-w-md text-right">{service.desc}</p>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Tech Stack */}
+        <section className="py-32 px-6 md:px-12 lg:px-24 section-fade">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-12 md:mb-20 text-stagger">
+              <p className="font-mono text-blue-400 text-[10px] md:text-xs tracking-[0.3em] mb-4 md:mb-6">TECH STACK</p>
+              <h2 className="text-3xl md:text-6xl font-bold tracking-tight">技術スタック</h2>
+            </div>
+
+            <div className="relative overflow-hidden">
+              {/* フェードアウトオーバーレイ */}
+              <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-[clamp(24px,8%,120px)] bg-[linear-gradient(to_right,rgb(2,2,18)_0%,rgba(0,0,0,0)_100%)]" />
+              <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-[clamp(24px,8%,120px)] bg-[linear-gradient(to_left,rgb(2,2,18)_0%,rgba(0,0,0,0)_100%)]" />
+
+              {/* スクロールコンテナ */}
+              <div className="flex animate-infinite-scroll hover:pause">
+                {/* 1周目 */}
+                <div className="flex gap-12 md:gap-16 items-center py-8">
+                  <SiNextdotjs className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Next.js" />
+                  <SiReact className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="React" />
+                  <SiTypescript className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="TypeScript" />
+                  <SiAmazonwebservices className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="AWS" />
+                  <SiSupabase className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Supabase" />
+                  <SiTailwindcss className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Tailwind CSS" />
+                  <SiThreedotjs className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Three.js" />
+                  <SiVercel className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Vercel" />
+                  <SiNodedotjs className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Node.js" />
+                  <SiPostgresql className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="PostgreSQL" />
+                  <SiPython className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Python" />
+                  <SiDocker className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Docker" />
+                  <SiGit className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Git" />
+                </div>
+                {/* 2周目（シームレスループ用） */}
+                <div className="flex gap-12 md:gap-16 items-center py-8 ml-12 md:ml-16">
+                  <SiNextdotjs className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Next.js" />
+                  <SiReact className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="React" />
+                  <SiTypescript className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="TypeScript" />
+                  <SiAmazonwebservices className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="AWS" />
+                  <SiSupabase className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Supabase" />
+                  <SiTailwindcss className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Tailwind CSS" />
+                  <SiThreedotjs className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Three.js" />
+                  <SiVercel className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Vercel" />
+                  <SiNodedotjs className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Node.js" />
+                  <SiPostgresql className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="PostgreSQL" />
+                  <SiPython className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Python" />
+                  <SiDocker className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Docker" />
+                  <SiGit className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Git" />
+                </div>
+              </div>
             </div>
           </div>
         </section>

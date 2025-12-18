@@ -188,16 +188,16 @@ const chapters = [
 // 記事を章ごとに分類
 function categorizePostsByChapter(posts: WPPost[]) {
   const postsByChapter = new Map<number, WPPost[]>()
-
+  
   posts.forEach((post) => {
     const title = stripHtml(post.title.rendered).toLowerCase()
-
+    
     // 各章のキーワードにマッチするか確認
     for (const chapter of chapters) {
       const matchesKeyword = chapter.keywords.some((keyword) =>
         title.includes(keyword.toLowerCase())
       )
-
+      
       if (matchesKeyword) {
         const chapterPosts = postsByChapter.get(chapter.id) || []
         chapterPosts.push(post)
@@ -206,7 +206,7 @@ function categorizePostsByChapter(posts: WPPost[]) {
       }
     }
   })
-
+  
   return postsByChapter
 }
 
@@ -294,7 +294,7 @@ export default async function N8nFeaturedPage() {
                   n8n完全ガイドは、業務自動化ツール「n8n」を基礎から実践まで体系的に学べる学習ロードマップです。
                   初心者の方は第1章から順番に、すでに基本を理解している方は必要な章から読み進めてください。
                 </p>
-
+                
                 {/* 目次 */}
                 <div className="bg-slate-50 dark:bg-gray-900 rounded-xl p-6 mb-8">
                   <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
@@ -354,9 +354,9 @@ export default async function N8nFeaturedPage() {
               <div className="space-y-20 md:space-y-24">
                 {chapters.map((chapter) => {
                   const chapterPosts = postsByChapter.get(chapter.id) || []
-
+                  
                   if (chapterPosts.length === 0) return null
-
+                  
                   return (
                     <section key={chapter.id} id={`chapter-${chapter.id}`} className="space-y-8 scroll-mt-20">
                       {/* Chapter Header */}
@@ -383,7 +383,7 @@ export default async function N8nFeaturedPage() {
                           </div>
                         </div>
                       </div>
-
+                      
                       {/* Chapter Posts Grid */}
                       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 lg:gap-12">
                         {chapterPosts.map((post) => (

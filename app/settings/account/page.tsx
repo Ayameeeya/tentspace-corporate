@@ -7,15 +7,15 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { 
-  getCurrentUser, 
-  getProfile, 
-  updateProfile, 
+import {
+  getCurrentUser,
+  getProfile,
+  updateProfile,
   uploadAvatar,
   deleteAvatar,
   deleteAccount,
   signOut,
-  type Profile 
+  type Profile
 } from "@/lib/auth"
 import type { User } from "@supabase/supabase-js"
 import {
@@ -55,7 +55,7 @@ export default function AccountSettingsPage() {
     setLoading(true)
     try {
       const currentUser = await getCurrentUser()
-      
+
       if (!currentUser || !currentUser.email_confirmed_at) {
         router.push("/blog")
         return
@@ -111,12 +111,12 @@ export default function AccountSettingsPage() {
       }
 
       const newAvatarUrl = await uploadAvatar(user.id, file)
-      
+
       if (newAvatarUrl) {
         const updatedProfile = await updateProfile(user.id, {
           avatar_url: newAvatarUrl,
         })
-        
+
         if (updatedProfile) {
           setProfile(updatedProfile)
           setAvatarUrl(newAvatarUrl)
@@ -173,7 +173,7 @@ export default function AccountSettingsPage() {
       const updatedProfile = await updateProfile(user.id, {
         avatar_url: null,
       })
-      
+
       if (updatedProfile) {
         setProfile(updatedProfile)
         setAvatarUrl(null)
@@ -200,7 +200,7 @@ export default function AccountSettingsPage() {
         display_name: displayName,
         bio: bio,
       })
-      
+
       if (updatedProfile) {
         setProfile(updatedProfile)
         setMessage({ type: "success", text: "プロフィールを更新しました" })
@@ -227,9 +227,9 @@ export default function AccountSettingsPage() {
       window.location.href = "/blog"
     } catch (error) {
       console.error("Error deleting account:", error)
-      setMessage({ 
-        type: "error", 
-        text: error instanceof Error ? error.message : "アカウントの削除に失敗しました" 
+      setMessage({
+        type: "error",
+        text: error instanceof Error ? error.message : "アカウントの削除に失敗しました"
       })
       setDeleting(false)
       setShowDeleteDialog(false)
@@ -257,11 +257,10 @@ export default function AccountSettingsPage() {
 
       <form onSubmit={handleSave} className="space-y-6">
         {message && (
-          <div className={`rounded-lg p-3 text-sm ${
-            message.type === "success" 
-              ? "bg-green-500/10 text-green-500" 
+          <div className={`rounded-lg p-3 text-sm ${message.type === "success"
+              ? "bg-green-500/10 text-green-500"
               : "bg-red-500/10 text-red-500"
-          }`}>
+            }`}>
             {message.text}
           </div>
         )}
@@ -269,12 +268,11 @@ export default function AccountSettingsPage() {
         {/* Avatar Upload Section */}
         <div className="bg-card rounded-lg border border-border p-6">
           <h2 className="text-lg font-semibold text-foreground mb-4">アバター画像</h2>
-          <div 
-            className={`relative border-2 border-dashed rounded-lg p-6 transition-colors ${
-              isDragging 
-                ? "border-blue-500 bg-blue-500/10" 
+          <div
+            className={`relative border-2 border-dashed rounded-lg p-6 transition-colors ${isDragging
+                ? "border-blue-500 bg-blue-500/10"
                 : "border-border bg-muted"
-            } ${uploadingAvatar ? "opacity-50 pointer-events-none" : ""}`}
+              } ${uploadingAvatar ? "opacity-50 pointer-events-none" : ""}`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
@@ -346,7 +344,7 @@ export default function AccountSettingsPage() {
         {/* Profile Information */}
         <div className="bg-card rounded-lg border border-border p-6 space-y-4">
           <h2 className="text-lg font-semibold text-foreground mb-4">プロフィール情報</h2>
-          
+
           <div className="space-y-2">
             <Label htmlFor="email">メールアドレス</Label>
             <Input
@@ -390,8 +388,8 @@ export default function AccountSettingsPage() {
             >
               ログアウト
             </Button>
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               className="bg-blue-600 hover:bg-blue-700 text-white"
               disabled={saving}
             >
@@ -407,7 +405,7 @@ export default function AccountSettingsPage() {
             <div className="flex justify-between">
               <dt className="text-muted-foreground">アカウント作成日</dt>
               <dd className="text-foreground">
-                {profile?.created_at 
+                {profile?.created_at
                   ? new Date(profile.created_at).toLocaleDateString("ja-JP")
                   : "-"}
               </dd>
@@ -415,7 +413,7 @@ export default function AccountSettingsPage() {
             <div className="flex justify-between">
               <dt className="text-muted-foreground">最終更新日</dt>
               <dd className="text-foreground">
-                {profile?.updated_at 
+                {profile?.updated_at
                   ? new Date(profile.updated_at).toLocaleDateString("ja-JP")
                   : "-"}
               </dd>
