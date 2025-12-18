@@ -78,7 +78,7 @@ export default function FavoritesClient() {
   const fetchPosts = async (slugs: string[]) => {
     try {
       const WP_API_URL = 'https://blog.tentspace.net/wp-json/wp/v2'
-
+      
       // Decode slugs if they are already encoded
       const decodedSlugs = slugs.map(slug => {
         try {
@@ -88,7 +88,7 @@ export default function FavoritesClient() {
           return slug
         }
       })
-
+      
       // WordPress REST APIで各記事を個別に取得
       const postPromises = decodedSlugs.map(async (slug) => {
         const response = await fetch(
@@ -98,7 +98,7 @@ export default function FavoritesClient() {
         const data = await response.json()
         return data[0] || null
       })
-
+      
       const postsData = await Promise.all(postPromises)
       const validPosts = postsData.filter((post): post is WPPost => post !== null)
       setPosts(validPosts)

@@ -244,7 +244,7 @@ export function BlogHeader() {
                 onClick={() => setShowAuthModal(true)}
                 className="relative group overflow-hidden"
               >
-                <div className="relative px-4 py-1.5 md:px-5 md:py-2 border border-foreground bg-transparent text-foreground text-[10px] md:text-xs font-semibold tracking-wide transition-all duration-300 group-hover:bg-foreground group-hover:text-background">
+                <div className="relative px-4 py-1.5 md:px-5 md:py-2 border border-foreground bg-background/30 backdrop-blur-sm text-foreground text-[10px] md:text-xs font-semibold tracking-wide transition-all duration-300 group-hover:bg-foreground group-hover:text-background">
                   SIGN IN
                 </div>
               </button>

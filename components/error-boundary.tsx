@@ -2,6 +2,7 @@
 
 import React, { Component, ErrorInfo as ReactErrorInfo, ReactNode } from 'react';
 import { ErrorInfo } from '@/hooks/use-error-tracking';
+import { EyeLoader } from '@/components/eye-loader';
 
 interface Props {
   children: ReactNode;
@@ -36,11 +37,11 @@ export class ErrorBoundary extends Component<Props, State> {
     // デバイス情報を取得
     const getDeviceContext = () => {
       if (typeof window === 'undefined') return undefined;
-      
+
       const userAgent = navigator.userAgent;
       let browserName = 'Unknown';
       let browserVersion = 'Unknown';
-      
+
       if (userAgent.includes('Chrome')) {
         browserName = 'Chrome';
         browserVersion = userAgent.match(/Chrome\/(\d+\.\d+)/)?.[1] || 'Unknown';
@@ -51,7 +52,7 @@ export class ErrorBoundary extends Component<Props, State> {
         browserName = 'Safari';
         browserVersion = userAgent.match(/Version\/(\d+\.\d+)/)?.[1] || 'Unknown';
       }
-      
+
       return {
         browser: { name: browserName, version: browserVersion },
         os: { name: 'Unknown', version: 'Unknown' },
@@ -64,10 +65,10 @@ export class ErrorBoundary extends Component<Props, State> {
     // パフォーマンス情報を取得
     const getPerformanceMetrics = () => {
       if (typeof window === 'undefined') return undefined;
-      
+
       const performance = window.performance as any;
       const memory = performance.memory;
-      
+
       return {
         memory: memory ? {
           usedJSHeapSize: memory.usedJSHeapSize,
@@ -81,7 +82,7 @@ export class ErrorBoundary extends Component<Props, State> {
     const generateFingerprint = (error: Error, componentStack?: string): string[] => {
       const stackFirstLine = error.stack?.split('\n')[1]?.trim() || '';
       const componentFirstLine = componentStack?.split('\n')[1]?.trim() || '';
-      
+
       return [
         error.message.split(':')[0],
         stackFirstLine || componentFirstLine || 'unknown-component',
@@ -97,7 +98,7 @@ export class ErrorBoundary extends Component<Props, State> {
       type: 'react',
       componentStack: errorInfo.componentStack || undefined,
       severity: 'error',
-      
+
       // Sentryライクな追加情報
       fingerprint: generateFingerprint(error, errorInfo.componentStack || undefined),
       tags: {
@@ -113,7 +114,7 @@ export class ErrorBoundary extends Component<Props, State> {
       } : undefined,
       device: getDeviceContext(),
       performance: getPerformanceMetrics(),
-      sessionId: typeof window !== 'undefined' ? 
+      sessionId: typeof window !== 'undefined' ?
         `${Date.now()}-${Math.random().toString(36).substring(2, 11)}` : undefined,
       release: process.env.NEXT_PUBLIC_APP_VERSION,
       environment: process.env.NODE_ENV || 'development',
@@ -121,12 +122,12 @@ export class ErrorBoundary extends Component<Props, State> {
 
     try {
       const payload = JSON.stringify(errorData);
-      
+
       // sendBeacon を優先使用（Reactエラーは重要なので確実に送信）
       if (typeof navigator !== 'undefined' && navigator.sendBeacon) {
         const blob = new Blob([payload], { type: 'application/json' });
         const sent = navigator.sendBeacon('/api/error-logging', blob);
-        
+
         if (!sent) {
           // sendBeacon が失敗した場合は fetch にフォールバック
           await fetch('/api/error-logging', {
@@ -154,27 +155,70 @@ export class ErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         this.props.fallback || (
-          <div className="flex min-h-screen items-center justify-center p-4">
-            <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-                エラーが発生しました
-              </h2>
-              <p className="text-gray-600 dark:text-gray-400 mb-6">
-                申し訳ございません。予期しないエラーが発生しました。
-              </p>
-              <button
-                onClick={() => window.location.reload()}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                ページをリロード
-              </button>
-            </div>
-          </div>
+          <DefaultErrorFallback error={this.state.error} />
         )
       );
     }
 
     return this.props.children;
   }
+}
+
+// デフォルトエラーフォールバックコンポーネント
+function DefaultErrorFallback({ error }: { error?: Error }) {
+  return (
+    <div className="min-h-screen bg-background text-foreground flex flex-col">
+      {/* Main Content */}
+      <main className="flex-1 flex items-center justify-center px-4 pt-16">
+        <div className="max-w-2xl w-full text-center py-12">
+          {/* Eye Animation */}
+          <div className="mb-6 flex justify-center">
+            <div className="scale-75 md:scale-100">
+              <EyeLoader variant="end" />
+            </div>
+          </div>
+
+          {/* Error Code */}
+          <div className="mb-8">
+            <h1 className="text-[120px] md:text-[180px] font-black font-tech text-foreground/60 leading-none select-none">
+              ERROR
+            </h1>
+          </div>
+
+          {/* Message */}
+          <div className="mb-12">
+            <h2 className="text-2xl md:text-4xl font-bold font-tech text-foreground mb-4">
+              エラーが発生しました
+            </h2>
+            <p className="text-muted-foreground mb-6">
+              申し訳ございません。予期しないエラーが発生しました
+            </p>
+            {error && process.env.NODE_ENV === 'development' && (
+              <div className="mt-4 text-left max-w-md mx-auto">
+                <details className="text-xs text-muted-foreground bg-muted/30 border border-border rounded-lg p-4">
+                  <summary className="cursor-pointer font-mono mb-2">
+                    エラー詳細（開発環境のみ）
+                  </summary>
+                  <pre className="overflow-auto font-mono text-[10px] mt-2">
+                    {error.message}
+                    {'\n\n'}
+                    {error.stack}
+                  </pre>
+                </details>
+              </div>
+            )}
+          </div>
+
+          {/* Reload Button */}
+          <button
+            onClick={() => window.location.reload()}
+            className="px-8 py-3 bg-foreground text-background font-bold rounded-full hover:opacity-90 transition-opacity"
+          >
+            ページをリロード
+          </button>
+        </div>
+      </main>
+    </div>
+  );
 }
 

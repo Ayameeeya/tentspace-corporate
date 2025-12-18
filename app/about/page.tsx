@@ -8,6 +8,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 import Link from "next/link"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { LogoLoop, type LogoItem } from "@/components/LogoLoop"
 import {
   SiReact,
   SiNextdotjs,
@@ -423,10 +424,10 @@ export default function AboutPage() {
             {/* Left - Main Title */}
             <div className="hero-content">
               <div className="overflow-hidden mb-4">
-                <p className="hero-label font-mono text-blue-400 text-[10px] md:text-xs tracking-[0.3em] uppercase">About Us</p>
+                <p className="hero-label font-tech text-blue-400 text-[10px] md:text-xs tracking-[0.3em] uppercase">About Us</p>
               </div>
               <div className="overflow-hidden">
-                <h1 className="hero-title font-[family-name:var(--font-display)] text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[0.9]">
+                <h1 className="hero-title text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[0.9]">
                   tent<span className="text-blue-500">␣</span>
                 </h1>
               </div>
@@ -439,31 +440,31 @@ export default function AboutPage() {
 
             {/* Right - Statement */}
             <div className="hero-statement lg:pl-12 border-l border-white/10">
-              <div className="space-y-3 md:space-y-5">
+              <div className="space-y-2 md:space-y-4 font-bold font-mono">
                 <div className="overflow-hidden">
-                  <p className="hero-text text-base md:text-2xl lg:text-3xl font-medium text-white/90 leading-relaxed">
+                  <p className="hero-text text-base md:text-2xl lg:text-3xl text-white/90 leading-relaxed">
                     <span className="text-blue-400">ソフトウェア開発</span>と
                   </p>
                 </div>
                 <div className="overflow-hidden">
-                  <p className="hero-text text-base md:text-2xl lg:text-3xl font-medium text-white/90 leading-relaxed">
+                  <p className="hero-text text-base md:text-2xl lg:text-3xl text-white/90 leading-relaxed">
                     <span className="text-blue-400">ITコンサルティング</span>で
                   </p>
                 </div>
                 <div className="overflow-hidden">
-                  <p className="hero-text text-base md:text-2xl lg:text-3xl font-medium text-white/90 leading-relaxed">
+                  <p className="hero-text text-base md:text-2xl lg:text-3xl text-white/90 leading-relaxed">
                     ビジネスの課題を解決。
                   </p>
                 </div>
                 <div className="overflow-hidden">
-                  <p className="hero-text text-base md:text-2xl lg:text-3xl font-medium text-white leading-relaxed">
+                  <p className="hero-text text-base md:text-2xl lg:text-3xl text-white leading-relaxed">
                     AIを<span className="text-blue-400">武器</span>に、共に創る。
                   </p>
                 </div>
               </div>
 
               <div className="hero-line mt-6 md:mt-10 pt-4 md:pt-6 border-t border-white/10">
-                <p className="text-white/40 text-[10px] md:text-xs font-mono tracking-wider">EST. 2023 — IZU, JAPAN</p>
+                <p className="text-white/40 text-[10px] md:text-xs tracking-wider">EST. 2023 — IZU, JAPAN</p>
               </div>
             </div>
           </div>
@@ -474,8 +475,8 @@ export default function AboutPage() {
         <section className="min-h-screen flex items-center px-6 md:px-12 lg:px-24 section-fade">
           <div className="grid lg:grid-cols-2 gap-16 items-center max-w-7xl mx-auto">
             <div className="parallax-slow">
-              <p className="font-mono text-blue-400 text-[10px] md:text-xs tracking-[0.3em] mb-4 md:mb-6">OUR MISSION</p>
-              <h2 className="text-3xl md:text-6xl font-bold tracking-tight mb-6 md:mb-8 leading-tight">
+              <p className="font-tech text-blue-400 text-[10px] md:text-xs tracking-[0.3em] mb-4 md:mb-6">OUR MISSION</p>
+              <h2 className="text-3xl md:text-6xl font-bold font-mono tracking-tight mb-6 md:mb-8 leading-tight">
                 AIの力で、
                 <br />
                 <span className="text-blue-400">可能性を拡張する</span>
@@ -501,8 +502,8 @@ export default function AboutPage() {
         <section className="py-32 px-6 md:px-12 lg:px-24 section-fade">
           <div className="max-w-7xl mx-auto">
             <div className="mb-12 md:mb-16 text-stagger">
-              <p className="font-mono text-blue-400 text-[9px] md:text-[10px] tracking-[0.3em] mb-4 md:mb-6 uppercase">COMPANY</p>
-              <h2 className="text-2xl md:text-5xl font-bold tracking-tight">会社概要</h2>
+              <p className="font-tech text-blue-400 text-[9px] md:text-[10px] tracking-[0.3em] mb-4 md:mb-6 uppercase">COMPANY</p>
+              <h2 className="text-2xl md:text-5xl font-bold font-mono tracking-tight">会社概要</h2>
             </div>
 
             <div className="border border-white/10 backdrop-blur-sm">
@@ -518,7 +519,7 @@ export default function AboutPage() {
                   key={i}
                   className="company-info-item grid grid-cols-1 md:grid-cols-[180px_1fr] border-b border-white/10 last:border-b-0"
                 >
-                  <div className="px-4 py-3 md:px-6 md:py-5 font-mono text-blue-400 text-[10px] md:text-xs bg-white/[0.02]">{item.label}</div>
+                  <div className="px-4 py-3 md:px-6 md:py-5 font-tech text-blue-400 text-[10px] md:text-xs bg-white/[0.02]">{item.label}</div>
                   <div className="px-4 py-3 md:px-6 md:py-5 text-white/80 text-xs md:text-sm whitespace-pre-line">{item.value}</div>
                 </div>
               ))}
@@ -538,7 +539,7 @@ export default function AboutPage() {
               ].map((stat, i) => (
                 <div key={i} className="text-center">
                   <div className="text-3xl md:text-7xl font-bold text-blue-500 mb-1 md:mb-2">{stat.value}</div>
-                  <div className="text-white/40 font-mono text-[10px] md:text-xs tracking-wider">{stat.label}</div>
+                  <div className="text-white/40 font-tech text-[10px] md:text-xs tracking-wider">{stat.label}</div>
                 </div>
               ))}
             </div>
@@ -549,8 +550,8 @@ export default function AboutPage() {
         <section className="min-h-screen flex items-center py-32 px-6 md:px-12 lg:px-24 section-fade">
           <div className="max-w-7xl mx-auto w-full">
             <div className="mb-12 md:mb-20 text-stagger">
-              <p className="font-mono text-blue-400 text-[10px] md:text-xs tracking-[0.3em] mb-4 md:mb-6">OUR VALUES</p>
-              <h2 className="text-3xl md:text-6xl font-bold tracking-tight">私たちの価値観</h2>
+              <p className="font-tech text-blue-400 text-[10px] md:text-xs tracking-[0.3em] mb-4 md:mb-6">OUR VALUES</p>
+              <h2 className="text-3xl md:text-6xl font-bold font-mono tracking-tight">私たちの価値観</h2>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
@@ -575,7 +576,7 @@ export default function AboutPage() {
                   key={i}
                   className="value-card p-6 md:p-10 border border-white/10 backdrop-blur-sm hover:border-blue-500/50 transition-colors cursor-default"
                 >
-                  <span className="font-mono text-blue-500 text-xs md:text-sm">{value.num}</span>
+                  <span className="font-tech text-blue-500 text-xs md:text-sm">{value.num}</span>
                   <h3 className="text-xl md:text-3xl font-bold mt-3 md:mt-4 mb-3 md:mb-4">{value.title}</h3>
                   <p className="text-white/50 text-sm md:text-base leading-relaxed">{value.desc}</p>
                 </div>
@@ -588,8 +589,8 @@ export default function AboutPage() {
         <section className="py-32 px-6 md:px-12 lg:px-24 section-fade">
           <div className="max-w-7xl mx-auto">
             <div className="mb-12 md:mb-20 text-stagger">
-              <p className="font-mono text-blue-400 text-[10px] md:text-xs tracking-[0.3em] mb-4 md:mb-6">SERVICES</p>
-              <h2 className="text-3xl md:text-6xl font-bold tracking-tight">提供サービス</h2>
+              <p className="font-tech text-blue-400 text-[10px] md:text-xs tracking-[0.3em] mb-4 md:mb-6">SERVICES</p>
+              <h2 className="text-3xl md:text-6xl font-bold font-mono tracking-tight">提供サービス</h2>
             </div>
 
             <div className="space-y-4">
@@ -604,7 +605,7 @@ export default function AboutPage() {
                   className="group flex items-center justify-between p-4 md:p-6 border-b border-white/10 hover:border-blue-500/50 transition-all cursor-default"
                 >
                   <div className="flex items-center gap-4 md:gap-8">
-                    <span className="font-mono text-blue-500/50 text-xs md:text-sm">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="font-tech text-blue-500/50 text-xs md:text-sm">{String(i + 1).padStart(2, "0")}</span>
                     <h3 className="text-lg md:text-3xl font-bold group-hover:text-blue-400 transition-colors">
                       {service.title}
                     </h3>
@@ -620,51 +621,31 @@ export default function AboutPage() {
         <section className="py-32 px-6 md:px-12 lg:px-24 section-fade">
           <div className="max-w-7xl mx-auto">
             <div className="mb-12 md:mb-20 text-stagger">
-              <p className="font-mono text-blue-400 text-[10px] md:text-xs tracking-[0.3em] mb-4 md:mb-6">TECH STACK</p>
-              <h2 className="text-3xl md:text-6xl font-bold tracking-tight">技術スタック</h2>
+              <p className="font-tech text-blue-400 text-[10px] md:text-xs tracking-[0.3em] mb-4 md:mb-6">TECH STACK</p>
+              <h2 className="text-3xl md:text-6xl font-bold font-mono tracking-tight">技術スタック</h2>
             </div>
 
-            <div className="relative overflow-hidden">
-              {/* フェードアウトオーバーレイ */}
-              <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-[clamp(24px,8%,120px)] bg-[linear-gradient(to_right,rgb(2,2,18)_0%,rgba(0,0,0,0)_100%)]" />
-              <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-[clamp(24px,8%,120px)] bg-[linear-gradient(to_left,rgb(2,2,18)_0%,rgba(0,0,0,0)_100%)]" />
-
-              {/* スクロールコンテナ */}
-              <div className="flex animate-infinite-scroll hover:pause">
-                {/* 1周目 */}
-                <div className="flex gap-12 md:gap-16 items-center py-8">
-                  <SiNextdotjs className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Next.js" />
-                  <SiReact className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="React" />
-                  <SiTypescript className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="TypeScript" />
-                  <SiAmazonwebservices className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="AWS" />
-                  <SiSupabase className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Supabase" />
-                  <SiTailwindcss className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Tailwind CSS" />
-                  <SiThreedotjs className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Three.js" />
-                  <SiVercel className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Vercel" />
-                  <SiNodedotjs className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Node.js" />
-                  <SiPostgresql className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="PostgreSQL" />
-                  <SiPython className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Python" />
-                  <SiDocker className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Docker" />
-                  <SiGit className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Git" />
-                </div>
-                {/* 2周目（シームレスループ用） */}
-                <div className="flex gap-12 md:gap-16 items-center py-8 ml-12 md:ml-16">
-                  <SiNextdotjs className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Next.js" />
-                  <SiReact className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="React" />
-                  <SiTypescript className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="TypeScript" />
-                  <SiAmazonwebservices className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="AWS" />
-                  <SiSupabase className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Supabase" />
-                  <SiTailwindcss className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Tailwind CSS" />
-                  <SiThreedotjs className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Three.js" />
-                  <SiVercel className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Vercel" />
-                  <SiNodedotjs className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Node.js" />
-                  <SiPostgresql className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="PostgreSQL" />
-                  <SiPython className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Python" />
-                  <SiDocker className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Docker" />
-                  <SiGit className="w-12 h-12 md:w-16 md:h-16 text-white/80 hover:text-white hover:scale-110 transition-all" title="Git" />
-                </div>
-              </div>
-            </div>
+            <LogoLoop
+              logos={[
+                { node: <SiNextdotjs className="w-12 h-12 md:w-16 md:h-16" />, ariaLabel: "Next.js" },
+                { node: <SiReact className="w-12 h-12 md:w-16 md:h-16" />, ariaLabel: "React" },
+                { node: <SiTypescript className="w-12 h-12 md:w-16 md:h-16" />, ariaLabel: "TypeScript" },
+                { node: <SiAmazonwebservices className="w-12 h-12 md:w-16 md:h-16" />, ariaLabel: "AWS" },
+                { node: <SiSupabase className="w-12 h-12 md:w-16 md:h-16" />, ariaLabel: "Supabase" },
+                { node: <SiTailwindcss className="w-12 h-12 md:w-16 md:h-16" />, ariaLabel: "Tailwind CSS" },
+                { node: <SiThreedotjs className="w-12 h-12 md:w-16 md:h-16" />, ariaLabel: "Three.js" },
+                { node: <SiVercel className="w-12 h-12 md:w-16 md:h-16" />, ariaLabel: "Vercel" },
+                { node: <SiNodedotjs className="w-12 h-12 md:w-16 md:h-16" />, ariaLabel: "Node.js" },
+                { node: <SiPostgresql className="w-12 h-12 md:w-16 md:h-16" />, ariaLabel: "PostgreSQL" },
+                { node: <SiPython className="w-12 h-12 md:w-16 md:h-16" />, ariaLabel: "Python" },
+                { node: <SiDocker className="w-12 h-12 md:w-16 md:h-16" />, ariaLabel: "Docker" },
+                { node: <SiGit className="w-12 h-12 md:w-16 md:h-16" />, ariaLabel: "Git" },
+              ]}
+              speed={30}
+              fadeOut
+              fadeOutColor="rgb(2,2,18)"
+              className="text-white/80 hover:text-white transition-colors"
+            />
           </div>
         </section>
 
@@ -672,8 +653,8 @@ export default function AboutPage() {
         <section className="min-h-screen flex items-center justify-center px-6 md:px-12 section-fade">
           <div className="text-center max-w-3xl">
             <div className="text-stagger">
-              <p className="font-mono text-blue-400 text-[10px] md:text-xs tracking-[0.5em] uppercase mb-6 md:mb-8">NEXT STEP</p>
-              <h2 className="text-3xl md:text-7xl font-bold tracking-tight mb-6 md:mb-8">
+              <p className="font-tech text-blue-400 text-[10px] md:text-xs tracking-[0.5em] uppercase mb-6 md:mb-8">NEXT STEP</p>
+              <h2 className="text-3xl md:text-7xl font-bold font-tech tracking-tight mb-6 md:mb-8">
                 Let's build
                 <br />
                 the future

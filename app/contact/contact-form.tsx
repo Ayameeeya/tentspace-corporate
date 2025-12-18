@@ -45,7 +45,7 @@ export function ContactForm() {
           <div className="space-y-2">
             <label
               htmlFor="name"
-              className="text-sm font-bold text-slate-700"
+              className="text-sm font-bold text-foreground"
             >
               お名前 <span className="text-red-500">*</span>
             </label>
@@ -62,7 +62,7 @@ export function ContactForm() {
           <div className="space-y-2">
             <label
               htmlFor="email"
-              className="text-sm font-bold text-slate-700"
+              className="text-sm font-bold text-foreground"
             >
               メールアドレス <span className="text-red-500">*</span>
             </label>
@@ -80,7 +80,7 @@ export function ContactForm() {
 
         {/* Company Name */}
         <div className="space-y-2">
-          <label htmlFor="company" className="text-sm font-bold text-slate-700">
+          <label htmlFor="company" className="text-sm font-bold text-foreground">
             会社名
           </label>
           <input
@@ -95,7 +95,7 @@ export function ContactForm() {
 
         {/* Phone Number */}
         <div className="space-y-2">
-          <label htmlFor="phone" className="text-sm font-bold text-slate-700">
+          <label htmlFor="phone" className="text-sm font-bold text-foreground">
             電話番号
           </label>
           <input
@@ -112,7 +112,7 @@ export function ContactForm() {
         <div className="space-y-2">
           <label
             htmlFor="inquiry_type"
-            className="text-sm font-bold text-slate-700"
+            className="text-sm font-bold text-foreground"
           >
             お問い合わせ種別 <span className="text-red-500">*</span>
           </label>
@@ -139,7 +139,7 @@ export function ContactForm() {
         <div className="space-y-2">
           <label
             htmlFor="message"
-            className="text-sm font-bold text-slate-700"
+            className="text-sm font-bold text-foreground"
           >
             お問い合わせ内容 <span className="text-red-500">*</span>
           </label>
@@ -155,7 +155,7 @@ export function ContactForm() {
         </div>
 
         {/* Privacy Policy Notice */}
-        <div className="rounded-lg bg-slate-50 p-4 text-sm text-slate-600">
+        <div className="rounded-lg bg-muted border border-border p-4 text-sm text-muted-foreground">
           <p>
             お問い合わせいただいた内容は、
             <a

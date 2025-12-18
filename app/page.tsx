@@ -632,7 +632,7 @@ function HUDTip({
               style={{ backgroundColor: isDark ? "rgb(96, 165, 250)" : "rgb(59, 130, 246)" }}
             />
             <span
-              className="text-[8px] md:text-[10px] font-mono tracking-widest uppercase transition-colors duration-500"
+              className="text-[8px] md:text-[10px] font-tech tracking-widest uppercase transition-colors duration-500"
               style={{ color: isDark ? "rgba(96, 165, 250, 0.8)" : "rgba(59, 130, 246, 0.9)" }}
             >
               SYSTEM
@@ -723,15 +723,15 @@ function HUDDataDisplay({
               className="w-0.5 h-3 md:w-1 md:h-4 animate-pulse transition-colors duration-500"
               style={{ backgroundColor: isDark ? "rgb(96, 165, 250)" : "rgb(59, 130, 246)" }}
             />
-            <div className="font-mono">
+            <div>
               <span
-                className="text-[8px] md:text-[10px] uppercase tracking-wider transition-colors duration-500"
+                className="text-[8px] md:text-[10px] font-tech uppercase tracking-wider transition-colors duration-500"
                 style={{ color: isDark ? "rgba(255, 255, 255, 0.5)" : "rgba(0, 0, 0, 0.5)" }}
               >
                 {item.label}
               </span>
               <div
-                className="text-xs md:text-sm font-bold transition-colors duration-500"
+                className="text-xs md:text-sm font-bold font-mono transition-colors duration-500"
                 style={{ color: isDark ? "rgb(96, 165, 250)" : "rgb(59, 130, 246)" }}
               >
                 {item.value}
@@ -883,7 +883,7 @@ function StatusBar({ currentSection, scrollProgress }: { currentSection: number;
           }}
         />
         <span
-          className="text-[8px] md:text-xs font-mono animate-pulse transition-colors duration-500"
+          className="text-[8px] md:text-xs font-pixel animate-pulse transition-colors duration-500"
           style={{
             color: isDark ? "rgb(96, 165, 250)" : "rgb(59, 130, 246)",
           }}
@@ -1113,7 +1113,7 @@ function TextOverlay({ scrollProgress }: { scrollProgress: number }) {
     <div ref={containerRef} className="relative z-10 pointer-events-none">
 
       <HUDTip position="top-left" delay={500} active={activeSection === 0} scrollProgress={scrollProgress}>
-        tent spaceは AI ドリブン開発のパイオニア。
+        tent space(テントスペース)はAIドリブン開発のパイオニア。
         確かな技術と柔軟な発想で、あなたのビジネスの可能性を無限に広げるパートナーです。
       </HUDTip>
       <HUDDataDisplay
@@ -1184,13 +1184,13 @@ function TextOverlay({ scrollProgress }: { scrollProgress: number }) {
           <h1 className="text-5xl md:text-9xl font-bold tracking-tighter text-white glow-text-white mb-4 md:mb-6">
             <GlitchText text="tent␣" active={activeSection === 0} />
           </h1>
-          <p className="text-sm md:text-2xl text-white/60 tracking-widest uppercase">AI Driven Development</p>
+          <p className="text-sm md:text-2xl text-white/60 tracking-widest font-tech uppercase">AI-Driven Development</p>
         </div>
       </div>
 
       <div className="h-screen flex items-center justify-center">
         <div ref={section2Ref} className="text-center px-4">
-          <h2 className="text-4xl md:text-8xl font-bold text-primary glow-text">
+          <h2 className="text-4xl md:text-8xl font-bold font-tech text-primary glow-text">
             {"CREATE".split("").map((char, i) => (
               <span key={i} className="char inline-block">
                 {char}
@@ -1203,21 +1203,21 @@ function TextOverlay({ scrollProgress }: { scrollProgress: number }) {
 
       <div className="h-screen flex items-center justify-center">
         <div ref={section3Ref} className="text-center px-4">
-          <h2 className="text-4xl md:text-8xl font-bold text-white glow-text-white">INNOVATE</h2>
+          <h2 className="text-4xl md:text-8xl font-bold font-tech text-white glow-text-white">INNOVATE</h2>
           <p className="text-xs md:text-xl text-primary/80 mt-4 md:mt-8 tracking-wider">次世代のソリューションを構築</p>
         </div>
       </div>
 
       <div className="h-screen flex items-center justify-center">
         <div ref={section4Ref} className="text-center px-4">
-          <h2 className="text-3xl md:text-7xl font-bold text-primary tracking-widest glow-text uppercase">Transform</h2>
+          <h2 className="text-3xl md:text-7xl font-bold font-tech text-primary tracking-widest glow-text uppercase">Transform</h2>
         </div>
       </div>
 
       <div className="h-screen flex items-center justify-center">
         <div ref={section5Ref} className="text-center perspective-1000 px-4">
           <h2
-            className="text-5xl md:text-9xl font-bold mb-4 md:mb-8 transition-colors duration-500"
+            className="text-5xl md:text-9xl font-bold font-tech mb-4 md:mb-8 transition-colors duration-500"
             style={{
               color: scrollProgress > 0.85 ? "#1a1a1a" : "#ffffff",
               textShadow:

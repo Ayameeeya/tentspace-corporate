@@ -197,7 +197,7 @@ export default async function SEOPage() {
   try {
     // SEOカテゴリを取得
     const category = await getCategoryBySlug("seo")
-
+    
     if (!category) {
       return (
         <div className="min-h-screen bg-background">
@@ -240,8 +240,8 @@ export default async function SEOPage() {
       return posts.filter(post => {
         const decodedSlug = decodeURIComponent(post.slug).toLowerCase()
         const title = post.title.rendered.toLowerCase()
-        return keywords.some(keyword =>
-          decodedSlug.includes(keyword.toLowerCase()) ||
+        return keywords.some(keyword => 
+          decodedSlug.includes(keyword.toLowerCase()) || 
           title.includes(keyword.toLowerCase())
         )
       })
@@ -411,7 +411,7 @@ export default async function SEOPage() {
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-none mb-6">
                   SEO初心者向けマニュアル
                 </h1>
-
+                
                 <div className="prose prose-slate max-w-none mb-8">
                   <p className="text-lg text-muted-foreground leading-relaxed">
                     SEOとは、「Search Engine Optimization」（検索エンジン最適化）という意味で、今の日本においては主にGoogleの検索エンジンで上位に表示されるための一連の施策のことです。わかりやすくいえば「自社サイトを1位に表示させるための対策」とも言えます。
@@ -507,16 +507,16 @@ export default async function SEOPage() {
                       📖 詳しく読む
                     </h4>
                     {posts
-                      .filter(post =>
-                        decodeURIComponent(post.slug).includes('cloudflare-pay-per-crawl') ||
+                      .filter(post => 
+                        decodeURIComponent(post.slug).includes('cloudflare-pay-per-crawl') || 
                         decodeURIComponent(post.slug).includes('ai時代')
                       )
                       .slice(0, 1)
                       .map(post => {
                         const imageUrl = getFeaturedImageUrl(post, 'medium')
                         return (
-                          <Link
-                            key={post.id}
+                          <Link 
+                            key={post.id} 
                             href={`/blog/${post.slug}`}
                             className="flex gap-4 group"
                           >
@@ -531,7 +531,7 @@ export default async function SEOPage() {
                               </div>
                             )}
                             <div className="flex-1">
-                              <h5
+                              <h5 
                                 className="text-lg font-bold text-foreground mb-2 group-hover:text-primary transition-colors"
                                 dangerouslySetInnerHTML={{ __html: post.title.rendered }}
                               />
@@ -633,7 +633,7 @@ export default async function SEOPage() {
     )
   } catch (error) {
     console.error("Error loading SEO page:", error)
-
+    
     return (
       <div className="min-h-screen bg-background">
         <BlogHeader />

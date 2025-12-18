@@ -1,14 +1,16 @@
 "use client"
 
-import { useEffect, useState, useCallback, Suspense, useRef } from "react"
+import { useEffect, useState, useCallback, Suspense, useRef, useMemo } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
-import Masonry from 'react-masonry-css'
+// import Masonry from 'react-masonry-css' // Replaced with custom masonry
 import { gsap } from "gsap"
 import { BlogHeader } from "@/components/blog-header"
 import { Footer } from "@/components/footer"
 import { EyeLoader } from "@/components/eye-loader"
+import { SeoBanner } from "@/components/seo-banner"
+import { N8nBanner } from "@/components/n8n-banner"
 import { getPosts, getCategories, getFeaturedImageUrl, stripHtml, formatDate, getReadingTime, type WPPost, type WPCategory } from "@/lib/wordpress"
 import { fetchLikeCounts } from "@/lib/blog-likes"
 
@@ -123,6 +125,52 @@ function getCardVariant(index: number): 'tall' | 'wide' | 'square' {
   return patterns[index % patterns.length] as 'tall' | 'wide' | 'square'
 }
 
+// Get estimated height for each variant (in relative units)
+function getVariantHeight(variant: 'tall' | 'wide' | 'square'): number {
+  return {
+    tall: 4,      // aspect-[3/4] = taller
+    wide: 2.25,   // aspect-[16/9] = shorter
+    square: 3     // aspect-square = medium
+  }[variant]
+}
+
+// Reorder posts to balance column heights using "shortest column first" algorithm
+function balanceMasonryPosts<T>(
+  posts: T[],
+  columns: number,
+  getHeight: (post: T, index: number) => number
+): T[] {
+  if (columns <= 1) return posts
+
+  // Track height of each column
+  const colHeights = new Array(columns).fill(0)
+  // Track which posts go to which column
+  const colPosts: T[][] = Array.from({ length: columns }, () => [])
+
+  posts.forEach((post, index) => {
+    const height = getHeight(post, index)
+    // Find the shortest column
+    const shortestCol = colHeights.indexOf(Math.min(...colHeights))
+    // Add post to that column
+    colPosts[shortestCol].push(post)
+    // Update column height
+    colHeights[shortestCol] += height
+  })
+
+  // Flatten posts back into single array, interleaving columns for masonry
+  const result: T[] = []
+  let maxLength = Math.max(...colPosts.map(col => col.length))
+  for (let i = 0; i < maxLength; i++) {
+    for (let col = 0; col < columns; col++) {
+      if (colPosts[col][i]) {
+        result.push(colPosts[col][i])
+      }
+    }
+  }
+
+  return result
+}
+
 // Get random fallback image - no duplicates within 10 posts, consistent for each post
 function getFallbackImage(postId: number, index: number): string {
   const images = [
@@ -203,12 +251,14 @@ function MasonryBlogCard({ post, likes = 0, index = 0 }: { post: WPPost; likes?:
               className="object-cover group-hover:scale-105 transition-transform duration-700"
             />
 
-            {/* Category Badge - ホバー時に画像左下に表示 */}
-            {categories[0] && (
-              <div className="absolute bottom-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <span className="inline-flex items-center px-3 py-1.5 text-xs font-bold text-accent bg-background/95 backdrop-blur-sm rounded-full shadow-lg border border-border/50">
-                  {categories[0].name}
-                </span>
+            {/* Category Badges - ホバー時に画像左下に表示 */}
+            {categories.length > 0 && (
+              <div className="absolute bottom-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-wrap gap-1.5">
+                {categories.map((category) => (
+                  <span key={category.id} className="inline-flex items-center px-2 py-1 text-[8px] md:text-[10px] font-bold text-accent bg-background/90 backdrop-blur-sm rounded-full shadow-lg border border-border/50">
+                    {category.name}
+                  </span>
+                ))}
               </div>
             )}
           </div>
@@ -426,12 +476,51 @@ function BlogPageContent() {
     }
   }, [hasMore, loadingMore, loading, currentPage, fetchPosts])
 
-  // Masonry breakpoint columns
-  const breakpointColumns = {
-    default: 3,
-    1100: 2,
-    700: 1
-  }
+  // Detect current column count based on window width
+  const [currentColumns, setCurrentColumns] = useState(3)
+
+  useEffect(() => {
+    const updateColumns = () => {
+      const width = window.innerWidth
+      if (width <= 700) {
+        setCurrentColumns(1)
+      } else if (width <= 1100) {
+        setCurrentColumns(2)
+      } else {
+        setCurrentColumns(3)
+      }
+    }
+
+    updateColumns()
+    window.addEventListener('resize', updateColumns)
+    return () => window.removeEventListener('resize', updateColumns)
+  }, [])
+
+  // Distribute posts into columns using "shortest column first" algorithm
+  const columnPosts = useMemo(() => {
+    if (currentColumns === 1) {
+      return [posts]
+    }
+
+    const colHeights = new Array(currentColumns).fill(0)
+    const columns: WPPost[][] = Array.from({ length: currentColumns }, () => [])
+
+    posts.forEach((post, index) => {
+      const variant = getCardVariant(index)
+      const height = getVariantHeight(variant)
+
+      // Find the shortest column
+      const shortestCol = colHeights.indexOf(Math.min(...colHeights))
+
+      // Add post to that column
+      columns[shortestCol].push(post)
+
+      // Update column height
+      colHeights[shortestCol] += height
+    })
+
+    return columns
+  }, [posts, currentColumns])
 
   return (
     <div className="min-h-screen bg-background">
@@ -451,7 +540,7 @@ function BlogPageContent() {
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4">
                 Insights & Ideas
               </h1>
-              <p className="text-base md:text-lg text-muted-foreground mb-8">
+              <p className="text-base md:text-lg text-muted-foreground font-pixel mb-8">
                 Exploring the intersection of AI, design, and technology. Deep dives into innovation that shapes the future.
               </p>
 
@@ -550,69 +639,38 @@ function BlogPageContent() {
             </div>
           ) : (
             <>
-              {/* Masonry Grid */}
-              <Masonry
-                breakpointCols={breakpointColumns}
-                className="flex -ml-6 md:-ml-8 w-auto"
-                columnClassName="pl-6 md:pl-8 bg-clip-padding"
-              >
-                {/* SEO特設サイトバナー - Unsplash+スタイル */}
-                <div className="mb-6 md:mb-8 break-inside-avoid">
-                  <Link href="/blog/seo" className="block">
-                    <div className="bg-background rounded-3xl border border-border overflow-hidden hover:border-primary/50 transition-all duration-300 hover:shadow-xl">
-                      <div className="relative">
-                        {/* グリッドレイアウト：左テキスト、右ビジュアル */}
-                        <div className="grid grid-cols-2">
-                          {/* 左側テキスト（半分） - パディング付き */}
-                          <div className="flex flex-col justify-between p-4 md:p-6">
-                            <div className="space-y-3">
-                              {/* ロゴ */}
-                              <div className="w-6 h-6 md:w-8 md:h-8 relative">
-                                <Image
-                                  src="/logo_black_symbol.png"
-                                  alt="tent space"
-                                  fill
-                                  className="object-contain"
-                                />
-                              </div>
-
-                              {/* テキスト */}
-                              <div className="space-y-1">
-                                <h3 className="text-sm md:text-base font-medium text-foreground leading-relaxed">
-                                  AI時代のSEO戦略にアクセス。
-                                </h3>
-                                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">いつでも無料で学習可能。</p>
-                              </div>
-                            </div>
-
-                            {/* 下部CTA */}
-                            <div className="mt-6">
-                              <span className="inline-flex items-center px-5 py-1.5 bg-foreground text-background rounded-lg font-medium text-xs hover:bg-foreground/90 transition-all">
-                                SEO特設サイトを見る
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* 右側ビジュアル（半分） - 余白なし */}
-                          <div className="relative h-full min-h-[180px] md:min-h-[200px]">
-                            {/* 背景の写真 */}
-                            <Image
-                              src="/blog-placeholders/oleg-laptev-QRKJwE6yfJo.jpg"
-                              alt="SEO Learning"
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
+              {/* Banner Row - SEO (1 col) + n8n (2 cols) */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-6 md:mb-8">
+                {/* SEO Banner - 1 column */}
+                <div className="md:col-span-1">
+                  <SeoBanner />
                 </div>
 
-                {posts.map((post, index) => (
-                  <MasonryBlogCard key={post.id} post={post} likes={likeCounts[post.slug] || 0} index={index} />
+                {/* n8n Banner - 2 columns */}
+                <div className="md:col-span-2">
+                  <N8nBanner />
+                </div>
+              </div>
+
+              {/* Custom Masonry Grid */}
+              <div className="flex gap-6 md:gap-8 items-start">
+                {columnPosts.map((columnItems, colIndex) => (
+                  <div key={colIndex} className="flex-1 space-y-6 md:space-y-8">
+                    {/* Posts in this column */}
+                    {columnItems.map((post) => {
+                      const globalIndex = posts.indexOf(post)
+                      return (
+                        <MasonryBlogCard
+                          key={post.id}
+                          post={post}
+                          likes={likeCounts[post.slug] || 0}
+                          index={globalIndex}
+                        />
+                      )
+                    })}
+                  </div>
                 ))}
-              </Masonry>
+              </div>
 
               {/* Load More Trigger */}
               {hasMore && (
@@ -627,7 +685,7 @@ function BlogPageContent() {
               {!hasMore && posts.length > 0 && (
                 <div className="mt-12 flex flex-col items-center gap-4">
                   <EyeLoader variant="end" />
-                  <p className="text-sm text-muted-foreground">That’s a wrap!</p>
+                  <p className="text-xs md:text-sm text-muted-foreground font-pixel">That's a wrap!</p>
                 </div>
               )}
             </>

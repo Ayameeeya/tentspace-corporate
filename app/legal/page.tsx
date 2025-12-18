@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import Link from "next/link"
 import { Header } from "@/components/header"
 import { PageFooter } from "@/components/page-footer"
 
@@ -114,12 +113,12 @@ export default function LegalPage() {
   ]
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-white text-slate-900">
+    <div ref={containerRef} className="min-h-screen bg-background text-foreground">
       <Header scrollProgress={1} />
 
       {/* Subtle gradient background */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-b from-white via-slate-50 to-white" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/30 to-background" />
         <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-blue-500/5 blur-3xl" />
         <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-blue-500/3 blur-3xl" />
       </div>
@@ -128,17 +127,17 @@ export default function LegalPage() {
         {/* Hero */}
         <div className="min-h-[50vh] flex flex-col justify-end px-6 md:px-12 lg:px-20 pb-12 md:pb-16">
           <div className="max-w-5xl">
-            <p className="legal-subtitle text-blue-600 text-xs md:text-sm font-medium tracking-wider mb-4 md:mb-6">
+            <p className="legal-subtitle text-blue-600 text-xs md:text-sm font-medium font-tech tracking-wider mb-4 md:mb-6">
               LEGAL NOTICE
             </p>
-            <h1 className="legal-title text-3xl md:text-7xl lg:text-8xl font-bold tracking-tight overflow-hidden text-slate-900">
+            <h1 className="legal-title text-3xl md:text-7xl lg:text-8xl font-bold tracking-tight overflow-hidden text-foreground">
               {"特定商取引法に基づく表記".split("").map((char, i) => (
                 <span key={i} className="inline-block">
                   {char}
                 </span>
               ))}
             </h1>
-            <div className="legal-subtitle mt-6 md:mt-8 flex items-center gap-4 md:gap-6 text-slate-400 text-xs md:text-sm">
+            <div className="legal-subtitle mt-6 md:mt-8 flex items-center gap-4 md:gap-6 text-muted-foreground text-xs md:text-sm">
               <span>最終更新: 2025年12月1日</span>
               <span className="w-1 h-1 md:w-1.5 md:h-1.5 bg-blue-500 rounded-full" />
               <span>株式会社tent space</span>
@@ -148,7 +147,7 @@ export default function LegalPage() {
 
         {/* Divider */}
         <div className="px-6 md:px-12 lg:px-20">
-          <div className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+          <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
         </div>
 
         {/* Content */}
@@ -157,18 +156,18 @@ export default function LegalPage() {
             {/* Basic Info Table */}
             <section className="legal-section mb-12 md:mb-16">
               <div className="flex items-start gap-4 md:gap-6">
-                <span className="text-blue-500 text-xs md:text-sm font-mono mt-1.5">01</span>
+                <span className="text-blue-500 text-xs md:text-sm font-tech mt-1.5">01</span>
                 <div className="flex-1">
-                  <h2 className="text-lg md:text-xl font-semibold mb-4 md:mb-6 text-slate-800">事業者情報</h2>
-                  <div className="overflow-hidden rounded-lg border border-slate-200">
+                  <h2 className="text-lg md:text-xl font-semibold mb-4 md:mb-6 text-foreground">事業者情報</h2>
+                  <div className="overflow-hidden rounded-lg border border-border">
                     <table className="w-full">
-                      <tbody className="divide-y divide-slate-200">
+                      <tbody className="divide-y divide-border">
                         {basicInfo.map((info, i) => (
-                          <tr key={i} className="hover:bg-slate-50/50 transition-colors">
-                            <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm font-medium text-slate-500 bg-slate-50/50 w-1/3">
+                          <tr key={i} className="hover:bg-muted/50 transition-colors">
+                            <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm font-medium text-muted-foreground bg-muted/50 w-1/3">
                               {info.label}
                             </td>
-                            <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-slate-700">
+                            <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-foreground">
                               {info.isEmail ? (
                                 <a
                                   href={`mailto:${info.value}`}
@@ -202,16 +201,16 @@ export default function LegalPage() {
             {sections.map((section) => (
               <section key={section.id} className="legal-section mb-12 md:mb-16 last:mb-0">
                 <div className="flex items-start gap-4 md:gap-6">
-                  <span className="text-blue-500 text-xs md:text-sm font-mono mt-1.5">{section.id}</span>
+                  <span className="text-blue-500 text-xs md:text-sm font-tech mt-1.5">{section.id}</span>
                   <div className="flex-1">
-                    <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-slate-800">{section.title}</h2>
+                    <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-foreground">{section.title}</h2>
                     {section.content && (
-                      <p className="text-slate-600 text-sm md:text-base leading-relaxed">{section.content}</p>
+                      <p className="text-muted-foreground text-sm md:text-base leading-relaxed">{section.content}</p>
                     )}
                     {section.list && (
                       <ul className="mt-3 md:mt-4 space-y-2">
                         {section.list.map((item, i) => (
-                          <li key={i} className="flex items-start gap-2 md:gap-3 text-slate-600 text-sm md:text-base">
+                          <li key={i} className="flex items-start gap-2 md:gap-3 text-muted-foreground text-sm md:text-base">
                             <span className="w-1 h-1 bg-blue-500 rounded-full mt-2 md:mt-2.5 shrink-0" />
                             <span>{item}</span>
                           </li>
@@ -224,48 +223,48 @@ export default function LegalPage() {
             ))}
 
             {/* Contact */}
-            <section className="legal-section mt-12 md:mt-20 pt-12 md:pt-16 border-t border-slate-200">
+            <section className="legal-section mt-12 md:mt-20 pt-12 md:pt-16 border-t border-border">
               <div className="flex items-start gap-4 md:gap-6">
-                <span className="text-blue-500 text-xs md:text-sm font-mono mt-1.5">10</span>
+                <span className="text-blue-500 text-xs md:text-sm font-tech mt-1.5">10</span>
                 <div className="flex-1">
-                  <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-slate-800">お問い合わせ</h2>
-                  <p className="text-slate-600 text-sm md:text-base mb-4 md:mb-6">
+                  <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-foreground">お問い合わせ</h2>
+                  <p className="text-muted-foreground text-sm md:text-base mb-4 md:mb-6">
                     本ページの内容に関するお問い合わせは、下記の窓口までお願いいたします。
                   </p>
-                  <div className="overflow-hidden rounded-lg border border-slate-200 bg-gradient-to-br from-blue-50/30 to-slate-50/50">
+                  <div className="overflow-hidden rounded-lg border border-border bg-gradient-to-br from-blue-50/30 to-muted/50">
                     <table className="w-full">
-                      <tbody className="divide-y divide-slate-200">
-                        <tr className="hover:bg-white/50 transition-colors">
-                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm font-medium text-slate-500 w-1/3 md:w-1/4">
+                      <tbody className="divide-y divide-border">
+                        <tr className="hover:bg-background/50 transition-colors">
+                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm font-medium text-muted-foreground w-1/3 md:w-1/4">
                             事業者名
                           </td>
-                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-slate-700">
+                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-foreground">
                             株式会社tent space
                           </td>
                         </tr>
-                        <tr className="hover:bg-white/50 transition-colors">
-                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm font-medium text-slate-500 w-1/3 md:w-1/4">
+                        <tr className="hover:bg-background/50 transition-colors">
+                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm font-medium text-muted-foreground w-1/3 md:w-1/4">
                             所在地
                           </td>
-                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-slate-700">
+                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-foreground">
                             〒355-0316 埼玉県比企郡小川町大字角山323
                           </td>
                         </tr>
-                        <tr className="hover:bg-white/50 transition-colors">
-                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm font-medium text-slate-500 w-1/3 md:w-1/4">
+                        <tr className="hover:bg-background/50 transition-colors">
+                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm font-medium text-muted-foreground w-1/3 md:w-1/4">
                             電話番号
                           </td>
-                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-slate-700">
+                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-foreground">
                             <a href="tel:07085229335" className="text-blue-600 hover:text-blue-500 transition-colors">
                               070-8522-9335
                             </a>
                           </td>
                         </tr>
-                        <tr className="hover:bg-white/50 transition-colors">
-                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm font-medium text-slate-500 w-1/3 md:w-1/4">
+                        <tr className="hover:bg-background/50 transition-colors">
+                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm font-medium text-muted-foreground w-1/3 md:w-1/4">
                             Email
                           </td>
-                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-slate-700">
+                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-foreground">
                             <a
                               href="mailto:back-office@tentspace.net"
                               className="text-blue-600 hover:text-blue-500 transition-colors"
@@ -277,7 +276,7 @@ export default function LegalPage() {
                       </tbody>
                     </table>
                   </div>
-                  <p className="text-slate-500 text-xs md:text-sm mt-3 md:mt-4">
+                  <p className="text-muted-foreground text-xs md:text-sm mt-3 md:mt-4">
                     ※お問い合わせは原則メールにて承っております
                   </p>
                 </div>
@@ -287,25 +286,8 @@ export default function LegalPage() {
         </div>
 
         {/* Footer */}
-        <div className="px-6 md:px-12 lg:px-20">
-          <PageFooter />
-        </div>
-
-        {/* Copyright */}
-        <Footer />
+        <PageFooter />
       </div>
     </div>
-  )
-}
-
-function Footer() {
-  return (
-    <footer className="relative z-20 px-2 md:px-8 py-1">
-      <div className="flex justify-end">
-        <p className="text-[8px] md:text-[9px] text-primary-foreground/60">
-          © 2025 tent space Inc. All rights reserved.
-        </p>
-      </div>
-    </footer>
   )
 }
