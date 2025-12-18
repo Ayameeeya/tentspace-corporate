@@ -376,16 +376,19 @@ export default function CategoryPage() {
               {!hasMore && posts.length > 0 && (
                 <div className="mt-12 flex flex-col items-center gap-4">
                   <EyeLoader variant="end" />
-                  <p className="text-sm text-muted-foreground">You've reached the end</p>
+                  <p className="text-sm text-muted-foreground">That’s all for now!</p>
                 </div>
               )}
             </>
           )}
         </div>
 
-        <div className="mt-12 md:mt-16">
-          <Footer />
-        </div>
+        {/* Footer - 最後の記事が表示された後のみ表示 */}
+        {!hasMore && posts.length > 0 && (
+          <div className="mt-12 md:mt-16">
+            <Footer />
+          </div>
+        )}
       </main>
 
       <style jsx global>{`
