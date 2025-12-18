@@ -620,7 +620,7 @@ export default function AboutPage() {
         <div className="h-32" />
 
         {/* Footer */}
-        <Footer />
+        <Footer copyrightClassName="text-background/60" />
       </div>
     </div>
   )
