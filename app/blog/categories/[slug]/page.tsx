@@ -154,7 +154,7 @@ function MasonryBlogCard({ post, likes = 0, index = 0, isMobile = false }: { pos
       <Link href={`/blog/${post.slug}`} className="block">
         <div className="bg-card rounded-xl border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden">
           {/* Image Area with Notch */}
-          <div className={`relative ${aspectRatios[finalVariant]} bg-muted`}>
+          <div className={`relative ${aspectRatios[finalVariant]} bg-card`}>
             <div className="absolute inset-0" style={{
               clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 24px), 75% calc(100% - 24px), 70% 100%, 0 100%)'
             }}>
