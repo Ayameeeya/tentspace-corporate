@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { signOut } from "@/lib/auth"
+import GlassSurface from "@/components/GlassSurface"
 
 export function BlogHeader() {
   const router = useRouter()
@@ -242,11 +243,19 @@ export function BlogHeader() {
             ) : (
               <button
                 onClick={() => setShowAuthModal(true)}
-                className="relative group overflow-hidden"
+                className="relative group"
               >
-                <div className="relative px-4 py-1.5 md:px-5 md:py-2 border border-foreground bg-background/30 backdrop-blur-sm text-foreground text-[10px] md:text-xs font-semibold tracking-wide transition-all duration-300 group-hover:bg-foreground group-hover:text-background">
-                  SIGN IN
-                </div>
+                <GlassSurface
+                  width="auto"
+                  height={40}
+                  borderRadius={8}
+                  blur={8}
+                  className="px-4 md:px-5 transition-all duration-300"
+                >
+                  <span className="text-foreground text-[10px] md:text-xs font-semibold tracking-wide whitespace-nowrap">
+                    SIGN IN
+                  </span>
+                </GlassSurface>
               </button>
             )}
           </div>

@@ -11,6 +11,7 @@ import { CategoryTabsClient } from "@/components/category-tabs-client"
 import { EyeLoader } from "@/components/eye-loader"
 import { SeoBanner } from "@/components/seo-banner"
 import { N8nBanner } from "@/components/n8n-banner"
+import GlassSurface from "@/components/GlassSurface"
 import {
   getPosts,
   getCategories,
@@ -145,30 +146,43 @@ function MasonryBlogCard({ post, likes = 0, index = 0 }: { post: WPPost; likes?:
   return (
     <article className="group animate-fadeIn break-inside-avoid mb-6 md:mb-8">
       <Link href={`/blog/${post.slug}`} className="block">
-        <div className="bg-card rounded-xl overflow-hidden border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
-          {/* Image Area */}
-          <div className={`relative ${aspectRatios[finalVariant]} overflow-hidden bg-muted`}>
-            <Image
-              src={finalImageUrl}
-              alt={post.title.rendered}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-700"
-            />
+        <div className="bg-card rounded-xl border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden">
+          {/* Image Area with Notch */}
+          <div className={`relative ${aspectRatios[finalVariant]} bg-muted`}>
+            <div className="absolute inset-0" style={{
+              clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 24px), 75% calc(100% - 24px), 70% 100%, 0 100%)'
+            }}>
+              <Image
+                src={finalImageUrl}
+                alt={post.title.rendered}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-700"
+              />
+            </div>
 
             {/* Category Badges - ホバー時に画像左下に表示 */}
             {categories.length > 0 && (
-              <div className="absolute bottom-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-wrap gap-1.5">
+              <div className="absolute bottom-8 left-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-wrap gap-1.5 z-10">
                 {categories.map((category) => (
-                  <span key={category.id} className="inline-flex items-center px-2 py-1 text-[8px] md:text-[10px] font-bold text-accent bg-background/90 backdrop-blur-sm rounded-full shadow-lg border border-border/50">
-                    {category.name}
-                  </span>
+                  <GlassSurface
+                    key={category.id}
+                    width="auto"
+                    height={24}
+                    borderRadius={12}
+                    blur={6}
+                    className="px-2 py-0.5"
+                  >
+                    <span className="text-[8px] md:text-[10px] font-bold text-white whitespace-nowrap" style={{ mixBlendMode: 'difference' }}>
+                      {category.name}
+                    </span>
+                  </GlassSurface>
                 ))}
               </div>
             )}
           </div>
 
           {/* Text Area */}
-          <div className="p-5 md:p-6 bg-card">
+          <div className="p-5 md:p-6 bg-card relative -mt-2">
             {/* Meta - always show */}
             <div className="flex items-center gap-2 mb-3 text-xs text-muted-foreground">
               <time>{formatDate(post.date)}</time>
