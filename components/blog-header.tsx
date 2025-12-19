@@ -351,19 +351,44 @@ export function BlogHeader() {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-col h-full p-6">
-          {/* Close Button */}
-          <button
-            onClick={() => setMobileMenuOpen(false)}
-            className="self-end mb-8 w-8 h-8 flex items-center justify-center text-foreground hover:text-primary transition-colors"
-            aria-label="Close menu"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+          {/* Logo + Close Button */}
+          <div className="flex items-center justify-between mb-8">
+            <Link
+              href="/"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center"
+            >
+              <Image
+                src="/logo_black_yoko.png"
+                alt="tent space"
+                width={110}
+                height={50}
+                className="w-[90px] h-auto"
+                priority
+              />
+            </Link>
+
+            {/* Close Button */}
+            <button
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-8 h-8 flex items-center justify-center text-foreground hover:text-primary transition-colors"
+              aria-label="Close menu"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
 
           {/* Navigation Links */}
           <nav className="flex flex-col gap-6 mb-8">
+            <Link
+              href="/about"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-foreground text-2xl font-pixel tracking-wider hover:text-primary transition-colors"
+            >
+              ABOUT
+            </Link>
             <Link
               href="/blog"
               onClick={() => setMobileMenuOpen(false)}
@@ -481,7 +506,7 @@ export function BlogHeader() {
                 setMobileMenuOpen(false)
                 setShowAuthModal(true)
               }}
-              className="w-full py-4 px-6 bg-foreground text-background rounded-lg font-pixel text-lg tracking-wider hover:bg-foreground/90 transition-colors"
+              className="w-full py-3.5 px-6 bg-foreground text-background rounded-lg text-sm font-semibold tracking-wide hover:bg-foreground/90 transition-all hover:shadow-lg"
             >
               SIGN IN
             </button>
