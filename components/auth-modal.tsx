@@ -10,8 +10,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import GlassSurface from "@/components/GlassSurface"
 
 interface AuthModalProps {
   isOpen: boolean
@@ -295,14 +295,14 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
         </VisuallyHidden>
         <div className="flex flex-col md:flex-row min-h-[600px]">
           {/* Left Side - Form */}
-          <div className="flex-1 p-8 md:p-12 flex flex-col justify-center">
+          <div className="flex-1 p-6 md:p-10 flex flex-col justify-center">
             <div className="max-w-md mx-auto w-full">
               {/* Header */}
-              <div className="mb-8">
-                <p className="text-[10px] md:text-xs font-bold tracking-wider uppercase text-foreground mb-4">
+              <div className="mb-6">
+                <p className="text-sm font-pixel tracking-widest uppercase text-muted-foreground mb-1">
                   DON'T MISS A THING
                 </p>
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-serif text-foreground leading-tight">
+                <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-foreground leading-tight">
                   {mfaRequired ? "認証コードを入力" :
                     mode === "login" ? "Welcome back to our blog" :
                       mode === "signup" ? "Join our community" :
@@ -316,9 +316,17 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                   <p className="text-muted-foreground">{message}</p>
                   <button
                     onClick={handleClose}
-                    className="w-full py-3 bg-foreground text-background font-semibold hover:opacity-90 transition-opacity"
+                    className="w-full"
                   >
-                    閉じる
+                    <GlassSurface
+                      width="100%"
+                      height={48}
+                      borderRadius={8}
+                      blur={10}
+                      className="py-3"
+                    >
+                      <span className="font-semibold text-foreground">閉じる</span>
+                    </GlassSurface>
                   </button>
                 </div>
               ) : (
@@ -327,10 +335,10 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                     mode === "login" ? handleLogin :
                       mode === "signup" ? handleSignup :
                         handleForgotPassword
-                } className="space-y-6">
+                } className="space-y-4">
                   {/* Error Message */}
                   {error && (
-                    <div className="bg-red-50 dark:bg-red-950 text-red-600 dark:text-red-300 p-3 text-sm">
+                    <div className="bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-400 px-3 py-2.5 text-xs rounded-md border border-red-200 dark:border-red-900/50">
                       {error}
                     </div>
                   )}
@@ -345,7 +353,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                         onChange={(e) => setMfaCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                         maxLength={6}
                         required
-                        className="w-full py-3 px-4 border border-border text-center text-2xl font-mono tracking-wider"
+                        className="w-full py-2.5 px-3.5 border border-border/50 text-center text-xl font-mono tracking-wider"
                         autoFocus
                       />
                     </div>
@@ -355,21 +363,21 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                       {mode === "signup" && (
                         <Input
                           type="text"
-                          placeholder="DISPLAY NAME"
+                          placeholder="Display Name"
                           value={displayName}
                           onChange={(e) => setDisplayName(e.target.value)}
-                          className="w-full py-3 px-4 border border-border"
+                          className="w-full py-2.5 px-3.5 border border-border/50 text-sm placeholder:text-muted-foreground/60"
                         />
                       )}
 
                       {/* Email Input */}
                       <Input
                         type="email"
-                        placeholder="EMAIL ADDRESS"
+                        placeholder="Email Address"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
-                        className="w-full py-3 px-4 border border-border uppercase placeholder:text-muted-foreground"
+                        className="w-full py-2.5 px-3.5 border border-border/50 text-sm placeholder:text-muted-foreground/60"
                       />
 
                       {/* Password Input */}
@@ -377,25 +385,25 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                         <div className="relative">
                           <Input
                             type={showPassword ? "text" : "password"}
-                            placeholder="PASSWORD"
+                            placeholder="Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
                             minLength={8}
-                            className="w-full py-3 px-4 pr-12 border border-border uppercase placeholder:text-muted-foreground"
+                            className="w-full py-2.5 px-3.5 pr-11 border border-border/50 text-sm placeholder:text-muted-foreground/60"
                           />
                           <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground/60 hover:text-foreground transition-colors"
                             tabIndex={-1}
                           >
                             {showPassword ? (
-                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
                               </svg>
                             ) : (
-                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                               </svg>
@@ -409,25 +417,25 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                         <div className="relative">
                           <Input
                             type={showConfirmPassword ? "text" : "password"}
-                            placeholder="CONFIRM PASSWORD"
+                            placeholder="Confirm Password"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             required
                             minLength={8}
-                            className="w-full py-3 px-4 pr-12 border border-border uppercase placeholder:text-muted-foreground"
+                            className="w-full py-2.5 px-3.5 pr-11 border border-border/50 text-sm placeholder:text-muted-foreground/60"
                           />
                           <button
                             type="button"
                             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground/60 hover:text-foreground transition-colors"
                             tabIndex={-1}
                           >
                             {showConfirmPassword ? (
-                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
                               </svg>
                             ) : (
-                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                               </svg>
@@ -442,44 +450,51 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="group relative w-full py-3 bg-foreground text-background font-bold uppercase tracking-wider hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+                    className="group relative w-full disabled:opacity-50"
                   >
-                    {loading ? (
-                      <>
-                        <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                        </svg>
-                        処理中...
-                      </>
-                    ) : (
-                      <>
-                        {mfaRequired ? "確認" :
-                          mode === "login" ? "Sign In" :
-                            mode === "signup" ? "Sign Up" :
-                              "Send Reset Link"}
-                        <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                        </svg>
-                      </>
-                    )}
+                    <GlassSurface
+                      width="100%"
+                      height={44}
+                      borderRadius={8}
+                      blur={10}
+                      className="py-2.5"
+                    >
+                      <div className="flex items-center justify-center gap-2 text-sm font-semibold tracking-wide text-foreground">
+                        {loading ? (
+                          <>
+                            <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                            </svg>
+                            処理中...
+                          </>
+                        ) : (
+                          <>
+                            {mfaRequired ? "確認" :
+                              mode === "login" ? "Sign In" :
+                                mode === "signup" ? "Sign Up" :
+                                  "Send Reset Link"}
+                          </>
+                        )}
+                      </div>
+                    </GlassSurface>
                   </button>
 
                   {/* Links */}
-                  <div className="space-y-3 text-center text-sm">
+                  <div className="space-y-2 text-center text-xs pt-2">
                     {mfaRequired ? (
                       <button
                         type="button"
-                        className="text-muted-foreground hover:text-foreground"
+                        className="text-muted-foreground hover:text-foreground transition-colors"
                         onClick={() => { resetForm(); setMode("login") }}
                       >
-                        ← ログイン画面に戻る
+                        ログイン画面に戻る
                       </button>
                     ) : mode === "login" ? (
                       <>
                         <button
                           type="button"
-                          className="block w-full text-muted-foreground hover:text-foreground"
+                          className="block w-full text-muted-foreground hover:text-foreground transition-colors"
                           onClick={() => { resetForm(); setMode("forgot") }}
                         >
                           パスワードをお忘れですか？
@@ -488,7 +503,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                           アカウントをお持ちでない方は{" "}
                           <button
                             type="button"
-                            className="text-foreground font-semibold hover:underline"
+                            className="text-foreground font-medium hover:underline transition-all"
                             onClick={() => { resetForm(); setMode("signup") }}
                           >
                             新規登録
@@ -500,20 +515,23 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                         既にアカウントをお持ちの方は{" "}
                         <button
                           type="button"
-                          className="text-foreground font-semibold hover:underline"
+                          className="text-foreground font-medium hover:underline transition-all"
                           onClick={() => { resetForm(); setMode("login") }}
                         >
                           ログイン
                         </button>
                       </p>
                     ) : (
-                      <button
-                        type="button"
-                        className="text-muted-foreground hover:text-foreground"
-                        onClick={() => { resetForm(); setMode("login") }}
-                      >
-                        ログインに戻る
-                      </button>
+                      <p className="text-muted-foreground">
+                        <button
+                          type="button"
+                          className="text-foreground font-medium hover:underline transition-all"
+                          onClick={() => { resetForm(); setMode("login") }}
+                        >
+                          ログイン
+                        </button>
+                        に戻る
+                      </p>
                     )}
                   </div>
                 </form>

@@ -12,16 +12,16 @@ import { EyeLoader } from "@/components/eye-loader"
 import { SeoBanner } from "@/components/seo-banner"
 import { N8nBanner } from "@/components/n8n-banner"
 import GlassSurface from "@/components/GlassSurface"
-import {
-  getPosts,
-  getCategories,
-  getCategoryBySlug,
-  getFeaturedImageUrl,
-  stripHtml,
-  formatDate,
+import { 
+  getPosts, 
+  getCategories, 
+  getCategoryBySlug, 
+  getFeaturedImageUrl, 
+  stripHtml, 
+  formatDate, 
   getReadingTime,
   type WPPost,
-  type WPCategory
+  type WPCategory 
 } from "@/lib/wordpress"
 import { fetchLikeCounts } from "@/lib/blog-likes"
 
@@ -33,7 +33,7 @@ function getCardVariant(index: number): 'tall' | 'wide' | 'square' {
 
 // Get estimated height for each variant (in relative units)
 function getVariantHeight(variant: 'tall' | 'wide' | 'square'): number {
-  return {
+    return {
     tall: 4,      // aspect-[3/4] = taller
     wide: 2.25,   // aspect-[16/9] = shorter
     square: 3     // aspect-square = medium
@@ -159,7 +159,7 @@ function MasonryBlogCard({ post, likes = 0, index = 0 }: { post: WPPost; likes?:
                 className="object-cover group-hover:scale-105 transition-transform duration-700"
               />
             </div>
-
+          
             {/* Category Badges - ホバー時に画像左下に表示 */}
             {categories.length > 0 && (
               <div className="absolute bottom-8 left-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-wrap gap-1.5 z-10">
@@ -174,9 +174,9 @@ function MasonryBlogCard({ post, likes = 0, index = 0 }: { post: WPPost; likes?:
                   >
                     <span className="text-[8px] md:text-[10px] font-bold text-white whitespace-nowrap" style={{ mixBlendMode: 'difference' }}>
                       {category.name}
-                    </span>
+                </span>
                   </GlassSurface>
-                ))}
+              ))}
               </div>
             )}
           </div>
@@ -199,8 +199,8 @@ function MasonryBlogCard({ post, likes = 0, index = 0 }: { post: WPPost; likes?:
             {/* Pattern 2: with-excerpt - show description */}
             {contentVariant === 'with-excerpt' && (
               <p className="text-muted-foreground text-sm line-clamp-2 leading-relaxed">
-                {excerpt}
-              </p>
+              {excerpt}
+            </p>
             )}
 
             {/* Pattern 3: full - show description + quote */}
@@ -341,7 +341,7 @@ export default function CategoryPage() {
     return () => {
       if (currentRef) {
         observer.unobserve(currentRef)
-      }
+}
     }
   }, [hasMore, loadingMore, loading, currentPage, fetchPosts])
 
@@ -393,7 +393,7 @@ export default function CategoryPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <BlogHeader />
+        <BlogHeader />
 
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/30 to-background" />
@@ -411,23 +411,23 @@ export default function CategoryPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
                 Back to Blog
-              </Link>
+                </Link>
               {category && (
                 <>
                   <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4">
-                    {category.name}
-                  </h1>
-                  {category.description && (
+                {category.name}
+              </h1>
+              {category.description && (
                     <p className="text-base md:text-lg text-muted-foreground mb-4" dangerouslySetInnerHTML={{ __html: category.description }} />
-                  )}
+              )}
                   <p className="text-base text-muted-foreground/70 font-pixel">
                     {totalPosts} {totalPosts === 1 ? 'Article' : 'Articles'}
                   </p>
                 </>
               )}
+              </div>
             </div>
           </div>
-        </div>
 
         <CategoryTabsClient
           categories={categories}
@@ -453,19 +453,19 @@ export default function CategoryPage() {
               <div className="w-20 h-20 mx-auto mb-6 bg-muted rounded-full flex items-center justify-center">
                 <svg className="w-10 h-10 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h10a2 2 0 012 2v11a2 2 0 01-2 2z" />
-                </svg>
-              </div>
+                  </svg>
+                </div>
               <p className="text-muted-foreground text-lg">No articles in this category</p>
-            </div>
-          ) : (
-            <>
+              </div>
+            ) : (
+              <>
               {/* Category-specific Banner */}
               {category && (
                 <div className="mb-6 md:mb-8">
                   {category.slug === 'seo' && <SeoBanner layout="horizontal" />}
                   {category.slug === 'n8n' && <N8nBanner />}
-                </div>
-              )}
+                  </div>
+                )}
 
               {/* Custom Masonry Grid */}
               <div className="flex gap-6 md:gap-8 items-start">
@@ -484,8 +484,8 @@ export default function CategoryPage() {
                       )
                     })}
                   </div>
-                ))}
-              </div>
+                  ))}
+                </div>
 
               {hasMore && (
                 <div ref={loadMoreRef} className="mt-12 flex justify-center">
@@ -501,17 +501,17 @@ export default function CategoryPage() {
                   <p className="text-xs md:text-sm text-muted-foreground font-pixel">That's all for now!</p>
                 </div>
               )}
-            </>
-          )}
-        </div>
+              </>
+            )}
+          </div>
 
         {/* Footer - 最後の記事が表示された後のみ表示 */}
         {!hasMore && posts.length > 0 && (
           <div className="mt-12 md:mt-16">
             <Footer />
-          </div>
+                </div>
         )}
-      </main>
+        </main>
 
       <style jsx global>{`
         @keyframes fadeIn {
@@ -529,6 +529,6 @@ export default function CategoryPage() {
           animation: fadeIn 0.6s ease-out forwards;
         }
       `}</style>
-    </div>
+      </div>
   )
 }
