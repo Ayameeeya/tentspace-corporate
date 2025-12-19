@@ -47,7 +47,7 @@ export function BlogTicker() {
 
                 {/* アイコン */}
                 {avatarUrl ? (
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full overflow-hidden border border-border">
+                  <div className="flex-shrink-0 w-5 h-5 md:w-6 md:h-6 rounded-full overflow-hidden border border-border">
                     <Image
                       src={avatarUrl}
                       alt={authorName}
@@ -57,14 +57,14 @@ export function BlogTicker() {
                     />
                   </div>
                 ) : (
-                  <div className="flex-shrink-0 w-6 h-6 bg-muted rounded-full flex items-center justify-center text-xs font-bold text-muted-foreground border border-border">
+                  <div className="flex-shrink-0 w-4 h-4 md:w-6 md:h-6 bg-muted rounded-full flex items-center justify-center text-[8px] md:text-xs font-bold text-muted-foreground border border-border">
                     {authorName[0]}
                   </div>
                 )}
 
                 {/* タイトル */}
                 <span
-                  className="text-sm font-light"
+                  className="text-xs md:text-sm font-light"
                   dangerouslySetInnerHTML={{ __html: post.title.rendered }}
                 />
 

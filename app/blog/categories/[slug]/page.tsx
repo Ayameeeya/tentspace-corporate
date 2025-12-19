@@ -12,28 +12,34 @@ import { EyeLoader } from "@/components/eye-loader"
 import { SeoBanner } from "@/components/seo-banner"
 import { N8nBanner } from "@/components/n8n-banner"
 import GlassSurface from "@/components/GlassSurface"
-import { 
-  getPosts, 
-  getCategories, 
-  getCategoryBySlug, 
-  getFeaturedImageUrl, 
-  stripHtml, 
-  formatDate, 
+import {
+  getPosts,
+  getCategories,
+  getCategoryBySlug,
+  getFeaturedImageUrl,
+  stripHtml,
+  formatDate,
   getReadingTime,
   type WPPost,
-  type WPCategory 
+  type WPCategory
 } from "@/lib/wordpress"
 import { fetchLikeCounts } from "@/lib/blog-likes"
 
 // Get random card variant
-function getCardVariant(index: number): 'tall' | 'wide' | 'square' {
+function getCardVariant(index: number, isMobile: boolean = false): 'tall' | 'wide' | 'square' {
+  // Mobile: only wide and square
+  if (isMobile) {
+    const mobilePatterns = ['wide', 'square', 'square', 'wide', 'square', 'wide']
+    return mobilePatterns[index % mobilePatterns.length] as 'tall' | 'wide' | 'square'
+  }
+  // Desktop: tall, wide, and square
   const patterns = ['tall', 'wide', 'square', 'tall', 'square', 'wide', 'square', 'tall', 'wide']
   return patterns[index % patterns.length] as 'tall' | 'wide' | 'square'
 }
 
 // Get estimated height for each variant (in relative units)
 function getVariantHeight(variant: 'tall' | 'wide' | 'square'): number {
-    return {
+  return {
     tall: 4,      // aspect-[3/4] = taller
     wide: 2.25,   // aspect-[16/9] = shorter
     square: 3     // aspect-square = medium
@@ -118,13 +124,13 @@ function getContentVariant(index: number): 'title-only' | 'with-excerpt' | 'full
 }
 
 // Masonry Blog Card
-function MasonryBlogCard({ post, likes = 0, index = 0 }: { post: WPPost; likes?: number; index?: number }) {
+function MasonryBlogCard({ post, likes = 0, index = 0, isMobile = false }: { post: WPPost; likes?: number; index?: number; isMobile?: boolean }) {
   const imageUrl = getFeaturedImageUrl(post, 'large')
   const excerpt = stripHtml(post.excerpt.rendered)
   const readingTime = getReadingTime(post.content.rendered)
   const categories = post._embedded?.['wp:term']?.[0] || []
 
-  const variant = getCardVariant(index)
+  const variant = getCardVariant(index, isMobile)
   const contentVariant = getContentVariant(index)
 
   // Wide uses actual thumbnail, Tall/Square use dummy images (random based on post ID and index)
@@ -159,7 +165,7 @@ function MasonryBlogCard({ post, likes = 0, index = 0 }: { post: WPPost; likes?:
                 className="object-cover group-hover:scale-105 transition-transform duration-700"
               />
             </div>
-          
+
             {/* Category Badges - ホバー時に画像左下に表示 */}
             {categories.length > 0 && (
               <div className="absolute bottom-8 left-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-wrap gap-1.5 z-10">
@@ -174,9 +180,9 @@ function MasonryBlogCard({ post, likes = 0, index = 0 }: { post: WPPost; likes?:
                   >
                     <span className="text-[8px] md:text-[10px] font-bold text-white whitespace-nowrap" style={{ mixBlendMode: 'difference' }}>
                       {category.name}
-                </span>
+                    </span>
                   </GlassSurface>
-              ))}
+                ))}
               </div>
             )}
           </div>
@@ -199,8 +205,8 @@ function MasonryBlogCard({ post, likes = 0, index = 0 }: { post: WPPost; likes?:
             {/* Pattern 2: with-excerpt - show description */}
             {contentVariant === 'with-excerpt' && (
               <p className="text-muted-foreground text-sm line-clamp-2 leading-relaxed">
-              {excerpt}
-            </p>
+                {excerpt}
+              </p>
             )}
 
             {/* Pattern 3: full - show description + quote */}
@@ -238,6 +244,18 @@ export default function CategoryPage() {
   const [hasMore, setHasMore] = useState(true)
   const [totalPosts, setTotalPosts] = useState(0)
   const [likeCounts, setLikeCounts] = useState<Record<string, number>>({})
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Detect mobile screen
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   // Fetch category and all categories
   useEffect(() => {
@@ -341,7 +359,7 @@ export default function CategoryPage() {
     return () => {
       if (currentRef) {
         observer.unobserve(currentRef)
-}
+      }
     }
   }, [hasMore, loadingMore, loading, currentPage, fetchPosts])
 
@@ -371,11 +389,14 @@ export default function CategoryPage() {
       return [posts]
     }
 
+    // Use currentColumns to determine if mobile (more reliable than isMobile state)
+    const isMobileLayout = currentColumns <= 2
+
     const colHeights = new Array(currentColumns).fill(0)
     const columns: WPPost[][] = Array.from({ length: currentColumns }, () => [])
 
     posts.forEach((post, index) => {
-      const variant = getCardVariant(index)
+      const variant = getCardVariant(index, isMobileLayout)
       const height = getVariantHeight(variant)
 
       // Find the shortest column
@@ -393,7 +414,7 @@ export default function CategoryPage() {
 
   return (
     <div className="min-h-screen bg-background">
-        <BlogHeader />
+      <BlogHeader />
 
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/30 to-background" />
@@ -403,31 +424,22 @@ export default function CategoryPage() {
         <div className="border-b border-border">
           <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-12 md:py-16">
             <div className="text-center max-w-3xl mx-auto">
-              <Link
-                href="/blog"
-                className="inline-flex items-center gap-2 text-sm text-slate-600 dark:text-gray-400 hover:text-foreground transition-colors mb-6"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-                Back to Blog
-                </Link>
               {category && (
                 <>
                   <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4">
-                {category.name}
-              </h1>
-              {category.description && (
+                    {category.name}
+                  </h1>
+                  {category.description && (
                     <p className="text-base md:text-lg text-muted-foreground mb-4" dangerouslySetInnerHTML={{ __html: category.description }} />
-              )}
+                  )}
                   <p className="text-base text-muted-foreground/70 font-pixel">
                     {totalPosts} {totalPosts === 1 ? 'Article' : 'Articles'}
                   </p>
                 </>
               )}
-              </div>
             </div>
           </div>
+        </div>
 
         <CategoryTabsClient
           categories={categories}
@@ -453,19 +465,19 @@ export default function CategoryPage() {
               <div className="w-20 h-20 mx-auto mb-6 bg-muted rounded-full flex items-center justify-center">
                 <svg className="w-10 h-10 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h10a2 2 0 012 2v11a2 2 0 01-2 2z" />
-                  </svg>
-                </div>
-              <p className="text-muted-foreground text-lg">No articles in this category</p>
+                </svg>
               </div>
-            ) : (
-              <>
+              <p className="text-muted-foreground text-lg">No articles in this category</p>
+            </div>
+          ) : (
+            <>
               {/* Category-specific Banner */}
               {category && (
                 <div className="mb-6 md:mb-8">
-                  {category.slug === 'seo' && <SeoBanner layout="horizontal" />}
-                  {category.slug === 'n8n' && <N8nBanner />}
-                  </div>
-                )}
+                  {category.slug === 'seo' && <SeoBanner layout={isMobile ? "vertical" : "horizontal"} />}
+                  {category.slug === 'n8n' && <N8nBanner layout={isMobile ? "vertical" : "horizontal"} />}
+                </div>
+              )}
 
               {/* Custom Masonry Grid */}
               <div className="flex gap-6 md:gap-8 items-start">
@@ -474,18 +486,20 @@ export default function CategoryPage() {
                     {/* Posts in this column */}
                     {columnItems.map((post) => {
                       const globalIndex = posts.indexOf(post)
+                      const isMobileLayout = currentColumns <= 2
                       return (
                         <MasonryBlogCard
                           key={post.id}
                           post={post}
                           likes={likeCounts[post.slug] || 0}
                           index={globalIndex}
+                          isMobile={isMobileLayout}
                         />
                       )
                     })}
                   </div>
-                  ))}
-                </div>
+                ))}
+              </div>
 
               {hasMore && (
                 <div ref={loadMoreRef} className="mt-12 flex justify-center">
@@ -501,17 +515,17 @@ export default function CategoryPage() {
                   <p className="text-xs md:text-sm text-muted-foreground font-pixel">That's all for now!</p>
                 </div>
               )}
-              </>
-            )}
-          </div>
+            </>
+          )}
+        </div>
 
         {/* Footer - 最後の記事が表示された後のみ表示 */}
         {!hasMore && posts.length > 0 && (
           <div className="mt-12 md:mt-16">
             <Footer />
-                </div>
+          </div>
         )}
-        </main>
+      </main>
 
       <style jsx global>{`
         @keyframes fadeIn {
@@ -529,6 +543,6 @@ export default function CategoryPage() {
           animation: fadeIn 0.6s ease-out forwards;
         }
       `}</style>
-      </div>
+    </div>
   )
 }

@@ -121,7 +121,13 @@ function CategoryFilter({
 }
 
 // Get random card variant for visual variety
-function getCardVariant(index: number): 'tall' | 'wide' | 'square' {
+function getCardVariant(index: number, isMobile: boolean = false): 'tall' | 'wide' | 'square' {
+  // Mobile: only wide and square
+  if (isMobile) {
+    const mobilePatterns = ['wide', 'square', 'square', 'wide', 'square', 'wide']
+    return mobilePatterns[index % mobilePatterns.length] as 'tall' | 'wide' | 'square'
+  }
+  // Desktop: tall, wide, and square
   const patterns = ['tall', 'wide', 'square', 'tall', 'square', 'wide', 'square', 'tall', 'wide']
   return patterns[index % patterns.length] as 'tall' | 'wide' | 'square'
 }
@@ -213,13 +219,13 @@ function getContentVariant(index: number): 'title-only' | 'with-excerpt' | 'full
 }
 
 // Masonry Blog Card with varying heights
-function MasonryBlogCard({ post, likes = 0, index = 0 }: { post: WPPost; likes?: number; index?: number }) {
+function MasonryBlogCard({ post, likes = 0, index = 0, isMobile = false }: { post: WPPost; likes?: number; index?: number; isMobile?: boolean }) {
   const imageUrl = getFeaturedImageUrl(post, 'large')
   const excerpt = stripHtml(post.excerpt.rendered)
   const readingTime = getReadingTime(post.content.rendered)
   const categories = post._embedded?.['wp:term']?.[0] || []
 
-  const variant = getCardVariant(index)
+  const variant = getCardVariant(index, isMobile)
   const contentVariant = getContentVariant(index)
 
   // Wide uses actual thumbnail, Tall/Square use dummy images (random based on post ID and index)
@@ -337,6 +343,18 @@ function BlogPageContent() {
   const [searchQuery, setSearchQuery] = useState('')
   const [searchInput, setSearchInput] = useState('')
   const [likeCounts, setLikeCounts] = useState<Record<string, number>>({})
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Detect mobile screen
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   // Hero animation
   useEffect(() => {
@@ -516,11 +534,14 @@ function BlogPageContent() {
       return [posts]
     }
 
+    // Use currentColumns to determine if mobile (more reliable than isMobile state)
+    const isMobileLayout = currentColumns <= 2
+
     const colHeights = new Array(currentColumns).fill(0)
     const columns: WPPost[][] = Array.from({ length: currentColumns }, () => [])
 
     posts.forEach((post, index) => {
-      const variant = getCardVariant(index)
+      const variant = getCardVariant(index, isMobileLayout)
       const height = getVariantHeight(variant)
 
       // Find the shortest column
@@ -661,14 +682,14 @@ function BlogPageContent() {
             <>
               {/* Banner Row - SEO (1 col) + n8n (2 cols) */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-6 md:mb-8">
-                {/* SEO Banner - 1 column */}
+                {/* SEO Banner - 1 column on desktop, full width on mobile */}
                 <div className="md:col-span-1">
-                  <SeoBanner />
+                  <SeoBanner layout="vertical" />
                 </div>
 
-                {/* n8n Banner - 2 columns */}
+                {/* n8n Banner - 2 columns on desktop, full width on mobile */}
                 <div className="md:col-span-2">
-                  <N8nBanner />
+                  <N8nBanner layout={isMobile ? "vertical" : "horizontal"} />
                 </div>
               </div>
 
@@ -679,12 +700,14 @@ function BlogPageContent() {
                     {/* Posts in this column */}
                     {columnItems.map((post) => {
                       const globalIndex = posts.indexOf(post)
+                      const isMobileLayout = currentColumns <= 2
                       return (
                         <MasonryBlogCard
                           key={post.id}
                           post={post}
                           likes={likeCounts[post.slug] || 0}
                           index={globalIndex}
+                          isMobile={isMobileLayout}
                         />
                       )
                     })}
