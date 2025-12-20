@@ -135,7 +135,7 @@ export function Footer({ copyrightClassName = "text-primary-foreground/60" }: Fo
               <div className="flex items-center gap-3">
                 {/* LinkedIn */}
                 <a
-                  href="https://www.linkedin.com/in/hiroshige-negishi-4b5255135/"
+                  href="https://www.linkedin.com/in/hirokuma/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-8 h-8 rounded-full border border-background/30 flex items-center justify-center hover:bg-background/10 transition-colors"

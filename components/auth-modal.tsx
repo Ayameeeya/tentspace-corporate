@@ -247,7 +247,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
       password,
       options: {
         data: {
-          display_name: displayName || email.split("@")[0],
+          display_name: displayName,
         },
         emailRedirectTo: `${window.location.origin}/blog`,
       },
@@ -358,6 +358,8 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                           placeholder="DISPLAY NAME"
                           value={displayName}
                           onChange={(e) => setDisplayName(e.target.value)}
+                          required
+                          minLength={1}
                           className="w-full py-3 px-4 border border-border"
                         />
                       )}

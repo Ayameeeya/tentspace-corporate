@@ -62,6 +62,24 @@ export async function POST() {
       )
     }
 
+    // display_nameをraw_user_metadataから取得（優先）
+    const displayName = user.user_metadata?.display_name
+    
+    if (!displayName) {
+      return NextResponse.json(
+        { error: 'Display name is required. Please set display_name in user metadata.' },
+        { status: 400 }
+      )
+    }
+
+    // profiles.display_nameをraw_user_metadataの値で更新（メールアドレスが入っている場合を修正）
+    if (profile.display_name !== displayName) {
+      await supabase
+        .from('profiles')
+        .update({ display_name: displayName })
+        .eq('id', user.id)
+    }
+
     const results: {
       stripe?: { status: string; customerId?: string; error?: string }
       wordpress?: { status: string; userId?: number; error?: string }
@@ -71,7 +89,7 @@ export async function POST() {
     if (!profile.stripe_customer_id) {
       const { customerId, error } = await createStripeCustomer({
         email: user.email,
-        name: profile.display_name || user.user_metadata?.display_name,
+        name: displayName,
         metadata: {
           supabase_user_id: user.id,
         },
@@ -99,7 +117,7 @@ export async function POST() {
       const { userId, error } = await createWordPressUser({
         email: user.email,
         username: username,
-        displayName: profile.display_name || baseUsername,
+        displayName: displayName,
       })
 
       if (userId) {
