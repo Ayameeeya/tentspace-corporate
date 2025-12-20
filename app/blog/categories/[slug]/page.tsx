@@ -11,6 +11,7 @@ import { CategoryTabsClient } from "@/components/category-tabs-client"
 import { EyeLoader } from "@/components/eye-loader"
 import { SeoBanner } from "@/components/seo-banner"
 import { N8nBanner } from "@/components/n8n-banner"
+import GlassSurface from "@/components/GlassSurface"
 import {
   getPosts,
   getCategories,
@@ -25,7 +26,13 @@ import {
 import { fetchLikeCounts } from "@/lib/blog-likes"
 
 // Get random card variant
-function getCardVariant(index: number): 'tall' | 'wide' | 'square' {
+function getCardVariant(index: number, isMobile: boolean = false): 'tall' | 'wide' | 'square' {
+  // Mobile: only wide and square
+  if (isMobile) {
+    const mobilePatterns = ['wide', 'square', 'square', 'wide', 'square', 'wide']
+    return mobilePatterns[index % mobilePatterns.length] as 'tall' | 'wide' | 'square'
+  }
+  // Desktop: tall, wide, and square
   const patterns = ['tall', 'wide', 'square', 'tall', 'square', 'wide', 'square', 'tall', 'wide']
   return patterns[index % patterns.length] as 'tall' | 'wide' | 'square'
 }
@@ -117,13 +124,13 @@ function getContentVariant(index: number): 'title-only' | 'with-excerpt' | 'full
 }
 
 // Masonry Blog Card
-function MasonryBlogCard({ post, likes = 0, index = 0 }: { post: WPPost; likes?: number; index?: number }) {
+function MasonryBlogCard({ post, likes = 0, index = 0, isMobile = false }: { post: WPPost; likes?: number; index?: number; isMobile?: boolean }) {
   const imageUrl = getFeaturedImageUrl(post, 'large')
   const excerpt = stripHtml(post.excerpt.rendered)
   const readingTime = getReadingTime(post.content.rendered)
   const categories = post._embedded?.['wp:term']?.[0] || []
 
-  const variant = getCardVariant(index)
+  const variant = getCardVariant(index, isMobile)
   const contentVariant = getContentVariant(index)
 
   // Wide uses actual thumbnail, Tall/Square use dummy images (random based on post ID and index)
@@ -145,30 +152,43 @@ function MasonryBlogCard({ post, likes = 0, index = 0 }: { post: WPPost; likes?:
   return (
     <article className="group animate-fadeIn break-inside-avoid mb-6 md:mb-8">
       <Link href={`/blog/${post.slug}`} className="block">
-        <div className="bg-card rounded-xl overflow-hidden border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
-          {/* Image Area */}
-          <div className={`relative ${aspectRatios[finalVariant]} overflow-hidden bg-muted`}>
-            <Image
-              src={finalImageUrl}
-              alt={post.title.rendered}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-700"
-            />
+        <div className="bg-card rounded-xl border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden">
+          {/* Image Area with Notch */}
+          <div className={`relative ${aspectRatios[finalVariant]} bg-card`}>
+            <div className="absolute inset-0" style={{
+              clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 24px), 75% calc(100% - 24px), 70% 100%, 0 100%)'
+            }}>
+              <Image
+                src={finalImageUrl}
+                alt={post.title.rendered}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-700"
+              />
+            </div>
 
             {/* Category Badges - ホバー時に画像左下に表示 */}
             {categories.length > 0 && (
-              <div className="absolute bottom-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-wrap gap-1.5">
+              <div className="absolute bottom-8 left-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-wrap gap-1.5 z-10">
                 {categories.map((category) => (
-                  <span key={category.id} className="inline-flex items-center px-2 py-1 text-[8px] md:text-[10px] font-bold text-accent bg-background/90 backdrop-blur-sm rounded-full shadow-lg border border-border/50">
-                    {category.name}
-                  </span>
+                  <GlassSurface
+                    key={category.id}
+                    width="auto"
+                    height={24}
+                    borderRadius={12}
+                    blur={6}
+                    className="px-2 py-0.5"
+                  >
+                    <span className="text-[8px] md:text-[10px] font-bold text-white whitespace-nowrap" style={{ mixBlendMode: 'difference' }}>
+                      {category.name}
+                    </span>
+                  </GlassSurface>
                 ))}
               </div>
             )}
           </div>
 
           {/* Text Area */}
-          <div className="p-5 md:p-6 bg-card">
+          <div className="p-5 md:p-6 bg-card relative -mt-2">
             {/* Meta - always show */}
             <div className="flex items-center gap-2 mb-3 text-xs text-muted-foreground">
               <time>{formatDate(post.date)}</time>
@@ -224,6 +244,18 @@ export default function CategoryPage() {
   const [hasMore, setHasMore] = useState(true)
   const [totalPosts, setTotalPosts] = useState(0)
   const [likeCounts, setLikeCounts] = useState<Record<string, number>>({})
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Detect mobile screen
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   // Fetch category and all categories
   useEffect(() => {
@@ -357,11 +389,14 @@ export default function CategoryPage() {
       return [posts]
     }
 
+    // Use currentColumns to determine if mobile (more reliable than isMobile state)
+    const isMobileLayout = currentColumns <= 2
+
     const colHeights = new Array(currentColumns).fill(0)
     const columns: WPPost[][] = Array.from({ length: currentColumns }, () => [])
 
     posts.forEach((post, index) => {
-      const variant = getCardVariant(index)
+      const variant = getCardVariant(index, isMobileLayout)
       const height = getVariantHeight(variant)
 
       // Find the shortest column
@@ -389,15 +424,6 @@ export default function CategoryPage() {
         <div className="border-b border-border">
           <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-12 md:py-16">
             <div className="text-center max-w-3xl mx-auto">
-              <Link
-                href="/blog"
-                className="inline-flex items-center gap-2 text-sm text-slate-600 dark:text-gray-400 hover:text-foreground transition-colors mb-6"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-                Back to Blog
-              </Link>
               {category && (
                 <>
                   <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4">
@@ -448,8 +474,8 @@ export default function CategoryPage() {
               {/* Category-specific Banner */}
               {category && (
                 <div className="mb-6 md:mb-8">
-                  {category.slug === 'seo' && <SeoBanner layout="horizontal" />}
-                  {category.slug === 'n8n' && <N8nBanner />}
+                  {category.slug === 'seo' && <SeoBanner layout={isMobile ? "vertical" : "horizontal"} />}
+                  {category.slug === 'n8n' && <N8nBanner layout={isMobile ? "vertical" : "horizontal"} />}
                 </div>
               )}
 
@@ -460,12 +486,14 @@ export default function CategoryPage() {
                     {/* Posts in this column */}
                     {columnItems.map((post) => {
                       const globalIndex = posts.indexOf(post)
+                      const isMobileLayout = currentColumns <= 2
                       return (
                         <MasonryBlogCard
                           key={post.id}
                           post={post}
                           likes={likeCounts[post.slug] || 0}
                           index={globalIndex}
+                          isMobile={isMobileLayout}
                         />
                       )
                     })}

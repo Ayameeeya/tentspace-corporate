@@ -11,6 +11,7 @@ import { Footer } from "@/components/footer"
 import { EyeLoader } from "@/components/eye-loader"
 import { SeoBanner } from "@/components/seo-banner"
 import { N8nBanner } from "@/components/n8n-banner"
+import GlassSurface from "@/components/GlassSurface"
 import { getPosts, getCategories, getFeaturedImageUrl, stripHtml, formatDate, getReadingTime, type WPPost, type WPCategory } from "@/lib/wordpress"
 import { fetchLikeCounts } from "@/lib/blog-likes"
 
@@ -120,7 +121,13 @@ function CategoryFilter({
 }
 
 // Get random card variant for visual variety
-function getCardVariant(index: number): 'tall' | 'wide' | 'square' {
+function getCardVariant(index: number, isMobile: boolean = false): 'tall' | 'wide' | 'square' {
+  // Mobile: only wide and square
+  if (isMobile) {
+    const mobilePatterns = ['wide', 'square', 'square', 'wide', 'square', 'wide']
+    return mobilePatterns[index % mobilePatterns.length] as 'tall' | 'wide' | 'square'
+  }
+  // Desktop: tall, wide, and square
   const patterns = ['tall', 'wide', 'square', 'tall', 'square', 'wide', 'square', 'tall', 'wide']
   return patterns[index % patterns.length] as 'tall' | 'wide' | 'square'
 }
@@ -212,13 +219,13 @@ function getContentVariant(index: number): 'title-only' | 'with-excerpt' | 'full
 }
 
 // Masonry Blog Card with varying heights
-function MasonryBlogCard({ post, likes = 0, index = 0 }: { post: WPPost; likes?: number; index?: number }) {
+function MasonryBlogCard({ post, likes = 0, index = 0, isMobile = false }: { post: WPPost; likes?: number; index?: number; isMobile?: boolean }) {
   const imageUrl = getFeaturedImageUrl(post, 'large')
   const excerpt = stripHtml(post.excerpt.rendered)
   const readingTime = getReadingTime(post.content.rendered)
   const categories = post._embedded?.['wp:term']?.[0] || []
 
-  const variant = getCardVariant(index)
+  const variant = getCardVariant(index, isMobile)
   const contentVariant = getContentVariant(index)
 
   // Wide uses actual thumbnail, Tall/Square use dummy images (random based on post ID and index)
@@ -241,30 +248,43 @@ function MasonryBlogCard({ post, likes = 0, index = 0 }: { post: WPPost; likes?:
   return (
     <article className="group animate-fadeIn break-inside-avoid mb-6 md:mb-8">
       <Link href={`/blog/${post.slug}`} className="block">
-        <div className="bg-card rounded-xl overflow-hidden border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
-          {/* Image Area */}
-          <div className={`relative ${aspectRatios[finalVariant]} overflow-hidden bg-muted`}>
-            <Image
-              src={finalImageUrl}
-              alt={post.title.rendered}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-700"
-            />
+        <div className="bg-card rounded-xl border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden">
+          {/* Image Area with Notch */}
+          <div className={`relative ${aspectRatios[finalVariant]} bg-card`}>
+            <div className="absolute inset-0" style={{
+              clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 24px), 75% calc(100% - 24px), 70% 100%, 0 100%)'
+            }}>
+              <Image
+                src={finalImageUrl}
+                alt={post.title.rendered}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-700"
+              />
+            </div>
 
             {/* Category Badges - ホバー時に画像左下に表示 */}
             {categories.length > 0 && (
-              <div className="absolute bottom-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-wrap gap-1.5">
+              <div className="absolute bottom-8 left-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-wrap gap-1.5 z-10">
                 {categories.map((category) => (
-                  <span key={category.id} className="inline-flex items-center px-2 py-1 text-[8px] md:text-[10px] font-bold text-accent bg-background/90 backdrop-blur-sm rounded-full shadow-lg border border-border/50">
-                    {category.name}
-                  </span>
+                  <GlassSurface
+                    key={category.id}
+                    width="auto"
+                    height={24}
+                    borderRadius={12}
+                    blur={6}
+                    className="px-2 py-0.5"
+                  >
+                    <span className="text-[8px] md:text-[10px] font-bold text-white whitespace-nowrap" style={{ mixBlendMode: 'difference' }}>
+                      {category.name}
+                    </span>
+                  </GlassSurface>
                 ))}
               </div>
             )}
           </div>
 
           {/* Text Area */}
-          <div className="p-5 md:p-6 bg-card">
+          <div className="p-5 md:p-6 bg-card relative -mt-2">
             {/* Meta - always show */}
             <div className="flex items-center gap-2 mb-3 text-xs text-muted-foreground">
               <time>{formatDate(post.date)}</time>
@@ -323,6 +343,18 @@ function BlogPageContent() {
   const [searchQuery, setSearchQuery] = useState('')
   const [searchInput, setSearchInput] = useState('')
   const [likeCounts, setLikeCounts] = useState<Record<string, number>>({})
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Detect mobile screen
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   // Hero animation
   useEffect(() => {
@@ -502,11 +534,14 @@ function BlogPageContent() {
       return [posts]
     }
 
+    // Use currentColumns to determine if mobile (more reliable than isMobile state)
+    const isMobileLayout = currentColumns <= 2
+
     const colHeights = new Array(currentColumns).fill(0)
     const columns: WPPost[][] = Array.from({ length: currentColumns }, () => [])
 
     posts.forEach((post, index) => {
-      const variant = getCardVariant(index)
+      const variant = getCardVariant(index, isMobileLayout)
       const height = getVariantHeight(variant)
 
       // Find the shortest column
@@ -544,37 +579,53 @@ function BlogPageContent() {
                 Exploring the intersection of AI, design, and technology. Deep dives into innovation that shapes the future.
               </p>
 
-              {/* Search */}
-              <form onSubmit={handleSearch} className="max-w-xl mx-auto mb-8">
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={searchInput}
-                    onChange={(e) => setSearchInput(e.target.value)}
-                    placeholder="Search Articles"
-                    className="w-full px-6 py-4 pr-12 text-base text-foreground bg-background border-2 border-border rounded-full focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-muted-foreground"
-                  />
-                  {searchInput ? (
-                    <button
-                      type="button"
-                      onClick={clearSearch}
-                      className="absolute right-5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                      aria-label="Clear search"
-                    >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                  ) : (
-                    <svg
-                      className="absolute right-5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                  )}
+              {/* Terminal Search */}
+              <form onSubmit={handleSearch} className="max-w-2xl mx-auto mb-8">
+                <div className="rounded-lg overflow-hidden border border-border/50 shadow-2xl backdrop-blur-sm bg-card/80">
+                  {/* Terminal Toolbar */}
+                  <div className="flex items-center justify-between h-8 px-3 bg-gradient-to-b from-muted/80 to-muted/60 border-b border-border/30">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full bg-[#ff5f57] shadow-sm" />
+                      <div className="w-3 h-3 rounded-full bg-[#febc2e] shadow-sm" />
+                      <div className="w-3 h-3 rounded-full bg-[#28c840] shadow-sm" />
+                    </div>
+                  </div>
+
+                  {/* Terminal Body */}
+                  <div className="bg-background/95 backdrop-blur-sm p-4">
+                    <div className="flex items-center gap-2 text-sm md:text-base font-mono">
+                      <span className="text-[#1eff8e] font-semibold">guest</span>
+                      <span className="text-muted-foreground">@</span>
+                      <span className="text-[#4878c0] font-semibold">blog</span>
+                      <span className="text-muted-foreground">:</span>
+                      <span className="text-[#4878c0]">~</span>
+                      <span className="text-primary">$</span>
+                      <div className="flex-1 relative">
+                        <input
+                          type="text"
+                          value={searchInput}
+                          onChange={(e) => setSearchInput(e.target.value)}
+                          placeholder="search articles..."
+                          className="w-full bg-transparent text-foreground focus:outline-none placeholder:text-muted-foreground/50 font-mono caret-primary"
+                        />
+                        {!searchInput && (
+                          <span className="absolute left-0 top-0 inline-block w-2 h-5 bg-primary animate-pulse ml-0.5" style={{
+                            animation: 'terminal-cursor 1.2s step-end infinite'
+                          }} />
+                        )}
+                      </div>
+                      {searchInput && (
+                        <button
+                          type="button"
+                          onClick={clearSearch}
+                          className="text-muted-foreground hover:text-foreground transition-colors text-xs"
+                          aria-label="Clear search"
+                        >
+                          ✕
+                        </button>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </form>
             </div>
@@ -583,18 +634,12 @@ function BlogPageContent() {
 
         {/* Search Results Info */}
         {searchQuery && (
-          <div className="bg-primary/5 border-b border-primary/20">
+          <div className="bg-foreground/5">
             <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-3">
               <div className="flex items-center justify-between">
-                <p className="text-sm text-foreground">
-                  <span className="font-semibold text-primary">{totalPosts}</span> results for &quot;{searchQuery}&quot;
+                <p className="text- md:text-lg text-foreground font-pixel text-muted-foreground">
+                  <span className="font-semibold">{totalPosts}</span> results for &quot;{searchQuery}&quot;
                 </p>
-                <button
-                  onClick={clearSearch}
-                  className="text-sm text-muted-foreground hover:text-foreground font-medium transition-colors"
-                >
-                  Clear
-                </button>
               </div>
             </div>
           </div>
@@ -629,26 +674,22 @@ function BlogPageContent() {
               </button>
             </div>
           ) : posts.length === 0 ? (
-            <div className="text-center py-20">
-              <div className="w-20 h-20 mx-auto mb-6 bg-muted rounded-full flex items-center justify-center">
-                <svg className="w-10 h-10 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h10a2 2 0 012 2v11a2 2 0 01-2 2z" />
-                </svg>
-              </div>
-              <p className="text-muted-foreground text-lg">No articles found</p>
+            <div className="mt-12 flex flex-col items-center gap-4">
+              <EyeLoader variant="end" />
+              <p className="text-lg md:text-xl text-muted-foreground font-pixel">No articles found</p>
             </div>
           ) : (
             <>
               {/* Banner Row - SEO (1 col) + n8n (2 cols) */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-6 md:mb-8">
-                {/* SEO Banner - 1 column */}
+                {/* SEO Banner - 1 column on desktop, full width on mobile */}
                 <div className="md:col-span-1">
-                  <SeoBanner />
+                  <SeoBanner layout="vertical" />
                 </div>
 
-                {/* n8n Banner - 2 columns */}
+                {/* n8n Banner - 2 columns on desktop, full width on mobile */}
                 <div className="md:col-span-2">
-                  <N8nBanner />
+                  <N8nBanner layout={isMobile ? "vertical" : "horizontal"} />
                 </div>
               </div>
 
@@ -659,12 +700,14 @@ function BlogPageContent() {
                     {/* Posts in this column */}
                     {columnItems.map((post) => {
                       const globalIndex = posts.indexOf(post)
+                      const isMobileLayout = currentColumns <= 2
                       return (
                         <MasonryBlogCard
                           key={post.id}
                           post={post}
                           likes={likeCounts[post.slug] || 0}
                           index={globalIndex}
+                          isMobile={isMobileLayout}
                         />
                       )
                     })}

@@ -771,67 +771,237 @@ function GlitchText({ text, active }: { text: string; active: boolean }) {
 }
 
 // Radar/Scanner Component
-function RadarScanner({
-  active,
-  position,
-  scrollProgress,
-}: {
-  active: boolean
-  position: "left" | "right"
-  scrollProgress: number
-}) {
-  if (!active) return null
+// function RadarScanner({
+//   active,
+//   position,
+//   scrollProgress,
+// }: {
+//   active: boolean
+//   position: "left" | "right"
+//   scrollProgress: number
+// }) {
+//   if (!active) return null
 
-  const positionClass = position === "left" ? "left-8" : "right-8"
+//   const positionClass = position === "left" ? "left-8" : "right-8"
+//   const isDark = scrollProgress < 0.85
+
+//   return (
+//     <div className={`fixed bottom-20 md:bottom-32 ${positionClass} z-40 pointer-events-none`}>
+//       <div className="relative w-16 h-16 md:w-24 md:h-24">
+//         {/* Outer ring */}
+//         <div
+//           className="absolute inset-0 border rounded-full transition-colors duration-500"
+//           style={{ borderColor: isDark ? "rgba(96, 165, 250, 0.3)" : "rgba(59, 130, 246, 0.4)" }}
+//         />
+//         <div
+//           className="absolute inset-2 border rounded-full transition-colors duration-500"
+//           style={{ borderColor: isDark ? "rgba(96, 165, 250, 0.2)" : "rgba(59, 130, 246, 0.3)" }}
+//         />
+//         <div
+//           className="absolute inset-4 border rounded-full transition-colors duration-500"
+//           style={{ borderColor: isDark ? "rgba(96, 165, 250, 0.1)" : "rgba(59, 130, 246, 0.2)" }}
+//         />
+
+//         {/* Scanning line */}
+//         <div className="absolute inset-0 origin-center animate-radar">
+//           <div
+//             className="absolute top-1/2 left-1/2 w-1/2 h-0.5 origin-left transition-colors duration-500"
+//             style={{
+//               backgroundImage: isDark
+//                 ? "linear-gradient(to right, rgb(96, 165, 250), transparent)"
+//                 : "linear-gradient(to right, rgb(59, 130, 246), transparent)",
+//             }}
+//           />
+//         </div>
+
+//         {/* Center dot */}
+//         <div
+//           className="absolute top-1/2 left-1/2 w-1.5 h-1.5 md:w-2 md:h-2 -translate-x-1/2 -translate-y-1/2 rounded-full animate-ping-slow transition-colors duration-500"
+//           style={{ backgroundColor: isDark ? "rgb(96, 165, 250)" : "rgb(59, 130, 246)" }}
+//         />
+
+//         {/* Blips */}
+//         <div
+//           className="absolute top-1/4 left-1/3 w-0.5 h-0.5 md:w-1 md:h-1 rounded-full animate-pulse transition-colors duration-500"
+//           style={{ backgroundColor: isDark ? "rgb(96, 165, 250)" : "rgb(59, 130, 246)" }}
+//         />
+//         <div
+//           className="absolute top-2/3 right-1/4 w-0.5 h-0.5 md:w-1 md:h-1 rounded-full animate-pulse transition-colors duration-500"
+//           style={{
+//             backgroundColor: isDark ? "rgb(96, 165, 250)" : "rgb(59, 130, 246)",
+//             animationDelay: "0.5s",
+//           }}
+//         />
+//       </div>
+//     </div>
+//   )
+// }
+
+// Easter Egg: Floating 3D Crystal
+function FloatingCrystal({ active, scrollProgress }: { active: boolean; scrollProgress: number }) {
+  const [isHovered, setIsHovered] = useState(false)
+
+  const handleClick = () => {
+    window.open('https://tentspace-particle-system.vercel.app/', '_blank')
+  }
+
   const isDark = scrollProgress < 0.85
 
   return (
-    <div className={`fixed bottom-20 md:bottom-32 ${positionClass} z-40 pointer-events-none`}>
-      <div className="relative w-16 h-16 md:w-24 md:h-24">
-        {/* Outer ring */}
+    <div
+      className="fixed right-12 md:right-20 top-1/3 z-40 cursor-pointer transition-all duration-700 ease-out"
+      onClick={handleClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{
+        opacity: active ? 1 : 0,
+        transform: active ? 'scale(1)' : 'scale(0.8)',
+        pointerEvents: active ? 'auto' : 'none',
+      }}
+    >
+      <div className="relative w-12 h-12 md:w-16 md:h-16">
+        {/* Glowing ring */}
         <div
-          className="absolute inset-0 border rounded-full transition-colors duration-500"
-          style={{ borderColor: isDark ? "rgba(96, 165, 250, 0.3)" : "rgba(59, 130, 246, 0.4)" }}
-        />
-        <div
-          className="absolute inset-2 border rounded-full transition-colors duration-500"
-          style={{ borderColor: isDark ? "rgba(96, 165, 250, 0.2)" : "rgba(59, 130, 246, 0.3)" }}
-        />
-        <div
-          className="absolute inset-4 border rounded-full transition-colors duration-500"
-          style={{ borderColor: isDark ? "rgba(96, 165, 250, 0.1)" : "rgba(59, 130, 246, 0.2)" }}
-        />
-
-        {/* Scanning line */}
-        <div className="absolute inset-0 origin-center animate-radar">
-          <div
-            className="absolute top-1/2 left-1/2 w-1/2 h-0.5 origin-left transition-colors duration-500"
-            style={{
-              backgroundImage: isDark
-                ? "linear-gradient(to right, rgb(96, 165, 250), transparent)"
-                : "linear-gradient(to right, rgb(59, 130, 246), transparent)",
-            }}
-          />
-        </div>
-
-        {/* Center dot */}
-        <div
-          className="absolute top-1/2 left-1/2 w-1.5 h-1.5 md:w-2 md:h-2 -translate-x-1/2 -translate-y-1/2 rounded-full animate-ping-slow transition-colors duration-500"
-          style={{ backgroundColor: isDark ? "rgb(96, 165, 250)" : "rgb(59, 130, 246)" }}
-        />
-
-        {/* Blips */}
-        <div
-          className="absolute top-1/4 left-1/3 w-0.5 h-0.5 md:w-1 md:h-1 rounded-full animate-pulse transition-colors duration-500"
-          style={{ backgroundColor: isDark ? "rgb(96, 165, 250)" : "rgb(59, 130, 246)" }}
-        />
-        <div
-          className="absolute top-2/3 right-1/4 w-0.5 h-0.5 md:w-1 md:h-1 rounded-full animate-pulse transition-colors duration-500"
+          className="absolute inset-0 rounded-full transition-all duration-500"
           style={{
-            backgroundColor: isDark ? "rgb(96, 165, 250)" : "rgb(59, 130, 246)",
-            animationDelay: "0.5s",
+            background: isDark
+              ? `radial-gradient(circle, rgba(96, 165, 250, ${isHovered ? '0.3' : '0.1'}) 0%, transparent 70%)`
+              : `radial-gradient(circle, rgba(59, 130, 246, ${isHovered ? '0.3' : '0.1'}) 0%, transparent 70%)`,
+            filter: 'blur(8px)',
+            transform: isHovered ? 'scale(1.2)' : 'scale(1)',
           }}
         />
+
+        {/* Black Hole Portal shape */}
+        <div
+          className="absolute inset-0 flex items-center justify-center"
+          style={{
+            animation: 'float 3s ease-in-out infinite',
+            transform: isHovered ? 'scale(1.1)' : 'scale(1)',
+            transition: 'transform 0.3s ease',
+          }}
+        >
+          <svg
+            viewBox="0 0 100 100"
+            className="w-10 h-10 md:w-14 md:h-14"
+            style={{
+              filter: `drop-shadow(0 0 ${isHovered ? '16px' : '8px'} ${isDark ? 'rgba(96, 165, 250, 0.9)' : 'rgba(59, 130, 246, 0.9)'})`,
+            }}
+          >
+            <defs>
+              {/* Black hole gradient */}
+              <radialGradient id="blackHoleGradient">
+                <stop offset="0%" stopColor="rgba(0, 0, 0, 0.9)" />
+                <stop offset="40%" stopColor={isDark ? 'rgba(59, 130, 246, 0.4)' : 'rgba(96, 165, 250, 0.4)'} />
+                <stop offset="70%" stopColor={isDark ? 'rgba(96, 165, 250, 0.2)' : 'rgba(59, 130, 246, 0.2)'} />
+                <stop offset="100%" stopColor="transparent" />
+              </radialGradient>
+
+              {/* Accretion disk gradient */}
+              <radialGradient id="diskGradient">
+                <stop offset="0%" stopColor="transparent" />
+                <stop offset="50%" stopColor={isDark ? 'rgba(147, 197, 253, 0.6)' : 'rgba(96, 165, 250, 0.6)'} />
+                <stop offset="100%" stopColor="transparent" />
+              </radialGradient>
+            </defs>
+
+            {/* Outer glow rings */}
+            <circle
+              cx="50"
+              cy="50"
+              r="35"
+              fill="none"
+              stroke={isDark ? 'rgb(96, 165, 250)' : 'rgb(59, 130, 246)'}
+              strokeWidth="0.5"
+              opacity="0.3"
+              style={{
+                animation: 'rotate-slow 15s linear infinite',
+                transformOrigin: '50% 50%',
+              }}
+            />
+            <circle
+              cx="50"
+              cy="50"
+              r="28"
+              fill="none"
+              stroke={isDark ? 'rgb(147, 197, 253)' : 'rgb(96, 165, 250)'}
+              strokeWidth="0.5"
+              opacity="0.4"
+              style={{
+                animation: 'rotate-slow 10s linear reverse infinite',
+                transformOrigin: '50% 50%',
+              }}
+            />
+
+            {/* Accretion disk (rotating ellipse) */}
+            <ellipse
+              cx="50"
+              cy="50"
+              rx="25"
+              ry="8"
+              fill="url(#diskGradient)"
+              opacity={isHovered ? '0.8' : '0.6'}
+              style={{
+                animation: 'rotate-slow 6s linear infinite',
+                transformOrigin: '50% 50%',
+              }}
+            />
+
+            {/* Black hole center */}
+            <circle
+              cx="50"
+              cy="50"
+              r="15"
+              fill="url(#blackHoleGradient)"
+            />
+
+            {/* Event horizon */}
+            <circle
+              cx="50"
+              cy="50"
+              r="12"
+              fill="rgba(0, 0, 0, 0.95)"
+              stroke={isDark ? 'rgb(96, 165, 250)' : 'rgb(59, 130, 246)'}
+              strokeWidth="1"
+              opacity={isHovered ? '1' : '0.8'}
+            />
+
+            {/* Spiral particles */}
+            <circle cx="65" cy="50" r="1.5" fill={isDark ? 'rgb(147, 197, 253)' : 'rgb(96, 165, 250)'} opacity="0.8">
+              <animateTransform
+                attributeName="transform"
+                type="rotate"
+                from="0 50 50"
+                to="360 50 50"
+                dur="4s"
+                repeatCount="indefinite"
+              />
+            </circle>
+            <circle cx="35" cy="50" r="1" fill={isDark ? 'rgb(147, 197, 253)' : 'rgb(96, 165, 250)'} opacity="0.6">
+              <animateTransform
+                attributeName="transform"
+                type="rotate"
+                from="180 50 50"
+                to="540 50 50"
+                dur="3s"
+                repeatCount="indefinite"
+              />
+            </circle>
+          </svg>
+        </div>
+
+        {/* Hint text on hover */}
+        {isHovered && (
+          <div
+            className="absolute bottom-full left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-pixel tracking-wider pointer-events-none animate-bounce"
+            style={{
+              color: isDark ? 'rgb(147, 197, 253)' : 'rgb(59, 130, 246)',
+              textShadow: `0 0 8px ${isDark ? 'rgba(96, 165, 250, 0.5)' : 'rgba(59, 130, 246, 0.5)'}`,
+            }}
+          >
+            Grab the stardust✊
+          </div>
+        )}
       </div>
     </div>
   )
@@ -1126,7 +1296,7 @@ function TextOverlay({ scrollProgress }: { scrollProgress: number }) {
           { label: "AI MODELS", value: "INTEGRATED" },
         ]}
       />
-      <RadarScanner active={activeSection === 0} position="left" scrollProgress={scrollProgress} />
+      {/* <RadarScanner active={activeSection === 0} position="left" scrollProgress={scrollProgress} /> */}
 
       <HUDTip position="top-right" delay={300} active={activeSection === 1} scrollProgress={scrollProgress}>
         創造力とAIの融合。私たちは最新のAI技術と確かな開発経験を組み合わせ、未来のソリューションを提供します。
@@ -1141,6 +1311,7 @@ function TextOverlay({ scrollProgress }: { scrollProgress: number }) {
           { label: "ACCURACY", value: "99.7%" },
         ]}
       />
+      <FloatingCrystal active={activeSection === 1} scrollProgress={scrollProgress} />
 
       <HUDTip position="bottom-left" delay={200} active={activeSection === 2} scrollProgress={scrollProgress}>
         革新は恐れずに前進することから始まる。既存の枠を超え、新しい価値を創造します。
@@ -1155,7 +1326,7 @@ function TextOverlay({ scrollProgress }: { scrollProgress: number }) {
           { label: "UPTIME", value: "99.99%" },
         ]}
       />
-      <RadarScanner active={activeSection === 2} position="right" scrollProgress={scrollProgress} />
+      {/* <RadarScanner active={activeSection === 2} position="right" scrollProgress={scrollProgress} /> */}
 
       <HUDTip position="left" delay={100} active={activeSection === 3} scrollProgress={scrollProgress}>
         トランスフォーメーションの瞬間。AIがあなたのビジネスを次元を超えて変革します。
@@ -1177,7 +1348,7 @@ function TextOverlay({ scrollProgress }: { scrollProgress: number }) {
           { label: "FUTURE", value: "NOW" },
         ]}
       />
-      <RadarScanner active={activeSection === 4} position="left" scrollProgress={scrollProgress} />
+      {/* <RadarScanner active={activeSection === 4} position="left" scrollProgress={scrollProgress} /> */}
 
       <div className="h-screen flex items-center justify-center">
         <div ref={section1Ref} className="text-center perspective-1000">
