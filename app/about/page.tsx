@@ -1,14 +1,20 @@
 "use client"
 
-import { useEffect, useRef, useState, useMemo } from "react"
+import { Suspense, useEffect, useRef } from "react"
 import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import * as THREE from "three"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import Link from "next/link"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { LogoLoop, type LogoItem } from "@/components/LogoLoop"
+import { LogoLoop } from "@/components/LogoLoop"
+import { SmoothScroll } from "@/components/smooth-scroll"
+import { Starfield } from "@/components/three/starfield"
+import { Galaxy } from "@/components/three/galaxy"
+import { Planet } from "@/components/three/planets"
+import { FloatingAsteroids } from "@/components/three/asteroids"
+import { DistantGalaxies, ForegroundStars } from "@/components/three/deep-space"
+import { useScrollStore } from "@/lib/stores/scroll-store"
 import {
   SiReact,
   SiNextdotjs,
@@ -29,171 +35,23 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger)
 }
 
-// Infinite Star Field
-function StarField({ scrollProgress }: { scrollProgress: number }) {
-  const pointsRef = useRef<THREE.Points>(null)
-  const count = 12000
-
-  const [positions, colors, sizes] = useMemo(() => {
-    const pos = new Float32Array(count * 3)
-    const col = new Float32Array(count * 3)
-    const siz = new Float32Array(count)
-
-    for (let i = 0; i < count; i++) {
-      const theta = Math.random() * Math.PI * 2
-      const phi = Math.acos(2 * Math.random() - 1)
-      const r = 30 + Math.random() * 150
-
-      pos[i * 3] = r * Math.sin(phi) * Math.cos(theta)
-      pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta)
-      pos[i * 3 + 2] = r * Math.cos(phi)
-
-      const isBlue = Math.random() > 0.75
-      col[i * 3] = isBlue ? 0.4 : 1
-      col[i * 3 + 1] = isBlue ? 0.6 : 1
-      col[i * 3 + 2] = 1
-
-      siz[i] = Math.random() * 1.5 + 0.3
-    }
-    return [pos, col, siz]
-  }, [])
-
-  useFrame((state) => {
-    if (!pointsRef.current) return
-    const t = state.clock.elapsedTime
-
-    pointsRef.current.rotation.y = t * 0.015 + scrollProgress * Math.PI
-    pointsRef.current.rotation.x = Math.sin(t * 0.008) * 0.15 + scrollProgress * 0.3
-  })
-
-  return (
-    <points ref={pointsRef}>
-      <bufferGeometry>
-        <bufferAttribute attach="attributes-position" count={count} array={positions} itemSize={3} />
-        <bufferAttribute attach="attributes-color" count={count} array={colors} itemSize={3} />
-        <bufferAttribute attach="attributes-size" count={count} array={sizes} itemSize={1} />
-      </bufferGeometry>
-      <pointsMaterial
-        size={0.12}
-        vertexColors
-        transparent
-        opacity={0.85}
-        sizeAttenuation
-        blending={THREE.AdditiveBlending}
-      />
-    </points>
-  )
-}
-
-// Flowing Particle Streams
-function ParticleStreams({ scrollProgress }: { scrollProgress: number }) {
-  const groupRef = useRef<THREE.Group>(null)
-
-  const streams = useMemo(() => {
-    return Array.from({ length: 4 }, (_, streamIndex) => {
-      const count = 800
-      const positions = new Float32Array(count * 3)
-      const baseAngle = (streamIndex / 4) * Math.PI * 2
-
-      for (let i = 0; i < count; i++) {
-        const t = i / count
-        const spiral = t * Math.PI * 6
-        const radius = 8 + t * 25
-
-        positions[i * 3] = Math.cos(spiral + baseAngle) * radius
-        positions[i * 3 + 1] = (Math.random() - 0.5) * 15 + Math.sin(t * Math.PI * 3) * 8
-        positions[i * 3 + 2] = Math.sin(spiral + baseAngle) * radius - 40
-      }
-      return { positions, count }
-    })
-  }, [])
-
-  useFrame((state) => {
-    if (!groupRef.current) return
-    const t = state.clock.elapsedTime
-
-    groupRef.current.rotation.y = t * 0.05 + scrollProgress * Math.PI * 0.5
-    groupRef.current.rotation.z = Math.sin(t * 0.1) * 0.1
-  })
-
-  return (
-    <group ref={groupRef}>
-      {streams.map((stream, idx) => (
-        <points key={idx}>
-          <bufferGeometry>
-            <bufferAttribute attach="attributes-position" count={stream.count} array={stream.positions} itemSize={3} />
-          </bufferGeometry>
-          <pointsMaterial
-            size={0.06}
-            color={idx % 2 === 0 ? "#60a5fa" : "#ffffff"}
-            transparent
-            opacity={0.5}
-            sizeAttenuation
-            blending={THREE.AdditiveBlending}
-          />
-        </points>
-      ))}
-    </group>
-  )
-}
-
-// Nebula effect
-function Nebula({ scrollProgress }: { scrollProgress: number }) {
-  const groupRef = useRef<THREE.Group>(null)
-  const count = 2000
-
-  const positions = useMemo(() => {
-    const pos = new Float32Array(count * 3)
-    for (let i = 0; i < count; i++) {
-      const theta = Math.random() * Math.PI * 2
-      const phi = Math.random() * Math.PI
-      const r = 40 + Math.random() * 50
-
-      pos[i * 3] = r * Math.sin(phi) * Math.cos(theta)
-      pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta) * 0.4
-      pos[i * 3 + 2] = r * Math.cos(phi) - 60
-    }
-    return pos
-  }, [])
-
-  useFrame((state) => {
-    if (!groupRef.current) return
-    const t = state.clock.elapsedTime
-
-    groupRef.current.rotation.y = t * 0.01 + scrollProgress * 0.5
-    groupRef.current.position.z = -60 + scrollProgress * 30
-  })
-
-  return (
-    <group ref={groupRef}>
-      <points>
-        <bufferGeometry>
-          <bufferAttribute attach="attributes-position" count={count} array={positions} itemSize={3} />
-        </bufferGeometry>
-        <pointsMaterial
-          size={0.6}
-          color="#1e40af"
-          transparent
-          opacity={0.12}
-          sizeAttenuation
-          blending={THREE.AdditiveBlending}
-        />
-      </points>
-    </group>
-  )
-}
-
-// Camera Controller
-function CameraController({ scrollProgress }: { scrollProgress: number }) {
+// Camera: gentle drift forward, driven by the shared scroll store
+function CameraController() {
   const { camera } = useThree()
 
   useFrame((state) => {
+    const { progress, reducedMotion } = useScrollStore.getState()
     const t = state.clock.elapsedTime
 
-    // Gentle floating camera movement
-    camera.position.x = Math.sin(t * 0.2) * 2 + Math.sin(scrollProgress * Math.PI) * 5
-    camera.position.y = Math.cos(t * 0.15) * 1.5 + scrollProgress * 3
-    camera.position.z = 30 - scrollProgress * 15
+    if (reducedMotion) {
+      camera.position.set(0, 0, 30)
+      camera.lookAt(0, 0, -20)
+      return
+    }
+
+    camera.position.x = Math.sin(t * 0.2) * 2 + Math.sin(progress * Math.PI) * 5
+    camera.position.y = Math.cos(t * 0.15) * 1.5 + progress * 3
+    camera.position.z = 30 - progress * 18
 
     camera.lookAt(0, 0, -20)
   })
@@ -201,27 +59,48 @@ function CameraController({ scrollProgress }: { scrollProgress: number }) {
   return null
 }
 
-// 3D Scene
-function Scene3D({ scrollProgress }: { scrollProgress: number }) {
+// 3D Scene — shares the galaxy / planet components with the top page
+function Scene3D() {
   return (
     <>
       <color attach="background" args={["#020212"]} />
-      <fog attach="fog" args={["#020212", 50, 200]} />
+      <fog attach="fog" args={["#020212", 50, 260]} />
 
-      <CameraController scrollProgress={scrollProgress} />
-      <StarField scrollProgress={scrollProgress} />
-      <ParticleStreams scrollProgress={scrollProgress} />
-      <Nebula scrollProgress={scrollProgress} />
+      <CameraController />
+      <Starfield />
+      <DistantGalaxies />
+      <ForegroundStars />
+
+      <Suspense fallback={null}>
+        <Galaxy position={[15, -18, -70]} />
+        <FloatingAsteroids />
+        <Planet
+          textureUrl="/textures/2k_moon.jpg"
+          radius={3}
+          position={[-16, 6, -26]}
+          spinSpeed={0.02}
+          glow="#93c5fd"
+        />
+        <Planet
+          textureUrl="/textures/2k_neptune.jpg"
+          radius={6}
+          position={[24, -6, -60]}
+          spinSpeed={0.04}
+          tilt={0.3}
+          glow="#3b82f6"
+          ring
+        />
+      </Suspense>
 
       <ambientLight intensity={0.3} />
-      <pointLight position={[10, 10, 10]} intensity={0.5} color="#60a5fa" />
+      <pointLight position={[10, 10, 10]} intensity={0.6} color="#60a5fa" />
+      <directionalLight position={[30, 20, 10]} intensity={1} color="#ffffff" />
     </>
   )
 }
 
 export default function AboutPage() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [scrollProgress, setScrollProgress] = useState(0)
 
   useEffect(() => {
     // Configure ScrollTrigger for better mobile performance
@@ -234,19 +113,10 @@ export default function AboutPage() {
   }, [])
 
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight
-      const progress = Math.min(scrollY / docHeight, 1)
-      setScrollProgress(progress)
-    }
-
-    window.addEventListener("scroll", handleScroll, { passive: true })
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
-
-  useEffect(() => {
     const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768
+    const reduced = typeof window !== 'undefined' && window.matchMedia("(prefers-reduced-motion: reduce)").matches
+
+    if (reduced) return
 
     const ctx = gsap.context(() => {
       const heroTl = gsap.timeline({ defaults: { ease: "power4.out" } })
@@ -407,12 +277,13 @@ export default function AboutPage() {
 
   return (
     <div ref={containerRef} className="relative min-h-screen text-white overflow-x-hidden" style={{ WebkitOverflowScrolling: 'touch' }}>
+      <SmoothScroll />
       <Header />
 
       {/* 3D Background */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <Canvas camera={{ position: [0, 0, 30], fov: 75 }}>
-          <Scene3D scrollProgress={scrollProgress} />
+        <Canvas camera={{ position: [0, 0, 30], fov: 75 }} gl={{ antialias: true, stencil: false }} dpr={[1, 1.5]}>
+          <Scene3D />
         </Canvas>
       </div>
 
@@ -659,7 +530,7 @@ export default function AboutPage() {
                 <br />
                 the future
               </h2>
-              <p className="text-white/50 text-sm md:text-lg mb-8 md:mb-12">AIがビジネスをどう変革できるか、一緒に考えましょう。</p>
+              <p className="text-white/50 text-sm md:text-lg">AIがビジネスをどう変革できるか、一緒に考えましょう。</p>
             </div>
           </div>
         </section>

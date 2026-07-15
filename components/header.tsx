@@ -75,8 +75,8 @@ export function Header({ scrollProgress = 0 }: { scrollProgress?: number }) {
     }
   }, [isHovering])
 
-  // Switch logo based on background brightness
-  const isDark = scrollProgress < 0.85
+  // Switch logo based on background brightness (space fades to light at 0.9-1.0)
+  const isDark = scrollProgress < 0.95
   const logoSrc = isDark ? "/logo_white_yoko.png" : "/logo_gradation_yoko.png"
 
   return (
