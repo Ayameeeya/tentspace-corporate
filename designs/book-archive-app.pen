@@ -1,0 +1,5056 @@
+{
+  "version": "2.14",
+  "children": [
+    {
+      "type": "frame",
+      "id": "zguUt",
+      "x": 80,
+      "y": 80,
+      "name": "Button Primary",
+      "reusable": true,
+      "fill": "$fg",
+      "padding": [
+        12,
+        24
+      ],
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "text",
+          "id": "gAhfJ",
+          "name": "Label",
+          "fill": "#FFFFFF",
+          "content": "購入する",
+          "fontFamily": "$font-body",
+          "fontSize": 13,
+          "fontWeight": "500"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "D4Pahc",
+      "x": 280,
+      "y": 80,
+      "name": "Button Hero CTA",
+      "reusable": true,
+      "fill": "$hud-yellow",
+      "gap": 8,
+      "padding": [
+        12,
+        24
+      ],
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "text",
+          "id": "lVq4A",
+          "name": "Label",
+          "fill": "$hud-ink",
+          "content": "EXPLORE NOW",
+          "fontFamily": "$font-mono",
+          "fontSize": 11,
+          "fontWeight": "normal",
+          "letterSpacing": 2
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "r5BaiZ",
+      "x": 500,
+      "y": 80,
+      "name": "Button Neumorphic",
+      "reusable": true,
+      "fill": "$neu",
+      "cornerRadius": 12,
+      "effect": [
+        {
+          "type": "shadow",
+          "shadowType": "outer",
+          "color": "#D1D1D1",
+          "offset": {
+            "x": 5,
+            "y": 5
+          },
+          "blur": 10
+        },
+        {
+          "type": "shadow",
+          "shadowType": "outer",
+          "color": "#FFFFFF",
+          "offset": {
+            "x": -5,
+            "y": -5
+          },
+          "blur": 10
+        }
+      ],
+      "padding": [
+        12,
+        24
+      ],
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "text",
+          "id": "BJPtl",
+          "name": "Label",
+          "fill": "$fg",
+          "content": "ニューモボタン",
+          "fontFamily": "$font-body",
+          "fontSize": 13,
+          "fontWeight": "normal"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "sC07D",
+      "x": 740,
+      "y": 80,
+      "name": "Category Pill",
+      "reusable": true,
+      "fill": "$fg",
+      "padding": [
+        10,
+        20
+      ],
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "text",
+          "id": "AoY9L",
+          "name": "Label",
+          "fill": "#FFFFFF",
+          "content": "3DGS",
+          "fontFamily": "$font-head",
+          "fontSize": 13,
+          "fontWeight": "700",
+          "fontStyle": "italic"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "ObVsk",
+      "x": 920,
+      "y": 80,
+      "name": "Format Badge",
+      "reusable": true,
+      "stroke": "#00000099",
+      "strokeWidth": 1,
+      "padding": [
+        4,
+        8
+      ],
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "text",
+          "id": "C7hcxF",
+          "name": "Label",
+          "fill": "$fg",
+          "content": "GLB",
+          "fontFamily": "$font-head",
+          "fontSize": 10,
+          "fontWeight": "600"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "HJRX5",
+      "x": 1080,
+      "y": 80,
+      "name": "Product Card",
+      "reusable": true,
+      "clip": true,
+      "width": 280,
+      "fill": "$card-white",
+      "effect": [
+        {
+          "type": "shadow",
+          "shadowType": "outer",
+          "color": "#0000000F",
+          "offset": {
+            "x": 2,
+            "y": 2
+          },
+          "blur": 6
+        },
+        {
+          "type": "shadow",
+          "shadowType": "outer",
+          "color": "#FFFFFF66",
+          "offset": {
+            "x": -2,
+            "y": -2
+          },
+          "blur": 6
+        }
+      ],
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "rectangle",
+          "id": "cfuZR",
+          "name": "Thumb",
+          "fill": "$card",
+          "width": "fill_container",
+          "height": 210
+        },
+        {
+          "type": "frame",
+          "id": "A1TAFy",
+          "name": "Body",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 8,
+          "padding": 14,
+          "children": [
+            {
+              "type": "text",
+              "id": "tP5dn",
+              "name": "Title",
+              "fill": "$fg",
+              "content": "Heritage Statue Scan",
+              "fontFamily": "$font-head",
+              "fontSize": 14,
+              "fontWeight": "500"
+            },
+            {
+              "type": "frame",
+              "id": "RM9ca",
+              "name": "Meta Row",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "PzN41",
+                  "name": "Price",
+                  "fill": "$fg",
+                  "content": "¥4,800",
+                  "fontFamily": "$font-head",
+                  "fontSize": 15,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "kYKCH",
+                  "name": "Badges",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "id": "gZNzP",
+                      "type": "ref",
+                      "ref": "ObVsk",
+                      "name": "B1"
+                    },
+                    {
+                      "id": "c9e5ks",
+                      "type": "ref",
+                      "ref": "ObVsk",
+                      "name": "B2",
+                      "descendants": {
+                        "C7hcxF": {
+                          "content": "PLY"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "ntjiI",
+      "x": 80,
+      "y": 280,
+      "name": "Nav Link",
+      "reusable": true,
+      "gap": 6,
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "text",
+          "id": "Y3gEU",
+          "name": "Chevron",
+          "fill": "$fg",
+          "content": "▸",
+          "fontFamily": "$font-body",
+          "fontSize": 11,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "j4izo",
+          "name": "Label",
+          "fill": "$fg",
+          "content": "商品一覧",
+          "fontFamily": "$font-body",
+          "fontSize": 12,
+          "fontWeight": "300"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "hOVRp",
+      "x": 80,
+      "y": 520,
+      "name": "00 — Tokens (3Dasset)",
+      "clip": true,
+      "width": 1440,
+      "fill": "$bg",
+      "layout": "vertical",
+      "gap": 48,
+      "padding": [
+        70,
+        90
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "wuE4y",
+          "name": "Header",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 10,
+          "children": [
+            {
+              "type": "text",
+              "id": "OEffZ",
+              "name": "Kicker",
+              "fill": "$muted-fg",
+              "content": "DESIGN BOOK — 3DASSET / ARCHIVE-APP",
+              "fontFamily": "$font-mono",
+              "fontSize": 11,
+              "fontWeight": "normal",
+              "letterSpacing": 3
+            },
+            {
+              "type": "text",
+              "id": "dAh4o",
+              "name": "Title",
+              "fill": "$fg",
+              "content": "Foundations",
+              "fontFamily": "$font-head",
+              "fontSize": 52,
+              "fontWeight": "700",
+              "fontStyle": "italic"
+            },
+            {
+              "type": "text",
+              "id": "ItnZV",
+              "name": "Sub",
+              "fill": "$muted-fg",
+              "textGrowth": "fixed-width",
+              "width": 760,
+              "content": "ライトグレーのニューモフィズム本体と、ブルー×ネオン黄のサイバーHUDヒーローの二層構造。本文はNoto Sans JP、見出しはPoppinsの太字イタリック、HUDはOrbitron+JetBrains Mono。",
+              "lineHeight": 1.7,
+              "fontFamily": "$font-body",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "k6zrk",
+          "name": "Body Palette",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "children": [
+            {
+              "type": "text",
+              "id": "fgORB",
+              "name": "Label",
+              "fill": "$muted-fg",
+              "content": "PALETTE — MARKETPLACE BODY (LIGHT / NEUMORPHIC)",
+              "fontFamily": "$font-mono",
+              "fontSize": 11,
+              "fontWeight": "normal",
+              "letterSpacing": 3
+            },
+            {
+              "type": "frame",
+              "id": "rUBIW",
+              "name": "Row",
+              "width": "fill_container",
+              "gap": 20,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "SVy4M",
+                  "name": "Sw bg",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "qgwEG",
+                      "name": "Chip",
+                      "fill": "$bg",
+                      "width": "fill_container",
+                      "height": 80,
+                      "stroke": "#D8D8D8",
+                      "strokeWidth": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "bkX0B",
+                      "name": "N",
+                      "fill": "$fg",
+                      "content": "bg",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "T79y4",
+                      "name": "H",
+                      "fill": "$muted-fg",
+                      "content": "#F6F6F6",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 9,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "E1Np5o",
+                  "name": "Sw card",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "TfBZ3",
+                      "name": "Chip",
+                      "fill": "$card",
+                      "width": "fill_container",
+                      "height": 80,
+                      "stroke": "#D8D8D8",
+                      "strokeWidth": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "FiP8J",
+                      "name": "N",
+                      "fill": "$fg",
+                      "content": "card",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Q3VrA",
+                      "name": "H",
+                      "fill": "$muted-fg",
+                      "content": "#E4E4E4",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 9,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "LhntS",
+                  "name": "Sw neu",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "EHqSE",
+                      "name": "Chip",
+                      "fill": "$neu",
+                      "width": "fill_container",
+                      "height": 80,
+                      "stroke": "#D8D8D8",
+                      "strokeWidth": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "ak3BA",
+                      "name": "N",
+                      "fill": "$fg",
+                      "content": "neu",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "N2FO6k",
+                      "name": "H",
+                      "fill": "$muted-fg",
+                      "content": "#EAEAEA",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 9,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "KSnvS",
+                  "name": "Sw neu-dark",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "bpexw",
+                      "name": "Chip",
+                      "fill": "$neu-dark",
+                      "width": "fill_container",
+                      "height": 80,
+                      "stroke": "#D8D8D8",
+                      "strokeWidth": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "anDmj",
+                      "name": "N",
+                      "fill": "$fg",
+                      "content": "neu-dark",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "bHiAn",
+                      "name": "H",
+                      "fill": "$muted-fg",
+                      "content": "#D1D1D1",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 9,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "u2YIHm",
+                  "name": "Sw fg",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "pu8hx",
+                      "name": "Chip",
+                      "fill": "$fg",
+                      "width": "fill_container",
+                      "height": 80,
+                      "stroke": "#D8D8D8",
+                      "strokeWidth": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "iy27y",
+                      "name": "N",
+                      "fill": "$fg",
+                      "content": "fg",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "mNERV",
+                      "name": "H",
+                      "fill": "$muted-fg",
+                      "content": "#000000",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 9,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "fP1Wi",
+                  "name": "Sw muted-fg",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "XkwFO",
+                      "name": "Chip",
+                      "fill": "$muted-fg",
+                      "width": "fill_container",
+                      "height": 80,
+                      "stroke": "#D8D8D8",
+                      "strokeWidth": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "rOFlV",
+                      "name": "N",
+                      "fill": "$fg",
+                      "content": "muted-fg",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "ypCvN",
+                      "name": "H",
+                      "fill": "$muted-fg",
+                      "content": "#746D76",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 9,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "oTQCA",
+                  "name": "Sw accent",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "rl65e",
+                      "name": "Chip",
+                      "fill": "$accent",
+                      "width": "fill_container",
+                      "height": 80,
+                      "stroke": "#D8D8D8",
+                      "strokeWidth": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "d5Hq87",
+                      "name": "N",
+                      "fill": "$fg",
+                      "content": "accent",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "uKBHM",
+                      "name": "H",
+                      "fill": "$muted-fg",
+                      "content": "#0015FF",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 9,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "PTFMz",
+          "name": "HUD Palette",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "children": [
+            {
+              "type": "text",
+              "id": "jRNEj",
+              "name": "Label",
+              "fill": "$muted-fg",
+              "content": "PALETTE — HERO / CYBER HUD",
+              "fontFamily": "$font-mono",
+              "fontSize": 11,
+              "fontWeight": "normal",
+              "letterSpacing": 3
+            },
+            {
+              "type": "frame",
+              "id": "O6qsq",
+              "name": "Row",
+              "width": "fill_container",
+              "gap": 20,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "vL8ij",
+                  "name": "Sw hero-blue",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "C1PTwZ",
+                      "name": "Chip",
+                      "fill": "$accent",
+                      "width": "fill_container",
+                      "height": 80,
+                      "stroke": "#D8D8D8",
+                      "strokeWidth": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "JUMRh",
+                      "name": "N",
+                      "fill": "$fg",
+                      "content": "hero-blue",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "xGVWv",
+                      "name": "H",
+                      "fill": "$muted-fg",
+                      "content": "#0015FF",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 9,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "PMbEb",
+                  "name": "Sw hud-yellow",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "MGYZb",
+                      "name": "Chip",
+                      "fill": "$hud-yellow",
+                      "width": "fill_container",
+                      "height": 80,
+                      "stroke": "#D8D8D8",
+                      "strokeWidth": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "QlvpZ",
+                      "name": "N",
+                      "fill": "$fg",
+                      "content": "hud-yellow",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Ush2E",
+                      "name": "H",
+                      "fill": "$muted-fg",
+                      "content": "#EFFF07",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 9,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "f2EsZ",
+                  "name": "Sw hud-orange",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "ldxvm",
+                      "name": "Chip",
+                      "fill": "$hud-orange",
+                      "width": "fill_container",
+                      "height": 80,
+                      "stroke": "#D8D8D8",
+                      "strokeWidth": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "d6wJWJ",
+                      "name": "N",
+                      "fill": "$fg",
+                      "content": "hud-orange",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "qeofJ",
+                      "name": "H",
+                      "fill": "$muted-fg",
+                      "content": "#FF3D00",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 9,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "rkWLD",
+                  "name": "Sw hud-cyan",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "jWKpK",
+                      "name": "Chip",
+                      "fill": "$hud-cyan",
+                      "width": "fill_container",
+                      "height": 80,
+                      "stroke": "#D8D8D8",
+                      "strokeWidth": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "e9A8FS",
+                      "name": "N",
+                      "fill": "$fg",
+                      "content": "hud-cyan",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "EEIZF",
+                      "name": "H",
+                      "fill": "$muted-fg",
+                      "content": "#B9F6EC",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 9,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "WqCP4",
+                  "name": "Sw hud-ink",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 4,
+                      "id": "FCXNO",
+                      "name": "Chip",
+                      "fill": "$hud-ink",
+                      "width": "fill_container",
+                      "height": 80,
+                      "stroke": "#D8D8D8",
+                      "strokeWidth": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "fL6fi",
+                      "name": "N",
+                      "fill": "$fg",
+                      "content": "hud-ink",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "X7Tua",
+                      "name": "H",
+                      "fill": "$muted-fg",
+                      "content": "#0A0A0A",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 9,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "p04G98",
+          "name": "Type",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 24,
+          "children": [
+            {
+              "type": "text",
+              "id": "iDXiV",
+              "name": "Label",
+              "fill": "$muted-fg",
+              "content": "TYPOGRAPHY — 3 SYSTEMS",
+              "fontFamily": "$font-mono",
+              "fontSize": 11,
+              "fontWeight": "normal",
+              "letterSpacing": 3
+            },
+            {
+              "type": "frame",
+              "id": "EC5VB",
+              "name": "Type Row",
+              "width": "fill_container",
+              "gap": 32,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Mm4rs",
+                  "name": "Meta",
+                  "fill": "$muted-fg",
+                  "textGrowth": "fixed-width",
+                  "width": 300,
+                  "content": "HEADINGS / Poppins Bold Italic",
+                  "lineHeight": 1.7,
+                  "fontFamily": "$font-mono",
+                  "fontSize": 10,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "D1keAX",
+                  "name": "Sample",
+                  "fill": "$fg",
+                  "content": "Featured Assets — New Arrivals",
+                  "fontFamily": "$font-head",
+                  "fontSize": 34,
+                  "fontWeight": "700",
+                  "fontStyle": "italic"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "n7AYv",
+              "name": "Type Row",
+              "width": "fill_container",
+              "gap": 32,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Qaly9",
+                  "name": "Meta",
+                  "fill": "$muted-fg",
+                  "textGrowth": "fixed-width",
+                  "width": 300,
+                  "content": "BODY / Noto Sans JP",
+                  "lineHeight": 1.7,
+                  "fontFamily": "$font-mono",
+                  "fontSize": 10,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "hA7Me",
+                  "name": "Sample",
+                  "fill": "$fg",
+                  "content": "クリエイティブプロジェクトのための高品質な3Dモデル、テクスチャ、アニメーション",
+                  "fontFamily": "$font-body",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Vmy9E",
+              "name": "Type Row",
+              "width": "fill_container",
+              "gap": 32,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "ubx8w",
+                  "name": "Meta",
+                  "fill": "$muted-fg",
+                  "textGrowth": "fixed-width",
+                  "width": 300,
+                  "content": "HUD / Orbitron + JetBrains Mono",
+                  "lineHeight": 1.7,
+                  "fontFamily": "$font-mono",
+                  "fontSize": 10,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "qtq19",
+                  "name": "Sample",
+                  "fill": "$fg",
+                  "content": "MARKERLESS MOTION CAPTURE — 90 HZ / BT.2020 / 1000 NIT",
+                  "fontFamily": "$font-hud",
+                  "fontSize": 16,
+                  "fontWeight": "800"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "iQfdt",
+      "x": 80,
+      "y": 1900,
+      "name": "01 — Hero / Cyber HUD",
+      "clip": true,
+      "width": 1440,
+      "height": 820,
+      "fill": "$accent",
+      "layout": "none",
+      "children": [
+        {
+          "type": "rectangle",
+          "id": "KOOjZ",
+          "x": 0,
+          "y": 0,
+          "name": "HUD Overlay",
+          "fill": "#0A0A0A55",
+          "width": 1440,
+          "height": 820
+        },
+        {
+          "type": "frame",
+          "id": "Je9nf",
+          "x": 0,
+          "y": 64,
+          "name": "Ticker Top",
+          "clip": true,
+          "width": 1440,
+          "fill": "$hud-ink",
+          "gap": 24,
+          "padding": [
+            6,
+            20
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "Auwh3",
+              "name": "T1",
+              "fill": "$hud-yellow",
+              "content": "· GAUSS_STREAM · PLY · SPZ · KSPLAT · every point has a ???? · ∴ DISCOVER_EVERYTHING ∴ · GAUSSIAN · SPLATS · RENDER · [ SCAN ] [ EXPLORE ] [ CREATE ] · HIGH_FIDELITY · REAL_TIME · PREMIUM · VERIFIED · YOURS ·",
+              "fontFamily": "$font-mono",
+              "fontSize": 8,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "TS7Wr",
+          "x": 0,
+          "y": 0,
+          "name": "Nav",
+          "width": 1440,
+          "fill": "#F6F6F6F2",
+          "padding": [
+            16,
+            48
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "ij5Qd",
+              "name": "Logo",
+              "fill": "$fg",
+              "content": "3Dasset",
+              "fontFamily": "$font-head",
+              "fontSize": 18,
+              "fontWeight": "700",
+              "fontStyle": "italic"
+            },
+            {
+              "type": "frame",
+              "id": "ytcXy",
+              "name": "Links",
+              "gap": 28,
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "uy4V9",
+                  "type": "ref",
+                  "ref": "ntjiI",
+                  "name": "L1"
+                },
+                {
+                  "id": "YX4X1",
+                  "type": "ref",
+                  "ref": "ntjiI",
+                  "name": "L2",
+                  "descendants": {
+                    "j4izo": {
+                      "content": "会社概要"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "qLYgp",
+          "x": 60,
+          "y": 270,
+          "name": "Head Left",
+          "fill": "#FFFFFF",
+          "content": "MOTION",
+          "fontFamily": "$font-hud",
+          "fontSize": 110,
+          "fontWeight": "900"
+        },
+        {
+          "type": "text",
+          "id": "d5NF8",
+          "x": 880,
+          "y": 270,
+          "name": "Head Right",
+          "fill": "$hud-yellow",
+          "content": "AVATAR",
+          "fontFamily": "$font-hud",
+          "fontSize": 110,
+          "fontWeight": "900"
+        },
+        {
+          "type": "frame",
+          "id": "vtOJ1",
+          "x": 620,
+          "y": 240,
+          "name": "Detect Box",
+          "width": 220,
+          "height": 300,
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "a7tHp",
+              "name": "Detect Tag",
+              "fill": "$hud-orange",
+              "padding": [
+                4,
+                10
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "DA7Hh",
+                  "name": "Tag Label",
+                  "fill": "#0A0A0A",
+                  "content": "person 0.98",
+                  "fontFamily": "$font-mono",
+                  "fontSize": 9,
+                  "fontWeight": "normal",
+                  "letterSpacing": 1
+                }
+              ]
+            },
+            {
+              "type": "rectangle",
+              "id": "Er6R6",
+              "name": "Detect Frame",
+              "fill": "#00000000",
+              "width": "fill_container",
+              "height": "fill_container",
+              "stroke": "$hud-cyan",
+              "strokeWidth": 1
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "kNhne",
+          "x": 60,
+          "y": 520,
+          "name": "Info Panel",
+          "width": 460,
+          "layout": "vertical",
+          "gap": 14,
+          "children": [
+            {
+              "type": "text",
+              "id": "CnhGa",
+              "name": "P Title",
+              "fill": "$hud-yellow",
+              "content": "マーカーレス モーションキャプチャ",
+              "fontFamily": "$font-hud",
+              "fontSize": 13,
+              "fontWeight": "800",
+              "letterSpacing": 2
+            },
+            {
+              "type": "text",
+              "id": "AfxvW",
+              "name": "P Desc",
+              "fill": "#FFFFFF",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "スポーツ＆エンターテイメントを3Dキャプチャで革新",
+              "lineHeight": 1.6,
+              "fontFamily": "$font-head",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            },
+            {
+              "id": "dafWy",
+              "type": "ref",
+              "ref": "D4Pahc",
+              "name": "CTA"
+            },
+            {
+              "type": "text",
+              "id": "Zn1jK",
+              "name": "Foot",
+              "fill": "#FFFFFF99",
+              "content": "3DASSET MARKETPLACE",
+              "fontFamily": "$font-mono",
+              "fontSize": 9,
+              "fontWeight": "normal",
+              "letterSpacing": 3
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Mj8Fw",
+          "x": 1180,
+          "y": 120,
+          "name": "Telemetry Top",
+          "width": 200,
+          "layout": "vertical",
+          "gap": 6,
+          "alignItems": "end",
+          "children": [
+            {
+              "type": "text",
+              "id": "sNiA1",
+              "name": "H 90 HZ",
+              "fill": "$hud-yellow",
+              "content": "90 HZ",
+              "fontFamily": "$font-mono",
+              "fontSize": 10,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            },
+            {
+              "type": "text",
+              "id": "Wv1mc",
+              "name": "H AR51",
+              "fill": "$hud-yellow",
+              "content": "AR51",
+              "fontFamily": "$font-mono",
+              "fontSize": 10,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            },
+            {
+              "type": "text",
+              "id": "XbQ2y",
+              "name": "H SCN · 01",
+              "fill": "$hud-yellow",
+              "content": "SCN · 01",
+              "fontFamily": "$font-mono",
+              "fontSize": 10,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "MumTB",
+          "x": 1080,
+          "y": 700,
+          "name": "Telemetry Bottom",
+          "gap": 24,
+          "children": [
+            {
+              "type": "text",
+              "id": "BzWEU",
+              "name": "H BT.2020",
+              "fill": "#FFFFFFAA",
+              "content": "BT.2020",
+              "fontFamily": "$font-mono",
+              "fontSize": 10,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            },
+            {
+              "type": "text",
+              "id": "E9HDf",
+              "name": "H ST2084",
+              "fill": "#FFFFFFAA",
+              "content": "ST2084",
+              "fontFamily": "$font-mono",
+              "fontSize": 10,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            },
+            {
+              "type": "text",
+              "id": "sDxRS",
+              "name": "H 1000 NIT",
+              "fill": "#FFFFFFAA",
+              "content": "1000 NIT",
+              "fontFamily": "$font-mono",
+              "fontSize": 10,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "ruJpV",
+          "x": 0,
+          "y": 780,
+          "name": "Ticker Bottom",
+          "clip": true,
+          "width": 1440,
+          "fill": "$hud-ink",
+          "padding": [
+            6,
+            20
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "nqabP",
+              "name": "T2",
+              "fill": "$hud-yellow",
+              "content": "· GAUSSIAN · SPLATS · RENDER · the world in ???? points · space, reconstructed — ????, distributed · HIGH_FIDELITY · REAL_TIME ·",
+              "fontFamily": "$font-mono",
+              "fontSize": 8,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "id": "Pjk9d",
+      "x": 1560,
+      "y": 1900,
+      "name": "Note Hero",
+      "width": 380,
+      "height": 0,
+      "content": "01 ヒーロー — 実装対応\n\n・実装ではFramer Motionの7秒自動カルーセル(3スライド)\n・見出しはR3FのText3D(helvetiker_bold)。ここではOrbitronで代用\n・上下の黄色ティッカーはScrollVelocity + marquee\n・検出ボックスはMediaPipeの物体検出HUD(スライド3)\n・テレメトリHUDはJetBrains Mono"
+    },
+    {
+      "type": "frame",
+      "id": "uzGEG",
+      "x": 80,
+      "y": 2840,
+      "name": "02 — Top / Marketplace Body",
+      "clip": true,
+      "width": 1440,
+      "fill": "$bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "YBnVj",
+          "name": "Marquee Bar",
+          "clip": true,
+          "width": "fill_container",
+          "fill": "#EDEDED",
+          "gap": 32,
+          "padding": [
+            8,
+            24
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "Q2NTX",
+              "name": "M1",
+              "fill": "$fg",
+              "content": "3Dasset",
+              "fontFamily": "$font-head",
+              "fontSize": 10,
+              "fontWeight": "700",
+              "fontStyle": "italic"
+            },
+            {
+              "type": "text",
+              "id": "ILFir",
+              "name": "M2",
+              "fill": "$muted-fg",
+              "content": "High-quality 3D models on the marketplace — Supports Gaussian Splatting format — Start listing your creations — Supports GLB, USDZ, FBX, OBJ, PLY, SPZ, KSPLAT, and SOG",
+              "fontFamily": "$font-body",
+              "fontSize": 10,
+              "fontWeight": "300",
+              "letterSpacing": 1
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "cLZi5",
+          "name": "Search Zone",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 24,
+          "padding": [
+            48,
+            90
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "lymOi",
+              "name": "Search Field",
+              "width": 640,
+              "fill": "#EDEDED",
+              "cornerRadius": 6,
+              "gap": 10,
+              "padding": [
+                12,
+                18
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "BDlJX",
+                  "name": "Icon",
+                  "width": 14,
+                  "height": 14,
+                  "icon": "search",
+                  "library": "lucide",
+                  "fill": "$muted-fg"
+                },
+                {
+                  "type": "text",
+                  "id": "ZVg00",
+                  "name": "Placeholder",
+                  "fill": "$muted-fg",
+                  "content": "検索キーワードを入力...",
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "l0tDGk",
+              "name": "Category Row",
+              "gap": 12,
+              "children": [
+                {
+                  "id": "tTI21",
+                  "type": "ref",
+                  "ref": "sC07D",
+                  "name": "Cat 1"
+                },
+                {
+                  "id": "tNVOy",
+                  "type": "ref",
+                  "ref": "sC07D",
+                  "name": "Cat 2",
+                  "fill": "$card",
+                  "descendants": {
+                    "AoY9L": {
+                      "content": "Motions",
+                      "fill": "$fg",
+                      "fontWeight": "400",
+                      "fontStyle": "normal"
+                    }
+                  }
+                },
+                {
+                  "id": "R0OgP6",
+                  "type": "ref",
+                  "ref": "sC07D",
+                  "name": "Cat 3",
+                  "fill": "$card",
+                  "descendants": {
+                    "AoY9L": {
+                      "content": "Atlases",
+                      "fill": "$fg",
+                      "fontWeight": "400",
+                      "fontStyle": "normal"
+                    }
+                  }
+                },
+                {
+                  "id": "Szcu2",
+                  "type": "ref",
+                  "ref": "sC07D",
+                  "name": "Cat 4",
+                  "fill": "$card",
+                  "descendants": {
+                    "AoY9L": {
+                      "content": "Cultural Heritage",
+                      "fill": "$fg",
+                      "fontWeight": "400",
+                      "fontStyle": "normal"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "akFxx",
+          "name": "Featured Section",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 28,
+          "padding": [
+            24,
+            90,
+            64,
+            90
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "qfVaW",
+              "name": "Sec Head",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "h9GDw",
+                  "name": "H2",
+                  "fill": "$fg",
+                  "content": "Featured Assets",
+                  "fontFamily": "$font-head",
+                  "fontSize": 26,
+                  "fontWeight": "700",
+                  "fontStyle": "italic"
+                },
+                {
+                  "type": "text",
+                  "id": "UUYsg",
+                  "name": "Chevrons",
+                  "fill": "$accent",
+                  "content": "›››",
+                  "fontFamily": "$font-head",
+                  "fontSize": 20,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "bZ3Ki",
+              "name": "Card Row",
+              "gap": 24,
+              "children": [
+                {
+                  "id": "kMIvu",
+                  "type": "ref",
+                  "ref": "HJRX5",
+                  "name": "P1",
+                  "descendants": {
+                    "cfuZR": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "https://images.unsplash.com/photo-1666714049946-7e7afdb95f5a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODM5Mjg1OTh8&ixlib=rb-4.1.0&q=80&w=1080",
+                        "mode": "fill"
+                      }
+                    }
+                  }
+                },
+                {
+                  "id": "ElY25",
+                  "type": "ref",
+                  "ref": "HJRX5",
+                  "name": "P2",
+                  "descendants": {
+                    "cfuZR": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "https://images.unsplash.com/photo-1712675003032-0b9352c77ca7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODM5Mjg1OTh8&ixlib=rb-4.1.0&q=80&w=1080",
+                        "mode": "fill"
+                      }
+                    },
+                    "tP5dn": {
+                      "content": "Gaussian Splat — Alley"
+                    },
+                    "PzN41": {
+                      "content": "¥12,000"
+                    }
+                  }
+                },
+                {
+                  "id": "Nk9iz",
+                  "type": "ref",
+                  "ref": "HJRX5",
+                  "name": "P3",
+                  "descendants": {
+                    "cfuZR": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "https://images.unsplash.com/photo-1775568350881-8d1610e442e9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODM5Mjg1OTl8&ixlib=rb-4.1.0&q=80&w=1080",
+                        "mode": "fill"
+                      }
+                    },
+                    "tP5dn": {
+                      "content": "Dance Motion Pack 01"
+                    },
+                    "PzN41": {
+                      "content": "¥8,400"
+                    }
+                  }
+                },
+                {
+                  "id": "atFVL",
+                  "type": "ref",
+                  "ref": "HJRX5",
+                  "name": "P4",
+                  "descendants": {
+                    "cfuZR": {
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "https://images.unsplash.com/photo-1775797391249-a67c223b6b80?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODM5Mjg2MDB8&ixlib=rb-4.1.0&q=80&w=1080",
+                        "mode": "fill"
+                      }
+                    },
+                    "tP5dn": {
+                      "content": "Temple Gate 3DGS"
+                    },
+                    "PzN41": {
+                      "content": "¥6,200"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "eSFNi",
+          "name": "Footer",
+          "clip": true,
+          "width": "fill_container",
+          "height": 480,
+          "fill": "#EFEFEF",
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "Z8SQK",
+              "x": 0,
+              "y": 0,
+              "name": "Contour BG",
+              "fill": {
+                "type": "shader",
+                "enabled": true,
+                "url": "contour-lines.glsl",
+                "uniforms": {
+                  "u_bg": "#EFEFEF",
+                  "u_line": "#1A1A1A",
+                  "u_levels": 12,
+                  "u_speed": 0.15,
+                  "u_alpha": 0.18
+                }
+              },
+              "width": 1440,
+              "height": 480
+            },
+            {
+              "type": "frame",
+              "id": "PagNy",
+              "x": 90,
+              "y": 64,
+              "name": "F Links",
+              "gap": 32,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "G1LQN",
+                  "name": "FL 会社概要",
+                  "fill": "$fg",
+                  "content": "会社概要",
+                  "fontFamily": "$font-body",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "BlM48",
+                  "name": "FL 特定商取引法に基づく表記",
+                  "fill": "$fg",
+                  "content": "特定商取引法に基づく表記",
+                  "fontFamily": "$font-body",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "ttOej",
+                  "name": "FL プライバシーポリシー",
+                  "fill": "$fg",
+                  "content": "プライバシーポリシー",
+                  "fontFamily": "$font-body",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "HE14Q",
+                  "name": "FL 利用規約",
+                  "fill": "$fg",
+                  "content": "利用規約",
+                  "fontFamily": "$font-body",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "BKTmS",
+              "x": 90,
+              "y": 100,
+              "name": "Copyright",
+              "fill": "$muted-fg",
+              "content": "© 2025 Izutsuya, Inc. All rights reserved.",
+              "fontFamily": "$font-body",
+              "fontSize": 11,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "fPvPJ",
+              "x": 1230,
+              "y": 60,
+              "name": "Back To Top",
+              "stroke": "$fg",
+              "strokeWidth": 1,
+              "gap": 8,
+              "padding": [
+                10,
+                18
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "So83A",
+                  "name": "L",
+                  "fill": "$fg",
+                  "content": "BACK TO TOP",
+                  "fontFamily": "$font-mono",
+                  "fontSize": 10,
+                  "fontWeight": "normal",
+                  "letterSpacing": 2
+                },
+                {
+                  "type": "icon",
+                  "id": "TXuWk",
+                  "name": "I",
+                  "width": 12,
+                  "height": 12,
+                  "icon": "arrow-up",
+                  "library": "lucide",
+                  "fill": "$fg"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "ggIJM",
+              "x": 70,
+              "y": 250,
+              "name": "Giant Logo",
+              "fill": "$fg",
+              "content": "3Dasset",
+              "fontFamily": "$font-head",
+              "fontSize": 260,
+              "fontWeight": "700",
+              "letterSpacing": -8,
+              "fontStyle": "italic"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "id": "IdM9A",
+      "x": 1560,
+      "y": 2840,
+      "name": "Note Top",
+      "width": 380,
+      "height": 0,
+      "content": "02 マーケットプレイス本体 — 実装対応\n\n・マーキーバーは40s linearの無限スクロール\n・カテゴリピル: 選択=黒地+Poppins太字イタリック、非選択=グレー。LetterSwapForward付き\n・商品カード: 白背景+ソフトニューモシャドウ、hoverでscale-105\n・セクション見出し横のシェブロンはGSAP連鎖アニメ\n・フッターはCanvas Waves背景+ブルーリンク(下線アニメ)"
+    },
+    {
+      "type": "frame",
+      "id": "mVOHG",
+      "x": 80,
+      "y": 4100,
+      "name": "03 — Component Sheet",
+      "clip": true,
+      "width": 1440,
+      "fill": "$bg",
+      "layout": "vertical",
+      "gap": 40,
+      "padding": [
+        70,
+        90
+      ],
+      "children": [
+        {
+          "type": "text",
+          "id": "l8pEXL",
+          "name": "Title",
+          "fill": "$fg",
+          "content": "Components",
+          "fontFamily": "$font-head",
+          "fontSize": 36,
+          "fontWeight": "700",
+          "fontStyle": "italic"
+        },
+        {
+          "type": "frame",
+          "id": "sC1lv",
+          "name": "Buttons Row",
+          "gap": 32,
+          "alignItems": "center",
+          "children": [
+            {
+              "id": "A605B",
+              "type": "ref",
+              "ref": "zguUt",
+              "name": "C Primary"
+            },
+            {
+              "id": "xfJXZ",
+              "type": "ref",
+              "ref": "r5BaiZ",
+              "name": "C Neu"
+            },
+            {
+              "id": "K4q6SZ",
+              "type": "ref",
+              "ref": "D4Pahc",
+              "name": "C Hero"
+            },
+            {
+              "id": "h2tVCx",
+              "type": "ref",
+              "ref": "sC07D",
+              "name": "C Pill"
+            },
+            {
+              "id": "k2R3d",
+              "type": "ref",
+              "ref": "ObVsk",
+              "name": "C Badge"
+            },
+            {
+              "id": "XllBy",
+              "type": "ref",
+              "ref": "ntjiI",
+              "name": "C Nav"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "qYKFs",
+          "name": "Neumorphic Container Demo",
+          "width": "fill_container",
+          "fill": "$neu",
+          "cornerRadius": 32,
+          "effect": [
+            {
+              "type": "shadow",
+              "shadowType": "outer",
+              "color": "#D1D1D1",
+              "offset": {
+                "x": 20,
+                "y": 20
+              },
+              "blur": 60
+            },
+            {
+              "type": "shadow",
+              "shadowType": "outer",
+              "color": "#FFFFFF",
+              "offset": {
+                "x": -20,
+                "y": -20
+              },
+              "blur": 60
+            }
+          ],
+          "layout": "vertical",
+          "gap": 16,
+          "padding": 40,
+          "children": [
+            {
+              "type": "text",
+              "id": "wTCaE",
+              "name": "NZ Label",
+              "fill": "$muted-fg",
+              "content": "NEUMORPHIC CONTAINER — rounded-[32px] / 20px 20px 60px",
+              "fontFamily": "$font-mono",
+              "fontSize": 10,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            },
+            {
+              "type": "text",
+              "id": "hjisO",
+              "name": "NZ Body",
+              "fill": "$fg",
+              "content": "商品詳細・管理画面で使う大型ニューモフィズム面。内側にビューワーやフォームを配置する。",
+              "fontFamily": "$font-body",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "U1nf9",
+      "x": 80,
+      "y": 4665,
+      "name": "04 — Products List",
+      "clip": true,
+      "width": 1440,
+      "fill": "$bg",
+      "layout": "vertical",
+      "gap": 32,
+      "padding": [
+        56,
+        90
+      ],
+      "children": [
+        {
+          "type": "text",
+          "id": "F5tW1J",
+          "name": "H1",
+          "fill": "$fg",
+          "content": "ALL",
+          "fontFamily": "$font-head",
+          "fontSize": 40,
+          "fontWeight": "700",
+          "fontStyle": "italic"
+        },
+        {
+          "type": "frame",
+          "id": "ZpaGp",
+          "name": "Controls",
+          "width": "fill_container",
+          "gap": 16,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "y7Dkk",
+              "name": "Search Field",
+              "width": 480,
+              "fill": "#EDEDED",
+              "gap": 10,
+              "padding": [
+                12,
+                18
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "rUEcj",
+                  "name": "Icon",
+                  "width": 14,
+                  "height": 14,
+                  "icon": "search",
+                  "library": "lucide",
+                  "fill": "$muted-fg"
+                },
+                {
+                  "type": "text",
+                  "id": "TencR",
+                  "name": "Placeholder",
+                  "fill": "$muted-fg",
+                  "content": "検索キーワードを入力...",
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "id": "mddQ9",
+              "type": "ref",
+              "ref": "sC07D",
+              "name": "Cat ALL",
+              "descendants": {
+                "AoY9L": {
+                  "content": "ALL"
+                }
+              }
+            },
+            {
+              "id": "u5fpW",
+              "type": "ref",
+              "ref": "sC07D",
+              "name": "Cat 3DGS",
+              "fill": "$card",
+              "descendants": {
+                "AoY9L": {
+                  "content": "3DGS",
+                  "fill": "$fg",
+                  "fontWeight": "400",
+                  "fontStyle": "normal"
+                }
+              }
+            },
+            {
+              "id": "FfTpk",
+              "type": "ref",
+              "ref": "sC07D",
+              "name": "Cat Motions",
+              "fill": "$card",
+              "descendants": {
+                "AoY9L": {
+                  "content": "Motions",
+                  "fill": "$fg",
+                  "fontWeight": "400",
+                  "fontStyle": "normal"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "wDykj",
+          "name": "Main Split",
+          "width": "fill_container",
+          "gap": 32,
+          "children": [
+            {
+              "type": "frame",
+              "id": "mMTBA",
+              "name": "Sidebar",
+              "width": 240,
+              "layout": "vertical",
+              "gap": 20,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "OdaG9",
+                  "name": "S Title",
+                  "fill": "$fg",
+                  "content": "Categories",
+                  "fontFamily": "$font-head",
+                  "fontSize": 14,
+                  "fontWeight": "700",
+                  "fontStyle": "italic"
+                },
+                {
+                  "type": "text",
+                  "id": "RQUqb",
+                  "name": "S All",
+                  "fill": "$accent",
+                  "content": "All",
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "wQpZP",
+                  "name": "S 3D Gaussian Splatting",
+                  "fill": "$muted-fg",
+                  "content": "3D Gaussian Splatting",
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "kqiRy",
+                  "name": "S Motions",
+                  "fill": "$muted-fg",
+                  "content": "Motions",
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "d7PiXz",
+                  "name": "S Atlases",
+                  "fill": "$muted-fg",
+                  "content": "Atlases",
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "I0PGp",
+                  "name": "S Cultural Heritage",
+                  "fill": "$muted-fg",
+                  "content": "Cultural Heritage",
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "SSX3m",
+                  "name": "S Characters",
+                  "fill": "$muted-fg",
+                  "content": "Characters",
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "V9fMLD",
+              "name": "Grid",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "nw9b2",
+                  "name": "Grid Row 1",
+                  "width": "fill_container",
+                  "gap": 24,
+                  "children": [
+                    {
+                      "id": "jilbG",
+                      "type": "ref",
+                      "ref": "HJRX5",
+                      "name": "G Heritage Statue Scan",
+                      "width": "fill_container",
+                      "descendants": {
+                        "cfuZR": {
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "https://images.unsplash.com/photo-1613461726177-7fc8c6221aca?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODM5MjkwOTF8&ixlib=rb-4.1.0&q=80&w=1080",
+                            "mode": "fill"
+                          }
+                        },
+                        "tP5dn": {
+                          "content": "Heritage Statue Scan"
+                        },
+                        "PzN41": {
+                          "content": "¥4,800"
+                        }
+                      }
+                    },
+                    {
+                      "id": "E4Ez6",
+                      "type": "ref",
+                      "ref": "HJRX5",
+                      "name": "G Gaussian Splat — Alley",
+                      "width": "fill_container",
+                      "descendants": {
+                        "cfuZR": {
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "https://images.unsplash.com/photo-1756015541984-63bc872431d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODM5MjkwOTJ8&ixlib=rb-4.1.0&q=80&w=1080",
+                            "mode": "fill"
+                          }
+                        },
+                        "tP5dn": {
+                          "content": "Gaussian Splat — Alley"
+                        },
+                        "PzN41": {
+                          "content": "¥12,000"
+                        }
+                      }
+                    },
+                    {
+                      "id": "DvCVy",
+                      "type": "ref",
+                      "ref": "HJRX5",
+                      "name": "G Dance Motion Pack 01",
+                      "width": "fill_container",
+                      "descendants": {
+                        "cfuZR": {
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "https://images.unsplash.com/photo-1761882698516-2d9a92b0363e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODM5MjkwOTJ8&ixlib=rb-4.1.0&q=80&w=1080",
+                            "mode": "fill"
+                          }
+                        },
+                        "tP5dn": {
+                          "content": "Dance Motion Pack 01"
+                        },
+                        "PzN41": {
+                          "content": "¥8,400"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Saq4S",
+                  "name": "Grid Row 2",
+                  "width": "fill_container",
+                  "gap": 24,
+                  "children": [
+                    {
+                      "id": "pWq6K",
+                      "type": "ref",
+                      "ref": "HJRX5",
+                      "name": "G Temple Gate 3DGS",
+                      "width": "fill_container",
+                      "descendants": {
+                        "cfuZR": {
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "https://images.unsplash.com/photo-1748737349603-8b08c62b317b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODM5MjkwOTN8&ixlib=rb-4.1.0&q=80&w=1080",
+                            "mode": "fill"
+                          }
+                        },
+                        "tP5dn": {
+                          "content": "Temple Gate 3DGS"
+                        },
+                        "PzN41": {
+                          "content": "¥6,200"
+                        }
+                      }
+                    },
+                    {
+                      "id": "wqGN9",
+                      "type": "ref",
+                      "ref": "HJRX5",
+                      "name": "G City Block Atlas",
+                      "width": "fill_container",
+                      "descendants": {
+                        "cfuZR": {
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "https://images.unsplash.com/photo-1510846606678-710c05a5c776?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODM5MjkwOTR8&ixlib=rb-4.1.0&q=80&w=1080",
+                            "mode": "fill"
+                          }
+                        },
+                        "tP5dn": {
+                          "content": "City Block Atlas"
+                        },
+                        "PzN41": {
+                          "content": "¥9,800"
+                        }
+                      }
+                    },
+                    {
+                      "id": "M1Nc9",
+                      "type": "ref",
+                      "ref": "HJRX5",
+                      "name": "G Avatar Rig — Base",
+                      "width": "fill_container",
+                      "descendants": {
+                        "cfuZR": {
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "https://images.unsplash.com/photo-1699787150873-c6b8fb3dc1f3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODM5MjkwOTV8&ixlib=rb-4.1.0&q=80&w=1080",
+                            "mode": "fill"
+                          }
+                        },
+                        "tP5dn": {
+                          "content": "Avatar Rig — Base"
+                        },
+                        "PzN41": {
+                          "content": "¥5,500"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "uXS2s",
+          "name": "Pagination",
+          "gap": 8,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "NqD82",
+              "name": "Pg 1",
+              "fill": "$fg",
+              "padding": [
+                8,
+                14
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "a4nnR",
+                  "name": "N",
+                  "fill": "#FFFFFF",
+                  "content": "1",
+                  "fontFamily": "$font-body",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Ossll",
+              "name": "Pg 2",
+              "fill": "$card",
+              "padding": [
+                8,
+                14
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "eeYbH",
+                  "name": "N",
+                  "fill": "$fg",
+                  "content": "2",
+                  "fontFamily": "$font-body",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "U2oRpx",
+              "name": "Pg 3",
+              "fill": "$card",
+              "padding": [
+                8,
+                14
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "o2GYb",
+                  "name": "N",
+                  "fill": "$fg",
+                  "content": "3",
+                  "fontFamily": "$font-body",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "id": "kSlXM",
+      "x": 1560,
+      "y": 4665,
+      "name": "Note Products",
+      "width": 380,
+      "height": 0,
+      "content": "04 商品一覧(/products) — 実装対応\n\n・H1はカテゴリ名 or ALL or 「\"キーワード\" の検索結果」(text-4xl bold italic Poppins)\n・サイドバーはlg以上のみ表示\n・グリッドは21件/ページ\n・カードhoverで画像scale-105+シャドウ拡大"
+    },
+    {
+      "type": "frame",
+      "id": "m519h",
+      "x": 80,
+      "y": 5733,
+      "name": "05 — Product Detail",
+      "clip": true,
+      "width": 1440,
+      "fill": "$bg",
+      "layout": "vertical",
+      "gap": 28,
+      "padding": [
+        48,
+        90
+      ],
+      "children": [
+        {
+          "type": "text",
+          "id": "n5xlBm",
+          "name": "Breadcrumb",
+          "fill": "$muted-fg",
+          "content": "商品一覧 / Cultural Heritage / Heritage Statue Scan",
+          "fontFamily": "$font-body",
+          "fontSize": 12,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "D6NI0",
+          "name": "Split",
+          "width": "fill_container",
+          "gap": 48,
+          "children": [
+            {
+              "type": "frame",
+              "id": "gnEKI",
+              "name": "Viewer Neumo",
+              "width": 760,
+              "height": 560,
+              "fill": "$neu",
+              "cornerRadius": 32,
+              "effect": [
+                {
+                  "type": "shadow",
+                  "shadowType": "outer",
+                  "color": "#D1D1D1",
+                  "offset": {
+                    "x": 20,
+                    "y": 20
+                  },
+                  "blur": 60
+                },
+                {
+                  "type": "shadow",
+                  "shadowType": "outer",
+                  "color": "#FFFFFF",
+                  "offset": {
+                    "x": -20,
+                    "y": -20
+                  },
+                  "blur": 60
+                }
+              ],
+              "layout": "vertical",
+              "padding": 24,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 16,
+                  "id": "EFlFm",
+                  "name": "3D Viewport",
+                  "metadata": {
+                    "type": "unsplash",
+                    "username": "eprouzet",
+                    "link": "https://unsplash.com/@eprouzet",
+                    "author": "Eric Prouzet"
+                  },
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "https://images.unsplash.com/photo-1764773818307-253ecc8192b6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODM5Mjk1Mzl8&ixlib=rb-4.1.0&q=80&w=1080",
+                    "mode": "fill"
+                  },
+                  "width": "fill_container",
+                  "height": "fill_container"
+                },
+                {
+                  "type": "frame",
+                  "id": "aEmxa",
+                  "name": "Viewer Bar",
+                  "width": "fill_container",
+                  "padding": [
+                    12,
+                    4,
+                    0,
+                    4
+                  ],
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "g1yEO",
+                      "name": "Hint",
+                      "fill": "$muted-fg",
+                      "content": "DRAG TO ORBIT · 3DGS VIEWER",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 9,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Agz7J",
+                      "name": "V Btns",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "JSNiQ",
+                          "name": "VB rotate-ccw",
+                          "fill": "#E8E8E8",
+                          "cornerRadius": 8,
+                          "effect": [
+                            {
+                              "type": "shadow",
+                              "shadowType": "outer",
+                              "color": "#CACACA",
+                              "offset": {
+                                "x": 3,
+                                "y": 3
+                              },
+                              "blur": 6
+                            },
+                            {
+                              "type": "shadow",
+                              "shadowType": "outer",
+                              "color": "#FFFFFF",
+                              "offset": {
+                                "x": -3,
+                                "y": -3
+                              },
+                              "blur": 6
+                            }
+                          ],
+                          "padding": 8,
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "XZ3q2",
+                              "name": "I",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "rotate-ccw",
+                              "library": "lucide",
+                              "fill": "$fg"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "sMH4k",
+                          "name": "VB maximize-2",
+                          "fill": "#E8E8E8",
+                          "cornerRadius": 8,
+                          "effect": [
+                            {
+                              "type": "shadow",
+                              "shadowType": "outer",
+                              "color": "#CACACA",
+                              "offset": {
+                                "x": 3,
+                                "y": 3
+                              },
+                              "blur": 6
+                            },
+                            {
+                              "type": "shadow",
+                              "shadowType": "outer",
+                              "color": "#FFFFFF",
+                              "offset": {
+                                "x": -3,
+                                "y": -3
+                              },
+                              "blur": 6
+                            }
+                          ],
+                          "padding": 8,
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "t3WQF",
+                              "name": "I",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "maximize-2",
+                              "library": "lucide",
+                              "fill": "$fg"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "s0maHb",
+                          "name": "VB share-2",
+                          "fill": "#E8E8E8",
+                          "cornerRadius": 8,
+                          "effect": [
+                            {
+                              "type": "shadow",
+                              "shadowType": "outer",
+                              "color": "#CACACA",
+                              "offset": {
+                                "x": 3,
+                                "y": 3
+                              },
+                              "blur": 6
+                            },
+                            {
+                              "type": "shadow",
+                              "shadowType": "outer",
+                              "color": "#FFFFFF",
+                              "offset": {
+                                "x": -3,
+                                "y": -3
+                              },
+                              "blur": 6
+                            }
+                          ],
+                          "padding": 8,
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "MXN1l",
+                              "name": "I",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "share-2",
+                              "library": "lucide",
+                              "fill": "$fg"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "aX75r",
+              "name": "Info Col",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 18,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "G38Un2",
+                  "name": "Badge Row",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "SjtVa",
+                      "name": "Sale Badge",
+                      "fill": "$fg",
+                      "padding": [
+                        4,
+                        10
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "xdpt4",
+                          "name": "S",
+                          "fill": "#FFFFFF",
+                          "content": "販売中",
+                          "fontFamily": "$font-head",
+                          "fontSize": 10,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "id": "S8JbbV",
+                      "type": "ref",
+                      "ref": "ObVsk",
+                      "name": "F1",
+                      "descendants": {
+                        "C7hcxF": {
+                          "content": "PLY"
+                        }
+                      }
+                    },
+                    {
+                      "id": "qHWJq",
+                      "type": "ref",
+                      "ref": "ObVsk",
+                      "name": "F2",
+                      "descendants": {
+                        "C7hcxF": {
+                          "content": "SPZ"
+                        }
+                      }
+                    },
+                    {
+                      "id": "BjEEE",
+                      "type": "ref",
+                      "ref": "ObVsk",
+                      "name": "F3",
+                      "descendants": {
+                        "C7hcxF": {
+                          "content": "KSPLAT"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "k0ZOJ4",
+                  "name": "Title",
+                  "fill": "$fg",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Heritage Statue Scan",
+                  "fontFamily": "$font-head",
+                  "fontSize": 32,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "M2ebs",
+                  "name": "Creator",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ellipse",
+                      "id": "Z0vsk9",
+                      "name": "Avatar",
+                      "fill": "$card",
+                      "width": 28,
+                      "height": 28
+                    },
+                    {
+                      "type": "text",
+                      "id": "s1mvD",
+                      "name": "Name",
+                      "fill": "$accent",
+                      "content": "Izutsuya Studio",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "KX8AC",
+                  "name": "Price",
+                  "fill": "$fg",
+                  "content": "¥4,800",
+                  "fontFamily": "$font-head",
+                  "fontSize": 40,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "m3n6C6",
+                  "name": "Desc",
+                  "fill": "$muted-fg",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "文化財アーカイブプロジェクトでスキャンした石像の3D Gaussian Splattingデータ。PLY / SPZ / KSPLAT形式同梱。商用利用可。",
+                  "lineHeight": 1.8,
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "xJCjB",
+                  "name": "Actions",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "R2LVi",
+                      "name": "Buy Btn",
+                      "fill": "$fg",
+                      "gap": 8,
+                      "padding": [
+                        14,
+                        32
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "R6wnp",
+                          "name": "Cart",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "shopping-cart",
+                          "library": "lucide",
+                          "fill": "#FFFFFF"
+                        },
+                        {
+                          "type": "text",
+                          "id": "yhwZU",
+                          "name": "L",
+                          "fill": "#FFFFFF",
+                          "content": "購入する",
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "k2OlY3",
+                      "name": "Wish Btn",
+                      "stroke": "$fg",
+                      "strokeWidth": 1,
+                      "padding": [
+                        14,
+                        20
+                      ],
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "qeQn7",
+                          "name": "Heart",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "heart",
+                          "library": "lucide",
+                          "fill": "$fg"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Zh8kk",
+                  "name": "Meta List",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ECCjB",
+                      "name": "MR フォーマット",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "IILQU",
+                          "name": "K",
+                          "fill": "$muted-fg",
+                          "content": "フォーマット",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "VzDjJ",
+                          "name": "V",
+                          "fill": "$fg",
+                          "content": "PLY / SPZ / KSPLAT",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "O4OEul",
+                      "name": "MR ポイント数",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "FsNgP",
+                          "name": "K",
+                          "fill": "$muted-fg",
+                          "content": "ポイント数",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "GkwHI",
+                          "name": "V",
+                          "fill": "$fg",
+                          "content": "2,400,000",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "KeTSB",
+                      "name": "MR ライセンス",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "rpDGh",
+                          "name": "K",
+                          "fill": "$muted-fg",
+                          "content": "ライセンス",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "rWUU2",
+                          "name": "V",
+                          "fill": "$fg",
+                          "content": "商用可(再配布不可)",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "id": "GYdTr",
+      "x": 1560,
+      "y": 5733,
+      "name": "Note Detail",
+      "width": 380,
+      "height": 0,
+      "content": "05 商品詳細(/products/[slug]) — 実装対応\n\n・左はrounded-[32px]のニューモコンテナ+3DGSビューワー(gs-viewer/embedと共通)\n・シェア/操作ボタンは#E8E8E8のニューモ小ボタン\n・購入ボタンはhoverでテキスト↔カートアイコン切替\n・売切時は赤(#DC2626)のSOLD斜めリボン\n・タイトルにanimate-shineのグラデーション演出"
+    },
+    {
+      "type": "frame",
+      "id": "p9nDyP",
+      "x": 80,
+      "y": 6554,
+      "name": "06 — Auth / Signin",
+      "clip": true,
+      "width": 1440,
+      "height": 760,
+      "fill": "$card",
+      "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "frame",
+          "id": "XjDBo",
+          "name": "Auth Card",
+          "width": 420,
+          "fill": "$bg",
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000014",
+            "offset": {
+              "x": 0,
+              "y": 8
+            },
+            "blur": 32
+          },
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            40,
+            36
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "KdAv3",
+              "name": "Logo",
+              "fill": "$fg",
+              "content": "3Dasset",
+              "fontFamily": "$font-head",
+              "fontSize": 22,
+              "fontWeight": "700",
+              "fontStyle": "italic"
+            },
+            {
+              "type": "text",
+              "id": "G1dZc",
+              "name": "Lead",
+              "fill": "$muted-fg",
+              "content": "アカウントにサインイン",
+              "fontFamily": "$font-body",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "KkD3y",
+              "name": "Field メールアドレス",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "qjAFU",
+                  "name": "Label",
+                  "fill": "$fg",
+                  "content": "メールアドレス",
+                  "fontFamily": "$font-body",
+                  "fontSize": 12,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "frame",
+                  "id": "kTsFF",
+                  "name": "Input",
+                  "width": "fill_container",
+                  "height": 40,
+                  "fill": "$bg",
+                  "stroke": "#DDDDDD",
+                  "strokeWidth": 1,
+                  "padding": [
+                    0,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "iMaBh",
+                      "name": "PH",
+                      "fill": "$muted-fg",
+                      "content": "you@example.com",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Jlcnt",
+              "name": "Field パスワード",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "VZbow",
+                  "name": "Label",
+                  "fill": "$fg",
+                  "content": "パスワード",
+                  "fontFamily": "$font-body",
+                  "fontSize": 12,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "frame",
+                  "id": "PZY2g",
+                  "name": "Input",
+                  "width": "fill_container",
+                  "height": 40,
+                  "fill": "$bg",
+                  "stroke": "#DDDDDD",
+                  "strokeWidth": 1,
+                  "padding": [
+                    0,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "AFUQF",
+                      "name": "PH",
+                      "fill": "$muted-fg",
+                      "content": "••••••••",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "R4pnPy",
+              "name": "Signin Btn",
+              "width": "fill_container",
+              "height": 40,
+              "fill": "$fg",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "opHvZ",
+                  "name": "L",
+                  "fill": "#FFFFFF",
+                  "content": "サインイン",
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "tOYGh",
+              "name": "Links",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "bMfJ0",
+                  "name": "L1",
+                  "fill": "$accent",
+                  "content": "パスワードをお忘れですか?",
+                  "fontFamily": "$font-body",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "BDZbR",
+                  "name": "L2",
+                  "fill": "$accent",
+                  "content": "新規登録",
+                  "fontFamily": "$font-body",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "id": "v5iXJ",
+      "x": 1560,
+      "y": 6554,
+      "name": "Note Auth",
+      "width": 380,
+      "height": 0,
+      "content": "06 認証(/auth/signin, /auth/signup, /auth/reset-password)\n\n・shadcn/uiのInput(h-10 rounded-md border)と黒のPrimary Button\n・リンクはアクセントブルー #0000EE + underline\n・signupは同構成+ユーザー名欄、resetはメールのみ"
+    },
+    {
+      "type": "frame",
+      "id": "pCc1P",
+      "x": 80,
+      "y": 7434,
+      "name": "07 — Mypage / Orders",
+      "clip": true,
+      "width": 1440,
+      "fill": "$bg",
+      "layout": "vertical",
+      "gap": 28,
+      "padding": [
+        48,
+        90
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "a9D3Y7",
+          "name": "Creator Banner",
+          "width": "fill_container",
+          "fill": "$accent",
+          "gap": 10,
+          "padding": [
+            10,
+            20
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "TxO42",
+              "name": "I",
+              "width": 14,
+              "height": 14,
+              "icon": "badge-check",
+              "library": "lucide",
+              "fill": "#FFFFFF"
+            },
+            {
+              "type": "text",
+              "id": "W7maG",
+              "name": "T",
+              "fill": "#FFFFFF",
+              "content": "クリエイターアカウント — 商品の出品・管理ができます",
+              "fontFamily": "$font-body",
+              "fontSize": 12,
+              "fontWeight": "500"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "NSPwu",
+          "name": "Profile Row",
+          "width": "fill_container",
+          "gap": 20,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ellipse",
+              "id": "KNkWD",
+              "name": "Avatar",
+              "fill": "$card",
+              "width": 72,
+              "height": 72
+            },
+            {
+              "type": "frame",
+              "id": "Ii2zz",
+              "name": "P Col",
+              "layout": "vertical",
+              "gap": 4,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "o6tcCv",
+                  "name": "Name",
+                  "fill": "$fg",
+                  "content": "Izutsuya Studio",
+                  "fontFamily": "$font-head",
+                  "fontSize": 24,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "p1cBXN",
+                  "name": "Mail",
+                  "fill": "$muted-fg",
+                  "content": "studio@izutsuya.co.jp",
+                  "fontFamily": "$font-body",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "KmJYV",
+          "name": "Tabs",
+          "gap": 24,
+          "children": [
+            {
+              "type": "frame",
+              "id": "ACJBk",
+              "name": "Tab 購入履歴",
+              "layout": "vertical",
+              "gap": 6,
+              "padding": [
+                0,
+                0,
+                8,
+                0
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "bIdqO",
+                  "name": "T",
+                  "fill": "$fg",
+                  "content": "購入履歴",
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "rectangle",
+                  "id": "Ni3tl",
+                  "name": "U",
+                  "fill": "$fg",
+                  "width": 52,
+                  "height": 2
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "z3CGd",
+              "name": "Tab コレクション",
+              "layout": "vertical",
+              "gap": 6,
+              "padding": [
+                0,
+                0,
+                8,
+                0
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "kOiPt",
+                  "name": "T",
+                  "fill": "$muted-fg",
+                  "content": "コレクション",
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "HW7CZ",
+              "name": "Tab 出品中の商品",
+              "layout": "vertical",
+              "gap": 6,
+              "padding": [
+                0,
+                0,
+                8,
+                0
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "MSdeH",
+                  "name": "T",
+                  "fill": "$muted-fg",
+                  "content": "出品中の商品",
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "NKutr",
+              "name": "Tab プロフィール設定",
+              "layout": "vertical",
+              "gap": 6,
+              "padding": [
+                0,
+                0,
+                8,
+                0
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Ww8XE",
+                  "name": "T",
+                  "fill": "$muted-fg",
+                  "content": "プロフィール設定",
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "nnlNI",
+          "name": "Orders",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 12,
+          "children": [
+            {
+              "type": "frame",
+              "id": "PtVS1",
+              "name": "Order Heritage Statue Scan",
+              "width": "fill_container",
+              "fill": "$bg",
+              "stroke": "#E5E5E5",
+              "strokeWidth": 1,
+              "gap": 16,
+              "padding": [
+                16,
+                20
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "id": "NHoMW",
+                  "name": "Thumb",
+                  "fill": "$card",
+                  "width": 56,
+                  "height": 56
+                },
+                {
+                  "type": "frame",
+                  "id": "i8ZOoZ",
+                  "name": "O Col",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "X5LY7E",
+                      "name": "T",
+                      "fill": "$fg",
+                      "content": "Heritage Statue Scan",
+                      "fontFamily": "$font-body",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "QNVAH",
+                      "name": "D",
+                      "fill": "$muted-fg",
+                      "content": "購入日: 2026/07/02",
+                      "fontFamily": "$font-body",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "upTua",
+                  "name": "P",
+                  "fill": "$fg",
+                  "content": "¥4,800",
+                  "fontFamily": "$font-head",
+                  "fontSize": 15,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "saqfm",
+                  "name": "St",
+                  "fill": "#E8F5E9",
+                  "cornerRadius": 99,
+                  "padding": [
+                    4,
+                    10
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "uO85Z",
+                      "name": "S",
+                      "fill": "#2E7D32",
+                      "content": "ダウンロード可",
+                      "fontFamily": "$font-body",
+                      "fontSize": 10,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "N5sgvr",
+                  "name": "DL",
+                  "fill": "$fg",
+                  "gap": 6,
+                  "padding": [
+                    8,
+                    14
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "Z5StMb",
+                      "name": "I",
+                      "width": 12,
+                      "height": 12,
+                      "icon": "download",
+                      "library": "lucide",
+                      "fill": "#FFFFFF"
+                    },
+                    {
+                      "type": "text",
+                      "id": "US8k2",
+                      "name": "L",
+                      "fill": "#FFFFFF",
+                      "content": "DL",
+                      "fontFamily": "$font-body",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Y921ZE",
+              "name": "Order Gaussian Splat — Alley",
+              "width": "fill_container",
+              "fill": "$bg",
+              "stroke": "#E5E5E5",
+              "strokeWidth": 1,
+              "gap": 16,
+              "padding": [
+                16,
+                20
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "id": "MlniT",
+                  "name": "Thumb",
+                  "fill": "$card",
+                  "width": 56,
+                  "height": 56
+                },
+                {
+                  "type": "frame",
+                  "id": "e1DBAq",
+                  "name": "O Col",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "LVFBO",
+                      "name": "T",
+                      "fill": "$fg",
+                      "content": "Gaussian Splat — Alley",
+                      "fontFamily": "$font-body",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Xxflg",
+                      "name": "D",
+                      "fill": "$muted-fg",
+                      "content": "購入日: 2026/06/18",
+                      "fontFamily": "$font-body",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "d63T8F",
+                  "name": "P",
+                  "fill": "$fg",
+                  "content": "¥12,000",
+                  "fontFamily": "$font-head",
+                  "fontSize": 15,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "LhRcO",
+                  "name": "St",
+                  "fill": "#E8F5E9",
+                  "cornerRadius": 99,
+                  "padding": [
+                    4,
+                    10
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "huN54",
+                      "name": "S",
+                      "fill": "#2E7D32",
+                      "content": "ダウンロード可",
+                      "fontFamily": "$font-body",
+                      "fontSize": 10,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "qsr3P",
+                  "name": "DL",
+                  "fill": "$fg",
+                  "gap": 6,
+                  "padding": [
+                    8,
+                    14
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "QPrvV",
+                      "name": "I",
+                      "width": 12,
+                      "height": 12,
+                      "icon": "download",
+                      "library": "lucide",
+                      "fill": "#FFFFFF"
+                    },
+                    {
+                      "type": "text",
+                      "id": "t2s07k",
+                      "name": "L",
+                      "fill": "#FFFFFF",
+                      "content": "DL",
+                      "fontFamily": "$font-body",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "qResg",
+              "name": "Order Dance Motion Pack 01",
+              "width": "fill_container",
+              "fill": "$bg",
+              "stroke": "#E5E5E5",
+              "strokeWidth": 1,
+              "gap": 16,
+              "padding": [
+                16,
+                20
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "id": "nZU9F",
+                  "name": "Thumb",
+                  "fill": "$card",
+                  "width": 56,
+                  "height": 56
+                },
+                {
+                  "type": "frame",
+                  "id": "eSJB1",
+                  "name": "O Col",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Y1FCa1",
+                      "name": "T",
+                      "fill": "$fg",
+                      "content": "Dance Motion Pack 01",
+                      "fontFamily": "$font-body",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "J5KM7",
+                      "name": "D",
+                      "fill": "$muted-fg",
+                      "content": "購入日: 2026/06/01",
+                      "fontFamily": "$font-body",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "gt1hK",
+                  "name": "P",
+                  "fill": "$fg",
+                  "content": "¥8,400",
+                  "fontFamily": "$font-head",
+                  "fontSize": 15,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "BBA5q",
+                  "name": "St",
+                  "fill": "#FFF3E0",
+                  "cornerRadius": 99,
+                  "padding": [
+                    4,
+                    10
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "r9Sa6",
+                      "name": "S",
+                      "fill": "#E65100",
+                      "content": "処理中",
+                      "fontFamily": "$font-body",
+                      "fontSize": 10,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "A7O69",
+                  "name": "DL",
+                  "fill": "$fg",
+                  "gap": 6,
+                  "padding": [
+                    8,
+                    14
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "a8Tc0",
+                      "name": "I",
+                      "width": 12,
+                      "height": 12,
+                      "icon": "download",
+                      "library": "lucide",
+                      "fill": "#FFFFFF"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Q6rUYm",
+                      "name": "L",
+                      "fill": "#FFFFFF",
+                      "content": "DL",
+                      "fontFamily": "$font-body",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "id": "gatep",
+      "x": 1560,
+      "y": 7434,
+      "name": "Note Mypage",
+      "width": 380,
+      "height": 0,
+      "content": "07 マイページ(/mypage) — 実装対応\n\n・クリエイターロール時はアクセントブルーのバナー、管理者は#FF4500のバナーを表示\n・タブ: 購入履歴 / コレクション / 出品中の商品(creatorのみ) / プロフィール設定\n・購入済商品は署名URLでDL(期限付き)"
+    },
+    {
+      "type": "frame",
+      "id": "WyHo5",
+      "x": 80,
+      "y": 8166,
+      "name": "08 — Admin Console",
+      "clip": true,
+      "width": 1440,
+      "fill": "$card",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "ZFi7g",
+          "name": "Admin Banner",
+          "width": "fill_container",
+          "fill": "#FF4500",
+          "gap": 10,
+          "padding": [
+            10,
+            32
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "xIRdF",
+              "name": "I",
+              "width": 14,
+              "height": 14,
+              "icon": "shield-alert",
+              "library": "lucide",
+              "fill": "#FFFFFF"
+            },
+            {
+              "type": "text",
+              "id": "iW6XQ",
+              "name": "T",
+              "fill": "#FFFFFF",
+              "content": "管理者モード — すべての操作が監査ログに記録されます",
+              "fontFamily": "$font-body",
+              "fontSize": 12,
+              "fontWeight": "600"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "JikmH",
+          "name": "Admin Body",
+          "width": "fill_container",
+          "children": [
+            {
+              "type": "frame",
+              "id": "njXTK",
+              "name": "Admin Side",
+              "width": 220,
+              "fill": "$bg",
+              "layout": "vertical",
+              "gap": 6,
+              "padding": [
+                28,
+                20
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "FxXm9",
+                  "name": "SI 商品管理",
+                  "width": "fill_container",
+                  "fill": "$card",
+                  "gap": 10,
+                  "padding": [
+                    10,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "w8RVon",
+                      "name": "I",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "package",
+                      "library": "lucide",
+                      "fill": "$fg"
+                    },
+                    {
+                      "type": "text",
+                      "id": "oVPii",
+                      "name": "T",
+                      "fill": "$fg",
+                      "content": "商品管理",
+                      "fontFamily": "$font-body",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "LRdfx",
+                  "name": "SI カテゴリ管理",
+                  "width": "fill_container",
+                  "fill": "$bg",
+                  "gap": 10,
+                  "padding": [
+                    10,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "T3ptYk",
+                      "name": "I",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "tags",
+                      "library": "lucide",
+                      "fill": "$muted-fg"
+                    },
+                    {
+                      "type": "text",
+                      "id": "C7Cml",
+                      "name": "T",
+                      "fill": "$muted-fg",
+                      "content": "カテゴリ管理",
+                      "fontFamily": "$font-body",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "BeGNs",
+                  "name": "SI ユーザー管理",
+                  "width": "fill_container",
+                  "fill": "$bg",
+                  "gap": 10,
+                  "padding": [
+                    10,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "cWvOs",
+                      "name": "I",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "users",
+                      "library": "lucide",
+                      "fill": "$muted-fg"
+                    },
+                    {
+                      "type": "text",
+                      "id": "bygXw",
+                      "name": "T",
+                      "fill": "$muted-fg",
+                      "content": "ユーザー管理",
+                      "fontFamily": "$font-body",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "NOTu6",
+                  "name": "SI 注文管理",
+                  "width": "fill_container",
+                  "fill": "$bg",
+                  "gap": 10,
+                  "padding": [
+                    10,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "qkAJB",
+                      "name": "I",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "receipt",
+                      "library": "lucide",
+                      "fill": "$muted-fg"
+                    },
+                    {
+                      "type": "text",
+                      "id": "suBQo",
+                      "name": "T",
+                      "fill": "$muted-fg",
+                      "content": "注文管理",
+                      "fontFamily": "$font-body",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "lafbq",
+                  "name": "SI バナー管理",
+                  "width": "fill_container",
+                  "fill": "$bg",
+                  "gap": 10,
+                  "padding": [
+                    10,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "Lncbw",
+                      "name": "I",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "image",
+                      "library": "lucide",
+                      "fill": "$muted-fg"
+                    },
+                    {
+                      "type": "text",
+                      "id": "i4j1d",
+                      "name": "T",
+                      "fill": "$muted-fg",
+                      "content": "バナー管理",
+                      "fontFamily": "$font-body",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "RXtrd",
+              "name": "Admin Main",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                28,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "WnBdz",
+                  "name": "H Row",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "GIw7d",
+                      "name": "H",
+                      "fill": "$fg",
+                      "content": "商品管理",
+                      "fontFamily": "$font-head",
+                      "fontSize": 22,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "d0AcEi",
+                      "name": "New Btn",
+                      "fill": "$fg",
+                      "gap": 6,
+                      "padding": [
+                        10,
+                        18
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "ErCk4",
+                          "name": "I",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "plus",
+                          "library": "lucide",
+                          "fill": "#FFFFFF"
+                        },
+                        {
+                          "type": "text",
+                          "id": "ngIPw",
+                          "name": "L",
+                          "fill": "#FFFFFF",
+                          "content": "新規商品",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "X1ur3",
+                  "name": "Table",
+                  "clip": true,
+                  "width": "fill_container",
+                  "fill": "$bg",
+                  "stroke": "#E5E5E5",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "dLZsR",
+                      "name": "THead",
+                      "width": "fill_container",
+                      "fill": "$card",
+                      "gap": 16,
+                      "padding": [
+                        12,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "w3jIq",
+                          "name": "C1",
+                          "fill": "$muted-fg",
+                          "content": "商品名",
+                          "fontFamily": "$font-body",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "J9Vap",
+                          "name": "C2",
+                          "fill": "$muted-fg",
+                          "content": "クリエイター",
+                          "fontFamily": "$font-body",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "z9a9r",
+                          "name": "C3",
+                          "fill": "$muted-fg",
+                          "content": "価格",
+                          "fontFamily": "$font-body",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "k4Uo7",
+                          "name": "C4",
+                          "fill": "$muted-fg",
+                          "content": "ステータス",
+                          "fontFamily": "$font-body",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "PsoVl",
+                          "name": "C5",
+                          "fill": "$muted-fg",
+                          "content": "操作",
+                          "fontFamily": "$font-body",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "MZbCc",
+                      "name": "TR Heritage Statue Scan",
+                      "width": "fill_container",
+                      "stroke": "#EFEFEF",
+                      "strokeWidth": 1,
+                      "gap": 16,
+                      "padding": [
+                        14,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Qp6VL",
+                          "name": "C1",
+                          "fill": "$fg",
+                          "content": "Heritage Statue Scan",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Ut7i3",
+                          "name": "C2",
+                          "fill": "$muted-fg",
+                          "content": "Izutsuya Studio",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "U0jWgw",
+                          "name": "C3",
+                          "fill": "$fg",
+                          "content": "¥4,800",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "jhnmS",
+                          "name": "C4",
+                          "width": 120,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "JO781",
+                              "name": "B",
+                              "fill": "#E8F5E9",
+                              "cornerRadius": 99,
+                              "padding": [
+                                3,
+                                10
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "gjkIr",
+                                  "name": "S",
+                                  "fill": "#2E7D32",
+                                  "content": "公開中",
+                                  "fontFamily": "$font-body",
+                                  "fontSize": 10,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "PnjIW",
+                          "name": "C5",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "m2C6y",
+                              "name": "E",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "pencil",
+                              "library": "lucide",
+                              "fill": "$muted-fg"
+                            },
+                            {
+                              "type": "icon",
+                              "id": "mU9Bv",
+                              "name": "D",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "trash-2",
+                              "library": "lucide",
+                              "fill": "#DC2626"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "y7wFz",
+                      "name": "TR Gaussian Splat — Alley",
+                      "width": "fill_container",
+                      "stroke": "#EFEFEF",
+                      "strokeWidth": 1,
+                      "gap": 16,
+                      "padding": [
+                        14,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "wXRqJ",
+                          "name": "C1",
+                          "fill": "$fg",
+                          "content": "Gaussian Splat — Alley",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "nLzRW",
+                          "name": "C2",
+                          "fill": "$muted-fg",
+                          "content": "Izutsuya Studio",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "rUvKb",
+                          "name": "C3",
+                          "fill": "$fg",
+                          "content": "¥12,000",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Jik8a",
+                          "name": "C4",
+                          "width": 120,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "lW6Gg",
+                              "name": "B",
+                              "fill": "#E8F5E9",
+                              "cornerRadius": 99,
+                              "padding": [
+                                3,
+                                10
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "gvud5",
+                                  "name": "S",
+                                  "fill": "#2E7D32",
+                                  "content": "公開中",
+                                  "fontFamily": "$font-body",
+                                  "fontSize": 10,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "aKTBp",
+                          "name": "C5",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "CzaK6",
+                              "name": "E",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "pencil",
+                              "library": "lucide",
+                              "fill": "$muted-fg"
+                            },
+                            {
+                              "type": "icon",
+                              "id": "k1PQR",
+                              "name": "D",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "trash-2",
+                              "library": "lucide",
+                              "fill": "#DC2626"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "PbBda",
+                      "name": "TR Temple Gate 3DGS",
+                      "width": "fill_container",
+                      "stroke": "#EFEFEF",
+                      "strokeWidth": 1,
+                      "gap": 16,
+                      "padding": [
+                        14,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "POPEm",
+                          "name": "C1",
+                          "fill": "$fg",
+                          "content": "Temple Gate 3DGS",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "rSMtk",
+                          "name": "C2",
+                          "fill": "$muted-fg",
+                          "content": "Kyoto Archive",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "qS4Rw",
+                          "name": "C3",
+                          "fill": "$fg",
+                          "content": "¥6,200",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "f6beX",
+                          "name": "C4",
+                          "width": 120,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "GLr6e",
+                              "name": "B",
+                              "fill": "#F0F0F0",
+                              "cornerRadius": 99,
+                              "padding": [
+                                3,
+                                10
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "siICd",
+                                  "name": "S",
+                                  "fill": "#666666",
+                                  "content": "下書き",
+                                  "fontFamily": "$font-body",
+                                  "fontSize": 10,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "F0KUn",
+                          "name": "C5",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "nyhIU",
+                              "name": "E",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "pencil",
+                              "library": "lucide",
+                              "fill": "$muted-fg"
+                            },
+                            {
+                              "type": "icon",
+                              "id": "M4IvSr",
+                              "name": "D",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "trash-2",
+                              "library": "lucide",
+                              "fill": "#DC2626"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "p0qpU",
+                      "name": "TR Avatar Rig — Base",
+                      "width": "fill_container",
+                      "stroke": "#EFEFEF",
+                      "strokeWidth": 1,
+                      "gap": 16,
+                      "padding": [
+                        14,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "whznh",
+                          "name": "C1",
+                          "fill": "$fg",
+                          "content": "Avatar Rig — Base",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "text",
+                          "id": "w3l7d9",
+                          "name": "C2",
+                          "fill": "$muted-fg",
+                          "content": "MotionLab",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "SiSF3",
+                          "name": "C3",
+                          "fill": "$fg",
+                          "content": "¥5,500",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Wqrq9",
+                          "name": "C4",
+                          "width": 120,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "oz0Vi",
+                              "name": "B",
+                              "fill": "#E8F5E9",
+                              "cornerRadius": 99,
+                              "padding": [
+                                3,
+                                10
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "uNuwo",
+                                  "name": "S",
+                                  "fill": "#2E7D32",
+                                  "content": "公開中",
+                                  "fontFamily": "$font-body",
+                                  "fontSize": 10,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "QobVq",
+                          "name": "C5",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "y7BheM",
+                              "name": "E",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "pencil",
+                              "library": "lucide",
+                              "fill": "$muted-fg"
+                            },
+                            {
+                              "type": "icon",
+                              "id": "YttGU",
+                              "name": "D",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "trash-2",
+                              "library": "lucide",
+                              "fill": "#DC2626"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "id": "y0QC6s",
+      "x": 1560,
+      "y": 8166,
+      "name": "Note Admin",
+      "width": 380,
+      "height": 0,
+      "content": "08 管理画面(/admin/*) — 実装対応\n\n・管理者ログイン時は#FF4500の帯を全ページ上部に表示\n・セクション: 商品/カテゴリ/ユーザー/注文/バナー管理\n・テーブルはshadcn Tableベース、行 hoverでbg-muted\n・クリエイター向け商品管理(/creator/products)も同構成"
+    },
+    {
+      "type": "frame",
+      "id": "N5zWWH",
+      "x": 80,
+      "y": 8668,
+      "name": "09 — Overlays / Banners",
+      "clip": true,
+      "width": 1440,
+      "fill": "$card",
+      "layout": "vertical",
+      "gap": 32,
+      "padding": [
+        48,
+        90
+      ],
+      "children": [
+        {
+          "type": "text",
+          "id": "wXem6",
+          "name": "H",
+          "fill": "$fg",
+          "content": "Overlays / Banners",
+          "fontFamily": "$font-head",
+          "fontSize": 22,
+          "fontWeight": "700",
+          "fontStyle": "italic"
+        },
+        {
+          "type": "frame",
+          "id": "gIANp",
+          "name": "Cookie Banner",
+          "width": "fill_container",
+          "fill": "$bg",
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000018",
+            "offset": {
+              "x": 0,
+              "y": -4
+            },
+            "blur": 24
+          },
+          "gap": 24,
+          "padding": [
+            20,
+            28
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "V0EmM",
+              "name": "Ck Col",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "mzhdK",
+                  "name": "T",
+                  "fill": "$fg",
+                  "content": "Cookieの使用について",
+                  "fontFamily": "$font-body",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "Z4xUDr",
+                  "name": "B",
+                  "fill": "$muted-fg",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "当サイトでは、サービスの提供および利用状況の分析のためにCookieを使用します。詳しくはプライバシーポリシーをご確認ください。",
+                  "lineHeight": 1.7,
+                  "fontFamily": "$font-body",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "x5YJx",
+              "name": "Ck Btns",
+              "gap": 10,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "ZFQnD",
+                  "name": "Agree",
+                  "fill": "$fg",
+                  "padding": [
+                    10,
+                    22
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "q7Koc",
+                      "name": "L",
+                      "fill": "#FFFFFF",
+                      "content": "同意する",
+                      "fontFamily": "$font-body",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "mWkOv",
+                  "name": "Deny",
+                  "stroke": "$fg",
+                  "strokeWidth": 1,
+                  "padding": [
+                    10,
+                    22
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "LDbN4",
+                      "name": "L",
+                      "fill": "$fg",
+                      "content": "拒否する",
+                      "fontFamily": "$font-body",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Pfo7j",
+          "name": "Role Banners",
+          "width": "fill_container",
+          "gap": 20,
+          "children": [
+            {
+              "type": "frame",
+              "id": "mPPUS",
+              "name": "RB Admin",
+              "width": "fill_container",
+              "fill": "#FF4500",
+              "gap": 10,
+              "padding": [
+                10,
+                20
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "h5OK4o",
+                  "name": "I",
+                  "width": 14,
+                  "height": 14,
+                  "icon": "shield-alert",
+                  "library": "lucide",
+                  "fill": "#FFFFFF"
+                },
+                {
+                  "type": "text",
+                  "id": "jO2gR",
+                  "name": "T",
+                  "fill": "#FFFFFF",
+                  "content": "管理者モード",
+                  "fontFamily": "$font-body",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "PGfNo",
+              "name": "RB Creator",
+              "width": "fill_container",
+              "fill": "$accent",
+              "gap": 10,
+              "padding": [
+                10,
+                20
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "ckLeq",
+                  "name": "I",
+                  "width": 14,
+                  "height": 14,
+                  "icon": "badge-check",
+                  "library": "lucide",
+                  "fill": "#FFFFFF"
+                },
+                {
+                  "type": "text",
+                  "id": "wLVum",
+                  "name": "T",
+                  "fill": "#FFFFFF",
+                  "content": "クリエイターアカウント",
+                  "fontFamily": "$font-body",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "ItRTj",
+          "name": "Sold Demo",
+          "clip": true,
+          "width": 280,
+          "height": 290,
+          "fill": "$card-white",
+          "effect": [
+            {
+              "type": "shadow",
+              "shadowType": "outer",
+              "color": "#0000000F",
+              "offset": {
+                "x": 2,
+                "y": 2
+              },
+              "blur": 6
+            },
+            {
+              "type": "shadow",
+              "shadowType": "outer",
+              "color": "#FFFFFF66",
+              "offset": {
+                "x": -2,
+                "y": -2
+              },
+              "blur": 6
+            }
+          ],
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "EGjqr",
+              "x": 0,
+              "y": 0,
+              "name": "Thumb",
+              "metadata": {
+                "type": "unsplash",
+                "username": "philipsfuture",
+                "link": "https://unsplash.com/@philipsfuture",
+                "author": "Philip Oroni"
+              },
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "https://images.unsplash.com/photo-1660665416754-e0c780103b3c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODM5NDE0MDd8&ixlib=rb-4.1.0&q=80&w=1080",
+                "mode": "fill"
+              },
+              "width": 280,
+              "height": 210
+            },
+            {
+              "type": "text",
+              "id": "XACrL",
+              "x": 14,
+              "y": 224,
+              "name": "Title",
+              "fill": "$fg",
+              "content": "Heritage Statue Scan",
+              "fontFamily": "$font-body",
+              "fontSize": 13,
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "bpPPD",
+              "x": 14,
+              "y": 248,
+              "name": "Price",
+              "fill": "$fg",
+              "content": "¥4,800",
+              "fontFamily": "$font-head",
+              "fontSize": 15,
+              "fontWeight": "700"
+            },
+            {
+              "type": "frame",
+              "id": "J4cz4K",
+              "x": -45,
+              "y": 125,
+              "name": "Ribbon",
+              "rotation": 45,
+              "width": 240,
+              "fill": "#DC2626",
+              "padding": [
+                7,
+                0
+              ],
+              "justifyContent": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "FVfo6",
+                  "name": "S",
+                  "fill": "#FFFFFF",
+                  "content": "SOLD",
+                  "fontFamily": "$font-head",
+                  "fontSize": 13,
+                  "fontWeight": "700",
+                  "letterSpacing": 3
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "id": "IwfkV",
+      "x": 1560,
+      "y": 8668,
+      "name": "Note Overlays",
+      "width": 380,
+      "height": 0,
+      "content": "09 オーバーレイ類 — 実装対応\n\n・Cookieバナーは初回訪問時に画面下部固定でスライドイン\n・ロールバナー: 管理者=#FF4500 / クリエイター=アクセントブルー\n・SOLDリボンは売切商品のサムネイル左上に-35°で重ねる(#DC2626)"
+    },
+    {
+      "type": "note",
+      "id": "eDtSB",
+      "x": 1560,
+      "y": 3160,
+      "name": "Note Footer",
+      "width": 380,
+      "height": 0,
+      "content": "フッター — 実装対応\n\n・背景はインタラクティブな等高線(contour-lines.glsl)。実装ではマウス位置でノイズフィールドが歪み、線がゆっくり変化\n・巨大ロゴ「3Dasset」は下半分をビューポート外に見切れさせる(overflow:hidden)\n・BACK TO TOPは角丸なしのアウトラインボタン、hoverで白黒反転"
+    }
+  ],
+  "variables": {
+    "bg": {
+      "type": "color",
+      "value": "#F6F6F6"
+    },
+    "fg": {
+      "type": "color",
+      "value": "#000000"
+    },
+    "card": {
+      "type": "color",
+      "value": "#E4E4E4"
+    },
+    "card-white": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "muted-fg": {
+      "type": "color",
+      "value": "#746D76"
+    },
+    "accent": {
+      "type": "color",
+      "value": "#0015FF"
+    },
+    "neu": {
+      "type": "color",
+      "value": "#EAEAEA"
+    },
+    "neu-light": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "neu-dark": {
+      "type": "color",
+      "value": "#D1D1D1"
+    },
+    "hud-yellow": {
+      "type": "color",
+      "value": "#EFFF07"
+    },
+    "hud-orange": {
+      "type": "color",
+      "value": "#FF3D00"
+    },
+    "hud-cyan": {
+      "type": "color",
+      "value": "#B9F6EC"
+    },
+    "hud-ink": {
+      "type": "color",
+      "value": "#0A0A0A"
+    },
+    "destructive": {
+      "type": "color",
+      "value": "#DC2626"
+    },
+    "font-body": {
+      "type": "string",
+      "value": "Noto Sans JP"
+    },
+    "font-head": {
+      "type": "string",
+      "value": "Poppins"
+    },
+    "font-hud": {
+      "type": "string",
+      "value": "Orbitron"
+    },
+    "font-mono": {
+      "type": "string",
+      "value": "JetBrains Mono"
+    }
+  },
+  "fileToken": "ce81742a-c54b-445c-a708-410d48187199"
+}

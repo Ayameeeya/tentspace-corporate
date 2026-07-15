@@ -1,0 +1,2402 @@
+{
+  "version": "2.14",
+  "children": [
+    {
+      "type": "frame",
+      "id": "Aqrpz",
+      "x": 80,
+      "y": 80,
+      "name": "Neon × Mono Palettes",
+      "width": 1560,
+      "fill": "#0E0E0E",
+      "layout": "vertical",
+      "gap": 48,
+      "padding": 80,
+      "children": [
+        {
+          "type": "frame",
+          "id": "n03OU",
+          "name": "Header",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 12,
+          "children": [
+            {
+              "type": "text",
+              "id": "Nfxd1",
+              "name": "Kicker",
+              "fill": "#777777",
+              "content": "REUSABLE COLOR SYSTEM — NEON × MONOTONE",
+              "fontFamily": "$font-mono",
+              "fontSize": 12,
+              "fontWeight": "normal",
+              "letterSpacing": 3
+            },
+            {
+              "type": "text",
+              "id": "EsWnL",
+              "name": "Title",
+              "fill": "#FFFFFF",
+              "content": "NEON PALETTES",
+              "fontFamily": "$font-display",
+              "fontSize": 64,
+              "fontWeight": "normal",
+              "letterSpacing": 1
+            },
+            {
+              "type": "text",
+              "id": "mIVit",
+              "name": "Sub",
+              "fill": "#999999",
+              "textGrowth": "fixed-width",
+              "width": 760,
+              "content": "モノトーンの舞台にネオンアクセントを一点だけ乗せる6パターン。各パレットは base / elevated / text-hi / text-lo / accent の5ロール固定。アクセントはCTA・ホバー・進捗表示のみに使い、面では使わない。すべてこのファイルの変数に登録済み。",
+              "lineHeight": 1.7,
+              "fontFamily": "$font-body",
+              "fontSize": 14,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "LitkJ",
+          "name": "Palette Grid",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 32,
+          "children": [
+            {
+              "type": "frame",
+              "id": "yvywA",
+              "name": "Grid Row 1",
+              "width": "fill_container",
+              "gap": 32,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "h2hBq3",
+                  "name": "Palette VOLT RUNNER",
+                  "width": "fill_container",
+                  "fill": "#141414",
+                  "cornerRadius": 4,
+                  "stroke": "#242424",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 20,
+                  "padding": 24,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ZyMZF",
+                      "name": "Name Row",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "wAm4o",
+                          "name": "Name",
+                          "fill": "$volt-accent",
+                          "content": "VOLT RUNNER",
+                          "fontFamily": "$font-display",
+                          "fontSize": 28,
+                          "fontWeight": "normal",
+                          "letterSpacing": 1
+                        },
+                        {
+                          "type": "text",
+                          "id": "wC0mf",
+                          "name": "Prefix",
+                          "fill": "#666666",
+                          "content": "$volt-*",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 10,
+                          "fontWeight": "normal",
+                          "letterSpacing": 2
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "S136r",
+                      "name": "Chips",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "QRVqK",
+                          "name": "Chip base",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "SPtd2",
+                              "name": "Swatch",
+                              "fill": "$volt-base",
+                              "width": "fill_container",
+                              "height": 56,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "mpnAR",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "base",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "cPpUm",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#0A0A0A",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "G3jubP",
+                          "name": "Chip elevated",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "Y2xp2",
+                              "name": "Swatch",
+                              "fill": "$volt-elevated",
+                              "width": "fill_container",
+                              "height": 56,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "CaHWT",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "elevated",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "bee0i",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#161616",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Tv4fm",
+                          "name": "Chip text-hi",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "RDELJ",
+                              "name": "Swatch",
+                              "fill": "$volt-text-hi",
+                              "width": "fill_container",
+                              "height": 56,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "iBr6A",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "text-hi",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "GgFjP",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#FFFFFF",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "O29Xb",
+                          "name": "Chip text-lo",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "b8Aaup",
+                              "name": "Swatch",
+                              "fill": "$volt-text-lo",
+                              "width": "fill_container",
+                              "height": 56,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "cYIWZ",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "text-lo",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "Hx8Rb",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#8A8A8A",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "QN6ih",
+                          "name": "Chip accent",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "klSHp",
+                              "name": "Swatch",
+                              "fill": "$volt-accent",
+                              "width": "fill_container",
+                              "height": 72,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "KDKkI",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "accent",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "uDqA1",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#CCFF00",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "wvNyj",
+                      "name": "Preview",
+                      "width": "fill_container",
+                      "fill": "$volt-base",
+                      "cornerRadius": 2,
+                      "layout": "vertical",
+                      "gap": 12,
+                      "padding": [
+                        24,
+                        28
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "uoYeD",
+                          "name": "Prev Kicker",
+                          "fill": "$volt-accent",
+                          "content": "● LIVE PREVIEW",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 9,
+                          "fontWeight": "normal",
+                          "letterSpacing": 3
+                        },
+                        {
+                          "type": "text",
+                          "id": "twa7X",
+                          "name": "Prev Head",
+                          "fill": "$volt-text-hi",
+                          "content": "OUTRUN",
+                          "fontFamily": "$font-display",
+                          "fontSize": 44,
+                          "fontWeight": "normal",
+                          "letterSpacing": 2
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Qs8rq",
+                          "name": "Prev Foot",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "j4aU0W",
+                              "name": "Prev Body",
+                              "fill": "$volt-text-lo",
+                              "content": "本文は text-lo で控えめに。",
+                              "fontFamily": "$font-body",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Pu9op",
+                              "name": "Prev Btn",
+                              "fill": "$volt-accent",
+                              "cornerRadius": 3,
+                              "padding": [
+                                10,
+                                20
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "iQiPg",
+                                  "name": "Btn Label",
+                                  "fill": "$volt-base",
+                                  "content": "ACTION",
+                                  "fontFamily": "$font-display",
+                                  "fontSize": 12,
+                                  "fontWeight": "normal",
+                                  "letterSpacing": 1
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "x5UEW",
+                      "name": "Use Note",
+                      "fill": "#999999",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "スポーツ・フィットネス・エナジー系。最も汎用性が高い勝ちパターン",
+                      "lineHeight": 1.6,
+                      "fontFamily": "$font-body",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "pAULc",
+                  "name": "Palette CYBER CYAN",
+                  "width": "fill_container",
+                  "fill": "#141414",
+                  "cornerRadius": 4,
+                  "stroke": "#242424",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 20,
+                  "padding": 24,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "H8FI2",
+                      "name": "Name Row",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "t96tC",
+                          "name": "Name",
+                          "fill": "$cyber-accent",
+                          "content": "CYBER CYAN",
+                          "fontFamily": "$font-display",
+                          "fontSize": 28,
+                          "fontWeight": "normal",
+                          "letterSpacing": 1
+                        },
+                        {
+                          "type": "text",
+                          "id": "o6Aivu",
+                          "name": "Prefix",
+                          "fill": "#666666",
+                          "content": "$cyber-*",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 10,
+                          "fontWeight": "normal",
+                          "letterSpacing": 2
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "jQTKG",
+                      "name": "Chips",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "SWMJS",
+                          "name": "Chip base",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "RhDsn",
+                              "name": "Swatch",
+                              "fill": "$cyber-base",
+                              "width": "fill_container",
+                              "height": 56,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "kdqAR",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "base",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "e8HBKH",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#05080A",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "PouKo",
+                          "name": "Chip elevated",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "sudBh",
+                              "name": "Swatch",
+                              "fill": "$cyber-elevated",
+                              "width": "fill_container",
+                              "height": 56,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "HY6Wm",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "elevated",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "U3i0I",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#0D1418",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "M0REE",
+                          "name": "Chip text-hi",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "AVAKD",
+                              "name": "Swatch",
+                              "fill": "$cyber-text-hi",
+                              "width": "fill_container",
+                              "height": 56,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "IuxXc",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "text-hi",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "bqwQy",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#F2FBFF",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "dZ6uM",
+                          "name": "Chip text-lo",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "S0OM3",
+                              "name": "Swatch",
+                              "fill": "$cyber-text-lo",
+                              "width": "fill_container",
+                              "height": 56,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "prIyA",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "text-lo",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "I4yrd",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#7A8A92",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Z5c6tQ",
+                          "name": "Chip accent",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "RR5NO",
+                              "name": "Swatch",
+                              "fill": "$cyber-accent",
+                              "width": "fill_container",
+                              "height": 72,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "Cw2TY",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "accent",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "z5iYA",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#00E5FF",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "HwpnD",
+                      "name": "Preview",
+                      "width": "fill_container",
+                      "fill": "$cyber-base",
+                      "cornerRadius": 2,
+                      "layout": "vertical",
+                      "gap": 12,
+                      "padding": [
+                        24,
+                        28
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "f61jAD",
+                          "name": "Prev Kicker",
+                          "fill": "$cyber-accent",
+                          "content": "● LIVE PREVIEW",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 9,
+                          "fontWeight": "normal",
+                          "letterSpacing": 3
+                        },
+                        {
+                          "type": "text",
+                          "id": "YhLbk",
+                          "name": "Prev Head",
+                          "fill": "$cyber-text-hi",
+                          "content": "SIGNAL",
+                          "fontFamily": "$font-display",
+                          "fontSize": 44,
+                          "fontWeight": "normal",
+                          "letterSpacing": 2
+                        },
+                        {
+                          "type": "frame",
+                          "id": "qvsrh",
+                          "name": "Prev Foot",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "w9cPq",
+                              "name": "Prev Body",
+                              "fill": "$cyber-text-lo",
+                              "content": "本文は text-lo で控えめに。",
+                              "fontFamily": "$font-body",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "ArN7I",
+                              "name": "Prev Btn",
+                              "fill": "$cyber-accent",
+                              "cornerRadius": 3,
+                              "padding": [
+                                10,
+                                20
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "nF3rT",
+                                  "name": "Btn Label",
+                                  "fill": "$cyber-base",
+                                  "content": "ACTION",
+                                  "fontFamily": "$font-display",
+                                  "fontSize": 12,
+                                  "fontWeight": "normal",
+                                  "letterSpacing": 1
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "lywRX",
+                      "name": "Use Note",
+                      "fill": "#999999",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "テック・AI・SaaS・データ系。クールで信頼感のある未来感",
+                      "lineHeight": 1.6,
+                      "fontFamily": "$font-body",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "G34Dy",
+              "name": "Grid Row 2",
+              "width": "fill_container",
+              "gap": 32,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "uYVrC",
+                  "name": "Palette PLASMA MAGENTA",
+                  "width": "fill_container",
+                  "fill": "#141414",
+                  "cornerRadius": 4,
+                  "stroke": "#242424",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 20,
+                  "padding": 24,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "g6gQ0a",
+                      "name": "Name Row",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "JDiXX",
+                          "name": "Name",
+                          "fill": "$plasma-accent",
+                          "content": "PLASMA MAGENTA",
+                          "fontFamily": "$font-display",
+                          "fontSize": 28,
+                          "fontWeight": "normal",
+                          "letterSpacing": 1
+                        },
+                        {
+                          "type": "text",
+                          "id": "CyOnk",
+                          "name": "Prefix",
+                          "fill": "#666666",
+                          "content": "$plasma-*",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 10,
+                          "fontWeight": "normal",
+                          "letterSpacing": 2
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "jjXHD",
+                      "name": "Chips",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "w6J0yg",
+                          "name": "Chip base",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "lOznp",
+                              "name": "Swatch",
+                              "fill": "$plasma-base",
+                              "width": "fill_container",
+                              "height": 56,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "w5ZEZ1",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "base",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "bDZze",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#0B0710",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Zs7Dn",
+                          "name": "Chip elevated",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "cXwqm",
+                              "name": "Swatch",
+                              "fill": "$plasma-elevated",
+                              "width": "fill_container",
+                              "height": 56,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "RuX87",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "elevated",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "dSw8N",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#171020",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "pTprv",
+                          "name": "Chip text-hi",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "A4DK6I",
+                              "name": "Swatch",
+                              "fill": "$plasma-text-hi",
+                              "width": "fill_container",
+                              "height": 56,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "qDgJm",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "text-hi",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "z1MJC2",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#FDF2F8",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "FzpJO",
+                          "name": "Chip text-lo",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "LaY3l",
+                              "name": "Swatch",
+                              "fill": "$plasma-text-lo",
+                              "width": "fill_container",
+                              "height": 56,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "obAie",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "text-lo",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "A6f7SK",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#8E7A8C",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Jk2Sp",
+                          "name": "Chip accent",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "ryZHG",
+                              "name": "Swatch",
+                              "fill": "$plasma-accent",
+                              "width": "fill_container",
+                              "height": 72,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "rtwWX",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "accent",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "T7PSm",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#FF2D95",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "V3ssb",
+                      "name": "Preview",
+                      "width": "fill_container",
+                      "fill": "$plasma-base",
+                      "cornerRadius": 2,
+                      "layout": "vertical",
+                      "gap": 12,
+                      "padding": [
+                        24,
+                        28
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Yt63b",
+                          "name": "Prev Kicker",
+                          "fill": "$plasma-accent",
+                          "content": "● LIVE PREVIEW",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 9,
+                          "fontWeight": "normal",
+                          "letterSpacing": 3
+                        },
+                        {
+                          "type": "text",
+                          "id": "LD3Op",
+                          "name": "Prev Head",
+                          "fill": "$plasma-text-hi",
+                          "content": "PULSE",
+                          "fontFamily": "$font-display",
+                          "fontSize": 44,
+                          "fontWeight": "normal",
+                          "letterSpacing": 2
+                        },
+                        {
+                          "type": "frame",
+                          "id": "VBzjv",
+                          "name": "Prev Foot",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "nSMRi",
+                              "name": "Prev Body",
+                              "fill": "$plasma-text-lo",
+                              "content": "本文は text-lo で控えめに。",
+                              "fontFamily": "$font-body",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Q2Nh0F",
+                              "name": "Prev Btn",
+                              "fill": "$plasma-accent",
+                              "cornerRadius": 3,
+                              "padding": [
+                                10,
+                                20
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "uwXbq",
+                                  "name": "Btn Label",
+                                  "fill": "$plasma-base",
+                                  "content": "ACTION",
+                                  "fontFamily": "$font-display",
+                                  "fontSize": 12,
+                                  "fontWeight": "normal",
+                                  "letterSpacing": 1
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "LphrP",
+                      "name": "Use Note",
+                      "fill": "#999999",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "ファッション・音楽・イベント系。大胆で情熱的なブランドに",
+                      "lineHeight": 1.6,
+                      "fontFamily": "$font-body",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "sIUUN",
+                  "name": "Palette EMBER ORANGE",
+                  "width": "fill_container",
+                  "fill": "#141414",
+                  "cornerRadius": 4,
+                  "stroke": "#242424",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 20,
+                  "padding": 24,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "N3Khx",
+                      "name": "Name Row",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "nX7iA",
+                          "name": "Name",
+                          "fill": "$ember-accent",
+                          "content": "EMBER ORANGE",
+                          "fontFamily": "$font-display",
+                          "fontSize": 28,
+                          "fontWeight": "normal",
+                          "letterSpacing": 1
+                        },
+                        {
+                          "type": "text",
+                          "id": "kHKCX",
+                          "name": "Prefix",
+                          "fill": "#666666",
+                          "content": "$ember-*",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 10,
+                          "fontWeight": "normal",
+                          "letterSpacing": 2
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "PsE8Q",
+                      "name": "Chips",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "nh6JU",
+                          "name": "Chip base",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "O4R7H",
+                              "name": "Swatch",
+                              "fill": "$ember-base",
+                              "width": "fill_container",
+                              "height": 56,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "wx73z",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "base",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "yLlrQ",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#0C0A08",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "ypltP",
+                          "name": "Chip elevated",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "cyHzz",
+                              "name": "Swatch",
+                              "fill": "$ember-elevated",
+                              "width": "fill_container",
+                              "height": 56,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "oxfSO",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "elevated",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "m4SQG",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#191410",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "psA5j",
+                          "name": "Chip text-hi",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "Bjs3l",
+                              "name": "Swatch",
+                              "fill": "$ember-text-hi",
+                              "width": "fill_container",
+                              "height": 56,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "Nz1q2",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "text-hi",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "bisIo",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#FFF7F0",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "SJeBH",
+                          "name": "Chip text-lo",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "FU2bp",
+                              "name": "Swatch",
+                              "fill": "$ember-text-lo",
+                              "width": "fill_container",
+                              "height": 56,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "s5b2g",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "text-lo",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "h9Zto3",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#94867A",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "dV7Hq",
+                          "name": "Chip accent",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "v4GrV5",
+                              "name": "Swatch",
+                              "fill": "$ember-accent",
+                              "width": "fill_container",
+                              "height": 72,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "j6s6FM",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "accent",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "cEcmX",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#FF5C00",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "RHWDz",
+                      "name": "Preview",
+                      "width": "fill_container",
+                      "fill": "$ember-base",
+                      "cornerRadius": 2,
+                      "layout": "vertical",
+                      "gap": 12,
+                      "padding": [
+                        24,
+                        28
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "G0VBVI",
+                          "name": "Prev Kicker",
+                          "fill": "$ember-accent",
+                          "content": "● LIVE PREVIEW",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 9,
+                          "fontWeight": "normal",
+                          "letterSpacing": 3
+                        },
+                        {
+                          "type": "text",
+                          "id": "bcf30",
+                          "name": "Prev Head",
+                          "fill": "$ember-text-hi",
+                          "content": "IGNITE",
+                          "fontFamily": "$font-display",
+                          "fontSize": 44,
+                          "fontWeight": "normal",
+                          "letterSpacing": 2
+                        },
+                        {
+                          "type": "frame",
+                          "id": "V0lUhk",
+                          "name": "Prev Foot",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "G78WIK",
+                              "name": "Prev Body",
+                              "fill": "$ember-text-lo",
+                              "content": "本文は text-lo で控えめに。",
+                              "fontFamily": "$font-body",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "j3JbFo",
+                              "name": "Prev Btn",
+                              "fill": "$ember-accent",
+                              "cornerRadius": 3,
+                              "padding": [
+                                10,
+                                20
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "N5pk0Q",
+                                  "name": "Btn Label",
+                                  "fill": "$ember-base",
+                                  "content": "ACTION",
+                                  "fontFamily": "$font-display",
+                                  "fontSize": 12,
+                                  "fontWeight": "normal",
+                                  "letterSpacing": 1
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "JIkSo",
+                      "name": "Use Note",
+                      "fill": "#999999",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "アウトドア・モビリティ・飲食系。熱量とクラフト感の両立",
+                      "lineHeight": 1.6,
+                      "fontFamily": "$font-body",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "R8KQUS",
+              "name": "Grid Row 3",
+              "width": "fill_container",
+              "gap": 32,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "AxEgv",
+                  "name": "Palette ACID MINT",
+                  "width": "fill_container",
+                  "fill": "#141414",
+                  "cornerRadius": 4,
+                  "stroke": "#242424",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 20,
+                  "padding": 24,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "nfmcr",
+                      "name": "Name Row",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "TXHgZ",
+                          "name": "Name",
+                          "fill": "$acid-accent",
+                          "content": "ACID MINT",
+                          "fontFamily": "$font-display",
+                          "fontSize": 28,
+                          "fontWeight": "normal",
+                          "letterSpacing": 1
+                        },
+                        {
+                          "type": "text",
+                          "id": "Vxs0R",
+                          "name": "Prefix",
+                          "fill": "#666666",
+                          "content": "$acid-*",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 10,
+                          "fontWeight": "normal",
+                          "letterSpacing": 2
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "kGGyi",
+                      "name": "Chips",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "AfZNl",
+                          "name": "Chip base",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "v1bqii",
+                              "name": "Swatch",
+                              "fill": "$acid-base",
+                              "width": "fill_container",
+                              "height": 56,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "LXnGy",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "base",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "eLxP9",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#060A08",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "ZpMkw",
+                          "name": "Chip elevated",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "D1MdnC",
+                              "name": "Swatch",
+                              "fill": "$acid-elevated",
+                              "width": "fill_container",
+                              "height": 56,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "qXWof",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "elevated",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "wn0xV",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#0F1814",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "eDunA",
+                          "name": "Chip text-hi",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "FjB2b",
+                              "name": "Swatch",
+                              "fill": "$acid-text-hi",
+                              "width": "fill_container",
+                              "height": 56,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "MbzqJ",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "text-hi",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "rvnlb",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#F0FFF8",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "bsBHK",
+                          "name": "Chip text-lo",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "t1f9l",
+                              "name": "Swatch",
+                              "fill": "$acid-text-lo",
+                              "width": "fill_container",
+                              "height": 56,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "ySZXd",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "text-lo",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "AfmcO",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#7A9288",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "V6sdv",
+                          "name": "Chip accent",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "YcISD",
+                              "name": "Swatch",
+                              "fill": "$acid-accent",
+                              "width": "fill_container",
+                              "height": 72,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "hnQFd",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "accent",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "iiudc",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#00FFA3",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "AMPkv",
+                      "name": "Preview",
+                      "width": "fill_container",
+                      "fill": "$acid-base",
+                      "cornerRadius": 2,
+                      "layout": "vertical",
+                      "gap": 12,
+                      "padding": [
+                        24,
+                        28
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "hinAS",
+                          "name": "Prev Kicker",
+                          "fill": "$acid-accent",
+                          "content": "● LIVE PREVIEW",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 9,
+                          "fontWeight": "normal",
+                          "letterSpacing": 3
+                        },
+                        {
+                          "type": "text",
+                          "id": "z63bi",
+                          "name": "Prev Head",
+                          "fill": "$acid-text-hi",
+                          "content": "EVOLVE",
+                          "fontFamily": "$font-display",
+                          "fontSize": 44,
+                          "fontWeight": "normal",
+                          "letterSpacing": 2
+                        },
+                        {
+                          "type": "frame",
+                          "id": "tKgXP",
+                          "name": "Prev Foot",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "X6YPO",
+                              "name": "Prev Body",
+                              "fill": "$acid-text-lo",
+                              "content": "本文は text-lo で控えめに。",
+                              "fontFamily": "$font-body",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "y1au8",
+                              "name": "Prev Btn",
+                              "fill": "$acid-accent",
+                              "cornerRadius": 3,
+                              "padding": [
+                                10,
+                                20
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "LoFKH",
+                                  "name": "Btn Label",
+                                  "fill": "$acid-base",
+                                  "content": "ACTION",
+                                  "fontFamily": "$font-display",
+                                  "fontSize": 12,
+                                  "fontWeight": "normal",
+                                  "letterSpacing": 1
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "CvTNt",
+                      "name": "Use Note",
+                      "fill": "#999999",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Web3・ゲーミング・サステナビリティ系。フレッシュで先進的",
+                      "lineHeight": 1.6,
+                      "fontFamily": "$font-body",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "M3vcs",
+                  "name": "Palette ULTRAVIOLET",
+                  "width": "fill_container",
+                  "fill": "#141414",
+                  "cornerRadius": 4,
+                  "stroke": "#242424",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 20,
+                  "padding": 24,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "quTLF",
+                      "name": "Name Row",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "INKrv",
+                          "name": "Name",
+                          "fill": "$uv-accent",
+                          "content": "ULTRAVIOLET",
+                          "fontFamily": "$font-display",
+                          "fontSize": 28,
+                          "fontWeight": "normal",
+                          "letterSpacing": 1
+                        },
+                        {
+                          "type": "text",
+                          "id": "Rl7oW",
+                          "name": "Prefix",
+                          "fill": "#666666",
+                          "content": "$uv-*",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 10,
+                          "fontWeight": "normal",
+                          "letterSpacing": 2
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "XYEhi",
+                      "name": "Chips",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "IBmMq",
+                          "name": "Chip base",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "QUl8N",
+                              "name": "Swatch",
+                              "fill": "$uv-base",
+                              "width": "fill_container",
+                              "height": 56,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "uwznQ",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "base",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "a5Wx9",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#08060F",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "fNuLa",
+                          "name": "Chip elevated",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "T1mz2",
+                              "name": "Swatch",
+                              "fill": "$uv-elevated",
+                              "width": "fill_container",
+                              "height": 56,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "cBZ2l",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "elevated",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "q7Pzdq",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#130E20",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "JtAgm",
+                          "name": "Chip text-hi",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "j6nnzb",
+                              "name": "Swatch",
+                              "fill": "$uv-text-hi",
+                              "width": "fill_container",
+                              "height": 56,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "SNBsy",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "text-hi",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "C5crD",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#F7F2FF",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "NCh1b",
+                          "name": "Chip text-lo",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "q4unlM",
+                              "name": "Swatch",
+                              "fill": "$uv-text-lo",
+                              "width": "fill_container",
+                              "height": 56,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "Q8tUBN",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "text-lo",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "J8FD2E",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#8B7F9E",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Vfqc0",
+                          "name": "Chip accent",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 2,
+                              "id": "acJw9",
+                              "name": "Swatch",
+                              "fill": "$uv-accent",
+                              "width": "fill_container",
+                              "height": 72,
+                              "stroke": "#2E2E2E",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "P0RYu",
+                              "name": "Role",
+                              "fill": "#AAAAAA",
+                              "content": "accent",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "NHuey",
+                              "name": "Hex",
+                              "fill": "#666666",
+                              "content": "#A855F7",
+                              "fontFamily": "$font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "GlMiS",
+                      "name": "Preview",
+                      "width": "fill_container",
+                      "fill": "$uv-base",
+                      "cornerRadius": 2,
+                      "layout": "vertical",
+                      "gap": 12,
+                      "padding": [
+                        24,
+                        28
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "upmkf",
+                          "name": "Prev Kicker",
+                          "fill": "$uv-accent",
+                          "content": "● LIVE PREVIEW",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 9,
+                          "fontWeight": "normal",
+                          "letterSpacing": 3
+                        },
+                        {
+                          "type": "text",
+                          "id": "TGkvo",
+                          "name": "Prev Head",
+                          "fill": "$uv-text-hi",
+                          "content": "DREAM",
+                          "fontFamily": "$font-display",
+                          "fontSize": 44,
+                          "fontWeight": "normal",
+                          "letterSpacing": 2
+                        },
+                        {
+                          "type": "frame",
+                          "id": "MUmCl",
+                          "name": "Prev Foot",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "CJIwa",
+                              "name": "Prev Body",
+                              "fill": "$uv-text-lo",
+                              "content": "本文は text-lo で控えめに。",
+                              "fontFamily": "$font-body",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "tPJ9o",
+                              "name": "Prev Btn",
+                              "fill": "$uv-accent",
+                              "cornerRadius": 3,
+                              "padding": [
+                                10,
+                                20
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "zlQN4",
+                                  "name": "Btn Label",
+                                  "fill": "$uv-base",
+                                  "content": "ACTION",
+                                  "fontFamily": "$font-display",
+                                  "fontSize": 12,
+                                  "fontWeight": "normal",
+                                  "letterSpacing": 1
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "a6SVn",
+                      "name": "Use Note",
+                      "fill": "#999999",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "クリエイティブ・エンタメ・夜系サービス。神秘的で洗練された印象",
+                      "lineHeight": 1.6,
+                      "fontFamily": "$font-body",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variables": {
+    "volt-base": {
+      "type": "color",
+      "value": "#0A0A0A"
+    },
+    "volt-elevated": {
+      "type": "color",
+      "value": "#161616"
+    },
+    "volt-text-hi": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "volt-text-lo": {
+      "type": "color",
+      "value": "#8A8A8A"
+    },
+    "volt-accent": {
+      "type": "color",
+      "value": "#CCFF00"
+    },
+    "cyber-base": {
+      "type": "color",
+      "value": "#05080A"
+    },
+    "cyber-elevated": {
+      "type": "color",
+      "value": "#0D1418"
+    },
+    "cyber-text-hi": {
+      "type": "color",
+      "value": "#F2FBFF"
+    },
+    "cyber-text-lo": {
+      "type": "color",
+      "value": "#7A8A92"
+    },
+    "cyber-accent": {
+      "type": "color",
+      "value": "#00E5FF"
+    },
+    "plasma-base": {
+      "type": "color",
+      "value": "#0B0710"
+    },
+    "plasma-elevated": {
+      "type": "color",
+      "value": "#171020"
+    },
+    "plasma-text-hi": {
+      "type": "color",
+      "value": "#FDF2F8"
+    },
+    "plasma-text-lo": {
+      "type": "color",
+      "value": "#8E7A8C"
+    },
+    "plasma-accent": {
+      "type": "color",
+      "value": "#FF2D95"
+    },
+    "ember-base": {
+      "type": "color",
+      "value": "#0C0A08"
+    },
+    "ember-elevated": {
+      "type": "color",
+      "value": "#191410"
+    },
+    "ember-text-hi": {
+      "type": "color",
+      "value": "#FFF7F0"
+    },
+    "ember-text-lo": {
+      "type": "color",
+      "value": "#94867A"
+    },
+    "ember-accent": {
+      "type": "color",
+      "value": "#FF5C00"
+    },
+    "acid-base": {
+      "type": "color",
+      "value": "#060A08"
+    },
+    "acid-elevated": {
+      "type": "color",
+      "value": "#0F1814"
+    },
+    "acid-text-hi": {
+      "type": "color",
+      "value": "#F0FFF8"
+    },
+    "acid-text-lo": {
+      "type": "color",
+      "value": "#7A9288"
+    },
+    "acid-accent": {
+      "type": "color",
+      "value": "#00FFA3"
+    },
+    "uv-base": {
+      "type": "color",
+      "value": "#08060F"
+    },
+    "uv-elevated": {
+      "type": "color",
+      "value": "#130E20"
+    },
+    "uv-text-hi": {
+      "type": "color",
+      "value": "#F7F2FF"
+    },
+    "uv-text-lo": {
+      "type": "color",
+      "value": "#8B7F9E"
+    },
+    "uv-accent": {
+      "type": "color",
+      "value": "#A855F7"
+    },
+    "font-display": {
+      "type": "string",
+      "value": "Anton"
+    },
+    "font-body": {
+      "type": "string",
+      "value": "Inter"
+    },
+    "font-mono": {
+      "type": "string",
+      "value": "Geist Mono"
+    }
+  },
+  "fileToken": "d914490c-5617-45fd-95a2-0ca4aab1a560"
+}

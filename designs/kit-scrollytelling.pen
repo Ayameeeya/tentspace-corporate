@@ -1,0 +1,2378 @@
+{
+  "version": "2.14",
+  "children": [
+    {
+      "type": "frame",
+      "id": "VxUd8",
+      "x": 80,
+      "y": 80,
+      "name": "Kicker",
+      "reusable": true,
+      "gap": 12,
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "rectangle",
+          "id": "OWvq9",
+          "name": "Accent Line",
+          "fill": "$accent",
+          "width": 32,
+          "height": 1
+        },
+        {
+          "type": "text",
+          "id": "yilkK",
+          "name": "Label",
+          "fill": "$text-secondary",
+          "content": "SECTION LABEL",
+          "fontFamily": "$font-mono",
+          "fontSize": 12,
+          "fontWeight": "normal",
+          "letterSpacing": 3
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "MaufI",
+      "x": 380,
+      "y": 80,
+      "name": "Chapter Marker",
+      "reusable": true,
+      "layout": "vertical",
+      "gap": 8,
+      "children": [
+        {
+          "type": "text",
+          "id": "e2Nc7v",
+          "name": "Number",
+          "fill": "$accent",
+          "content": "01",
+          "fontFamily": "$font-display",
+          "fontSize": 56,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "Xy4vn",
+          "name": "Label",
+          "fill": "$text-secondary",
+          "content": "CHAPTER — VISION",
+          "fontFamily": "$font-mono",
+          "fontSize": 11,
+          "fontWeight": "normal",
+          "letterSpacing": 4
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "n3GGO2",
+      "x": 700,
+      "y": 80,
+      "name": "Button Primary",
+      "reusable": true,
+      "fill": "$accent",
+      "gap": 12,
+      "padding": [
+        18,
+        32
+      ],
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "text",
+          "id": "hyEMT",
+          "name": "Label",
+          "fill": "$text-inverse",
+          "content": "START PROJECT",
+          "fontFamily": "$font-mono",
+          "fontSize": 13,
+          "fontWeight": "normal",
+          "letterSpacing": 2
+        },
+        {
+          "type": "icon",
+          "id": "YYtMr",
+          "name": "Arrow",
+          "width": 16,
+          "height": 16,
+          "icon": "arrow-right",
+          "library": "lucide",
+          "fill": "$text-inverse"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "V5VTX",
+      "x": 960,
+      "y": 80,
+      "name": "Button Ghost",
+      "reusable": true,
+      "stroke": "$text-secondary",
+      "strokeWidth": 1,
+      "gap": 12,
+      "padding": [
+        18,
+        32
+      ],
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "text",
+          "id": "rVPy2",
+          "name": "Label",
+          "fill": "$text-primary",
+          "content": "VIEW WORKS",
+          "fontFamily": "$font-mono",
+          "fontSize": 13,
+          "fontWeight": "normal",
+          "letterSpacing": 2
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "d7s44",
+      "x": 1220,
+      "y": 80,
+      "name": "Scroll Cue",
+      "reusable": true,
+      "layout": "vertical",
+      "gap": 12,
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "text",
+          "id": "yOmb5",
+          "name": "Label",
+          "fill": "$text-secondary",
+          "content": "SCROLL",
+          "fontFamily": "$font-mono",
+          "fontSize": 10,
+          "fontWeight": "normal",
+          "letterSpacing": 4
+        },
+        {
+          "type": "rectangle",
+          "id": "HTrrp",
+          "name": "Line",
+          "fill": "$accent",
+          "width": 1,
+          "height": 48
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "LwqKU",
+      "x": 1380,
+      "y": 80,
+      "name": "Stat Block",
+      "reusable": true,
+      "layout": "vertical",
+      "gap": 8,
+      "children": [
+        {
+          "type": "text",
+          "id": "R5nFZ",
+          "name": "Value",
+          "fill": "$text-primary",
+          "content": "120+",
+          "fontFamily": "$font-display",
+          "fontSize": 64,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "PIRng",
+          "name": "Label",
+          "fill": "$text-secondary",
+          "content": "PROJECTS DELIVERED",
+          "fontFamily": "$font-mono",
+          "fontSize": 11,
+          "fontWeight": "normal",
+          "letterSpacing": 2
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Uw6QJ",
+      "x": 80,
+      "y": 320,
+      "name": "Progress Rail",
+      "reusable": true,
+      "layout": "vertical",
+      "gap": 20,
+      "children": [
+        {
+          "type": "frame",
+          "id": "fhT8L",
+          "name": "Rail Item 01",
+          "gap": 12,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "cnHiw",
+              "name": "Tick",
+              "fill": "$accent",
+              "width": 24,
+              "height": 1
+            },
+            {
+              "type": "text",
+              "id": "P2XtbH",
+              "name": "Num",
+              "fill": "$accent",
+              "content": "01",
+              "fontFamily": "$font-mono",
+              "fontSize": 10,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "nTQxf",
+          "name": "Rail Item 02",
+          "gap": 12,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "egYUb",
+              "name": "Tick",
+              "fill": "$text-secondary",
+              "width": 12,
+              "height": 1
+            },
+            {
+              "type": "text",
+              "id": "IIqUH",
+              "name": "Num",
+              "fill": "$text-secondary",
+              "content": "02",
+              "fontFamily": "$font-mono",
+              "fontSize": 10,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "fjBxc",
+          "name": "Rail Item 03",
+          "gap": 12,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "hOopx",
+              "name": "Tick",
+              "fill": "$text-secondary",
+              "width": 12,
+              "height": 1
+            },
+            {
+              "type": "text",
+              "id": "irwmn",
+              "name": "Num",
+              "fill": "$text-secondary",
+              "content": "03",
+              "fontFamily": "$font-mono",
+              "fontSize": 10,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Z4YzlX",
+          "name": "Rail Item 04",
+          "gap": 12,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "HFx0t",
+              "name": "Tick",
+              "fill": "$text-secondary",
+              "width": 12,
+              "height": 1
+            },
+            {
+              "type": "text",
+              "id": "QiJpI",
+              "name": "Num",
+              "fill": "$text-secondary",
+              "content": "04",
+              "fontFamily": "$font-mono",
+              "fontSize": 10,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Z6czRi",
+          "name": "Rail Item 05",
+          "gap": 12,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "pjqx7",
+              "name": "Tick",
+              "fill": "$text-secondary",
+              "width": 12,
+              "height": 1
+            },
+            {
+              "type": "text",
+              "id": "sPJUW",
+              "name": "Num",
+              "fill": "$text-secondary",
+              "content": "05",
+              "fontFamily": "$font-mono",
+              "fontSize": 10,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "QjVFN",
+      "x": 280,
+      "y": 320,
+      "name": "Nav Link",
+      "reusable": true,
+      "gap": 8,
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "text",
+          "id": "D3PivW",
+          "name": "Label",
+          "fill": "$text-primary",
+          "content": "WORKS",
+          "fontFamily": "$font-mono",
+          "fontSize": 12,
+          "fontWeight": "normal",
+          "letterSpacing": 2
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "f2VB0",
+      "x": 480,
+      "y": 320,
+      "name": "Work Card",
+      "reusable": true,
+      "width": 400,
+      "layout": "vertical",
+      "gap": 16,
+      "children": [
+        {
+          "type": "rectangle",
+          "id": "e4k0B",
+          "name": "Cover",
+          "fill": "$bg-elevated",
+          "width": "fill_container",
+          "height": 280
+        },
+        {
+          "type": "frame",
+          "id": "IANmC",
+          "name": "Meta",
+          "width": "fill_container",
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "eZYtT",
+              "name": "Title",
+              "fill": "$text-primary",
+              "content": "Project Name",
+              "fontFamily": "$font-display",
+              "fontSize": 22,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "text",
+              "id": "fwvoe",
+              "name": "Year",
+              "fill": "$text-secondary",
+              "content": "2026",
+              "fontFamily": "$font-mono",
+              "fontSize": 11,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "TN0V9",
+          "name": "Tag",
+          "fill": "$text-secondary",
+          "content": "BRANDING / WEB",
+          "fontFamily": "$font-mono",
+          "fontSize": 11,
+          "fontWeight": "normal",
+          "letterSpacing": 2
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "ICS8N",
+      "x": 960,
+      "y": 320,
+      "name": "Pull Quote",
+      "reusable": true,
+      "width": 560,
+      "layout": "vertical",
+      "gap": 24,
+      "children": [
+        {
+          "type": "text",
+          "id": "ACL4q",
+          "name": "Quote",
+          "fill": "$text-primary",
+          "textGrowth": "fixed-width",
+          "width": "fill_container",
+          "content": "“We do not build pages. We build places people arrive at.”",
+          "lineHeight": 1.4,
+          "fontFamily": "$font-display",
+          "fontSize": 32,
+          "fontWeight": "normal",
+          "fontStyle": "italic"
+        },
+        {
+          "type": "frame",
+          "id": "Vqq9q",
+          "name": "Author",
+          "gap": 12,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "To2sE",
+              "name": "Line",
+              "fill": "$accent",
+              "width": 32,
+              "height": 1
+            },
+            {
+              "type": "text",
+              "id": "hpCxe",
+              "name": "Name",
+              "fill": "$text-secondary",
+              "content": "CREATIVE DIRECTOR",
+              "fontFamily": "$font-mono",
+              "fontSize": 11,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "qbIar",
+      "x": 80,
+      "y": 560,
+      "name": "00 — Design Tokens",
+      "clip": true,
+      "width": 1440,
+      "fill": "$bg-base",
+      "layout": "vertical",
+      "gap": 64,
+      "padding": [
+        80,
+        100
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "gmnxD",
+          "name": "Header",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "children": [
+            {
+              "id": "skczW",
+              "type": "ref",
+              "ref": "VxUd8",
+              "name": "Kicker",
+              "descendants": {
+                "yilkK": {
+                  "content": "DESIGN BOOK — TOKENS"
+                }
+              }
+            },
+            {
+              "type": "text",
+              "id": "waaYv",
+              "name": "Title",
+              "fill": "$text-primary",
+              "content": "Foundations",
+              "fontFamily": "$font-display",
+              "fontSize": 64,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "text",
+              "id": "IVqBH",
+              "name": "Sub",
+              "fill": "$text-secondary",
+              "textGrowth": "fixed-width",
+              "width": 720,
+              "content": "スクロールテリング型ブランドサイトの基礎トークン。暗い舞台に革のようなアクセントを一点だけ。セリフの見出しで物語を、モノスペースで製作の規律を語る。",
+              "lineHeight": 1.7,
+              "fontFamily": "$font-body",
+              "fontSize": 14,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "iYB3T",
+          "name": "Colors",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 24,
+          "children": [
+            {
+              "type": "text",
+              "id": "j3gNc",
+              "name": "Label",
+              "fill": "$text-secondary",
+              "content": "COLOR",
+              "fontFamily": "$font-mono",
+              "fontSize": 12,
+              "fontWeight": "normal",
+              "letterSpacing": 3
+            },
+            {
+              "type": "frame",
+              "id": "Vlif0",
+              "name": "Swatches",
+              "width": "fill_container",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "D4ilEr",
+                  "name": "Swatch bg-base",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "EHdiq",
+                      "name": "Chip",
+                      "fill": "$bg-base",
+                      "width": "fill_container",
+                      "height": 96,
+                      "stroke": "#2A2723",
+                      "strokeWidth": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "LnCTm",
+                      "name": "Name",
+                      "fill": "$text-primary",
+                      "content": "bg-base",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "Exhlx",
+                      "name": "Hex",
+                      "fill": "$text-secondary",
+                      "content": "#0E0D0B",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Ufl0y",
+                  "name": "Swatch bg-elevated",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "PsiPe",
+                      "name": "Chip",
+                      "fill": "$bg-elevated",
+                      "width": "fill_container",
+                      "height": 96,
+                      "stroke": "#2A2723",
+                      "strokeWidth": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "p7qk2",
+                      "name": "Name",
+                      "fill": "$text-primary",
+                      "content": "bg-elevated",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "Rjak6",
+                      "name": "Hex",
+                      "fill": "$text-secondary",
+                      "content": "#1A1816",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "oZi9O",
+                  "name": "Swatch surface-light",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "D2CoW",
+                      "name": "Chip",
+                      "fill": "$surface-light",
+                      "width": "fill_container",
+                      "height": 96,
+                      "stroke": "#2A2723",
+                      "strokeWidth": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "DXiV3",
+                      "name": "Name",
+                      "fill": "$text-primary",
+                      "content": "surface-light",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "R3stz",
+                      "name": "Hex",
+                      "fill": "$text-secondary",
+                      "content": "#F5F1EA",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "aiJgA",
+                  "name": "Swatch text-primary",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "wID9a",
+                      "name": "Chip",
+                      "fill": "$text-primary",
+                      "width": "fill_container",
+                      "height": 96,
+                      "stroke": "#2A2723",
+                      "strokeWidth": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "F2nWRj",
+                      "name": "Name",
+                      "fill": "$text-primary",
+                      "content": "text-primary",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "C6KSJ",
+                      "name": "Hex",
+                      "fill": "$text-secondary",
+                      "content": "#F5F1EA",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "eDkCt",
+                  "name": "Swatch text-secondary",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "v6bNF",
+                      "name": "Chip",
+                      "fill": "$text-secondary",
+                      "width": "fill_container",
+                      "height": 96,
+                      "stroke": "#2A2723",
+                      "strokeWidth": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "iBQSM",
+                      "name": "Name",
+                      "fill": "$text-primary",
+                      "content": "text-secondary",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "GWKVd",
+                      "name": "Hex",
+                      "fill": "$text-secondary",
+                      "content": "#A39C90",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "O107aV",
+                  "name": "Swatch accent",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "lPKpP",
+                      "name": "Chip",
+                      "fill": "$accent",
+                      "width": "fill_container",
+                      "height": 96,
+                      "stroke": "#2A2723",
+                      "strokeWidth": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "hXdTC",
+                      "name": "Name",
+                      "fill": "$text-primary",
+                      "content": "accent",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "r9wc9B",
+                      "name": "Hex",
+                      "fill": "$text-secondary",
+                      "content": "#E8A87C",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "uoEK1",
+          "name": "Typography",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 24,
+          "children": [
+            {
+              "type": "text",
+              "id": "i3mIQ2",
+              "name": "Label",
+              "fill": "$text-secondary",
+              "content": "TYPOGRAPHY",
+              "fontFamily": "$font-mono",
+              "fontSize": 12,
+              "fontWeight": "normal",
+              "letterSpacing": 3
+            },
+            {
+              "type": "frame",
+              "id": "mvUvj",
+              "name": "Specimens",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 32,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "f2J6t",
+                  "name": "Display Row",
+                  "width": "fill_container",
+                  "gap": 40,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "aATmD",
+                      "name": "Meta",
+                      "fill": "$text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": 280,
+                      "content": "DISPLAY / Playfair Display\n64-160px / 章タイトル・ヒーロー",
+                      "lineHeight": 1.8,
+                      "fontFamily": "$font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "Z4Yer",
+                      "name": "Specimen",
+                      "fill": "$text-primary",
+                      "content": "A journey in chapters",
+                      "fontFamily": "$font-display",
+                      "fontSize": 56,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Jh5EI",
+                  "name": "Body Row",
+                  "width": "fill_container",
+                  "gap": 40,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "d3fqrI",
+                      "name": "Meta",
+                      "fill": "$text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": 280,
+                      "content": "BODY / Inter\n14-16px / 本文・リード文",
+                      "lineHeight": 1.8,
+                      "fontFamily": "$font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "wfm6j",
+                      "name": "Specimen",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "読みやすさを保つ本文テキスト。スクロール中に出現する読み物は50–75文字の行長を守り、行間は広めにとる。",
+                      "lineHeight": 1.7,
+                      "fontFamily": "$font-body",
+                      "fontSize": 15,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "k7lQ4z",
+                  "name": "Mono Row",
+                  "width": "fill_container",
+                  "gap": 40,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "j8d396",
+                      "name": "Meta",
+                      "fill": "$text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": 280,
+                      "content": "CAPTION / Geist Mono\n10-13px / ラベル・章番号・UI",
+                      "lineHeight": 1.8,
+                      "fontFamily": "$font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "GT1wz",
+                      "name": "Specimen",
+                      "fill": "$text-primary",
+                      "content": "CHAPTER 02 — CRAFT / SCROLL TO EXPLORE",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 13,
+                      "fontWeight": "normal",
+                      "letterSpacing": 3
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "R4EQID",
+          "name": "Spacing",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 24,
+          "children": [
+            {
+              "type": "text",
+              "id": "CUXco",
+              "name": "Label",
+              "fill": "$text-secondary",
+              "content": "SPACING SCALE",
+              "fontFamily": "$font-mono",
+              "fontSize": 12,
+              "fontWeight": "normal",
+              "letterSpacing": 3
+            },
+            {
+              "type": "frame",
+              "id": "IHRYh",
+              "name": "Bars",
+              "gap": 40,
+              "alignItems": "end",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "S0j4z",
+                  "name": "Bar xs",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "u2eESh",
+                      "name": "Bar",
+                      "fill": "$bg-elevated",
+                      "width": 48,
+                      "height": 8,
+                      "stroke": "$accent",
+                      "strokeWidth": {
+                        "bottom": 2
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "Xh0QR",
+                      "name": "Name",
+                      "fill": "$text-secondary",
+                      "content": "xs / 8",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "b62Ct",
+                  "name": "Bar sm",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "l8fs3",
+                      "name": "Bar",
+                      "fill": "$bg-elevated",
+                      "width": 48,
+                      "height": 16,
+                      "stroke": "$accent",
+                      "strokeWidth": {
+                        "bottom": 2
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "BRztu",
+                      "name": "Name",
+                      "fill": "$text-secondary",
+                      "content": "sm / 16",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "IN1Gm",
+                  "name": "Bar md",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "RttOc",
+                      "name": "Bar",
+                      "fill": "$bg-elevated",
+                      "width": 48,
+                      "height": 24,
+                      "stroke": "$accent",
+                      "strokeWidth": {
+                        "bottom": 2
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "jrLYN",
+                      "name": "Name",
+                      "fill": "$text-secondary",
+                      "content": "md / 24",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "GpJps",
+                  "name": "Bar lg",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "l0rhB4",
+                      "name": "Bar",
+                      "fill": "$bg-elevated",
+                      "width": 48,
+                      "height": 40,
+                      "stroke": "$accent",
+                      "strokeWidth": {
+                        "bottom": 2
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "yxN3u",
+                      "name": "Name",
+                      "fill": "$text-secondary",
+                      "content": "lg / 40",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "hjr12",
+                  "name": "Bar xl",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "vRYmv",
+                      "name": "Bar",
+                      "fill": "$bg-elevated",
+                      "width": 48,
+                      "height": 64,
+                      "stroke": "$accent",
+                      "strokeWidth": {
+                        "bottom": 2
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "eiAbt",
+                      "name": "Name",
+                      "fill": "$text-secondary",
+                      "content": "xl / 64",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "vAWsZ",
+                  "name": "Bar section",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "eZUJc",
+                      "name": "Bar",
+                      "fill": "$bg-elevated",
+                      "width": 48,
+                      "height": 120,
+                      "stroke": "$accent",
+                      "strokeWidth": {
+                        "bottom": 2
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "vWvc8",
+                      "name": "Name",
+                      "fill": "$text-secondary",
+                      "content": "section / 120",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Qry20",
+      "x": 80,
+      "y": 1834,
+      "name": "01 — Hero / Opening Scene",
+      "clip": true,
+      "width": 1440,
+      "height": 900,
+      "fill": "$bg-base",
+      "layout": "none",
+      "children": [
+        {
+          "type": "rectangle",
+          "id": "lugd2",
+          "x": 0,
+          "y": 0,
+          "name": "Backdrop",
+          "metadata": {
+            "type": "unsplash",
+            "username": "photobycarl",
+            "link": "https://unsplash.com/@photobycarl",
+            "author": "Carl Gelin"
+          },
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "https://images.unsplash.com/photo-1678126581945-0de543dc46b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODM5MjQyNDR8&ixlib=rb-4.1.0&q=80&w=1080",
+            "mode": "fill"
+          },
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "rectangle",
+          "id": "mmnPU",
+          "x": 0,
+          "y": 0,
+          "name": "Scrim",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 180,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#0E0D0B22",
+                "position": 0
+              },
+              {
+                "color": "#0E0D0BE6",
+                "position": 1
+              }
+            ]
+          },
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "frame",
+          "id": "AjwaH",
+          "x": 0,
+          "y": 0,
+          "name": "Nav",
+          "width": 1440,
+          "padding": [
+            32,
+            100
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "S12kuB",
+              "name": "Logo",
+              "fill": "$text-primary",
+              "content": "tentspace",
+              "fontFamily": "$font-display",
+              "fontSize": 20,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "AINPt",
+              "name": "Links",
+              "gap": 40,
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "nz0wZ",
+                  "type": "ref",
+                  "ref": "QjVFN",
+                  "name": "Nav VISION",
+                  "descendants": {
+                    "D3PivW": {
+                      "content": "VISION"
+                    }
+                  }
+                },
+                {
+                  "id": "sEYQL",
+                  "type": "ref",
+                  "ref": "QjVFN",
+                  "name": "Nav CRAFT",
+                  "descendants": {
+                    "D3PivW": {
+                      "content": "CRAFT"
+                    }
+                  }
+                },
+                {
+                  "id": "S8oDQ",
+                  "type": "ref",
+                  "ref": "QjVFN",
+                  "name": "Nav WORKS",
+                  "descendants": {
+                    "D3PivW": {
+                      "content": "WORKS"
+                    }
+                  }
+                },
+                {
+                  "id": "PSzkf",
+                  "type": "ref",
+                  "ref": "QjVFN",
+                  "name": "Nav CONTACT",
+                  "descendants": {
+                    "D3PivW": {
+                      "content": "CONTACT"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "hh8Kw",
+          "x": 100,
+          "y": 290,
+          "name": "Lead",
+          "width": 560,
+          "layout": "vertical",
+          "gap": 20,
+          "children": [
+            {
+              "id": "d1K6g",
+              "type": "ref",
+              "ref": "VxUd8",
+              "name": "Kicker",
+              "descendants": {
+                "yilkK": {
+                  "content": "IMMERSIVE BRAND EXPERIENCE"
+                }
+              }
+            },
+            {
+              "type": "text",
+              "id": "nf7uu",
+              "name": "Lead Copy",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "スクロールはページ送りではなく、物語の再生ヘッド。訪れた人が「到着した」と感じる場所をつくる。",
+              "lineHeight": 1.8,
+              "fontFamily": "$font-body",
+              "fontSize": 15,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "DjH6N",
+          "x": -40,
+          "y": 430,
+          "name": "Monumental Headline",
+          "fill": "$text-primary",
+          "content": "ARRIVAL",
+          "fontFamily": "$font-display",
+          "fontSize": 350,
+          "fontWeight": "normal",
+          "letterSpacing": 14
+        },
+        {
+          "id": "c7bV6",
+          "type": "ref",
+          "ref": "d7s44",
+          "name": "Scroll Cue",
+          "x": 1320,
+          "y": 130
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "id": "deNfD",
+      "x": 1560,
+      "y": 1834,
+      "name": "Note Hero",
+      "width": 360,
+      "height": 0,
+      "content": "01 HERO — 実装メモ\n\n・背景はWebGLシェーダー1枚(R3F)または静止画のパララックス\n・見出しはSplitTextで文字単位の出現(stagger 0.03s)\n・スクロール開始でカメラが引き、次章へワンカット遷移\n・Lenisの慰性を強め(lerp 0.08)に設定\n・prefers-reduced-motion時は静止ヒーローにフォールバック"
+    },
+    {
+      "type": "frame",
+      "id": "XwFgM",
+      "x": 80,
+      "y": 2854,
+      "name": "02 — Chapter Divider (Pinned)",
+      "clip": true,
+      "width": 1440,
+      "height": 900,
+      "fill": "$bg-base",
+      "layout": "none",
+      "children": [
+        {
+          "id": "BJGh7",
+          "type": "ref",
+          "ref": "Uw6QJ",
+          "name": "Progress Rail",
+          "x": 60,
+          "y": 330
+        },
+        {
+          "type": "frame",
+          "id": "TsYMk",
+          "x": 0,
+          "y": 0,
+          "name": "Center Stage",
+          "width": 1440,
+          "height": 900,
+          "layout": "vertical",
+          "gap": 32,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "id": "PJnfj",
+              "type": "ref",
+              "ref": "MaufI",
+              "name": "Chapter",
+              "descendants": {
+                "e2Nc7v": {
+                  "content": "02",
+                  "fontSize": 72
+                },
+                "Xy4vn": {
+                  "content": "CHAPTER — CRAFT"
+                }
+              }
+            },
+            {
+              "type": "text",
+              "id": "tbqsJ",
+              "name": "Chapter Title",
+              "fill": "$text-primary",
+              "content": "手で考え、光で語る",
+              "fontFamily": "$font-display",
+              "fontSize": 96,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "text",
+              "id": "mR41H",
+              "name": "Chapter Sub",
+              "fill": "$text-secondary",
+              "textGrowth": "fixed-width",
+              "width": 520,
+              "content": "章の扉は画面をピン留めし、背景だけがスクロールで変化する。読む速度は訪問者が握る。",
+              "lineHeight": 1.8,
+              "textAlign": "center",
+              "fontFamily": "$font-body",
+              "fontSize": 14,
+              "fontWeight": "normal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "id": "C9oMC",
+      "x": 1560,
+      "y": 2854,
+      "name": "Note Chapter",
+      "width": 360,
+      "height": 0,
+      "content": "02 章扉 — 実装メモ\n\n・ScrollTrigger pin + scrubで章番号をカウントアップ\n・左の進捗レールは全章共通の固定UI(現在章をアクセント色)\n・章タイトルは下からマスクリベール\n・Observerによるスナップで章単位に停止"
+    },
+    {
+      "type": "frame",
+      "id": "hsV3j",
+      "x": 80,
+      "y": 3874,
+      "name": "03 — Pinned Story (Text + Media)",
+      "clip": true,
+      "width": 1440,
+      "height": 900,
+      "fill": "$bg-base",
+      "children": [
+        {
+          "type": "frame",
+          "id": "YUVhV",
+          "name": "Sticky Copy",
+          "width": 620,
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 28,
+          "padding": [
+            120,
+            100
+          ],
+          "justifyContent": "center",
+          "children": [
+            {
+              "id": "BvFf9",
+              "type": "ref",
+              "ref": "VxUd8",
+              "name": "Kicker",
+              "descendants": {
+                "yilkK": {
+                  "content": "02 / CRAFT — PROCESS"
+                }
+              }
+            },
+            {
+              "type": "text",
+              "id": "updmR",
+              "name": "Heading",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "固定された言葉、動く風景",
+              "lineHeight": 1.25,
+              "fontFamily": "$font-display",
+              "fontSize": 44,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "text",
+              "id": "V3EW0",
+              "name": "Body",
+              "fill": "$text-secondary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "テキストは画面左にピン留めされ、右のメディアだけがスクロールで入れ替わる。読み物としての安定と、風景が変わる驚きを両立させる、スクロールテリングの基本形。",
+              "lineHeight": 1.9,
+              "fontFamily": "$font-body",
+              "fontSize": 15,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "pjZF4",
+              "name": "Steps",
+              "layout": "vertical",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "NN8Ue",
+                  "name": "Step 01",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "XDB6S",
+                      "name": "Num",
+                      "fill": "$accent",
+                      "content": "01",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal",
+                      "letterSpacing": 2
+                    },
+                    {
+                      "type": "text",
+                      "id": "Xodsz",
+                      "name": "Label",
+                      "fill": "$text-primary",
+                      "content": "リサーチと章立て",
+                      "fontFamily": "$font-body",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "lDIUk",
+                  "name": "Step 02",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "d9mR8E",
+                      "name": "Num",
+                      "fill": "$text-secondary",
+                      "content": "02",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal",
+                      "letterSpacing": 2
+                    },
+                    {
+                      "type": "text",
+                      "id": "eL2gT",
+                      "name": "Label",
+                      "fill": "$text-secondary",
+                      "content": "ストーリーボード",
+                      "fontFamily": "$font-body",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "D6SwR",
+                  "name": "Step 03",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "r2Zqw",
+                      "name": "Num",
+                      "fill": "$text-secondary",
+                      "content": "03",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal",
+                      "letterSpacing": 2
+                    },
+                    {
+                      "type": "text",
+                      "id": "hMDx3",
+                      "name": "Label",
+                      "fill": "$text-secondary",
+                      "content": "プロトタイピング",
+                      "fontFamily": "$font-body",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "izbyr",
+          "name": "Media Column",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 24,
+          "padding": [
+            80,
+            80,
+            80,
+            0
+          ],
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "fUUx1",
+              "name": "Media Frame",
+              "metadata": {
+                "type": "unsplash",
+                "username": "vardarious",
+                "link": "https://unsplash.com/@vardarious",
+                "author": "Volkan Buyukvardar"
+              },
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "https://images.unsplash.com/photo-1609534655988-3f5225c13553?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODM5MjQyOTZ8&ixlib=rb-4.1.0&q=80&w=1080",
+                "mode": "fill"
+              },
+              "width": "fill_container",
+              "height": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "g4hEco",
+              "name": "Caption",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "dxoMD",
+                  "name": "Cap",
+                  "fill": "$text-secondary",
+                  "content": "FIG. 02 — SCROLL-SCRUBBED SEQUENCE",
+                  "fontFamily": "$font-mono",
+                  "fontSize": 10,
+                  "fontWeight": "normal",
+                  "letterSpacing": 2
+                },
+                {
+                  "type": "text",
+                  "id": "VBWDR",
+                  "name": "Prog",
+                  "fill": "$accent",
+                  "content": "1 / 3",
+                  "fontFamily": "$font-mono",
+                  "fontSize": 10,
+                  "fontWeight": "normal",
+                  "letterSpacing": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "id": "mPnHo",
+      "x": 1560,
+      "y": 3874,
+      "name": "Note Pinned",
+      "width": 360,
+      "height": 0,
+      "content": "03 ピン留めストーリー — 実装メモ\n\n・左カラムをpin、右メディアをscrubで差し替え\n・Stepsは進捗に応じてアクセント色が移動\n・メディアは連番画像/動画のscrub再生でも可\n・モバイルでは縦積みに切替(pinなし)"
+    },
+    {
+      "type": "frame",
+      "id": "Uxxvf",
+      "x": 80,
+      "y": 4894,
+      "name": "04 — Works Gallery (Horizontal Scroll)",
+      "clip": true,
+      "width": 1440,
+      "height": 900,
+      "fill": "$bg-base",
+      "layout": "vertical",
+      "gap": 48,
+      "padding": [
+        80,
+        0,
+        80,
+        100
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "r2RMKO",
+          "name": "Header",
+          "width": "fill_container",
+          "padding": [
+            0,
+            100,
+            0,
+            0
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "end",
+          "children": [
+            {
+              "type": "frame",
+              "id": "ptXsf",
+              "name": "Left",
+              "layout": "vertical",
+              "gap": 16,
+              "children": [
+                {
+                  "id": "d5qja",
+                  "type": "ref",
+                  "ref": "VxUd8",
+                  "name": "Kicker",
+                  "descendants": {
+                    "yilkK": {
+                      "content": "03 / WORKS — SELECTED"
+                    }
+                  }
+                },
+                {
+                  "type": "text",
+                  "id": "d1KdX",
+                  "name": "Title",
+                  "fill": "$text-primary",
+                  "content": "Selected Works",
+                  "fontFamily": "$font-display",
+                  "fontSize": 64,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "QgBAi",
+              "name": "Drag Hint",
+              "fill": "$accent",
+              "content": "DRAG / SCROLL →",
+              "fontFamily": "$font-mono",
+              "fontSize": 11,
+              "fontWeight": "normal",
+              "letterSpacing": 3
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "cnbxV",
+          "name": "Card Track",
+          "gap": 40,
+          "children": [
+            {
+              "id": "eJOOG",
+              "type": "ref",
+              "ref": "f2VB0",
+              "name": "Card Aurora Hotel",
+              "descendants": {
+                "e4k0B": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "https://images.unsplash.com/photo-1758448755969-8791367cf5c5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODM5MjQzNTR8&ixlib=rb-4.1.0&q=80&w=1080",
+                    "mode": "fill"
+                  }
+                },
+                "eZYtT": {
+                  "content": "Aurora Hotel"
+                },
+                "fwvoe": {
+                  "content": "2026"
+                },
+                "TN0V9": {
+                  "content": "BRANDING / WEB"
+                }
+              }
+            },
+            {
+              "id": "poqpv",
+              "type": "ref",
+              "ref": "f2VB0",
+              "name": "Card Kigi Furniture",
+              "descendants": {
+                "e4k0B": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "https://images.unsplash.com/photo-1687180497716-5872969e5125?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODM5MjQzNTV8&ixlib=rb-4.1.0&q=80&w=1080",
+                    "mode": "fill"
+                  }
+                },
+                "eZYtT": {
+                  "content": "Kigi Furniture"
+                },
+                "fwvoe": {
+                  "content": "2025"
+                },
+                "TN0V9": {
+                  "content": "E-COMMERCE"
+                }
+              }
+            },
+            {
+              "id": "KMVNs",
+              "type": "ref",
+              "ref": "f2VB0",
+              "name": "Card Form & Void",
+              "descendants": {
+                "e4k0B": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "https://images.unsplash.com/photo-1771064249776-55f2a1beb3f0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODM5MjQzNTV8&ixlib=rb-4.1.0&q=80&w=1080",
+                    "mode": "fill"
+                  }
+                },
+                "eZYtT": {
+                  "content": "Form & Void"
+                },
+                "fwvoe": {
+                  "content": "2025"
+                },
+                "TN0V9": {
+                  "content": "EXHIBITION"
+                }
+              }
+            },
+            {
+              "id": "HD0gC",
+              "type": "ref",
+              "ref": "f2VB0",
+              "name": "Card Hearth",
+              "descendants": {
+                "e4k0B": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "https://images.unsplash.com/photo-1730367019960-9906d9cbbf05?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODM5MjQzNTZ8&ixlib=rb-4.1.0&q=80&w=1080",
+                    "mode": "fill"
+                  }
+                },
+                "eZYtT": {
+                  "content": "Hearth"
+                },
+                "fwvoe": {
+                  "content": "2024"
+                },
+                "TN0V9": {
+                  "content": "IDENTITY"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "xqXfr",
+          "name": "Progress",
+          "gap": 8,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "f5mT9",
+              "name": "Track",
+              "fill": "$bg-elevated",
+              "width": 320,
+              "height": 1
+            },
+            {
+              "type": "text",
+              "id": "ycddN",
+              "name": "Count",
+              "fill": "$text-secondary",
+              "content": "01 — 04",
+              "fontFamily": "$font-mono",
+              "fontSize": 10,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "id": "wTqdo",
+      "x": 1560,
+      "y": 4894,
+      "name": "Note Works",
+      "width": 360,
+      "height": 0,
+      "content": "04 実績ギャラリー — 実装メモ\n\n・縦スクロールを横移動に変換(ScrollTrigger pin + x移動)\n・カードのCoverに実績画像。ホバーでズーム+タイトル下線\n・クリック→GSAP Flipで詳細ページのヒーローへシームレス拡大\n・モバイルはネイティブ横スワイプ(scroll-snap)"
+    },
+    {
+      "type": "frame",
+      "id": "MqxnK",
+      "x": 80,
+      "y": 5914,
+      "name": "05 — Editorial Break (Light)",
+      "clip": true,
+      "width": 1440,
+      "height": 900,
+      "fill": "$surface-light",
+      "layout": "vertical",
+      "gap": 80,
+      "padding": [
+        120,
+        100
+      ],
+      "justifyContent": "center",
+      "children": [
+        {
+          "type": "frame",
+          "id": "SjkAk",
+          "name": "Quote Row",
+          "width": "fill_container",
+          "gap": 80,
+          "children": [
+            {
+              "type": "text",
+              "id": "LXs1W",
+              "name": "Col Label",
+              "fill": "#8A8378",
+              "textGrowth": "fixed-width",
+              "width": 240,
+              "content": "PHILOSOPHY",
+              "fontFamily": "$font-mono",
+              "fontSize": 11,
+              "fontWeight": "normal",
+              "letterSpacing": 3
+            },
+            {
+              "type": "frame",
+              "id": "EwTnt",
+              "name": "Quote Col",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 32,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "MpvG0",
+                  "name": "Quote",
+                  "fill": "$text-inverse",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "“抑制はスペクタクルに勝つ。すべてのセクションが叫ぶ必要はない。”",
+                  "lineHeight": 1.45,
+                  "fontFamily": "$font-display",
+                  "fontSize": 44,
+                  "fontWeight": "normal",
+                  "fontStyle": "italic"
+                },
+                {
+                  "type": "frame",
+                  "id": "f2UBy",
+                  "name": "Author",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "U9ktt4",
+                      "name": "Line",
+                      "fill": "$accent",
+                      "width": 32,
+                      "height": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "XrRig",
+                      "name": "Name",
+                      "fill": "#8A8378",
+                      "content": "DESIGN PRINCIPLE — PODIUM, 2026",
+                      "fontFamily": "$font-mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal",
+                      "letterSpacing": 2
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "LAP7o",
+          "name": "Stats Row",
+          "width": "fill_container",
+          "gap": 64,
+          "children": [
+            {
+              "id": "d1ncM",
+              "type": "ref",
+              "ref": "LwqKU",
+              "name": "Stat PROJECTS DELIVERED",
+              "width": "fill_container",
+              "descendants": {
+                "R5nFZ": {
+                  "content": "120+",
+                  "fill": "$text-inverse"
+                },
+                "PIRng": {
+                  "content": "PROJECTS DELIVERED",
+                  "fill": "#8A8378"
+                }
+              }
+            },
+            {
+              "id": "yskNR",
+              "type": "ref",
+              "ref": "LwqKU",
+              "name": "Stat AWWWARDS HONORS",
+              "width": "fill_container",
+              "descendants": {
+                "R5nFZ": {
+                  "content": "14",
+                  "fill": "$text-inverse"
+                },
+                "PIRng": {
+                  "content": "AWWWARDS HONORS",
+                  "fill": "#8A8378"
+                }
+              }
+            },
+            {
+              "id": "RAGrO",
+              "type": "ref",
+              "ref": "LwqKU",
+              "name": "Stat YEARS OF CRAFT",
+              "width": "fill_container",
+              "descendants": {
+                "R5nFZ": {
+                  "content": "08",
+                  "fill": "$text-inverse"
+                },
+                "PIRng": {
+                  "content": "YEARS OF CRAFT",
+                  "fill": "#8A8378"
+                }
+              }
+            },
+            {
+              "id": "E9Ni0G",
+              "type": "ref",
+              "ref": "LwqKU",
+              "name": "Stat ON EVERY DEVICE",
+              "width": "fill_container",
+              "descendants": {
+                "R5nFZ": {
+                  "content": "60fps",
+                  "fill": "$text-inverse"
+                },
+                "PIRng": {
+                  "content": "ON EVERY DEVICE",
+                  "fill": "#8A8378"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "id": "Z4giiw",
+      "x": 1560,
+      "y": 5914,
+      "name": "Note Editorial",
+      "width": 360,
+      "height": 0,
+      "content": "05 エディトリアルブレーク — 実装メモ\n\n・暗→明のサーフェス切替でリズムを作る(密度の交互)\n・背景色はbodyごとGSAPでクロスフェード\n・数値はviewport進入時にカウントアップ\n・引用は行単位のSplitTextリベール"
+    },
+    {
+      "type": "frame",
+      "id": "bQxQn",
+      "x": 80,
+      "y": 6934,
+      "name": "06 — Finale / CTA",
+      "clip": true,
+      "width": 1440,
+      "height": 900,
+      "fill": "$bg-base",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "aLyF8",
+          "x": -55,
+          "y": 300,
+          "name": "Monumental",
+          "fill": "$text-primary",
+          "content": "BEGIN",
+          "fontFamily": "$font-display",
+          "fontSize": 380,
+          "fontWeight": "normal",
+          "letterSpacing": 85
+        },
+        {
+          "type": "frame",
+          "id": "uCg7F",
+          "x": 100,
+          "y": 140,
+          "name": "Intro",
+          "width": 520,
+          "layout": "vertical",
+          "gap": 16,
+          "children": [
+            {
+              "id": "Ms30z",
+              "type": "ref",
+              "ref": "VxUd8",
+              "name": "Kicker",
+              "descendants": {
+                "yilkK": {
+                  "content": "05 / CONTACT — NEXT CHAPTER"
+                }
+              }
+            },
+            {
+              "type": "text",
+              "id": "nbzYP",
+              "name": "Lead",
+              "fill": "$text-secondary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "物語の終点は、行動の起点。旅の最後に必ずCV装置を置く。",
+              "lineHeight": 1.8,
+              "fontFamily": "$font-body",
+              "fontSize": 15,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "xvodV",
+          "x": 100,
+          "y": 770,
+          "name": "Actions",
+          "gap": 24,
+          "alignItems": "center",
+          "children": [
+            {
+              "id": "pm5QT",
+              "type": "ref",
+              "ref": "n3GGO2",
+              "name": "Primary",
+              "descendants": {
+                "hyEMT": {
+                  "content": "START A PROJECT"
+                }
+              }
+            },
+            {
+              "id": "nxXHI",
+              "type": "ref",
+              "ref": "V5VTX",
+              "name": "Ghost",
+              "descendants": {
+                "rVPy2": {
+                  "content": "hello@tentspace.jp"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "qtXHX",
+          "x": 0,
+          "y": 830,
+          "name": "Footer",
+          "width": 1440,
+          "padding": [
+            24,
+            100
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "DRrMP",
+              "name": "Copy",
+              "fill": "$text-secondary",
+              "content": "© 2026 TENTSPACE INC.",
+              "fontFamily": "$font-mono",
+              "fontSize": 10,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            },
+            {
+              "type": "frame",
+              "id": "n1ieiu",
+              "name": "Links",
+              "gap": 32,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "a9nqNW",
+                  "name": "X",
+                  "fill": "$text-secondary",
+                  "content": "X",
+                  "fontFamily": "$font-mono",
+                  "fontSize": 10,
+                  "fontWeight": "normal",
+                  "letterSpacing": 2
+                },
+                {
+                  "type": "text",
+                  "id": "IJZy9",
+                  "name": "INSTAGRAM",
+                  "fill": "$text-secondary",
+                  "content": "INSTAGRAM",
+                  "fontFamily": "$font-mono",
+                  "fontSize": 10,
+                  "fontWeight": "normal",
+                  "letterSpacing": 2
+                },
+                {
+                  "type": "text",
+                  "id": "yQyqF",
+                  "name": "NOTE",
+                  "fill": "$text-secondary",
+                  "content": "NOTE",
+                  "fontFamily": "$font-mono",
+                  "fontSize": 10,
+                  "fontWeight": "normal",
+                  "letterSpacing": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "id": "v769Tt",
+      "x": 1560,
+      "y": 6934,
+      "name": "Note CTA",
+      "width": 360,
+      "height": 0,
+      "content": "06 フィナーレ — 実装メモ\n\n・Radianの知見:感情のピーク直後にCVを置く\n・巨大見出しはマウス追従でわずかに視差(magnetic)\n・ボタンはhoverで塗りのワイプアニメーション\n・フッター直前でLenisの慰性を緩めて着地感を出す"
+    }
+  ],
+  "variables": {
+    "bg-base": {
+      "type": "color",
+      "value": "#0E0D0B"
+    },
+    "bg-elevated": {
+      "type": "color",
+      "value": "#1A1816"
+    },
+    "surface-light": {
+      "type": "color",
+      "value": "#F5F1EA"
+    },
+    "text-primary": {
+      "type": "color",
+      "value": "#F5F1EA"
+    },
+    "text-secondary": {
+      "type": "color",
+      "value": "#A39C90"
+    },
+    "text-inverse": {
+      "type": "color",
+      "value": "#0E0D0B"
+    },
+    "accent": {
+      "type": "color",
+      "value": "#E8A87C"
+    },
+    "font-display": {
+      "type": "string",
+      "value": "Playfair Display"
+    },
+    "font-body": {
+      "type": "string",
+      "value": "Inter"
+    },
+    "font-mono": {
+      "type": "string",
+      "value": "Geist Mono"
+    },
+    "space-xs": {
+      "type": "number",
+      "value": 8
+    },
+    "space-sm": {
+      "type": "number",
+      "value": 16
+    },
+    "space-md": {
+      "type": "number",
+      "value": 24
+    },
+    "space-lg": {
+      "type": "number",
+      "value": 40
+    },
+    "space-xl": {
+      "type": "number",
+      "value": 64
+    },
+    "space-section": {
+      "type": "number",
+      "value": 120
+    },
+    "radius-none": {
+      "type": "number",
+      "value": 0
+    }
+  },
+  "fileToken": "f3a9d2b4-a389-4bda-b0a3-4ae8bb1d9979"
+}

@@ -1,0 +1,1396 @@
+{
+  "version": "2.14",
+  "children": [
+    {
+      "type": "frame",
+      "id": "p8V6w7",
+      "x": 80,
+      "y": 80,
+      "name": "Tag Chip",
+      "reusable": true,
+      "cornerRadius": 4,
+      "stroke": "#333333",
+      "strokeWidth": 1,
+      "gap": 8,
+      "padding": [
+        8,
+        14
+      ],
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "ellipse",
+          "id": "vNgW9",
+          "name": "Dot",
+          "fill": "$volt",
+          "width": 6,
+          "height": 6
+        },
+        {
+          "type": "text",
+          "id": "tZSUK",
+          "name": "Label",
+          "fill": "$text-hi",
+          "content": "PERFORMANCE",
+          "fontFamily": "$font-mono",
+          "fontSize": 11,
+          "fontWeight": "normal",
+          "letterSpacing": 3
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Ky1bD",
+      "x": 320,
+      "y": 80,
+      "name": "Button Volt",
+      "reusable": true,
+      "fill": "$volt",
+      "cornerRadius": 4,
+      "gap": 12,
+      "padding": [
+        18,
+        36
+      ],
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "text",
+          "id": "PuJLj",
+          "name": "Label",
+          "fill": "$ink",
+          "content": "SHOP NOW",
+          "fontFamily": "$font-display",
+          "fontSize": 15,
+          "fontWeight": "normal",
+          "letterSpacing": 2
+        },
+        {
+          "type": "icon",
+          "id": "Gq0mV",
+          "name": "Arrow",
+          "width": 18,
+          "height": 18,
+          "icon": "arrow-up-right",
+          "library": "lucide",
+          "fill": "$ink"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Oac7a",
+      "x": 580,
+      "y": 80,
+      "name": "Button Outline",
+      "reusable": true,
+      "cornerRadius": 4,
+      "stroke": "$text-hi",
+      "strokeWidth": 1,
+      "gap": 12,
+      "padding": [
+        18,
+        36
+      ],
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "text",
+          "id": "j22uI",
+          "name": "Label",
+          "fill": "$text-hi",
+          "content": "EXPLORE",
+          "fontFamily": "$font-display",
+          "fontSize": 15,
+          "fontWeight": "normal",
+          "letterSpacing": 2
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "MBGql",
+      "x": 820,
+      "y": 80,
+      "name": "Data Stat",
+      "reusable": true,
+      "layout": "vertical",
+      "gap": 6,
+      "children": [
+        {
+          "type": "frame",
+          "id": "k6l0N",
+          "name": "Value Row",
+          "gap": 4,
+          "alignItems": "end",
+          "children": [
+            {
+              "type": "text",
+              "id": "QVeXM",
+              "name": "Num",
+              "fill": "$text-hi",
+              "content": "4.2",
+              "fontFamily": "$font-display",
+              "fontSize": 56,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "text",
+              "id": "vDpuD",
+              "name": "Unit",
+              "fill": "$volt",
+              "content": "oz",
+              "fontFamily": "$font-mono",
+              "fontSize": 14,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "oQP9l",
+          "name": "Label",
+          "fill": "$text-lo",
+          "content": "TOTAL WEIGHT",
+          "fontFamily": "$font-mono",
+          "fontSize": 10,
+          "fontWeight": "normal",
+          "letterSpacing": 3
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "S9w4vP",
+      "x": 1060,
+      "y": 80,
+      "name": "Ledger Row",
+      "reusable": true,
+      "width": 1240,
+      "justifyContent": "space_between",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "text",
+          "id": "vSlTQ",
+          "name": "Index",
+          "fill": "$volt",
+          "content": "01",
+          "fontFamily": "$font-mono",
+          "fontSize": 16,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "t1R7y",
+          "name": "Name",
+          "fill": "$text-hi",
+          "content": "AERO GRID",
+          "fontFamily": "$font-display",
+          "fontSize": 64,
+          "fontWeight": "normal",
+          "letterSpacing": 1
+        },
+        {
+          "type": "text",
+          "id": "RoRiG",
+          "name": "Meta",
+          "fill": "$text-lo",
+          "content": "RUNNING / 2026",
+          "fontFamily": "$font-mono",
+          "fontSize": 11,
+          "fontWeight": "normal",
+          "letterSpacing": 2
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "H8HsTr",
+      "x": 80,
+      "y": 260,
+      "name": "Nav Item",
+      "reusable": true,
+      "padding": [
+        6,
+        0
+      ],
+      "children": [
+        {
+          "type": "text",
+          "id": "gz4cd",
+          "name": "Label",
+          "fill": "$text-hi",
+          "content": "MEN",
+          "fontFamily": "$font-mono",
+          "fontSize": 12,
+          "fontWeight": "normal",
+          "letterSpacing": 2
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "NkxYy",
+      "x": 80,
+      "y": 420,
+      "name": "01 — Hero / WebGL Velocity Field",
+      "clip": true,
+      "width": 1440,
+      "height": 900,
+      "fill": "$ink",
+      "layout": "none",
+      "children": [
+        {
+          "type": "rectangle",
+          "id": "sbIeK",
+          "x": 0,
+          "y": 0,
+          "name": "Shader Field",
+          "fill": {
+            "type": "shader",
+            "enabled": true,
+            "url": "velocity-field.glsl",
+            "uniforms": {
+              "u_base": "#0A0A0A",
+              "u_streak": "#CCFF00",
+              "u_speed": 1.2,
+              "u_density": 20
+            }
+          },
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "rectangle",
+          "id": "uP1o6",
+          "x": 620,
+          "y": 60,
+          "name": "Athlete Cut",
+          "metadata": {
+            "type": "unsplash",
+            "username": "mclee",
+            "link": "https://unsplash.com/@mclee",
+            "author": "MChe Lee"
+          },
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "https://images.unsplash.com/photo-1780922942713-7dea3dbdb2ed?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODM5Mjc2NDF8&ixlib=rb-4.1.0&q=80&w=1080",
+            "mode": "fill"
+          },
+          "width": 760,
+          "height": 840
+        },
+        {
+          "type": "rectangle",
+          "id": "BJCc1",
+          "x": 620,
+          "y": 60,
+          "name": "Athlete Scrim",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 90,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#0A0A0AFF",
+                "position": 0
+              },
+              {
+                "color": "#0A0A0A00",
+                "position": 0.45
+              }
+            ]
+          },
+          "width": 760,
+          "height": 840
+        },
+        {
+          "type": "frame",
+          "id": "OLkpZ",
+          "x": 0,
+          "y": 0,
+          "name": "Nav",
+          "width": 1440,
+          "padding": [
+            28,
+            80
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "R6dlIB",
+              "name": "Logo",
+              "fill": "$text-hi",
+              "content": "VELO/CITY",
+              "fontFamily": "$font-display",
+              "fontSize": 22,
+              "fontWeight": "normal",
+              "letterSpacing": 1
+            },
+            {
+              "type": "frame",
+              "id": "CdaYS",
+              "name": "Links",
+              "gap": 36,
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "zOtHH",
+                  "type": "ref",
+                  "ref": "H8HsTr",
+                  "name": "Nav MEN",
+                  "descendants": {
+                    "gz4cd": {
+                      "content": "MEN"
+                    }
+                  }
+                },
+                {
+                  "id": "fbaK2",
+                  "type": "ref",
+                  "ref": "H8HsTr",
+                  "name": "Nav WOMEN",
+                  "descendants": {
+                    "gz4cd": {
+                      "content": "WOMEN"
+                    }
+                  }
+                },
+                {
+                  "id": "GC3cH",
+                  "type": "ref",
+                  "ref": "H8HsTr",
+                  "name": "Nav TECH",
+                  "descendants": {
+                    "gz4cd": {
+                      "content": "TECH"
+                    }
+                  }
+                },
+                {
+                  "id": "q5yfF",
+                  "type": "ref",
+                  "ref": "H8HsTr",
+                  "name": "Nav STORIES",
+                  "descendants": {
+                    "gz4cd": {
+                      "content": "STORIES"
+                    }
+                  }
+                },
+                {
+                  "id": "TE1W5",
+                  "type": "ref",
+                  "ref": "Ky1bD",
+                  "name": "Nav CTA",
+                  "padding": [
+                    10,
+                    20
+                  ],
+                  "descendants": {
+                    "PuJLj": {
+                      "content": "DROP 04",
+                      "fontSize": 12
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "WPzOq",
+          "x": 80,
+          "y": 250,
+          "name": "Copy",
+          "width": 600,
+          "layout": "vertical",
+          "gap": 24,
+          "children": [
+            {
+              "id": "Y1Vq5",
+              "type": "ref",
+              "ref": "p8V6w7",
+              "name": "Tag",
+              "descendants": {
+                "tZSUK": {
+                  "content": "WEBGL EXPERIENCE — SS26"
+                }
+              }
+            },
+            {
+              "type": "text",
+              "id": "dH8Ll",
+              "name": "H1a",
+              "fill": "$text-hi",
+              "content": "OUTRUN",
+              "lineHeight": 0.92,
+              "fontFamily": "$font-display",
+              "fontSize": 150,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            },
+            {
+              "type": "text",
+              "id": "J27ML",
+              "name": "H1b",
+              "fill": "$volt",
+              "content": "GRAVITY",
+              "lineHeight": 0.92,
+              "fontFamily": "$font-display",
+              "fontSize": 150,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            },
+            {
+              "type": "text",
+              "id": "L214l",
+              "name": "Lead",
+              "fill": "$text-lo",
+              "textGrowth": "fixed-width",
+              "width": 420,
+              "content": "スクロールが速度になる。パーティクルの風を切って、新作「AERO GRID」の世界へ。",
+              "lineHeight": 1.7,
+              "fontFamily": "$font-body",
+              "fontSize": 15,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "VozEv",
+              "name": "Actions",
+              "gap": 16,
+              "children": [
+                {
+                  "id": "SWFH5",
+                  "type": "ref",
+                  "ref": "Ky1bD",
+                  "name": "CTA"
+                },
+                {
+                  "id": "W5pJyM",
+                  "type": "ref",
+                  "ref": "Oac7a",
+                  "name": "Sub",
+                  "descendants": {
+                    "j22uI": {
+                      "content": "WATCH FILM"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "v2PqX",
+          "x": 80,
+          "y": 830,
+          "name": "Bottom Meta",
+          "gap": 32,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "Z46er",
+              "name": "Coord",
+              "fill": "$text-lo",
+              "content": "SCROLL VELOCITY → SHADER SPEED",
+              "fontFamily": "$font-mono",
+              "fontSize": 10,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            },
+            {
+              "type": "rectangle",
+              "id": "P0zYk",
+              "name": "Rule",
+              "fill": "#333333",
+              "width": 120,
+              "height": 1
+            },
+            {
+              "type": "text",
+              "id": "mlvLm",
+              "name": "FPS",
+              "fill": "$volt",
+              "content": "60FPS / ADAPTIVE DPR",
+              "fontFamily": "$font-mono",
+              "fontSize": 10,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "id": "JL5vQ",
+      "x": 1560,
+      "y": 420,
+      "name": "Note Hero",
+      "width": 380,
+      "height": 0,
+      "content": "01 HERO — 実装メモ\n\n・背景は本物のGLSLシェーダー(velocity-field.glsl)。キャンバス上でアニメーション再生中\n・実装時はR3FのshaderMaterialに移植し、u_speedをLenisのスクロール速度にバインド\n・見出しはSplitTextで下からスライドイン、アスリート写真はマウス視差\n・DROP 04ボタンはmagnetic hover\n・低スペック端末はシェーダーを静止フレームに差し替え"
+    },
+    {
+      "type": "frame",
+      "id": "O1LQ8",
+      "x": 80,
+      "y": 1440,
+      "name": "02 — Product 360 (Scroll Scrub)",
+      "clip": true,
+      "width": 1440,
+      "height": 900,
+      "fill": "$ink-soft",
+      "layout": "none",
+      "children": [
+        {
+          "type": "rectangle",
+          "id": "E3qJos",
+          "x": 720,
+          "y": 0,
+          "name": "Grid Line V",
+          "fill": "#222222",
+          "width": 1,
+          "height": 900
+        },
+        {
+          "type": "rectangle",
+          "id": "LPSF8",
+          "x": 0,
+          "y": 450,
+          "name": "Grid Line H",
+          "fill": "#222222",
+          "width": 1440,
+          "height": 1
+        },
+        {
+          "type": "ellipse",
+          "id": "zIWhR",
+          "x": 420,
+          "y": 150,
+          "name": "Rotation Ring",
+          "innerRadius": 0.997,
+          "fill": "#00000000",
+          "width": 600,
+          "height": 600,
+          "stroke": "#333333",
+          "strokeWidth": 1
+        },
+        {
+          "type": "ellipse",
+          "id": "SMhA5",
+          "x": 420,
+          "y": 150,
+          "name": "Ring Progress",
+          "innerRadius": 0.985,
+          "startAngle": -90,
+          "sweepAngle": 120,
+          "fill": "$volt",
+          "width": 600,
+          "height": 600,
+          "stroke": "#00000000"
+        },
+        {
+          "type": "rectangle",
+          "cornerRadius": 250,
+          "id": "l8eYh",
+          "x": 470,
+          "y": 200,
+          "name": "Product Shot",
+          "metadata": {
+            "type": "unsplash",
+            "username": "maksym_tymchyk",
+            "link": "https://unsplash.com/@maksym_tymchyk",
+            "author": "Maksym Tymchyk 🇺🇦"
+          },
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "https://images.unsplash.com/photo-1627163159947-cfa0a930e0b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODM5Mjc2OTd8&ixlib=rb-4.1.0&q=80&w=1080",
+            "mode": "fill"
+          },
+          "width": 500,
+          "height": 500
+        },
+        {
+          "type": "frame",
+          "id": "hdSn9",
+          "x": 80,
+          "y": 90,
+          "name": "Head",
+          "layout": "vertical",
+          "gap": 16,
+          "children": [
+            {
+              "id": "sJhI9",
+              "type": "ref",
+              "ref": "p8V6w7",
+              "name": "Tag",
+              "descendants": {
+                "tZSUK": {
+                  "content": "02 — PRODUCT / 360°"
+                }
+              }
+            },
+            {
+              "type": "text",
+              "id": "JiFV5",
+              "name": "Title",
+              "fill": "$text-hi",
+              "content": "AERO GRID",
+              "fontFamily": "$font-display",
+              "fontSize": 88,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Grm46",
+          "x": 80,
+          "y": 420,
+          "name": "Specs Left",
+          "layout": "vertical",
+          "gap": 48,
+          "children": [
+            {
+              "id": "fzgAX",
+              "type": "ref",
+              "ref": "MBGql",
+              "name": "Weight"
+            },
+            {
+              "id": "hO6gU",
+              "type": "ref",
+              "ref": "MBGql",
+              "name": "Drop",
+              "descendants": {
+                "QVeXM": {
+                  "content": "6"
+                },
+                "vDpuD": {
+                  "content": "mm"
+                },
+                "oQP9l": {
+                  "content": "HEEL DROP"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "j6oKL",
+          "x": 1180,
+          "y": 420,
+          "name": "Specs Right",
+          "layout": "vertical",
+          "gap": 48,
+          "children": [
+            {
+              "id": "tzNtZ",
+              "type": "ref",
+              "ref": "MBGql",
+              "name": "Energy",
+              "descendants": {
+                "QVeXM": {
+                  "content": "87"
+                },
+                "vDpuD": {
+                  "content": "%"
+                },
+                "oQP9l": {
+                  "content": "ENERGY RETURN"
+                }
+              }
+            },
+            {
+              "id": "mrhNK",
+              "type": "ref",
+              "ref": "MBGql",
+              "name": "Carbon",
+              "descendants": {
+                "QVeXM": {
+                  "content": "1.5"
+                },
+                "vDpuD": {
+                  "content": "x"
+                },
+                "oQP9l": {
+                  "content": "CARBON PLATE"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "l6R0e",
+          "x": 80,
+          "y": 830,
+          "name": "Scrub Hint",
+          "gap": 16,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "q4zTpX",
+              "name": "Hint",
+              "fill": "$text-lo",
+              "content": "SCROLL → ROTATE 360°",
+              "fontFamily": "$font-mono",
+              "fontSize": 10,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            },
+            {
+              "type": "text",
+              "id": "jscOP",
+              "name": "Deg",
+              "fill": "$volt",
+              "content": "120° / 360°",
+              "fontFamily": "$font-mono",
+              "fontSize": 10,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "id": "OziIK",
+      "x": 1560,
+      "y": 1440,
+      "name": "Note Product",
+      "width": 380,
+      "height": 0,
+      "content": "02 プロダクト360 — 実装メモ\n\n・セクションをpinし、スクロール量→モデルのY回転にscrub(GLTFのシューズ3Dモデル/Draco圧縮)\n・voltの円弧が回転進捗インジケータ\n・回転角に応じてスペック数値が順番にハイライト\n・モバイルはドラッグ回転(use-gesture)に切替"
+    },
+    {
+      "type": "frame",
+      "id": "XpG53",
+      "x": 80,
+      "y": 2460,
+      "name": "03 — Kinetic Type / Marquee",
+      "clip": true,
+      "width": 1440,
+      "height": 900,
+      "fill": "$ink",
+      "layout": "none",
+      "children": [
+        {
+          "type": "rectangle",
+          "id": "qgjSY",
+          "x": 0,
+          "y": 0,
+          "name": "Action Photo",
+          "metadata": {
+            "type": "unsplash",
+            "username": "prince_1sma",
+            "link": "https://unsplash.com/@prince_1sma",
+            "author": "Ismail Hadine"
+          },
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "https://images.unsplash.com/photo-1631813256921-0e3e6e49f946?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODM5Mjc3MzR8&ixlib=rb-4.1.0&q=80&w=1080",
+            "mode": "fill"
+          },
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "rectangle",
+          "id": "V4SLL",
+          "x": 0,
+          "y": 0,
+          "name": "Scrim",
+          "fill": "#0A0A0A99",
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "text",
+          "id": "z5Rxv",
+          "x": -120,
+          "y": 210,
+          "name": "Marquee 1",
+          "fill": "$text-hi",
+          "content": "NO FINISH LINE —",
+          "fontFamily": "$font-display",
+          "fontSize": 170,
+          "fontWeight": "normal",
+          "letterSpacing": 4
+        },
+        {
+          "type": "text",
+          "id": "dtEdN",
+          "x": -320,
+          "y": 390,
+          "name": "Marquee 2",
+          "fill": "$volt",
+          "stroke": "#00000000",
+          "content": "NO FINISH LINE —",
+          "fontFamily": "$font-display",
+          "fontSize": 170,
+          "fontWeight": "normal",
+          "letterSpacing": 4
+        },
+        {
+          "type": "text",
+          "id": "csrbu",
+          "x": -40,
+          "y": 570,
+          "name": "Marquee 3",
+          "fill": "$text-hi",
+          "content": "NO FINISH LINE —",
+          "fontFamily": "$font-display",
+          "fontSize": 170,
+          "fontWeight": "normal",
+          "letterSpacing": 4
+        },
+        {
+          "type": "frame",
+          "id": "Pr95Z",
+          "x": 80,
+          "y": 90,
+          "name": "Tag Row",
+          "gap": 16,
+          "children": [
+            {
+              "id": "a3wAx",
+              "type": "ref",
+              "ref": "p8V6w7",
+              "name": "Tag",
+              "descendants": {
+                "tZSUK": {
+                  "content": "03 — MOTION / KINETIC TYPE"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "W3a5E",
+          "x": 80,
+          "y": 810,
+          "name": "Foot",
+          "width": 1280,
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "jz2ni",
+              "name": "Dir",
+              "fill": "$text-lo",
+              "content": "ROW VELOCITY ← SCROLL DIRECTION",
+              "fontFamily": "$font-mono",
+              "fontSize": 10,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            },
+            {
+              "type": "text",
+              "id": "Qzqpa",
+              "name": "Alt",
+              "fill": "$volt",
+              "content": "ALTERNATE / ±X",
+              "fontFamily": "$font-mono",
+              "fontSize": 10,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "id": "yMw9T",
+      "x": 1560,
+      "y": 2460,
+      "name": "Note Kinetic",
+      "width": 380,
+      "height": 0,
+      "content": "03 キネティックタイポ — 実装メモ\n\n・3行のマーキーがスクロール速度に比例して反対方向に流れる(ScrollTrigger velocity)\n・中段はアウトライン文字(-webkit-text-stroke)でvolt\n・背景写真はスクロールでズームアウト(scale 1.2→1.0)\n・急な方向転換で文字がスキュー(skewX)して加速感を出す"
+    },
+    {
+      "type": "frame",
+      "id": "DTqBn",
+      "x": 80,
+      "y": 3480,
+      "name": "04 — Collection Ledger",
+      "clip": true,
+      "width": 1440,
+      "height": 900,
+      "fill": "$ink",
+      "layout": "vertical",
+      "gap": 56,
+      "padding": [
+        90,
+        100
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "bxQgB",
+          "name": "Head",
+          "width": "fill_container",
+          "justifyContent": "space_between",
+          "alignItems": "end",
+          "children": [
+            {
+              "id": "EMMRr",
+              "type": "ref",
+              "ref": "p8V6w7",
+              "name": "Tag",
+              "descendants": {
+                "tZSUK": {
+                  "content": "04 — COLLECTION / SS26"
+                }
+              }
+            },
+            {
+              "type": "text",
+              "id": "rodmO",
+              "name": "Hint",
+              "fill": "$text-lo",
+              "content": "HOVER → WEBGL DISTORTION PREVIEW",
+              "fontFamily": "$font-mono",
+              "fontSize": 10,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "j6DTK",
+          "name": "Rows",
+          "width": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "CosqZ",
+              "name": "Row 01",
+              "width": "fill_container",
+              "layout": "vertical",
+              "padding": [
+                22,
+                0
+              ],
+              "children": [
+                {
+                  "id": "SQPed",
+                  "type": "ref",
+                  "ref": "S9w4vP",
+                  "name": "Ledger AERO GRID",
+                  "width": "fill_container",
+                  "descendants": {
+                    "vSlTQ": {
+                      "content": "01"
+                    },
+                    "t1R7y": {
+                      "content": "AERO GRID",
+                      "fill": "$volt",
+                      "fontSize": 56
+                    },
+                    "RoRiG": {
+                      "content": "RUNNING / 2026"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Y9UIvB",
+              "name": "Row 02",
+              "width": "fill_container",
+              "layout": "vertical",
+              "padding": [
+                22,
+                0
+              ],
+              "children": [
+                {
+                  "type": "rectangle",
+                  "id": "MAwSq",
+                  "layoutPosition": "absolute",
+                  "x": 0,
+                  "y": 0,
+                  "name": "Rule",
+                  "fill": "#222222",
+                  "width": 1240,
+                  "height": 1
+                },
+                {
+                  "id": "ki08O",
+                  "type": "ref",
+                  "ref": "S9w4vP",
+                  "name": "Ledger COURT ZERO",
+                  "width": "fill_container",
+                  "descendants": {
+                    "vSlTQ": {
+                      "content": "02"
+                    },
+                    "t1R7y": {
+                      "content": "COURT ZERO",
+                      "fill": "$text-hi",
+                      "fontSize": 56
+                    },
+                    "RoRiG": {
+                      "content": "BASKETBALL / 2026"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "YDRLS",
+              "name": "Row 03",
+              "width": "fill_container",
+              "layout": "vertical",
+              "padding": [
+                22,
+                0
+              ],
+              "children": [
+                {
+                  "type": "rectangle",
+                  "id": "p8rPUS",
+                  "layoutPosition": "absolute",
+                  "x": 0,
+                  "y": 0,
+                  "name": "Rule",
+                  "fill": "#222222",
+                  "width": 1240,
+                  "height": 1
+                },
+                {
+                  "id": "vWs87",
+                  "type": "ref",
+                  "ref": "S9w4vP",
+                  "name": "Ledger TRAIL GHOST",
+                  "width": "fill_container",
+                  "descendants": {
+                    "vSlTQ": {
+                      "content": "03"
+                    },
+                    "t1R7y": {
+                      "content": "TRAIL GHOST",
+                      "fill": "$text-hi",
+                      "fontSize": 56
+                    },
+                    "RoRiG": {
+                      "content": "OUTDOOR / 2025"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "gYMWK",
+              "name": "Row 04",
+              "width": "fill_container",
+              "layout": "vertical",
+              "padding": [
+                22,
+                0
+              ],
+              "children": [
+                {
+                  "type": "rectangle",
+                  "id": "ynRbv",
+                  "layoutPosition": "absolute",
+                  "x": 0,
+                  "y": 0,
+                  "name": "Rule",
+                  "fill": "#222222",
+                  "width": 1240,
+                  "height": 1
+                },
+                {
+                  "id": "l9tzXZ",
+                  "type": "ref",
+                  "ref": "S9w4vP",
+                  "name": "Ledger VAPOR KNIT",
+                  "width": "fill_container",
+                  "descendants": {
+                    "vSlTQ": {
+                      "content": "04"
+                    },
+                    "t1R7y": {
+                      "content": "VAPOR KNIT",
+                      "fill": "$text-hi",
+                      "fontSize": 56
+                    },
+                    "RoRiG": {
+                      "content": "LIFESTYLE / 2025"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "s4KO0o",
+              "name": "Row 05",
+              "width": "fill_container",
+              "layout": "vertical",
+              "padding": [
+                22,
+                0
+              ],
+              "children": [
+                {
+                  "type": "rectangle",
+                  "id": "KeUiP",
+                  "layoutPosition": "absolute",
+                  "x": 0,
+                  "y": 0,
+                  "name": "Rule",
+                  "fill": "#222222",
+                  "width": 1240,
+                  "height": 1
+                },
+                {
+                  "id": "IBTTc",
+                  "type": "ref",
+                  "ref": "S9w4vP",
+                  "name": "Ledger PULSE LAB",
+                  "width": "fill_container",
+                  "descendants": {
+                    "vSlTQ": {
+                      "content": "05"
+                    },
+                    "t1R7y": {
+                      "content": "PULSE LAB",
+                      "fill": "$text-hi",
+                      "fontSize": 56
+                    },
+                    "RoRiG": {
+                      "content": "TRAINING / 2025"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "id": "JeYdP",
+      "x": 1560,
+      "y": 3480,
+      "name": "Note Ledger",
+      "width": 380,
+      "height": 0,
+      "content": "04 コレクション台帳 — 実装メモ\n\n・ホバーでカーソルに追従するWebGL歪みプレビュー(商品画像のRGBシフト)を表示\n・行ホバーでタイトルがvoltに、他の行は淡く淡色化\n・行クリック→プレビュー画像がそのまま詳細ページのヒーローに拡大(Flip)\n・キーボード操作とreduced-motionに対応"
+    },
+    {
+      "type": "frame",
+      "id": "ohTpw",
+      "x": 80,
+      "y": 4500,
+      "name": "05 — Finale / Volt Slab",
+      "clip": true,
+      "width": 1440,
+      "height": 900,
+      "fill": "$volt",
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "LzZjs",
+          "x": -45,
+          "y": 170,
+          "name": "Monumental",
+          "fill": "$ink",
+          "content": "MOVE.",
+          "lineHeight": 0.9,
+          "fontFamily": "$font-display",
+          "fontSize": 330,
+          "fontWeight": "normal",
+          "letterSpacing": 2
+        },
+        {
+          "type": "text",
+          "id": "EeQW7",
+          "x": 340,
+          "y": 470,
+          "name": "Monumental 2",
+          "fill": "$paper",
+          "stroke": "#00000000",
+          "content": "NOW.",
+          "lineHeight": 0.9,
+          "fontFamily": "$font-display",
+          "fontSize": 330,
+          "fontWeight": "normal",
+          "letterSpacing": 2
+        },
+        {
+          "type": "frame",
+          "id": "xOX5z",
+          "x": 80,
+          "y": 90,
+          "name": "Tag",
+          "gap": 12,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ellipse",
+              "id": "A1SYE",
+              "name": "Dot",
+              "fill": "$ink",
+              "width": 8,
+              "height": 8
+            },
+            {
+              "type": "text",
+              "id": "R0TuDr",
+              "name": "Label",
+              "fill": "$ink",
+              "content": "05 — JOIN THE MOTION",
+              "fontFamily": "$font-mono",
+              "fontSize": 12,
+              "fontWeight": "normal",
+              "letterSpacing": 3
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Uld9q",
+          "x": 80,
+          "y": 790,
+          "name": "Actions",
+          "gap": 20,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "HC113",
+              "name": "Btn Ink",
+              "fill": "$ink",
+              "cornerRadius": 4,
+              "gap": 12,
+              "padding": [
+                20,
+                40
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "nSna5",
+                  "name": "Label",
+                  "fill": "$volt",
+                  "content": "GET AERO GRID",
+                  "fontFamily": "$font-display",
+                  "fontSize": 16,
+                  "fontWeight": "normal",
+                  "letterSpacing": 2
+                },
+                {
+                  "type": "icon",
+                  "id": "m6G3P6",
+                  "name": "Arrow",
+                  "width": 18,
+                  "height": 18,
+                  "icon": "arrow-up-right",
+                  "library": "lucide",
+                  "fill": "$volt"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "rgcH4",
+              "name": "Sub",
+              "fill": "$ink",
+              "content": "MEMBERS GET EARLY ACCESS — 07.20",
+              "fontFamily": "$font-mono",
+              "fontSize": 11,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "id": "oHhlC",
+      "x": 1560,
+      "y": 4500,
+      "name": "Note Finale",
+      "width": 380,
+      "height": 0,
+      "content": "05 フィナーレ — 実装メモ\n\n・直前の暗いセクションからvolt一面へハードカット(スクロールで幕が上がるクリップパス)\n・MOVE.は塗り、NOW.はアウトラインでリズムを作る\n・ボタンはmagnetic + ホバーで矢印が回転\n・Radianの知見:感情のピーク直後にCVを配置"
+    }
+  ],
+  "variables": {
+    "ink": {
+      "type": "color",
+      "value": "#0A0A0A"
+    },
+    "ink-soft": {
+      "type": "color",
+      "value": "#141414"
+    },
+    "paper": {
+      "type": "color",
+      "value": "#F2F2F0"
+    },
+    "volt": {
+      "type": "color",
+      "value": "#CCFF00"
+    },
+    "text-hi": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "text-lo": {
+      "type": "color",
+      "value": "#8A8A8A"
+    },
+    "font-display": {
+      "type": "string",
+      "value": "Anton"
+    },
+    "font-body": {
+      "type": "string",
+      "value": "Inter"
+    },
+    "font-mono": {
+      "type": "string",
+      "value": "Geist Mono"
+    }
+  },
+  "fileToken": "608b1768-6527-4e19-bff6-40a43ae7911c"
+}
