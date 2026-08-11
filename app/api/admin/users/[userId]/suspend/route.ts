@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
-import { supabaseAdmin } from "@/lib/supabase/server"
+import { getSupabaseAdmin } from "@/lib/supabase/server"
 
 export async function POST(
   request: NextRequest,
@@ -55,7 +55,7 @@ export async function POST(
     }
 
     // Supabase Admin APIを使用してユーザーを停止
-    const { error } = await supabaseAdmin.auth.admin.updateUserById(
+    const { error } = await getSupabaseAdmin().auth.admin.updateUserById(
       userId,
       { ban_duration: "876000h" } // 100年間（実質的に永続的）
     )

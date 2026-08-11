@@ -65,6 +65,9 @@ describe("repository hygiene", () => {
   it("記事運用と移行手順のドキュメントが揃っている", async () => {
     const requiredFiles = [
       "CLAUDE.md",
+      "app/content-manifest.json/route.ts",
+      "app/llms.txt/route.ts",
+      "app/blog/[slug]/index.md/route.ts",
       "docs/migration/findings.md",
       "docs/migration/runbook.md",
     ]

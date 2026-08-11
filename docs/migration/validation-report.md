@@ -4,12 +4,13 @@ Validated on 2026-08-11 against the production build served by `next start`.
 
 ## Automated checks
 
-- `npm test`: 9 files, 31 tests passed.
+- `npm test`: 11 files, 34 tests passed.
 - `npm run content:validate`: 94 published posts passed frontmatter, MDX,
   internal-link, and image validation.
 - `npm run typecheck`: passed with no TypeScript errors.
-- `npm run build`: passed; 144 static pages were generated, including all 94
-  article routes.
+- `npm run build`: passed in the same placeholder-only environment used by CI;
+  240 static pages were generated, including all 94 HTML article routes and 94
+  Markdown article routes.
 
 ## Browser checks
 
@@ -47,6 +48,13 @@ No browser request targeted the retired content service. `/feed`,
 `/sitemap.xml`, and `/robots.txt` returned HTTP 200 with the expected content
 types and canonical site URL.
 
+The latest agent-discovery requirement was also checked with Playwright:
+
+- `/llms.txt`: HTTP 200, `text/plain`, with 94 Markdown article links.
+- `/content-manifest.json`: HTTP 200, JSON array with 94 entries.
+- `/blog/alt-attribute-guide/index.md`: HTTP 200, `text/markdown`, with the
+  repository frontmatter and MDX source.
+
 The only HTTP failure under local `next start` was
 `/_vercel/insights/script.js` returning 404. That endpoint is injected and
 served by Vercel after deployment; no application or article request failed.
@@ -58,6 +66,7 @@ Local Playwright artifacts are kept outside version control:
 - `output/playwright/blog-index-final.png`
 - `output/playwright/article-alt-attribute-guide-final.png`
 - `output/playwright/article-alt-attribute-guide-production.png`
+- `output/playwright/llms-txt-final.png`
 
 Visual inspection confirmed that the index masonry layout, article typography,
 table of contents, inline images, related articles, and calls to action retain

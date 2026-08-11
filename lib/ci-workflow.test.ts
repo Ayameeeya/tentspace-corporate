@@ -19,6 +19,10 @@ describe("content CI workflow", () => {
     expect(workflow).toContain("npm test")
     expect(workflow).toContain("npm run typecheck")
     expect(workflow).toContain("npm run build")
+    expect(workflow).toContain('node-version: "22"')
+    expect(workflow).toContain("NEXT_PUBLIC_SUPABASE_URL")
+    expect(workflow).toContain("NEXT_PUBLIC_SUPABASE_ANON_KEY")
+    expect(workflow).toContain("SUPABASE_SERVICE_ROLE_KEY")
   })
 
   it("Next.jsビルドで型エラーを無視しない", async () => {

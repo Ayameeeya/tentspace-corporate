@@ -7,6 +7,7 @@ import {
   readPostFiles,
   validateContentRepository,
 } from "./repository"
+import { loadPostMarkdownBySlug } from "./markdown"
 
 const temporaryDirectories: string[] = []
 
@@ -74,6 +75,27 @@ describe("content repository", () => {
     expect(post?.contentHtml).toContain("<h2>導入</h2>")
     expect(post?.contentHtml).toContain("<strong>本文</strong>")
     await expect(loadPostBySlug("missing", postsDirectory)).resolves.toBeNull()
+  })
+
+  it("公開記事のMDXソースをMarkdown配信用に読み込む", async () => {
+    const postsDirectory = await createRepository()
+    await createPost(postsDirectory, "markdown-post", "## Markdown本文")
+    await createPost(
+      postsDirectory,
+      "draft-post",
+      "## 下書き",
+      "draft: true\n",
+    )
+
+    await expect(
+      loadPostMarkdownBySlug("markdown-post", postsDirectory),
+    ).resolves.toContain("## Markdown本文")
+    await expect(
+      loadPostMarkdownBySlug("draft-post", postsDirectory),
+    ).resolves.toBeNull()
+    await expect(
+      loadPostMarkdownBySlug("../invalid", postsDirectory),
+    ).resolves.toBeNull()
   })
 
   it("全記事を検証し、MDXコンパイルエラーを報告する", async () => {

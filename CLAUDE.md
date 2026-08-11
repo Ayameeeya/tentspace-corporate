@@ -114,3 +114,7 @@ checks internal article links and local images, and regenerates
 `content-manifest.json` plus `content-rendered.json`. The presentation layer
 reads those generated files. Likes, favorites, comments, and authentication
 remain Supabase-backed and use the article slug.
+
+Agent and crawler discovery is static: `/llms.txt` lists every published
+article, `/content-manifest.json` exposes the generated manifest, and
+`/blog/<slug>/index.md` serves the repository-owned MDX source as Markdown.

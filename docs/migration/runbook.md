@@ -12,14 +12,16 @@ repository workflow only prepares and verifies the deployment.
    representative articles including tables, code, and multiple images.
 4. Confirm `/feed`, `/sitemap.xml`, `/robots.txt`, canonical metadata, Open
    Graph metadata, and BlogPosting JSON-LD.
-5. Confirm no network request targets the retired content service.
+5. Confirm `/llms.txt`, `/content-manifest.json`, and a representative
+   `/blog/<slug>/index.md` return the complete static agent-facing content.
+6. Confirm no network request targets the retired content service.
 
 ## Publish and cutover
 
 1. Merge the approved PR to `main`.
 2. Wait for both CI and the production Vercel deployment to succeed.
-3. Check the home page, `/blog`, `/feed`, `/sitemap.xml`, and representative
-   article URLs in production.
+3. Check the home page, `/blog`, `/feed`, `/sitemap.xml`, `/llms.txt`, and
+   representative HTML and Markdown article URLs in production.
 4. Confirm GA4 and Vercel Analytics requests after consent is granted.
 5. Remove retired service environment variables only after the production
    checks pass. Do not change DNS as part of the repository workflow.
