@@ -11,8 +11,7 @@ import {
   formatDate,
   type BlogPost,
 } from "@/lib/blog-content"
-
-const SITE_URL = "https://tentspace.net"
+import { SITE_URL } from "@/lib/site"
 
 // Generate metadata
 export async function generateMetadata(): Promise<Metadata> {

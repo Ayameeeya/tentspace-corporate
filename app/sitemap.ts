@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next"
 import { getPosts, getCategories } from "@/lib/blog-content"
-
-const SITE_URL = "https://tentspace.net"
+import { SITE_URL } from "@/lib/site"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Static pages
@@ -65,7 +64,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Blog posts
   let blogPosts: MetadataRoute.Sitemap = []
   try {
-    const { posts } = await getPosts({ perPage: 100 })
+    const { posts } = await getPosts({ perPage: 1000 })
     blogPosts = posts.map((post) => ({
       url: `${SITE_URL}/blog/${post.slug}`,
       lastModified: new Date(post.updated),

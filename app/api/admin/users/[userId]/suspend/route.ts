@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
-import { supabaseAdmin } from "@/lib/supabase/server"
+import { getSupabaseAdmin } from "@/lib/supabase/server"
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
+    const { userId } = await params
     const cookieStore = await cookies()
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -46,7 +47,7 @@ export async function POST(
     }
 
     // 自分自身を停止しようとしていないかチェック
-    if (params.userId === user.id) {
+    if (userId === user.id) {
       return NextResponse.json(
         { error: "Cannot suspend your own account" },
         { status: 400 }
@@ -54,8 +55,8 @@ export async function POST(
     }
 
     // Supabase Admin APIを使用してユーザーを停止
-    const { error } = await supabaseAdmin.auth.admin.updateUserById(
-      params.userId,
+    const { error } = await getSupabaseAdmin().auth.admin.updateUserById(
+      userId,
       { ban_duration: "876000h" } // 100年間（実質的に永続的）
     )
 

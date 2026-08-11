@@ -10,9 +10,8 @@ import {
   type BlogPost,
 } from "@/lib/blog-content"
 import { getRenderedPostBySlug } from "@/lib/blog-content-server"
+import { SITE_URL } from "@/lib/site"
 import BlogPostClient from "./blog-post-client"
-
-const SITE_URL = "https://tentspace.net"
 
 export async function generateStaticParams() {
   const { posts } = await getPosts({ perPage: 1000 })

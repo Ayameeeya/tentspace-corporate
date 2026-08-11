@@ -1,7 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next"
-
-const SITE_URL = "https://tentspace.net"
+import { SITE_URL } from "@/lib/site"
 
 export const metadata: Metadata = {
   title: {
