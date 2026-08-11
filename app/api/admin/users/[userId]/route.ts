@@ -4,9 +4,10 @@ import { cookies } from "next/headers"
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
+    const { userId } = await params
     const cookieStore = await cookies()
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -55,7 +56,7 @@ export async function PATCH(
         bio,
         updated_at: new Date().toISOString(),
       })
-      .eq("id", params.userId)
+      .eq("id", userId)
 
     if (error) {
       console.error("Error updating profile:", error)

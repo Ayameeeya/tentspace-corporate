@@ -1,4 +1,7 @@
+import { readFile } from "node:fs/promises"
+import path from "node:path"
 import { evaluate } from "@mdx-js/mdx"
+import probe from "probe-image-size"
 import React from "react"
 import { renderToStaticMarkup } from "react-dom/server"
 import * as runtime from "react/jsx-runtime"
@@ -30,7 +33,66 @@ function XEmbed({ url }: { url: string }) {
   )
 }
 
-export async function renderMdxToHtml(source: string): Promise<string> {
+export interface RenderMdxOptions {
+  publicDirectory?: string
+}
+
+async function addLocalImageDimensions(
+  html: string,
+  publicDirectory: string,
+): Promise<string> {
+  const imageTags = [...new Set(html.match(/<img\b[^>]*>/g) ?? [])]
+  let rendered = html
+
+  for (const imageTag of imageTags) {
+    const hasWidth = /\swidth=/.test(imageTag)
+    const hasHeight = /\sheight=/.test(imageTag)
+    if (hasWidth && hasHeight) continue
+
+    const source = imageTag.match(/\ssrc="([^"]+)"/)?.[1]
+    if (!source?.startsWith("/") || source.startsWith("//")) continue
+
+    const pathname = decodeURIComponent(
+      new URL(source, "https://local.invalid").pathname,
+    )
+    const publicRoot = path.resolve(publicDirectory)
+    const imagePath = path.resolve(publicRoot, pathname.replace(/^\/+/, ""))
+    if (!imagePath.startsWith(`${publicRoot}${path.sep}`)) {
+      throw new Error(`Local image path escapes public directory: ${source}`)
+    }
+
+    let image: Buffer
+    try {
+      image = await readFile(imagePath)
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+        throw new Error(`Missing local image: ${source}`, { cause: error })
+      }
+      throw error
+    }
+
+    const dimensions = probe.sync(image)
+    if (!dimensions) {
+      throw new Error(`Could not determine local image dimensions: ${source}`)
+    }
+
+    const attributes = [
+      hasWidth ? "" : ` width="${dimensions.width}"`,
+      hasHeight ? "" : ` height="${dimensions.height}"`,
+      /\sloading=/.test(imageTag) ? "" : ' loading="lazy"',
+      /\sdecoding=/.test(imageTag) ? "" : ' decoding="async"',
+    ].join("")
+    const sizedTag = imageTag.replace(/\s*\/?>(?=$)/, `${attributes}/>`)
+    rendered = rendered.split(imageTag).join(sizedTag)
+  }
+
+  return rendered
+}
+
+export async function renderMdxToHtml(
+  source: string,
+  options: RenderMdxOptions = {},
+): Promise<string> {
   const evaluated = await evaluate(source, {
     ...runtime,
     remarkPlugins: [remarkGfm],
@@ -47,5 +109,8 @@ export async function renderMdxToHtml(source: string): Promise<string> {
     '<pre class="ts-code" data-lang="$1"><code class="language-$1">',
   )
 
-  return html
+  return addLocalImageDimensions(
+    html,
+    options.publicDirectory ?? path.join(process.cwd(), "public"),
+  )
 }

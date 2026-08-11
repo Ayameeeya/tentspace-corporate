@@ -1,4 +1,5 @@
-import { postFrontmatterSchema } from "./post-schema"
+import { postFrontmatterSchema, type PostFrontmatter } from "./post-schema"
+import { SITE_URL } from "../site"
 
 export interface NewPostInput {
   title: string
@@ -7,6 +8,7 @@ export interface NewPostInput {
   slug: string
   categories: string[]
   tags: string[]
+  experiment?: NonNullable<PostFrontmatter["experiment"]>
 }
 
 export function createPostTemplate(input: NewPostInput): string {
@@ -14,6 +16,13 @@ export function createPostTemplate(input: NewPostInput): string {
     ...input,
     draft: true,
   })
+
+  const experiment = metadata.experiment
+    ? `experiment:\n${Object.entries(metadata.experiment)
+        .filter(([, value]) => value !== undefined)
+        .map(([key, value]) => `  ${key}: ${JSON.stringify(value)}`)
+        .join("\n")}\n`
+    : ""
 
   return `---
 title: ${JSON.stringify(metadata.title)}
@@ -23,7 +32,7 @@ slug: ${metadata.slug}
 categories: ${JSON.stringify(metadata.categories)}
 tags: ${JSON.stringify(metadata.tags)}
 draft: true
----
+${experiment}---
 
 ## はじめに
 
@@ -36,5 +45,24 @@ draft: true
 ## まとめ
 
 要点と次のアクションを書きます。
+`
+}
+
+export function createSocialTemplate(input: {
+  title: string
+  slug: string
+}): string {
+  return `# SNS告知文
+
+記事: ${input.title}
+URL: ${SITE_URL}/blog/${input.slug}
+
+## X
+
+告知文を記入します。
+
+## Threads
+
+告知文を記入します。
 `
 }

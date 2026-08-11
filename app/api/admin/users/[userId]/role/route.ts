@@ -4,9 +4,10 @@ import { cookies } from "next/headers"
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
+    const { userId } = await params
     const cookieStore = await cookies()
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -56,7 +57,7 @@ export async function PATCH(
     }
 
     // 自分自身のロールを変更しようとしていないかチェック
-    if (params.userId === user.id) {
+    if (userId === user.id) {
       return NextResponse.json(
         { error: "Cannot change your own role" },
         { status: 400 }
@@ -67,7 +68,7 @@ export async function PATCH(
     const { error } = await supabase
       .from("profiles")
       .update({ role })
-      .eq("id", params.userId)
+      .eq("id", userId)
 
     if (error) {
       console.error("Error updating role:", error)

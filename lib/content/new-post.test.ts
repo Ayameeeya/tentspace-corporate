@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest"
-import { createPostTemplate } from "./new-post"
+import * as newPost from "./new-post"
 import { parsePostSource } from "./post-schema"
+
+const { createPostTemplate } = newPost
 
 describe("createPostTemplate", () => {
   it("検証可能な下書きMDXテンプレートを作る", () => {
@@ -39,5 +41,49 @@ describe("createPostTemplate", () => {
         tags: [],
       }),
     ).toThrow(/slug/i)
+  })
+
+  it("実験メタデータをfrontmatterへ出力する", () => {
+    const source = createPostTemplate({
+      title: "実験付き記事",
+      description: "仮説検証に使用する記事のテンプレートです。",
+      date: "2026-08-11",
+      slug: "experiment-post",
+      categories: ["AI"],
+      tags: ["検証"],
+      experiment: {
+        hook: "question",
+        cta: "contact",
+        targetKw: "AI 導入",
+        utmCampaign: "blog_2026w33",
+      },
+    })
+
+    const parsed = parsePostSource(
+      source,
+      "content/posts/experiment-post/index.mdx",
+    )
+    expect(parsed.metadata.experiment).toEqual({
+      hook: "question",
+      cta: "contact",
+      targetKw: "AI 導入",
+      utmCampaign: "blog_2026w33",
+    })
+  })
+
+  it("SNS告知文の雛形を生成する", () => {
+    const moduleWithSocial = newPost as typeof newPost & {
+      createSocialTemplate?: (input: { title: string; slug: string }) => string
+    }
+
+    expect(typeof moduleWithSocial.createSocialTemplate).toBe("function")
+    if (!moduleWithSocial.createSocialTemplate) return
+
+    const social = moduleWithSocial.createSocialTemplate({
+      title: "MDXで記事を書く",
+      slug: "writing-with-mdx",
+    })
+    expect(social).toContain("# SNS告知文")
+    expect(social).toContain("/blog/writing-with-mdx")
   })
 })

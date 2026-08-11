@@ -10,6 +10,34 @@ export interface PostFile {
   sourcePath: string
 }
 
+export interface ContentValidationOptions {
+  publicDirectory?: string
+}
+
+const NON_ARTICLE_BLOG_ROUTES = new Set(["favorites", "n8n", "seo"])
+
+function extractHtmlAttributeValues(
+  html: string,
+  attribute: "href" | "src",
+) {
+  const expression = new RegExp(`\\b${attribute}=["']([^"']+)["']`, "g")
+  return [...html.matchAll(expression)].map((match) => match[1])
+}
+
+function extractHtmlImageSources(html: string) {
+  return (html.match(/<img\b[^>]*>/g) ?? []).flatMap((imageTag) =>
+    extractHtmlAttributeValues(imageTag, "src"),
+  )
+}
+
+function getBlogPostSlug(reference: string): string | null {
+  if (!reference.startsWith("/") || reference.startsWith("//")) return null
+  const pathname = new URL(reference, "https://local.invalid").pathname
+  const match = pathname.match(/^\/blog\/([a-z0-9-]+)\/?$/)
+  if (!match || NON_ARTICLE_BLOG_ROUTES.has(match[1])) return null
+  return match[1]
+}
+
 export async function readPostFiles(
   postsDirectory = POSTS_DIRECTORY,
 ): Promise<PostFile[]> {
@@ -63,16 +91,38 @@ export async function loadPostBySlug(
 
 export async function validateContentRepository(
   postsDirectory = POSTS_DIRECTORY,
+  options: ContentValidationOptions = {},
 ) {
   const files = await readPostFiles(postsDirectory)
+  const parsedPosts = files.map((file) => parsePostSource(file.source, file.sourcePath))
+  const postSlugs = new Set(parsedPosts.map((post) => post.metadata.slug))
+  const publicDirectory =
+    options.publicDirectory ?? path.join(process.cwd(), "public")
 
-  for (const file of files) {
+  for (const parsed of parsedPosts) {
     try {
-      const parsed = parsePostSource(file.source, file.sourcePath)
-      await renderMdxToHtml(parsed.body)
+      const contentHtml = await renderMdxToHtml(parsed.body, { publicDirectory })
+
+      for (const source of extractHtmlImageSources(contentHtml)) {
+        if (/^(?:https?:)?\/\//.test(source)) {
+          throw new Error(`External article image is not allowed: ${source}`)
+        }
+        if (!source.startsWith("/")) {
+          throw new Error(
+            `Article image must use a root-relative local path: ${source}`,
+          )
+        }
+      }
+
+      for (const reference of extractHtmlAttributeValues(contentHtml, "href")) {
+        const slug = getBlogPostSlug(reference)
+        if (slug && !postSlugs.has(slug)) {
+          throw new Error(`Missing blog post for internal link: ${reference}`)
+        }
+      }
     } catch (error) {
       const reason = error instanceof Error ? error.message : String(error)
-      throw new Error(`${file.sourcePath}: ${reason}`, { cause: error })
+      throw new Error(`${parsed.sourcePath}: ${reason}`, { cause: error })
     }
   }
 
