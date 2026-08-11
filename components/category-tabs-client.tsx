@@ -2,13 +2,13 @@
 
 import { useEffect, useState, useCallback, useRef } from "react"
 import Link from "next/link"
-import type { WPCategory } from "@/lib/wordpress"
+import type { BlogCategory } from "@/lib/content/manifest-query"
 
 export function CategoryTabsClient({
   categories,
   currentSlug
 }: {
-  categories: WPCategory[]
+  categories: BlogCategory[]
   currentSlug: string
 }) {
   const scrollRef = useRef<HTMLDivElement>(null)

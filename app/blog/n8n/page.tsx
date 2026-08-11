@@ -9,16 +9,13 @@ import {
   getPosts,
   getCategoryBySlug,
   getFeaturedImageUrl,
+  getPostTerms,
   stripHtml,
   formatDate,
-  getReadingTime,
-  type WPPost,
-} from "@/lib/wordpress"
+  type BlogPost,
+} from "@/lib/blog-content"
 
 const SITE_URL = "https://tentspace.net"
-
-// Enable dynamic rendering
-export const dynamic = "force-dynamic"
 
 // Generate metadata
 export async function generateMetadata(): Promise<Metadata> {
@@ -75,11 +72,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 // Blog Card Component
-function BlogCard({ post }: { post: WPPost }) {
-  const imageUrl = getFeaturedImageUrl(post, 'large')
-  const excerpt = stripHtml(post.excerpt.rendered)
-  const readingTime = getReadingTime(post.content.rendered)
-  const categories = post._embedded?.['wp:term']?.[0] || []
+function BlogCard({ post }: { post: BlogPost }) {
+  const imageUrl = getFeaturedImageUrl(post)
+  const excerpt = stripHtml(post.description)
+  const readingTime = post.readingTime
+  const categories = getPostTerms(post)
 
   return (
     <article className="group">
@@ -90,7 +87,7 @@ function BlogCard({ post }: { post: WPPost }) {
             <div className="relative aspect-[16/9] bg-slate-100 dark:bg-gray-800 overflow-hidden mb-5 rounded-lg">
               <Image
                 src={imageUrl}
-                alt={stripHtml(post.title.rendered)}
+                alt={stripHtml(post.title)}
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-500"
               />
@@ -111,7 +108,7 @@ function BlogCard({ post }: { post: WPPost }) {
             {/* Title */}
             <h3
               className="text-xl md:text-2xl font-bold text-foreground mb-3 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-tight"
-              dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+              dangerouslySetInnerHTML={{ __html: post.title }}
             />
 
             {/* Excerpt */}
@@ -179,18 +176,18 @@ const chapters = [
   {
     id: 7,
     title: "第7章：活用事例・ワークフローレシピ",
-    description: "n8nで実現できる具体的な自動化事例を紹介します。Gmail自動返信、Slack通知、Google Sheets連携、WordPress連携など、すぐに使える実践的なワークフローレシピを掲載。営業、マーケティング、カスタマーサポート、経理、開発など、部門別のユースケースも学べます。",
-    keywords: ["ワークフロー", "活用事例", "Gmail", "Slack", "Google Sheets", "WordPress", "自動化"],
+    description: "n8nで実現できる具体的な自動化事例を紹介します。Gmail自動返信、Slack通知、Google Sheets連携、CMS連携など、すぐに使える実践的なワークフローレシピを掲載。営業、マーケティング、カスタマーサポート、経理、開発など、部門別のユースケースも学べます。",
+    keywords: ["ワークフロー", "活用事例", "Gmail", "Slack", "Google Sheets", "CMS", "自動化"],
     articles: 6,
   },
 ]
 
 // 記事を章ごとに分類
-function categorizePostsByChapter(posts: WPPost[]) {
-  const postsByChapter = new Map<number, WPPost[]>()
+function categorizePostsByChapter(posts: BlogPost[]) {
+  const postsByChapter = new Map<number, BlogPost[]>()
   
   posts.forEach((post) => {
-    const title = stripHtml(post.title.rendered).toLowerCase()
+    const title = stripHtml(post.title).toLowerCase()
     
     // 各章のキーワードにマッチするか確認
     for (const chapter of chapters) {

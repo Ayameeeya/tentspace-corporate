@@ -1,0 +1,402 @@
+---
+title: "【エンジニア向け】n8n Docker Compose設定完全ガイド｜環境変数・PostgreSQL・Queue Mode・Traefik連携"
+description: "n8nのDocker Compose設定を徹底解説。環境変数リファレンス、PostgreSQL構成、Traefik連携、Queue Mode（Redis + Worker）設定、ボリューム管理、機密情報の取り扱いまで、エンジニアが知っておくべき技術を網羅。"
+date: 2025-12-17T14:50:24Z
+updated: 2025-12-21T10:58:00Z
+slug: n8n-docker-compose-guide
+categories: ["n8n"]
+tags: ["Docker","インフラ","n8n","Docker Compose"]
+draft: false
+ogImage: "/blog-assets/n8n-docker-compose-guide/featured.webp"
+---
+
+n8nをDockerで運用するエンジニアにとって、Docker Composeの設定は最も重要な基盤です。
+
+環境変数の設定ミス、ボリュームの永続化忘れ、ネットワーク設定の誤りなど、多くのトラブルはdocker-compose.ymlの設定に起因します。
+
+この記事では、n8nのDocker Compose設定について、環境変数の完全リファレンス、本番向け構成パターン、Queue Mode設定、Traefik連携まで、エンジニアが知っておくべき技術を網羅的に解説します。
+
+## 基本構成：最小限のdocker-compose.yml
+
+まず、ローカル開発用の最小構成を確認します。
+
+### 最小構成（SQLite + HTTP）
+
+```
+version: "3.8"
+```
+
+```
+services:n8n:image: n8nio/n8n:latestcontainer_name: n8nrestart: unless-stoppedports:- "5678:5678"environment:- GENERIC_TIMEZONE=Asia/Tokyo- TZ=Asia/Tokyovolumes:- n8n_data:/home/node/.n8n
+```
+
+```
+volumes:n8n_data:
+```
+
+この構成の特徴：
+
+-   データベース：SQLite（デフォルト）
+-   プロトコル：HTTP（ローカル開発向け）
+-   ボリューム：Docker Named Volume
+
+### 起動コマンド
+
+```
+# 起動docker compose up -d
+```
+
+```
+# ログ確認docker compose logs -f n8n
+```
+
+```
+# 停止docker compose down
+```
+
+```
+# ボリューム含めて削除docker compose down -v
+```
+
+## 環境変数リファレンス
+
+n8nの挙動は環境変数で制御します。カテゴリ別に主要な環境変数を解説します。
+
+### 基本設定
+
+| 環境変数 | 説明  | デフォルト | 例   |
+| --- | --- | --- | --- |
+| N8N\_HOST | n8nのホスト名 | localhost | n8n.example.com |
+| N8N\_PORT | リッスンポート | 5678 | 5678 |
+| N8N\_PROTOCOL | プロトコル | http | https |
+| WEBHOOK\_URL | Webhook用外部URL | –   | https://n8n.example.com/ |
+| N8N\_EDITOR\_BASE\_URL | エディタのベースURL | –   | https://n8n.example.com/ |
+| GENERIC\_TIMEZONE | タイムゾーン | America/New\_York | Asia/Tokyo |
+| TZ  | システムタイムゾーン | UTC | Asia/Tokyo |
+
+### 認証・セキュリティ
+
+| 環境変数 | 説明  | デフォルト |
+| --- | --- | --- |
+| N8N\_BASIC\_AUTH\_ACTIVE | Basic認証の有効化 | false |
+| N8N\_BASIC\_AUTH\_USER | Basic認証ユーザー名 | –   |
+| N8N\_BASIC\_AUTH\_PASSWORD | Basic認証パスワード | –   |
+| N8N\_ENCRYPTION\_KEY | 認証情報暗号化キー | 自動生成 |
+| N8N\_SECURE\_COOKIE | Secure Cookieの有効化 | true |
+| N8N\_ENFORCE\_SETTINGS\_FILE\_PERMISSIONS | 設定ファイル権限チェック | false |
+
+**N8N\_ENCRYPTION\_KEYの重要性**
+
+```
+# 32バイト（64文字の16進数）を生成openssl rand -hex 32
+```
+
+このキーは認証情報（Credentials）の暗号化に使用されます。設定しないと起動時に自動生成されますが、コンテナを再作成すると既存の認証情報が復号できなくなります。必ず明示的に設定し、安全にバックアップしてください。
+
+### データベース設定
+
+| 環境変数 | 説明  | デフォルト |
+| --- | --- | --- |
+| DB\_TYPE | データベースタイプ | sqlite |
+| DB\_POSTGRESDB\_HOST | PostgreSQLホスト | localhost |
+| DB\_POSTGRESDB\_PORT | PostgreSQLポート | 5432 |
+| DB\_POSTGRESDB\_DATABASE | データベース名 | n8n |
+| DB\_POSTGRESDB\_USER | ユーザー名 | postgres |
+| DB\_POSTGRESDB\_PASSWORD | パスワード | –   |
+| DB\_POSTGRESDB\_SCHEMA | スキーマ名 | public |
+
+### 実行履歴（Executions）
+
+| 環境変数 | 説明  | デフォルト |
+| --- | --- | --- |
+| EXECUTIONS\_DATA\_PRUNE | 実行履歴の自動削除 | true |
+| EXECUTIONS\_DATA\_MAX\_AGE | 保持期間（時間） | 336（14日） |
+| EXECUTIONS\_DATA\_PRUNE\_MAX\_COUNT | 最大保持件数 | 10000 |
+| EXECUTIONS\_DATA\_SAVE\_ON\_ERROR | エラー時の保存 | all |
+| EXECUTIONS\_DATA\_SAVE\_ON\_SUCCESS | 成功時の保存 | all |
+| EXECUTIONS\_DATA\_SAVE\_ON\_PROGRESS | 進行中の保存 | false |
+| EXECUTIONS\_DATA\_SAVE\_MANUAL\_EXECUTIONS | 手動実行の保存 | true |
+
+### Queue Mode（Redis）
+
+| 環境変数 | 説明  | デフォルト |
+| --- | --- | --- |
+| EXECUTIONS\_MODE | 実行モード | regular |
+| QUEUE\_BULL\_REDIS\_HOST | Redisホスト | localhost |
+| QUEUE\_BULL\_REDIS\_PORT | Redisポート | 6379 |
+| QUEUE\_BULL\_REDIS\_PASSWORD | Redisパスワード | –   |
+| QUEUE\_BULL\_REDIS\_DB | RedisDB番号 | 0   |
+| QUEUE\_HEALTH\_CHECK\_ACTIVE | ヘルスチェック | false |
+
+## 本番向け構成：PostgreSQL + HTTPS
+
+本番環境向けの推奨構成です。
+
+### .envファイル
+
+```
+# ドメイン設定DOMAIN_NAME=example.comSUBDOMAIN=n8nSSL_EMAIL=admin@example.com
+```
+
+```
+# PostgreSQLPOSTGRES_USER=n8nPOSTGRES_PASSWORD=your_strong_db_passwordPOSTGRES_DB=n8n
+```
+
+```
+# n8nN8N_ENCRYPTION_KEY=your_64_char_hex_key_hereN8N_BASIC_AUTH_USER=adminN8N_BASIC_AUTH_PASSWORD=your_admin_password
+```
+
+```
+# タイムゾーンGENERIC_TIMEZONE=Asia/Tokyo
+```
+
+### docker-compose.yml（PostgreSQL + Nginx）
+
+```
+version: "3.8"
+```
+
+```
+services:postgres:image: postgres:15-alpinecontainer_name: n8n-postgresrestart: alwaysenvironment:- POSTGRES_USER=${POSTGRES_USER}- POSTGRES_PASSWORD=${POSTGRES_PASSWORD}- POSTGRES_DB=${POSTGRES_DB}volumes:- postgres_data:/var/lib/postgresql/datanetworks:- n8n-networkhealthcheck:test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}']interval: 10stimeout: 5sretries: 5
+```
+
+```
+n8n:image: n8nio/n8n:latestcontainer_name: n8nrestart: alwaysports:- "5678:5678"environment:# データベース- DB_TYPE=postgresdb- DB_POSTGRESDB_HOST=postgres- DB_POSTGRESDB_PORT=5432- DB_POSTGRESDB_DATABASE=${POSTGRES_DB}- DB_POSTGRESDB_USER=${POSTGRES_USER}- DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}# 認証- N8N_BASIC_AUTH_ACTIVE=true- N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER}- N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD}- N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}# ホスト設定- N8N_HOST=${SUBDOMAIN}.${DOMAIN_NAME}- N8N_PORT=5678- N8N_PROTOCOL=https- WEBHOOK_URL=https://${SUBDOMAIN}.${DOMAIN_NAME}/- N8N_SECURE_COOKIE=true# タイムゾーン- GENERIC_TIMEZONE=${GENERIC_TIMEZONE}- TZ=${GENERIC_TIMEZONE}# 実行履歴- EXECUTIONS_DATA_PRUNE=true- EXECUTIONS_DATA_MAX_AGE=168- EXECUTIONS_DATA_PRUNE_MAX_COUNT=10000# その他- NODE_ENV=production- N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=truevolumes:- n8n_data:/home/node/.n8n- ./local-files:/filesnetworks:- n8n-networkdepends_on:postgres:condition: service_healthyvolumes:postgres_data:n8n_data:
+```
+
+```
+networks:n8n-network:driver: bridge
+```
+
+## Traefik連携：自動SSL証明書
+
+Traefikを使用すると、Let’s EncryptのSSL証明書を自動取得・更新できます。
+
+### docker-compose.yml（Traefik版）
+
+```
+version: "3.8"
+```
+
+```
+services:traefik:image: traefik:v2.10container_name: traefikrestart: alwayscommand:- "--api.dashboard=true"- "--providers.docker=true"- "--providers.docker.exposedbydefault=false"- "--entrypoints.web.address=:80"- "--entrypoints.web.http.redirections.entrypoint.to=websecure"- "--entrypoints.web.http.redirections.entrypoint.scheme=https"- "--entrypoints.websecure.address=:443"- "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"- "--certificatesresolvers.letsencrypt.acme.email=${SSL_EMAIL}"- "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"ports:- "80:80"- "443:443"volumes:- ./traefik_data:/letsencrypt- /var/run/docker.sock:/var/run/docker.sock:ronetworks:- n8n-network
+```
+
+```
+postgres:image: postgres:15-alpinecontainer_name: n8n-postgresrestart: alwaysenvironment:- POSTGRES_USER=${POSTGRES_USER}- POSTGRES_PASSWORD=${POSTGRES_PASSWORD}- POSTGRES_DB=${POSTGRES_DB}volumes:- postgres_data:/var/lib/postgresql/datanetworks:- n8n-networkhealthcheck:test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER}']interval: 10stimeout: 5sretries: 5n8n:image: n8nio/n8n:latestcontainer_name: n8nrestart: alwaysenvironment:- DB_TYPE=postgresdb- DB_POSTGRESDB_HOST=postgres- DB_POSTGRESDB_PORT=5432- DB_POSTGRESDB_DATABASE=${POSTGRES_DB}- DB_POSTGRESDB_USER=${POSTGRES_USER}- DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}- N8N_BASIC_AUTH_ACTIVE=true- N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER}- N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD}- N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}- N8N_HOST=${SUBDOMAIN}.${DOMAIN_NAME}- N8N_PROTOCOL=https- WEBHOOK_URL=https://${SUBDOMAIN}.${DOMAIN_NAME}/- N8N_SECURE_COOKIE=true- GENERIC_TIMEZONE=${GENERIC_TIMEZONE}- TZ=${GENERIC_TIMEZONE}- NODE_ENV=productionvolumes:- n8n_data:/home/node/.n8n- ./local-files:/filesnetworks:- n8n-networklabels:- "traefik.enable=true"- "traefik.http.routers.n8n.rule=Host(${SUBDOMAIN}.${DOMAIN_NAME})"- "traefik.http.routers.n8n.entrypoints=websecure"- "traefik.http.routers.n8n.tls.certresolver=letsencrypt"- "traefik.http.services.n8n.loadbalancer.server.port=5678"depends_on:postgres:condition: service_healthyvolumes:postgres_data:n8n_data:
+```
+
+```
+networks:n8n-network:driver: bridge
+```
+
+### Traefik用ディレクトリ準備
+
+```
+mkdir -p traefik_data local-filestouch traefik_data/acme.jsonchmod 600 traefik_data/acme.json
+```
+
+## Queue Mode構成：Redis + Worker
+
+大規模なワークフロー処理には、Queue Modeを使用してワーカーを分離します。
+
+### Queue Modeのアーキテクチャ
+
+-   **Main（n8n）**：UI、API、Webhookを処理し、ジョブをRedisに投入
+-   **Redis**：ジョブキューとして機能
+-   **Worker**：Redisからジョブを取得して実行
+-   **PostgreSQL**：ワークフロー定義、認証情報、実行結果を保存
+
+### docker-compose.yml（Queue Mode）
+
+```
+version: "3.8"
+```
+
+```
+services:postgres:image: postgres:15-alpinecontainer_name: n8n-postgresrestart: alwaysenvironment:- POSTGRES_USER=${POSTGRES_USER}- POSTGRES_PASSWORD=${POSTGRES_PASSWORD}- POSTGRES_DB=${POSTGRES_DB}volumes:- postgres_data:/var/lib/postgresql/datanetworks:- n8n-networkhealthcheck:test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER}']interval: 10stimeout: 5sretries: 5
+```
+
+```
+redis:image: redis:7-alpinecontainer_name: n8n-redisrestart: alwaysvolumes:- redis_data:/datanetworks:- n8n-networkhealthcheck:test: ['CMD', 'redis-cli', 'ping']interval: 10stimeout: 5sretries: 5n8n:image: n8nio/n8n:latestcontainer_name: n8n-mainrestart: alwaysports:- "5678:5678"environment:# データベース- DB_TYPE=postgresdb- DB_POSTGRESDB_HOST=postgres- DB_POSTGRESDB_PORT=5432- DB_POSTGRESDB_DATABASE=${POSTGRES_DB}- DB_POSTGRESDB_USER=${POSTGRES_USER}- DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}# Queue Mode- EXECUTIONS_MODE=queue- QUEUE_BULL_REDIS_HOST=redis- QUEUE_BULL_REDIS_PORT=6379- QUEUE_HEALTH_CHECK_ACTIVE=true# 認証・セキュリティ- N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}- N8N_BASIC_AUTH_ACTIVE=true- N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER}- N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD}# ホスト設定- N8N_HOST=${SUBDOMAIN}.${DOMAIN_NAME}- N8N_PROTOCOL=https- WEBHOOK_URL=https://${SUBDOMAIN}.${DOMAIN_NAME}/- N8N_SECURE_COOKIE=true# タイムゾーン- GENERIC_TIMEZONE=${GENERIC_TIMEZONE}- TZ=${GENERIC_TIMEZONE}- NODE_ENV=productionvolumes:- n8n_data:/home/node/.n8nnetworks:- n8n-networkdepends_on:postgres:condition: service_healthyredis:condition: service_healthyn8n-worker:image: n8nio/n8n:latestcontainer_name: n8n-workerrestart: alwayscommand: workerenvironment:# データベース（Mainと同じ設定）- DB_TYPE=postgresdb- DB_POSTGRESDB_HOST=postgres- DB_POSTGRESDB_PORT=5432- DB_POSTGRESDB_DATABASE=${POSTGRES_DB}- DB_POSTGRESDB_USER=${POSTGRES_USER}- DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}# Queue Mode- EXECUTIONS_MODE=queue- QUEUE_BULL_REDIS_HOST=redis- QUEUE_BULL_REDIS_PORT=6379# 暗号化キー（Mainと同じ）- N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}# タイムゾーン- GENERIC_TIMEZONE=${GENERIC_TIMEZONE}- TZ=${GENERIC_TIMEZONE}- NODE_ENV=productionvolumes:- n8n_data:/home/node/.n8nnetworks:- n8n-networkdepends_on:- n8n- redisvolumes:postgres_data:redis_data:n8n_data:
+```
+
+```
+networks:n8n-network:driver: bridge
+```
+
+### Workerのスケーリング
+
+```
+# Worker数を増やすdocker compose up -d --scale n8n-worker=3
+```
+
+## ボリュームとパーミッション
+
+### Named Volume vs Bind Mount
+
+| 方式  | メリット | デメリット |
+| --- | --- | --- |
+| Named Volume | Dockerが管理、移植性が高い | 直接アクセスしにくい |
+| Bind Mount | 直接アクセス可能、バックアップ容易 | パーミッション管理が必要 |
+
+### Bind Mountを使用する場合
+
+```
+volumes:- ./n8n_data:/home/node/.n8n- ./postgres_data:/var/lib/postgresql/data
+```
+
+**パーミッション設定**
+
+```
+# n8nデータ（コンテナ内はnode:node = 1000:1000）sudo mkdir -p n8n_datasudo chown -R 1000:1000 n8n_data
+```
+
+```
+# PostgreSQLデータ（コンテナ内はpostgres = 999:999）sudo mkdir -p postgres_datasudo chown -R 999:999 postgres_data
+```
+
+## 機密情報の管理（\_FILE接尾辞）
+
+環境変数に直接パスワードを記載する代わりに、ファイルから読み込むことができます。
+
+### Docker Secretsの使用
+
+```
+# シークレットファイルを作成echo "your_db_password" > ./secrets/db_password.txtecho "your_encryption_key" > ./secrets/encryption_key.txtchmod 600 ./secrets/*
+```
+
+```
+services:n8n:environment:- DB_POSTGRESDB_PASSWORD_FILE=/run/secrets/db_password- N8N_ENCRYPTION_KEY_FILE=/run/secrets/encryption_keysecrets:- db_password- encryption_key
+```
+
+```
+secrets:db_password:file: ./secrets/db_password.txtencryption_key:file: ./secrets/encryption_key.txt
+```
+
+## ヘルスチェックとリソース制限
+
+### ヘルスチェック設定
+
+```
+services:n8n:healthcheck:test: ['CMD-SHELL', 'wget -q --spider http://localhost:5678/healthz || exit 1']interval: 30stimeout: 10sretries: 3start_period: 30s
+```
+
+### リソース制限
+
+```
+services:n8n:deploy:resources:limits:cpus: '2'memory: 2Greservations:cpus: '0.5'memory: 512M
+```
+
+## アップデート手順
+
+### イメージの更新
+
+```
+# 最新イメージをプル docker compose pull # コンテナを再作成 docker compose up -d
+```
+
+```
+# 古いイメージを削除docker image prune -f
+```
+
+### バージョン固定（推奨）
+
+本番環境では、latestではなくバージョンを固定することを推奨します。
+
+```
+services:n8n:image: n8nio/n8n:1.70.0
+```
+
+## トラブルシューティング
+
+### よくある問題と解決方法
+
+| 問題  | 原因  | 解決方法 |
+| --- | --- | --- |
+| 認証情報が読めない | N8N\_ENCRYPTION\_KEYの変更 | 元のキーを復元 |
+| PostgreSQLに接続できない | 起動順序の問題 | depends\_on + healthcheckを設定 |
+| SQLiteにフォールバック | DB\_TYPE未設定 | DB\_TYPE=postgresdbを確認 |
+| Webhookが動作しない | WEBHOOK\_URL未設定 | 外部アクセス可能なURLを設定 |
+| SSL証明書エラー | DNS未反映 | Aレコードの設定を確認 |
+| Permission denied | ボリュームの権限 | UID/GIDを確認してchown |
+
+### ログ確認コマンド
+
+```
+# 全サービスのログdocker compose logs -f
+```
+
+```
+# 特定サービスのログdocker compose logs -f n8n
+```
+
+```
+# 最新100行のみdocker compose logs --tail 100 n8n
+```
+
+```
+# タイムスタンプ付きdocker compose logs -t n8n
+```
+
+### コンテナ内でのデバッグ
+
+```
+# n8nコンテナに入るdocker exec -it n8n /bin/sh
+```
+
+```
+# PostgreSQLに接続docker exec -it n8n-postgres psql -U n8n -d n8n
+```
+
+```
+# Redisに接続docker exec -it n8n-redis redis-cli
+```
+
+## よくある質問（FAQ）
+
+### Q. latestタグを使っても大丈夫ですか？
+
+A. 開発環境では問題ありませんが、本番環境ではバージョンを固定することを強く推奨します。n8nは週次でリリースがあり、破壊的変更が含まれる可能性があります。
+
+### Q. Named VolumeとBind Mountはどちらが良いですか？
+
+A. 一般的にはNamed Volumeが推奨されます。ただし、バックアップを容易にしたい場合やファイルに直接アクセスしたい場合はBind Mountが便利です。
+
+### Q. Queue ModeではRedisは必須ですか？
+
+A. はい、Queue ModeではRedisが必須です。Redisがジョブキューとして機能し、MainプロセスとWorkerプロセス間の通信を仲介します。
+
+### Q. Workerは何台必要ですか？
+
+A. ワークフローの実行頻度と複雑さによります。小〜中規模であれば1〜2台、大規模であれば3台以上を検討してください。CPUコア数に応じてスケールするのが目安です。
+
+### Q. docker compose v1とv2の違いは？
+
+A. v2は「docker compose」（ハイフンなし）で実行し、v1は「docker-compose」（ハイフンあり）です。現在はv2が推奨されており、v1は非推奨です。
+
+## まとめ
+
+この記事では、n8nのDocker Compose設定について詳しく解説しました。
+
+**構成パターン**
+
+-   **最小構成**：SQLite + HTTP（ローカル開発向け）
+-   **本番構成**：PostgreSQL + HTTPS（Nginx or Traefik）
+-   **スケール構成**：Queue Mode + Redis + Worker
+
+**重要な環境変数**
+
+-   N8N\_ENCRYPTION\_KEY：認証情報の暗号化（必ず固定・バックアップ）
+-   DB\_TYPE：データベースタイプ（本番はpostgresdb）
+-   WEBHOOK\_URL：Webhook用外部URL（HTTPS推奨）
+-   EXECUTIONS\_MODE：実行モード（スケール時はqueue）
+
+**本番運用のポイント**
+
+-   バージョンを固定（latestは避ける）
+-   healthcheckでサービス依存関係を管理
+-   リソース制限でメモリ枯渇を防止
+-   機密情報は\_FILE接尾辞でファイルから読み込み
+
+Docker Composeの設定を正しく理解することで、n8nの安定運用が実現できます。

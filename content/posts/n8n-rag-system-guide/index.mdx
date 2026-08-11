@@ -1,0 +1,468 @@
+---
+title: "【上級者向け】n8nでRAGシステムを構築する｜ベクトルDB・チャンク分割・Rerankingの技術解説"
+description: "n8nでRAG（Retrieval Augmented Generation）システムを構築する技術解説。Pinecone・Qdrant・Supabaseのベクトルデータベース比較、チャンク分割戦略、Embeddingモデル選択からReranking、Hybrid Search、Agentic RAGなど高度なテクニ…"
+date: 2025-12-17T14:17:41Z
+updated: 2025-12-21T11:00:42Z
+slug: n8n-rag-system-guide
+categories: ["n8n"]
+tags: ["AI","自動化","RAG","ベクトルデータベース"]
+draft: false
+ogImage: "/blog-assets/n8n-rag-system-guide/featured.webp"
+---
+
+RAG（Retrieval-Augmented Generation）は、LLMに外部知識ベースを参照させることで、ハルシネーションを抑制し、社内ドキュメントや最新情報に基づいた回答を実現する手法です。
+
+n8nを使えば、データの取り込みから埋め込み生成、ベクトルデータベースへの格納、検索、回答生成まで、RAGパイプライン全体をノーコード/ローコードで構築できます。
+
+この記事では、n8nでRAGシステムを構築するための技術的な詳細を、上級者向けに解説します。
+
+**この記事でわかること**
+
+-   RAGアーキテクチャの全体像と各コンポーネントの役割
+-   n8nで利用可能なベクトルデータベース（Pinecone / Qdrant / Supabase）の比較
+-   チャンク分割戦略とEmbeddingモデルの選択
+-   データインジェスションとクエリパイプラインの構築
+-   Reranking、Contextual Retrieval、Agentic RAGなどの高度なテクニック
+
+## RAGアーキテクチャの全体像
+
+n8nで構築するRAGシステムは、大きく2つのパイプラインで構成されます。
+
+### 1\. データインジェスションパイプライン
+
+ドキュメントをベクトルデータベースに格納するフローです。
+
+1.  **データソースからの取得**：Google Drive、Notion、HTTP Requestなどでドキュメントを取得
+2.  **テキスト抽出**：Default Data Loaderでテキストコンテンツを抽出
+3.  **チャンク分割**：Text Splitterで適切なサイズに分割
+4.  **埋め込み生成**：Embeddings OpenAI / Geminiでベクトル化
+5.  **ベクトルストアへの格納**：Pinecone / Qdrant / SupabaseにUpsert
+
+### 2\. クエリパイプライン
+
+ユーザーの質問に対して回答を生成するフローです。
+
+1.  **クエリ受信**：Chat Trigger / Webhookでユーザー入力を受け取る
+2.  **クエリの埋め込み**：質問文をベクトル化
+3.  **類似検索**：ベクトルストアから関連チャンクを取得
+4.  **コンテキスト構築**：取得したチャンクをプロンプトに組み込む
+5.  **回答生成**：LLM（GPT-4o / Gemini / Claude）で回答を生成
+
+### n8nのRAG関連ノード
+
+| カテゴリ | ノード名 | 用途  |
+| --- | --- | --- |
+| ベクトルストア | Pinecone Vector Store | フルマネージドなベクトルDB |
+| ベクトルストア | Qdrant Vector Store | 高速なオープンソースベクトルDB |
+| ベクトルストア | Supabase Vector Store | PostgreSQL + pgvector |
+| ベクトルストア | In-Memory Vector Store | 簡易テスト用 |
+| 埋め込み | Embeddings OpenAI | text-embedding-3-small/large |
+| 埋め込み | Embeddings Google Gemini | text-embedding-004 |
+| テキスト分割 | Recursive Character Text Splitter | 文字数ベースの再帰的分割 |
+| テキスト分割 | Token Text Splitter | トークン数ベースの分割 |
+| データローダー | Default Data Loader | 各種ファイル形式のテキスト抽出 |
+| 検索ツール | Vector Store Tool | AI Agentからの検索ツール |
+| リトリーバー | Vector Store Retriever | Q&A Chainとの接続 |
+
+## ベクトルデータベースの比較と選択
+
+n8nでネイティブサポートされている主要なベクトルデータベースを比較します。
+
+### Pinecone
+
+**特徴**
+
+-   フルマネージドサービスで運用負荷がゼロ
+-   スケーラビリティが高く、大規模データにも対応
+-   Namespace機能でデータを論理的に分離可能
+-   メタデータフィルタリングが強力
+
+**料金**
+
+-   Starter（無料）：インデックス1つ、100万ベクトルまで
+-   Standard：$0.00025/クエリ、$0.025/GB/月
+
+**n8nでの設定**
+
+```
+Pinecone Index Name: n8n-ragPinecone Namespace: company-docsEmbeddings: text-embedding-3-small (1536次元)
+```
+
+### Qdrant
+
+**特徴**
+
+-   Rustで実装された高性能ベクトルDB
+-   セルフホスト可能（Docker対応）
+-   Qdrant Cloudでマネージドサービスも提供
+-   ハイブリッド検索（密/疎ベクトル）に対応
+-   メタデータフィルタリングが高速
+
+**料金**
+
+-   セルフホスト：無料（OSS）
+-   Qdrant Cloud Free Tier：1GBストレージまで無料
+
+**n8nでの設定**
+
+```
+Qdrant URL: https://xxx.qdrant.cloud:6333API Key: qdrant-api-keyCollection Name: documents
+```
+
+### Supabase（pgvector）
+
+**特徴**
+
+-   PostgreSQLベースでSQLクエリが使える
+-   認証・ストレージ・リアルタイムと統合可能
+-   既存のPostgreSQLインフラを活用できる
+-   メタデータとベクトルを同一DBで管理
+
+**料金**
+
+-   Free Tier：500MBストレージまで無料
+-   Pro：$25/月〜
+
+**Supabaseでのテーブル作成SQL**
+
+```
+-- pgvector拡張の有効化create extension if not exists vector;
+```
+
+```
+-- documentsテーブルの作成create table documents (id bigserial primary key,content text,metadata jsonb,embedding vector(1536));
+```
+
+```
+-- 類似検索用のインデックスcreate index on documentsusing ivfflat (embedding vector_cosine_ops)with (lists = 100);
+```
+
+### ベクトルDB選択の指針
+
+| 要件  | 推奨DB | 理由  |
+| --- | --- | --- |
+| とにかく早く始めたい | Pinecone | 設定が最もシンプル |
+| コストを抑えたい | Qdrant（セルフホスト） | 完全無料で運用可能 |
+| 既存のSupabaseプロジェクトがある | Supabase | インフラ統合のメリット |
+| ハイブリッド検索が必要 | Qdrant | 疎密ベクトル対応 |
+| 大規模データ（100万件以上） | Pinecone / Qdrant | スケーラビリティ |
+
+## チャンク分割戦略
+
+RAGの精度を左右する重要な要素がチャンク分割です。n8nで利用可能な分割方法と、その使い分けを解説します。
+
+### Recursive Character Text Splitter
+
+最も汎用的な分割方法で、指定した文字数で再帰的に分割します。
+
+**パラメータ**
+
+-   **Chunk Size**：1つのチャンクの最大文字数（推奨: 500〜1500）
+-   **Chunk Overlap**：チャンク間の重複文字数（推奨: 100〜200）
+-   **Separators**：分割に使用する区切り文字（デフォルト: nn, n, ” “, “”）
+
+**設定例**
+
+```
+Chunk Size: 1000Chunk Overlap: 200Separators: ["nn", "n", "。", " "]
+```
+
+### Token Text Splitter
+
+トークン数ベースで分割します。LLMのコンテキストウィンドウを意識した分割に有効です。
+
+**パラメータ**
+
+-   **Chunk Size（tokens）**：1チャンクの最大トークン数
+-   **Chunk Overlap（tokens）**：重複トークン数
+
+### チャンクサイズの選定指針
+
+| ドキュメントタイプ | 推奨Chunk Size | 推奨Overlap | 理由  |
+| --- | --- | --- | --- |
+| FAQ・ナレッジベース | 500〜800 | 100 | 質問-回答ペアを1チャンクに |
+| 技術ドキュメント | 1000〜1500 | 200 | セクション単位で意味を保持 |
+| 法務・契約書 | 800〜1200 | 200 | 条項の文脈を維持 |
+| 議事録・レポート | 1000〜2000 | 200〜300 | 話題の連続性を確保 |
+| ソースコード | 500〜1000 | 100 | 関数・クラス単位 |
+
+### Context-Aware Chunking
+
+より高度なアプローチとして、各チャンクにドキュメント全体のコンテキストを付与する方法があります。
+
+**実装のポイント**
+
+1.  ドキュメント全体の要約を生成
+2.  各チャンクに要約をプレフィックスとして追加
+3.  チャンクの位置情報（セクション名、ページ番号）をメタデータに格納
+
+**Codeノードでの実装例**
+
+```
+const documentSummary = $('OpenAI').item.json.message.content;const chunks = $input.all();
+```
+
+```
+return chunks.map((chunk, index) => ({json: {content: [Document Summary: ${documentSummary}]nn${chunk.json.content},metadata: {chunkIndex: index,totalChunks: chunks.length,source: chunk.json.source}}}));
+```
+
+## Embeddingモデルの選択
+
+埋め込みモデルの選択は検索精度に直結します。
+
+### OpenAI Embedding Models
+
+| モデル | 次元数 | 価格（/100万トークン） | 用途  |
+| --- | --- | --- | --- |
+| text-embedding-3-small | 1536 | $0.02 | コスト重視、一般用途 |
+| text-embedding-3-large | 3072 | $0.13 | 高精度が必要な場合 |
+| text-embedding-ada-002 | 1536 | $0.10 | レガシー（非推奨） |
+
+### Google Gemini Embedding
+
+| モデル | 次元数 | 価格  | 特徴  |
+| --- | --- | --- | --- |
+| text-embedding-004 | 768 | 無料枠あり | Geminiエコシステムとの統合 |
+
+### 重要な注意点
+
+**インジェスションとクエリで同じモデルを使用**
+
+埋め込みモデルが異なると、ベクトル空間が一致せず検索精度が大幅に低下します。必ず同じモデルを使用してください。
+
+**ベクトルDBの次元数設定**
+
+Pineconeのインデックス作成時やSupabaseのテーブル定義時に、使用するEmbeddingモデルの次元数に合わせて設定してください。
+
+## データインジェスションパイプラインの構築
+
+Google Driveからドキュメントを自動取り込みするパイプラインを構築します。
+
+### ワークフロー構成
+
+1.  **Google Drive Trigger**：新規ファイル / 更新を検知
+2.  **Google Drive（Download）**：ファイルをダウンロード
+3.  **Default Data Loader**：テキスト抽出（Binary Mode）
+4.  **Recursive Character Text Splitter**：チャンク分割
+5.  **Embeddings OpenAI**：ベクトル化
+6.  **Pinecone Vector Store（Insert Mode）**：格納
+
+### Google Drive Triggerの設定
+
+-   **Trigger On**：File Created / File Updated
+-   **Watch Folder**：対象フォルダID
+-   **Poll Times**：Every 5 Minutes
+
+### Default Data Loaderの設定
+
+-   **Type of Data**：Binary
+-   **Data Format**：自動検出（PDF、DOCX、TXTなどに対応）
+
+### メタデータの付与
+
+検索結果のフィルタリングや出典表示のために、メタデータを付与します。
+
+**Codeノードでのメタデータ設定**
+
+```
+const fileName = $('Google Drive').item.json.name;const fileId = $('Google Drive').item.json.id;const mimeType = $('Google Drive').item.json.mimeType;const modifiedTime = $('Google Drive').item.json.modifiedTime;
+```
+
+```
+return [{json: {metadata: {source: fileName,fileId: fileId,mimeType: mimeType,updatedAt: modifiedTime,department: 'HR' // カスタムメタデータ}}}];
+```
+
+### Upsert（更新時の再インデックス）
+
+ドキュメント更新時に古いベクトルを削除してから新しいベクトルを挿入する処理が必要です。
+
+**Pineconeの場合**
+
+Namespaceとファイルに基づく一意のIDを生成し、同じIDで上書きします。
+
+**Qdrantの場合**
+
+HTTP Requestノードでポイントを削除してから挿入します。
+
+```
+// 削除エンドポイントDELETE https://xxx.qdrant.cloud:6333/collections/{collection}/points/delete
+```
+
+```
+// ペイロード{"filter": {"must": [{ "key": "fileId", "match": { "value": "google-drive-file-id" } }]}}
+```
+
+## クエリパイプラインの構築
+
+ユーザーの質問に対して回答を生成するパイプラインを構築します。
+
+### 基本構成：AI Agent + Vector Store Tool
+
+1.  **Chat Trigger**：ユーザー入力を受信
+2.  **AI Agent**：推論と回答生成
+3.  **OpenAI Chat Model**：GPT-4o
+4.  **Vector Store Tool**：ベクトル検索
+5.  **Window Buffer Memory**：会話履歴の保持
+
+### AI Agentの設定
+
+**System Message**
+
+```
+あなたは社内ドキュメントに基づいて質問に回答するアシスタントです。
+```
+
+```
+【重要なルール】回答は必ずVector Storeから取得した情報に基づいてください情報が見つからない場合は「該当する情報が見つかりませんでした」と回答してください推測や一般的な知識での回答は避けてください回答には出典（ファイル名）を含めてください複数のドキュメントから情報を統合する場合は、各情報の出典を明記してください
+```
+
+### Vector Store Toolの設定
+
+-   **Name**：company\_knowledge\_base
+-   **Description**：社内ドキュメント（就業規則、マニュアル、FAQ）を検索するツールです。質問に関連する情報を取得します。
+-   **Top K**：5（取得するチャンク数）
+
+### Window Buffer Memoryの設定
+
+-   **Context Window Length**：10（保持するメッセージ数）
+-   **Session ID**：\{\{ $json.sessionId \}\}（セッション管理）
+
+## 高度なテクニック
+
+RAGの精度を向上させるための高度なテクニックを紹介します。
+
+### 1\. Reranking（再ランキング）
+
+ベクトル検索で取得したチャンクを、別のモデルで再評価して順位を最適化します。
+
+**Cohere Rerankを使用した実装**
+
+1.  Vector Storeから上位20件を取得
+2.  HTTP RequestでCohere Rerank APIを呼び出し
+3.  再ランキング結果の上位5件をコンテキストとして使用
+
+**Cohere Rerank APIの呼び出し**
+
+```
+POST https://api.cohere.ai/v1/rerank{"model": "rerank-english-v3.0","query": "ユーザーの質問","documents": ["チャンク1", "チャンク2", ...],"top_n": 5}
+```
+
+### 2\. Hybrid Search（ハイブリッド検索）
+
+密ベクトル検索（セマンティック）とスパースベクトル検索（キーワード）を組み合わせます。
+
+**Qdrantでのハイブリッド検索**
+
+Qdrantは密ベクトルと疎ベクトルの両方を同一コレクションに格納できます。
+
+```
+// クエリ例{"prefetch": [{"query": { "indices": [1, 42, 100], "values": [1.0, 0.5, 0.3] },"using": "sparse","limit": 20},{"query": [0.01, 0.45, ...],"using": "dense","limit": 20}],"query": { "fusion": "rrf" },"limit": 10}
+```
+
+### 3\. Query Transformation（クエリ変換）
+
+ユーザーの質問をそのまま検索するのではなく、検索に最適化した形式に変換します。
+
+**実装パターン**
+
+-   **Query Expansion**：同義語や関連語を追加
+-   **Query Decomposition**：複合的な質問を分解して複数回検索
+-   **Hypothetical Document Embedding（HyDE）**：仮想的な回答を生成し、それで検索
+
+**HyDEの実装例**
+
+```
+// Step 1: 仮想回答を生成System: この質問に対する理想的な回答を生成してください（実際の情報ではなく、形式として）User: {{ $json.question }}
+```
+
+```
+// Step 2: 生成した仮想回答で検索→ より精度の高いチャンクが取得できる
+```
+
+### 4\. Agentic RAG
+
+AI Agentが自律的に検索戦略を決定し、必要に応じて複数回検索を行うパターンです。
+
+**ツールの構成例**
+
+-   **general\_search**：全ドキュメント横断検索
+-   **policy\_search**：就業規則専用検索（メタデータフィルタ）
+-   **technical\_search**：技術ドキュメント専用検索
+-   **recent\_search**：直近1ヶ月のドキュメント検索
+
+AI Agentがユーザーの質問に応じて適切なツールを選択・組み合わせて回答を生成します。
+
+## パフォーマンス最適化
+
+### インジェスション最適化
+
+-   **バッチ処理**：Split In Batchesノードで大量ドキュメントを分割処理
+-   **並列処理**：複数のワークフローで並行インジェスション
+-   **差分更新**：変更があったドキュメントのみ再インデックス
+
+### 検索最適化
+
+-   **Top K の調整**：精度とレイテンシのバランスを調整
+-   **メタデータフィルタ**：検索対象を絞り込んで高速化
+-   **キャッシュ**：頻出クエリの結果をキャッシュ
+
+### コスト最適化
+
+-   **Embeddingモデル**：text-embedding-3-smallで十分な場合が多い
+-   **LLMモデル**：gpt-4o-miniで回答生成（精度要件次第）
+-   **チャンクサイズ**：大きすぎるとEmbeddingコストが増加
+
+## トラブルシューティング
+
+### 検索精度が低い場合
+
+-   チャンクサイズを調整（小さすぎると文脈喪失、大きすぎると関連度低下）
+-   Overlapを増やして文脈の連続性を確保
+-   Top Kを増やして候補を広げる
+-   Rerankingを導入
+
+### ハルシネーションが発生する場合
+
+-   System Messageで「情報がない場合は回答しない」を明記
+-   検索結果が空の場合の分岐処理を追加
+-   出典の明示を必須にする
+
+### レイテンシが高い場合
+
+-   Top Kを減らす
+-   ベクトルDBのインデックスを最適化
+-   LLMモデルを軽量なものに変更
+
+## まとめ
+
+この記事では、n8nでRAGシステムを構築するための技術的な詳細を解説しました。
+
+**アーキテクチャの要点**
+
+1.  データインジェスションとクエリの2つのパイプライン
+2.  チャンク分割 → 埋め込み → ベクトルストアの流れ
+3.  AI Agentによる検索と回答生成の統合
+
+**ベクトルDB選択の指針**
+
+-   Pinecone：フルマネージドで簡単に始められる
+-   Qdrant：高性能でセルフホスト可能
+-   Supabase：PostgreSQLエコシステムとの統合
+
+**精度向上のテクニック**
+
+-   適切なチャンクサイズとOverlapの設定
+-   Context-Aware Chunking
+-   Reranking
+-   Hybrid Search
+-   Agentic RAG
+
+**次のステップ**
+
+1.  シンプルなRAG構成（Pinecone + OpenAI）で動作確認
+2.  チャンク分割パラメータのチューニング
+3.  メタデータを活用したフィルタリング
+4.  Rerankingによる精度向上
+5.  Agentic RAGで複雑なクエリに対応
+
+n8nを使えば、これらの高度なRAGパターンをノーコード/ローコードで実装できます。自社のドキュメントに基づいた高精度なAIチャットボットの構築にぜひ活用してください。

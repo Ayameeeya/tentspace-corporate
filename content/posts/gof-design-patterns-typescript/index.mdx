@@ -1,0 +1,226 @@
+---
+title: "【実践】GoFデザインパターン6選をTypeScriptで実装｜現場で使える実例付き"
+description: "GoFデザインパターンの中から実務で本当に役立つ6パターン（Factory Method、Singleton、Adapter、Decorator、Strategy、Observer）をTypeScriptで実装。決済処理、HTTPクライアント、イベント駆動など、現場で使える実践的なコード例付きで解説します。"
+date: 2025-12-15T08:27:18Z
+updated: 2025-12-21T11:29:09Z
+slug: gof-design-patterns-typescript
+categories: ["プログラミング"]
+tags: ["TypeScript","デザインパターン","GoF","設計"]
+draft: false
+ogImage: "/blog-assets/gof-design-patterns-typescript/featured.webp"
+---
+
+「デザインパターンって、結局いつ使うの？」  
+「GoFの23パターンを全部覚える必要ある？」  
+「TypeScriptで書くとき、Javaの例と何が違うの？」
+
+こんな疑問を持ったことはありませんか？
+
+結論から言うと、実務で頻繁に使うパターンは限られています。すべてを暗記する必要はなく、「この問題にはこのパターン」という引き出しを持っておくことが重要です。
+
+この記事では、TypeScript中級者向けに、実務で本当に役立つGoFデザインパターン6つを厳選し、少し難しめの実践的なコード例とともに解説します。単なる「動物クラスを継承して犬と猫を作る」ような教科書的な例ではなく、APIクライアント、決済処理、イベント駆動など、現場で遭遇するシナリオを題材にしています。
+
+**この記事でわかること**
+
+-   デザインパターンを学ぶべき理由と学習のコツ
+-   Factory Method：条件分岐の散らばりを解消する
+-   Singleton：設定管理やコネクションプールの実装
+-   Adapter：外部APIやレガシーコードとの接続
+-   Decorator：ミドルウェア的な機能追加
+-   Strategy：差し替え可能なアルゴリズムの設計
+-   Observer：イベント駆動と状態監視の実装
+
+## なぜ今デザインパターンを学ぶのか
+
+「フレームワークが進化した今、デザインパターンなんて古い」という意見もあります。確かに、ReactやNext.jsを使えば、パターンを意識しなくてもアプリケーションは作れます。
+
+しかし、以下のような場面に遭遇したことはないでしょうか。
+
+-   機能追加のたびに 
+    
+    ```
+    if-else
+    ```
+    
+     が増えていく
+-   似たような処理があちこちに散らばっている
+-   「この設計、なんかモヤモヤする」けど言語化できない
+-   レビューで「もっといい書き方ありそう」と言われる
+
+デザインパターンは、こうした「設計の悩み」に名前を与え、解決策を提供してくれます。パターンを知っていれば、チーム内で「これはStrategyで書こう」と一言で意図が伝わります。
+
+TypeScriptとデザインパターンの相性は非常に良いです。インターフェース、ジェネリクス、アクセス修飾子など、パターンを表現するための言語機能が揃っています。
+
+## 生成パターン
+
+### Factory Method：インスタンス生成の条件分岐を解消する
+
+**どんな問題を解決するか**
+
+「ユーザーの種別によって異なるオブジェクトを生成したい」という要件は頻繁に発生します。素朴に書くと、こうなりがちです。
+
+```typescript
+// ❌ Before: 条件分岐が散らばる function createNotification(type: string, message: string) { if (type === ‘email’) { return { send: () => sendEmail(message) }; } else if (type === ‘slack’) { return { send: () => sendSlack(message) }; } else if (type === ‘sms’) { return { send: () => sendSMS(message) }; } throw new Error(‘Unknown notification type’); }
+```
+
+この書き方の問題点は、新しい通知タイプを追加するたびにこの関数を修正する必要があることです。また、各通知タイプ固有の設定（SMTPサーバー、Webhook URLなど）をどこで管理するかも曖昧になります。
+
+**TypeScriptでの実装**
+
+Factory Methodパターンを使うと、インスタンス生成のロジックをサブクラスに委譲できます。
+
+```typescript
+// 通知の共通インターフェース interface Notification { send(message: string): Promise; getChannel(): string; } // 各通知タイプの実装 class EmailNotification implements Notification { constructor( private smtpHost: string, private from: string ) {} async send(message: string): Promise { console.log(<code>Sending email via ${this.smtpHost}: ${message}</code>); // 実際のメール送信処理 } getChannel(): string { return ‘email’; } } class SlackNotification implements Notification { constructor(private webhookUrl: string) {} async send(message: string): Promise { console.log(<code>Posting to Slack: ${message}</code>); // 実際のSlack送信処理 } getChannel(): string { return ‘slack’; } } class SMSNotification implements Notification { constructor( private apiKey: string, private phoneNumber: string ) {} async send(message: string): Promise { console.log(<code>Sending SMS to ${this.phoneNumber}: ${message}</code>); // 実際のSMS送信処理 } getChannel(): string { return ‘sms’; } } // Factory（抽象クラス） abstract class NotificationFactory { abstract createNotification(): Notification; // テンプレートメソッド：共通処理を定義 async notify(message: string): Promise { const notification = this.createNotification(); console.log(<code>[${notification.getChannel()}] Preparing to send...</code>); await notification.send(message); console.log(<code>[${notification.getChannel()}] Sent successfully</code>); } } // 具体的なFactory class EmailNotificationFactory extends NotificationFactory { constructor( private smtpHost: string, private from: string ) { super(); } createNotification(): Notification { return new EmailNotification(this.smtpHost, this.from); } } class SlackNotificationFactory extends NotificationFactory { constructor(private webhookUrl: string) { super(); } createNotification(): Notification { return new SlackNotification(this.webhookUrl); } } // 使用例 const factories: Record = { email: new EmailNotificationFactory(‘smtp.example.com’, ‘noreply@example.com’), slack: new SlackNotificationFactory(‘https://hooks.slack.com/xxx’), }; async function sendAlert(channel: string, message: string) { const factory = factories[channel]; if (!factory) { throw new Error(<code>Unknown channel: ${channel}</code>); } await factory.notify(message); } // 実行 sendAlert(‘slack’, ‘サーバーエラーが発生しました’);
+```
+
+**使いどころ**
+
+-   生成するオブジェクトの種類が複数あり、それぞれ初期化ロジックが異なる
+-   新しい種類を追加する可能性が高い
+-   生成処理の前後に共通の処理（ログ出力、バリデーションなど）を挟みたい
+
+### Singleton：アプリケーション全体で共有するインスタンス
+
+**どんな問題を解決するか**
+
+設定情報、データベースコネクション、ロガーなど、アプリケーション全体で1つだけ存在すべきオブジェクトがあります。毎回 
+
+```
+new
+```
+
+ するとリソースの無駄になったり、状態の不整合が起きたりします。
+
+**TypeScriptでの実装**
+
+TypeScriptでは、モジュールスコープを利用したシンプルな実装が可能です。
+
+```typescript
+// config.ts – 設定管理のSingleton interface AppConfig { apiBaseUrl: string; apiTimeout: number; logLevel: ‘debug’ | ‘info’ | ‘warn’ | ‘error’; features: { darkMode: boolean; betaFeatures: boolean; }; } class ConfigManager { private static instance: ConfigManager | null = null; private config: AppConfig | null = null; private initialized = false; private constructor() { // privateコンストラクタで外部からのnewを禁止 } static getInstance(): ConfigManager { if (!ConfigManager.instance) { ConfigManager.instance = new ConfigManager(); } return ConfigManager.instance; } async initialize(configSource: string): Promise { if (this.initialized) { console.warn(‘ConfigManager is already initialized’); return; } // 実際のアプリでは外部ファイルやAPIから読み込む console.log(<code>Loading config from: ${configSource}</code>); this.config = { apiBaseUrl: ‘https://api.example.com’, apiTimeout: 5000, logLevel: ‘info’, features: { darkMode: true, betaFeatures: false, }, }; this.initialized = true; console.log(‘ConfigManager initialized’); } get(key: K): AppConfig[K] { if (!this.config) { throw new Error(‘ConfigManager not initialized. Call initialize() first.’); } return this.config[key]; } getAll(): Readonly { if (!this.config) { throw new Error(‘ConfigManager not initialized’); } return Object.freeze({ …this.config }); } // テスト用：インスタンスをリセット static resetForTesting(): void { ConfigManager.instance = null; } } // 使用例 async function bootstrap() { const config = ConfigManager.getInstance(); await config.initialize(‘/config/production.json’); console.log(‘API URL:’, config.get(‘apiBaseUrl’)); console.log(‘Features:’, config.get(‘features’)); } // 別のモジュールからも同じインスタンスにアクセス function makeApiCall() { const config = ConfigManager.getInstance(); const baseUrl = config.get(‘apiBaseUrl’); const timeout = config.get(‘apiTimeout’); console.log(<code>Calling API: ${baseUrl} (timeout: ${timeout}ms)</code>); }
+```
+
+**注意点**
+
+Singletonは便利ですが、使いすぎるとグローバル変数と同じ問題を引き起こします。テストが難しくなったり、依存関係が見えにくくなったりします。
+
+本当にアプリケーション全体で1つでなければならないか、DI（依存性注入）で代替できないか、を検討してから使いましょう。
+
+## 構造パターン
+
+### Adapter：異なるインターフェースを橋渡しする
+
+**どんな問題を解決するか**
+
+外部のAPIライブラリやレガシーコードを使うとき、既存のコードが期待するインターフェースと合わないことがあります。Adapterパターンは、この「インターフェースの不一致」を解消します。
+
+**TypeScriptでの実装**
+
+複数の決済プロバイダー（Stripe、PayPal、国内決済など）を統一的に扱う例を考えます。
+
+```typescript
+// 自社システムが期待する決済インターフェース interface PaymentProcessor { processPayment(amount: number, currency: string): Promise; refund(transactionId: string, amount: number): Promise; getTransactionStatus(transactionId: string): Promise; } interface PaymentResult { success: boolean; transactionId: string; message: string; } interface RefundResult { success: boolean; refundId: string; } type TransactionStatus = ‘pending’ | ‘completed’ | ‘failed’ | ‘refunded’; // 外部ライブラリ（Stripe風）のインターフェース // 実際のStripe SDKとは異なりますが、イメージとして class StripeClient { async createCharge(params: { amount: number; currency: string; source: string; }): Promise { console.log(‘Stripe: Creating charge…’); return { id: <code>ch_${Date.now()}</code>, status: ‘succeeded’ }; } async createRefund(chargeId: string, amount: number): Promise { console.log(‘Stripe: Creating refund…’); return { id: <code>re_${Date.now()}</code> }; } async retrieveCharge(chargeId: string): Promise { return { status: ‘succeeded’ }; } } // 別の決済プロバイダー（PayPal風） class PayPalClient { async executePayment( paymentId: string, payerId: string, amount: { total: string; currency: string } ): Promise { console.log(‘PayPal: Executing payment…’); return { state: ‘approved’, id: <code>PAY-${Date.now()}</code> }; } async refundSale( saleId: string, refundRequest: { amount: { total: string; currency: string } } ): Promise { console.log(‘PayPal: Refunding sale…’); return { id: <code>REF-${Date.now()}</code>, state: ‘completed’ }; } } // Stripe用Adapter class StripeAdapter implements PaymentProcessor { private client: StripeClient; private defaultSource: string; constructor(apiKey: string, defaultSource: string) { this.client = new StripeClient(); this.defaultSource = defaultSource; console.log(<code>StripeAdapter initialized with key: ${apiKey.slice(0, 8)}...</code>); } async processPayment(amount: number, currency: string): Promise { try { const charge = await this.client.createCharge({ amount: Math.round(amount * 100), // Stripeはセント単位 currency: currency.toLowerCase(), source: this.defaultSource, }); return { success: charge.status === ‘succeeded’, transactionId: charge.id, message: charge.failure_message || ‘Payment processed successfully’, }; } catch (error) { return { success: false, transactionId: ”, message: error instanceof Error ? error.message : ‘Unknown error’, }; } } async refund(transactionId: string, amount: number): Promise { const result = await this.client.createRefund(transactionId, Math.round(amount * 100)); return { success: true, refundId: result.id, }; } async getTransactionStatus(transactionId: string): Promise { const charge = await this.client.retrieveCharge(transactionId); const statusMap: Record = { succeeded: ‘completed’, pending: ‘pending’, failed: ‘failed’, }; return statusMap[charge.status] || ‘pending’; } } // PayPal用Adapter class PayPalAdapter implements PaymentProcessor { private client: PayPalClient; private payerId: string; constructor(clientId: string, clientSecret: string, payerId: string) { this.client = new PayPalClient(); this.payerId = payerId; console.log(‘PayPalAdapter initialized’); } async processPayment(amount: number, currency: string): Promise { const paymentId = <code>PAYID-${Date.now()}</code>; const result = await this.client.executePayment(paymentId, this.payerId, { total: amount.toFixed(2), currency: currency.toUpperCase(), }); return { success: result.state === ‘approved’, transactionId: result.id, message: result.state === ‘approved’ ? ‘Payment approved’ : ‘Payment failed’, }; } async refund(transactionId: string, amount: number): Promise { const result = await this.client.refundSale(transactionId, { amount: { total: amount.toFixed(2), currency: ‘USD’ }, }); return { success: result.state === ‘completed’, refundId: result.id, }; } async getTransactionStatus(transactionId: string): Promise { // PayPalの実装に応じて変換 return ‘completed’; } } // 使用例：どのプロバイダーでも同じインターフェースで扱える class CheckoutService { constructor(private paymentProcessor: PaymentProcessor) {} async checkout(amount: number, currency: string): Promise { console.log(<code>Processing checkout for ${currency} ${amount}</code>); const result = await this.paymentProcessor.processPayment(amount, currency); if (result.success) { console.log(<code>Payment successful: ${result.transactionId}</code>); } else { console.log(<code>Payment failed: ${result.message}</code>); } } } // Stripeを使う場合 const stripeProcessor = new StripeAdapter(‘sk_test_xxx’, ‘tok_visa’); const checkoutWithStripe = new CheckoutService(stripeProcessor); // PayPalを使う場合 const paypalProcessor = new PayPalAdapter(‘client_id’, ‘secret’, ‘payer_123’); const checkoutWithPayPal = new CheckoutService(paypalProcessor);
+```
+
+**使いどころ**
+
+-   外部ライブラリを自社のインターフェースに合わせたい
+-   将来的にライブラリを差し替える可能性がある
+-   レガシーコードを新しいシステムに統合する
+
+### Decorator：既存オブジェクトに機能を動的に追加する
+
+**どんな問題を解決するか**
+
+「APIクライアントにログ機能を追加したい」「キャッシュ機能も欲しい」「認証チェックも入れたい」。これらを継承で実現しようとすると、組み合わせの爆発が起きます。Decoratorパターンは、機能を「ラップ」することで柔軟に追加できます。
+
+**TypeScriptでの実装**
+
+HTTPクライアントにログ、リトライ、キャッシュ機能を追加する例です。
+
+```typescript
+// 基本のHTTPクライアントインターフェース interface HttpClient { get(url: string): Promise; post(url: string, data: unknown): Promise; } // 基本実装 class BasicHttpClient implements HttpClient { async get(url: string): Promise { const response = await fetch(url); return response.json() as Promise; } async post(url: string, data: unknown): Promise { const response = await fetch(url, { method: ‘POST’, headers: { ‘Content-Type’: ‘application/json’ }, body: JSON.stringify(data), }); return response.json() as Promise; } } // Decorator基底クラス abstract class HttpClientDecorator implements HttpClient { constructor(protected client: HttpClient) {} async get(url: string): Promise { return this.client.get(url); } async post(url: string, data: unknown): Promise { return this.client.post(url, data); } } // ログ機能を追加するDecorator class LoggingHttpClient extends HttpClientDecorator { private requestId = 0; async get(url: string): Promise { const id = ++this.requestId; console.log(<code>[${id}] GET ${url}</code>); const startTime = Date.now(); try { const result = await super.get(url); console.log(<code>[${id}] Completed in ${Date.now() - startTime}ms</code>); return result; } catch (error) { console.error(<code>[${id}] Failed: ${error}</code>); throw error; } } async post(url: string, data: unknown): Promise { const id = ++this.requestId; console.log(<code>[${id}] POST ${url}</code>, JSON.stringify(data).slice(0, 100)); const startTime = Date.now(); try { const result = await super.post(url, data); console.log(<code>[${id}] Completed in ${Date.now() - startTime}ms</code>); return result; } catch (error) { console.error(<code>[${id}] Failed: ${error}</code>); throw error; } } } // リトライ機能を追加するDecorator class RetryHttpClient extends HttpClientDecorator { constructor( client: HttpClient, private maxRetries: number = 3, private delayMs: number = 1000 ) { super(client); } private async withRetry(operation: () => Promise): Promise { let lastError: Error | null = null; for (let attempt = 1; attempt <= this.maxRetries; attempt++) { try { return await operation(); } catch (error) { lastError = error instanceof Error ? error : new Error(String(error)); console.log(<code>Attempt ${attempt}/${this.maxRetries} failed. Retrying in ${this.delayMs}ms...</code>); if (attempt setTimeout(resolve, this.delayMs)); } } } throw lastError; } async get(url: string): Promise { return this.withRetry(() => super.get(url)); } async post(url: string, data: unknown): Promise { return this.withRetry(() => super.post(url, data)); } } // キャッシュ機能を追加するDecorator class CachingHttpClient extends HttpClientDecorator { private cache = new Map(); constructor( client: HttpClient, private ttlMs: number = 60000 ) { super(client); } async get(url: string): Promise { const cached = this.cache.get(url); if (cached && cached.expiry > Date.now()) { console.log(<code>Cache HIT: ${url}</code>); return cached.data as T; } console.log(<code>Cache MISS: ${url}</code>); const result = await super.get(url); this.cache.set(url, { data: result, expiry: Date.now() + this.ttlMs, }); return result; } // POSTはキャッシュしない（副作用があるため） } // 使用例：Decoratorを組み合わせる function createHttpClient(): HttpClient { let client: HttpClient = new BasicHttpClient(); // 内側から外側に向かって機能を追加 client = new RetryHttpClient(client, 3, 1000); // リトライ client = new CachingHttpClient(client, 30000); // キャッシュ client = new LoggingHttpClient(client); // ログ（最外層） return client; } // 実行 const httpClient = createHttpClient(); async function fetchUserData() { // ログ → キャッシュチェック → (キャッシュミス時) リトライ付きリクエスト const user = await httpClient.get(‘https://api.example.com/user/1’); console.log(‘User:’, user); }
+```
+
+**使いどころ**
+
+-   既存のオブジェクトに機能を追加したいが、継承は使いたくない
+-   機能の組み合わせが複数パターンある
+-   Express/Koaのミドルウェア、Axios/FetchのInterceptorのような構造
+
+## 振る舞いパターン
+
+### Strategy：アルゴリズムを差し替え可能にする
+
+**どんな問題を解決するか**
+
+「ユーザーのプランによって計算ロジックが変わる」「地域によって税率計算が異なる」など、同じ処理でもコンテキストによってアルゴリズムを切り替えたい場面があります。
+
+**TypeScriptでの実装**
+
+ECサイトの配送料金計算を例に、地域・配送方法・会員ランクによって計算ロジックを切り替える実装です。
+
+```typescript
+// 配送料金計算のインターフェース interface ShippingStrategy { calculate(weight: number, distance: number): number; getName(): string; getEstimatedDays(): number; } // 通常配送 class StandardShipping implements ShippingStrategy { calculate(weight: number, distance: number): number { const baseRate = 500; const weightRate = weight * 10; const distanceRate = distance * 0.5; return Math.round(baseRate + weightRate + distanceRate); } getName(): string { return ‘通常配送’; } getEstimatedDays(): number { return 5; } } // 速達配送 class ExpressShipping implements ShippingStrategy { calculate(weight: number, distance: number): number { const baseRate = 1200; const weightRate = weight * 15; const distanceRate = distance * 1.2; return Math.round(baseRate + weightRate + distanceRate); } getName(): string { return ‘速達配送’; } getEstimatedDays(): number { return 2; } } // 翌日配送（プレミアム会員限定） class NextDayShipping implements ShippingStrategy { calculate(weight: number, distance: number): number { const baseRate = 2000; const weightRate = weight * 20; // 距離に関係なく翌日届ける return Math.round(baseRate + weightRate); } getName(): string { return ‘翌日配送’; } getEstimatedDays(): number { return 1; } } // 無料配送（条件付き） class FreeShipping implements ShippingStrategy { constructor(private minimumOrder: number) {} calculate(weight: number, distance: number): number { return 0; } getName(): string { return <code>無料配送（${this.minimumOrder}円以上）</code>; } getEstimatedDays(): number { return 7; } } // 会員ランクによる割引を適用するDecorator的なStrategy class MemberDiscountShipping implements ShippingStrategy { constructor( private baseStrategy: ShippingStrategy, private discountRate: number ) {} calculate(weight: number, distance: number): number { const basePrice = this.baseStrategy.calculate(weight, distance); return Math.round(basePrice * (1 – this.discountRate)); } getName(): string { const discountPercent = Math.round(this.discountRate * 100); return <code>${this.baseStrategy.getName()}（会員${discountPercent}%OFF）</code>; } getEstimatedDays(): number { return this.baseStrategy.getEstimatedDays(); } } // コンテキスト：注文処理 class Order { private shippingStrategy: ShippingStrategy; private items: Array = []; constructor( private customerDistance: number, private memberRank: ‘regular’ | ‘silver’ | ‘gold’ | ‘platinum’ ) { // デフォルトは通常配送 this.shippingStrategy = new StandardShipping(); } addItem(name: string, price: number, weight: number): void { this.items.push({ name, price, weight }); } setShippingMethod(method: ‘standard’ | ‘express’ | ‘nextday’): void { let strategy: ShippingStrategy; switch (method) { case ‘express’: strategy = new ExpressShipping(); break; case ‘nextday’: if (this.memberRank !== ‘platinum’) { throw new Error(‘翌日配送はプラチナ会員限定です’); } strategy = new NextDayShipping(); break; default: strategy = new StandardShipping(); } // 会員ランクによる割引を適用 const discountRate = this.getDiscountRate(); if (discountRate > 0) { strategy = new MemberDiscountShipping(strategy, discountRate); } this.shippingStrategy = strategy; } private getDiscountRate(): number { const rates: Record = { regular: 0, silver: 0.05, gold: 0.1, platinum: 0.2, }; return rates[this.memberRank] || 0; } private getTotalWeight(): number { return this.items.reduce((sum, item) => sum + item.weight, 0); } private getSubtotal(): number { return this.items.reduce((sum, item) => sum + item.price, 0); } calculateTotal(): { subtotal: number; shipping: number; shippingMethod: string; estimatedDays: number; total: number; } { const subtotal = this.getSubtotal(); const weight = this.getTotalWeight(); // 一定額以上で送料無料にする場合 let effectiveStrategy = this.shippingStrategy; if (subtotal >= 10000 && !(this.shippingStrategy instanceof FreeShipping)) { effectiveStrategy = new FreeShipping(10000); } const shipping = effectiveStrategy.calculate(weight, this.customerDistance); return { subtotal, shipping, shippingMethod: effectiveStrategy.getName(), estimatedDays: effectiveStrategy.getEstimatedDays(), total: subtotal + shipping, }; } } // 使用例 const order = new Order(150, ‘gold’); // 距離150km、ゴールド会員 order.addItem(‘TypeScript入門書’, 3000, 0.5); order.addItem(‘デザインパターン本’, 4500, 0.8); // 通常配送 order.setShippingMethod(‘standard’); console.log(‘通常配送:’, order.calculateTotal()); // 速達配送に変更 order.setShippingMethod(‘express’); console.log(‘速達配送:’, order.calculateTotal());
+```
+
+**使いどころ**
+
+-   同じ処理に複数のアルゴリズムがあり、実行時に切り替えたい
+-   条件分岐（if/switch）がアルゴリズムの選択だけに使われている
+-   新しいアルゴリズムを追加する可能性がある
+
+### Observer：イベント駆動と状態監視
+
+**どんな問題を解決するか**
+
+「在庫が一定数を下回ったら通知を送りたい」「ユーザーがログインしたらいくつかの処理を実行したい」など、ある状態変化に対して複数の処理を実行したい場面があります。Observerパターンは、この「購読と通知」の仕組みを提供します。
+
+**TypeScriptでの実装**
+
+型安全なイベントシステムを実装します。
+
+```typescript
+// イベントの型定義 interface EventMap { ‘user:login’: { userId: string; timestamp: Date }; ‘user:logout’: { userId: string }; ‘cart:add’: { productId: string; quantity: number }; ‘cart:remove’: { productId: string }; ‘order:placed’: { orderId: string; total: number }; ‘inventory:low’: { productId: string; currentStock: number }; } // Observer（購読者）の型 type Observer = (data: T) => void | Promise; // EventEmitter（Subject/Observable） class TypedEventEmitter<TEvents extends Record> { private observers = new Map<keyof TEvents, Set<Observer>>(); on(event: K, observer: Observer): () => void { if (!this.observers.has(event)) { this.observers.set(event, new Set()); } this.observers.get(event)!.add(observer as Observer); // 購読解除用の関数を返す return () => { this.observers.get(event)?.delete(observer as Observer); }; } once(event: K, observer: Observer): void { const unsubscribe = this.on(event, (data) => { unsubscribe(); observer(data); }); } async emit(event: K, data: TEvents[K]): Promise { const eventObservers = this.observers.get(event); if (!eventObservers) return; const promises: Promise[] = []; for (const observer of eventObservers) { const result = observer(data); if (result instanceof Promise) { promises.push(result); } } await Promise.all(promises); } removeAllListeners(event?: K): void { if (event) { this.observers.delete(event); } else { this.observers.clear(); } } } // アプリケーション全体で使用するイベントバス const eventBus = new TypedEventEmitter(); // 各種Observerの実装 // ログ記録 eventBus.on(‘user:login’, ({ userId, timestamp }) => { console.log(<code>[LOG] User ${userId} logged in at ${timestamp.toISOString()}</code>); }); // 分析トラッキング eventBus.on(‘user:login’, async ({ userId }) => { console.log(<code>[ANALYTICS] Tracking login for user ${userId}</code>); // 実際のアプリでは外部サービスにデータ送信 await new Promise(resolve => setTimeout(resolve, 100)); }); // セッション管理 eventBus.on(‘user:login’, ({ userId }) => { console.log(<code>[SESSION] Creating session for user ${userId}</code>); }); // 在庫アラート eventBus.on(‘inventory:low’, async ({ productId, currentStock }) => { console.log(<code>[ALERT] Low inventory: Product ${productId} has only ${currentStock} items</code>); // Slack通知やメール送信など }); // 注文処理後のワークフロー eventBus.on(‘order:placed’, async ({ orderId, total }) => { console.log(<code>[FULFILLMENT] Processing order ${orderId} (total: ¥${total})</code>); }); eventBus.on(‘order:placed’, async ({ orderId }) => { console.log(<code>[EMAIL] Sending confirmation for order ${orderId}</code>); }); // 実際の使用例 class AuthService { async login(userId: string, password: string): Promise { // 認証処理… console.log(<code>Authenticating user ${userId}...</code>); // ログイン成功時にイベントを発火 await eventBus.emit(‘user:login’, { userId, timestamp: new Date(), }); return true; } } class InventoryService { private stock = new Map(); private lowStockThreshold = 10; setStock(productId: string, quantity: number): void { this.stock.set(productId, quantity); if (quantity <= this.lowStockThreshold) { eventBus.emit(‘inventory:low’, { productId, currentStock: quantity, }); } } decreaseStock(productId: string, amount: number): void { const current = this.stock.get(productId) || 0; this.setStock(productId, current – amount); } } class OrderService { async placeOrder(items: Array): Promise { const orderId = <code>ORD-${Date.now()}</code>; const total = items.reduce((sum, item) => sum + item.quantity * 1000, 0); // 仮の計算 console.log(<code>Placing order ${orderId}...</code>); await eventBus.emit(‘order:placed’, { orderId, total }); return orderId; } } // 実行例 async function demo() { const auth = new AuthService(); const inventory = new InventoryService(); const order = new OrderService(); // ログイン → 複数のObserverが反応 await auth.login(‘user123’, ‘password’); console.log(‘—‘); // 在庫が少ない → アラート発火 inventory.setStock(‘PROD-001’, 5); console.log(‘—‘); // 注文 → 確認メール、フルフィルメント処理 await order.placeOrder([{ productId: ‘PROD-001’, quantity: 2 }]); } demo();
+```
+
+**使いどころ**
+
+-   あるイベントに対して複数の独立した処理を実行したい
+-   処理の追加・削除を柔軟に行いたい
+-   コンポーネント間の結合度を下げたい
+
+## まとめ：パターン選択の判断基準
+
+この記事で紹介した6つのパターンをまとめます。
+
+**生成パターン**
+
+| パターン | 使いどころ | TypeScriptでの特徴 |
+| --- | --- | --- |
+| Factory Method | 種類ごとに異なるオブジェクトを生成 | 抽象クラス + 具象ファクトリ |
+| Singleton | アプリ全体で1つのインスタンスを共有 | private constructor + static getInstance |
+
+**構造パターン**
+
+| パターン | 使いどころ | TypeScriptでの特徴 |
+| --- | --- | --- |
+| Adapter | 異なるインターフェースを統一 | interface + 変換クラス |
+| Decorator | 既存オブジェクトに機能を追加 | 同じinterfaceを実装してラップ |
+
+**振る舞いパターン**
+
+| パターン | 使いどころ | TypeScriptでの特徴 |
+| --- | --- | --- |
+| Strategy | アルゴリズムを実行時に切り替え | interface + 具象Strategy |
+| Observer | イベント駆動、状態変化の通知 | ジェネリクスで型安全なイベント |
+
+**学習の次のステップ**
+
+今回紹介したパターンが理解できたら、次のステップとして以下をおすすめします。
+
+1.  実際のコードベースでパターンを探してみる（React、Express、Prismaなど）
+2.  残りのGoFパターン（Template Method、Composite、Facadeなど）を学ぶ
+3.  SOLID原則との関係を理解する
+4.  アーキテクチャパターン（Clean Architecture、DDDなど）に進む
+
+デザインパターンは「覚える」ものではなく「引き出しを増やす」ものです。実際のコードを書きながら、「あ、これFactoryで書けそう」「Strategyにすれば拡張しやすいかも」と気づけるようになることが目標です。

@@ -123,28 +123,6 @@ export default function SettingsPage() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label>WordPress連携</Label>
-                    <p className="text-sm text-muted-foreground">
-                      WordPressとのユーザー同期を有効にします
-                    </p>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="wordpress-url">WordPress URL</Label>
-                  <Input
-                    id="wordpress-url"
-                    defaultValue={process.env.NEXT_PUBLIC_WORDPRESS_API_URL}
-                    disabled
-                  />
-                </div>
-              </div>
-
-              <Separator />
-
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
                     <Label>Stripe連携</Label>
                     <p className="text-sm text-muted-foreground">
                       決済処理にStripeを使用します

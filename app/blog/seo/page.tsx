@@ -9,14 +9,10 @@ import {
   getFeaturedImageUrl,
   stripHtml,
   formatDate,
-  getReadingTime,
-  type WPPost,
-} from "@/lib/wordpress"
+  type BlogPost,
+} from "@/lib/blog-content"
 
 const SITE_URL = "https://tentspace.net"
-
-// Enable dynamic rendering
-export const dynamic = "force-dynamic"
 
 // Generate metadata
 export async function generateMetadata(): Promise<Metadata> {
@@ -67,9 +63,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 // Blog Card Component (Smaller compact version)
-function BlogCard({ post }: { post: WPPost }) {
-  const imageUrl = getFeaturedImageUrl(post, 'medium')
-  const excerpt = stripHtml(post.excerpt.rendered)
+function BlogCard({ post }: { post: BlogPost }) {
+  const imageUrl = getFeaturedImageUrl(post)
+  const excerpt = stripHtml(post.description)
 
   return (
     <article className="group">
@@ -80,7 +76,7 @@ function BlogCard({ post }: { post: WPPost }) {
             <div className="relative w-24 h-24 flex-shrink-0 bg-muted overflow-hidden">
               <Image
                 src={imageUrl}
-                alt={post.title.rendered}
+                alt={post.title}
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-300"
               />
@@ -91,7 +87,7 @@ function BlogCard({ post }: { post: WPPost }) {
           <div className="flex-1 min-w-0">
             <h4
               className="text-base font-bold text-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors"
-              dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+              dangerouslySetInnerHTML={{ __html: post.title }}
             />
             <p className="text-sm text-muted-foreground">
               {formatDate(post.date)}
@@ -104,10 +100,10 @@ function BlogCard({ post }: { post: WPPost }) {
 }
 
 // Large Blog Card Component (for article list)
-function LargeBlogCard({ post }: { post: WPPost }) {
-  const imageUrl = getFeaturedImageUrl(post, 'large')
-  const excerpt = stripHtml(post.excerpt.rendered)
-  const readingTime = getReadingTime(post.content.rendered)
+function LargeBlogCard({ post }: { post: BlogPost }) {
+  const imageUrl = getFeaturedImageUrl(post)
+  const excerpt = stripHtml(post.description)
+  const readingTime = post.readingTime
 
   return (
     <article className="group">
@@ -118,7 +114,7 @@ function LargeBlogCard({ post }: { post: WPPost }) {
             <div className="relative aspect-[16/9] bg-muted overflow-hidden mb-4">
               <Image
                 src={imageUrl}
-                alt={post.title.rendered}
+                alt={post.title}
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-500"
               />
@@ -130,7 +126,7 @@ function LargeBlogCard({ post }: { post: WPPost }) {
             {/* Title */}
             <h3
               className="text-lg md:text-xl font-bold text-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors leading-tight"
-              dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+              dangerouslySetInnerHTML={{ __html: post.title }}
             />
 
             {/* Excerpt */}
@@ -161,7 +157,7 @@ function ChapterSection({
   chapterNumber: number
   title: string
   description: string
-  posts: WPPost[]
+  posts: BlogPost[]
 }) {
   return (
     <section id={`chapter-${chapterNumber}`} className="mb-16 md:mb-24">
@@ -226,20 +222,11 @@ export default async function SEOPage() {
       perPage: 100,
     })
 
-    // デバッグ: 実際のスラッグをデコードしてログに出力
-    console.log('=== SEOカテゴリの記事スラッグ一覧 ===')
-    console.log('総記事数:', posts.length)
-    posts.forEach((post, index) => {
-      const decodedSlug = decodeURIComponent(post.slug)
-      console.log(`${index + 1}. ${decodedSlug}`)
-    })
-    console.log('=====================================')
-
     // タイトルのキーワードで章ごとに分類
     const getPostsByKeywords = (keywords: string[]) => {
       return posts.filter(post => {
         const decodedSlug = decodeURIComponent(post.slug).toLowerCase()
-        const title = post.title.rendered.toLowerCase()
+        const title = post.title.toLowerCase()
         return keywords.some(keyword => 
           decodedSlug.includes(keyword.toLowerCase()) || 
           title.includes(keyword.toLowerCase())
@@ -357,16 +344,6 @@ export default async function SEOPage() {
         posts: getPostsByKeywords(chapter6Keywords),
       },
     ]
-
-    // 章ごとの記事数をログ出力
-    console.log('=== 章ごとの記事数 ===')
-    chapters.forEach(chapter => {
-      console.log(`第${chapter.number}章 「${chapter.title}」: ${chapter.posts.length}件`)
-      chapter.posts.forEach((post, index) => {
-        console.log(`  ${index + 1}. ${decodeURIComponent(post.slug)}`)
-      })
-    })
-    console.log('=====================')
 
     // JSON-LD for SEO Page
     const jsonLd = {
@@ -513,7 +490,7 @@ export default async function SEOPage() {
                       )
                       .slice(0, 1)
                       .map(post => {
-                        const imageUrl = getFeaturedImageUrl(post, 'medium')
+                        const imageUrl = getFeaturedImageUrl(post)
                         return (
                           <Link 
                             key={post.id} 
@@ -524,7 +501,7 @@ export default async function SEOPage() {
                               <div className="relative w-32 h-32 flex-shrink-0 bg-muted overflow-hidden">
                                 <Image
                                   src={imageUrl}
-                                  alt={post.title.rendered}
+                                  alt={post.title}
                                   fill
                                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                                 />
@@ -533,10 +510,10 @@ export default async function SEOPage() {
                             <div className="flex-1">
                               <h5 
                                 className="text-lg font-bold text-foreground mb-2 group-hover:text-primary transition-colors"
-                                dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+                                dangerouslySetInnerHTML={{ __html: post.title }}
                               />
                               <p className="text-sm text-muted-foreground line-clamp-2">
-                                {stripHtml(post.excerpt.rendered)}
+                                {stripHtml(post.description)}
                               </p>
                             </div>
                           </Link>

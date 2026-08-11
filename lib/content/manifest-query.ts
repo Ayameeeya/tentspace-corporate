@@ -1,0 +1,89 @@
+import type { ContentManifestEntry } from "./post-schema"
+
+export interface BlogCategory {
+  id: string
+  slug: string
+  name: string
+  count: number
+  description?: string
+}
+
+export interface PostQueryOptions {
+  page?: number
+  perPage?: number
+  search?: string
+  categories?: string[]
+  tags?: string[]
+}
+
+export interface PostQueryResult {
+  posts: ContentManifestEntry[]
+  totalPages: number
+  total: number
+}
+
+export function tagToSlug(tag: string): string {
+  return encodeURIComponent(tag.trim().toLowerCase()).toLowerCase()
+}
+
+export function queryPosts(
+  posts: ContentManifestEntry[],
+  options: PostQueryOptions = {},
+): PostQueryResult {
+  const page = Math.max(1, options.page ?? 1)
+  const perPage = Math.max(1, options.perPage ?? 12)
+  const search = options.search?.trim().toLocaleLowerCase("ja")
+  const requestedCategories = new Set(
+    (options.categories ?? []).map((category) => tagToSlug(category)),
+  )
+  const requestedTags = new Set((options.tags ?? []).map((tag) => tagToSlug(tag)))
+
+  const filtered = posts.filter((post) => {
+    const matchesSearch =
+      !search ||
+      [post.title, post.description, ...post.categories, ...post.tags]
+        .join(" ")
+        .toLocaleLowerCase("ja")
+        .includes(search)
+    const matchesTags =
+      requestedTags.size === 0 ||
+      post.tags.some((tag) => requestedTags.has(tagToSlug(tag)))
+    const matchesCategories =
+      requestedCategories.size === 0 ||
+      post.categories.some((category) =>
+        requestedCategories.has(tagToSlug(category)),
+      )
+
+    return matchesSearch && matchesTags && matchesCategories
+  })
+
+  const total = filtered.length
+  const totalPages = Math.max(1, Math.ceil(total / perPage))
+  const start = (page - 1) * perPage
+
+  return {
+    posts: filtered.slice(start, start + perPage),
+    totalPages,
+    total,
+  }
+}
+
+export function listCategories(posts: ContentManifestEntry[]): BlogCategory[] {
+  const categories = new Map<string, BlogCategory>()
+
+  for (const post of posts) {
+    for (const category of post.categories) {
+      const slug = tagToSlug(category)
+      const current = categories.get(slug)
+      if (current) {
+        current.count += 1
+      } else {
+        categories.set(slug, { id: slug, slug, name: category, count: 1 })
+      }
+    }
+  }
+
+  return [...categories.values()].sort((left, right) =>
+    left.name.localeCompare(right.name, "en", { sensitivity: "base" }),
+  )
+}

@@ -1,0 +1,546 @@
+---
+title: "n8nセルフホスト構築ガイド｜Docker Composeで本番環境を構築する方法"
+description: "n8nをVPS上にセルフホストする方法を技術者向けに解説。Docker Composeを使った構築手順、PostgreSQL連携、CaddyによるHTTPS化、バックアップ・アップデートの運用方法まで詳しく紹介します。"
+date: 2025-12-18T06:48:48Z
+updated: 2025-12-21T10:54:57Z
+slug: n8n-self-hosting-guide
+categories: ["n8n"]
+tags: ["Docker","n8n","VPS","セルフホスト","Docker Compose","ワークフロー自動化"]
+draft: false
+ogImage: "/blog-assets/n8n-self-hosting-guide/featured.webp"
+---
+
+n8nのセルフホストは、Cloud版と比べてコストを大幅に抑えながら、実行回数無制限・完全なデータ管理を実現できる運用方法です。この記事では、Docker Composeを使ったセルフホスト環境の構築から、本番運用に必要なHTTPS化、バックアップ、アップデートまでを解説します。
+
+## セルフホストとCloud版の比較
+
+n8nには大きく3つの利用形態があります。
+
+| 項目  | Cloud版 | セルフホスト（VPS） | ローカル（Docker Desktop） |
+| --- | --- | --- | --- |
+| 月額コスト | €20〜50 | ¥700〜2,000（サーバー代） | 無料  |
+| 実行回数 | 2,500〜10,000/月 | 無制限 | 無制限 |
+| 外部連携（Webhook） | ◯   | ◯   | △（トンネル必要） |
+| 24時間稼働 | ◯   | ◯   | ×（PC起動時のみ） |
+| 運用・保守 | 不要  | 自己責任 | 自己責任 |
+| データ管理 | n8n社 | 自社管理 | 自社管理 |
+
+**セルフホストが向いているケース**
+
+-   ワークフローの実行回数が多く、Cloud版の上限を超える
+-   機密データを外部サービスに預けたくない
+-   月額コストを最小限に抑えたい
+-   サーバー運用の知識がある（または学ぶ意欲がある）
+
+## セルフホストの選択肢
+
+セルフホストの構築先として、主に以下の選択肢があります。
+
+| サービス | 月額目安 | 特徴  |
+| --- | --- | --- |
+| Hostinger VPS | ¥780〜1,200 | 1クリックでn8nインストール可能、初心者向け |
+| XServer VPS | ¥830〜1,150 | 国内サーバー、日本語サポート充実 |
+| シン・VPS | ¥620〜900 | 国内最安クラス |
+| DigitalOcean | $6〜12 | 1クリックでn8nインストール可能、海外サーバー |
+| Railway | $5〜（従量課金） | PaaS型、使用量に応じて課金 |
+| GCP Compute Engine | 無料枠あり | e2-micro無料枠で運用可能 |
+
+この記事では、汎用的なVPS環境を想定し、Docker Composeを使った構築方法を解説します。
+
+## 前提条件
+
+-   VPS（Ubuntu 22.04/24.04 推奨、メモリ2GB以上）
+-   SSH接続環境
+-   独自ドメイン（HTTPS化する場合）
+-   基本的なLinuxコマンドの知識
+
+## ステップ1：Dockerのインストール
+
+まずVPSにSSH接続し、Dockerをインストールします。
+
+### 1-1. システムの更新
+
+```plaintext
+sudo apt update && sudo apt upgrade -y
+```
+
+### 1-2. Dockerのインストール
+
+公式のインストールスクリプトを使用します。
+
+```plaintext
+curl -fsSL <a href="https://get.docker.com" target="_blank" rel="noopener">https://get.docker.com</a> | sh
+```
+
+### 1-3. 現在のユーザーをdockerグループに追加
+
+```plaintext
+sudo usermod -aG docker $USER
+```
+
+一度ログアウトして再ログインするか、以下を実行します。
+
+```plaintext
+newgrp docker
+```
+
+### 1-4. インストール確認
+
+```plaintext
+docker –version
+docker compose version
+```
+
+バージョン情報が表示されれば成功です。
+
+## ステップ2：n8n用のディレクトリとファイルを作成
+
+### 2-1. 作業ディレクトリの作成
+
+```plaintext
+mkdir -p ~/n8n
+cd ~/n8n
+```
+
+### 2-2. docker-compose.ymlの作成
+
+本番運用を想定し、PostgreSQLをデータベースとして使用する構成です。
+
+```plaintext
+nano docker-compose.yml
+```
+
+以下の内容を貼り付けます。
+
+```plaintext
+version: ‘3.8’
+
+services:
+  postgres:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [“CMD-SHELL”, “pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}”]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  n8n:
+    image: n8nio/n8n:latest
+    restart: always
+    ports:
+      - “5678:5678″
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
+      - DB_POSTGRESDB_USER=${POSTGRES_USER}
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}
+      - N8N_HOST=${N8N_HOST}
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=${N8N_PROTOCOL}
+      - WEBHOOK_URL=${WEBHOOK_URL}
+      - GENERIC_TIMEZONE=Asia/Tokyo
+      - TZ=Asia/Tokyo
+    volumes:
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  n8n_data:
+```
+
+```
+Ctrl + X
+```
+
+ → 
+
+```
+Y
+```
+
+ → 
+
+```
+Enter
+```
+
+ で保存します。
+
+### 2-3. 環境変数ファイルの作成
+
+```plaintext
+nano .env
+```
+
+以下の内容を記述します。パスワードは必ず変更してください。
+
+```plaintext
+# PostgreSQL設定
+POSTGRES_USER=n8n_user
+POSTGRES_PASSWORD=your_secure_password_here
+POSTGRES_DB=n8n
+
+# n8n設定
+N8N_HOST=localhost
+N8N_PROTOCOL=http
+WEBHOOK_URL=<a href="http://localhost:5678/" target="_blank" rel="noopener">http://localhost:5678/</a>
+```
+
+**パスワードの生成例**
+
+```plaintext
+openssl rand -base64 24
+```
+
+## ステップ3：n8nの起動と初期設定
+
+### 3-1. コンテナの起動
+
+```plaintext
+docker compose up -d
+```
+
+初回はイメージのダウンロードに数分かかります。
+
+### 3-2. 起動確認
+
+```plaintext
+docker compose ps
+```
+
+両方のコンテナが「running」になっていれば成功です。
+
+```plaintext
+docker compose logs -f n8n
+```
+
+ログを確認し、エラーがないことを確認します（
+
+```
+Ctrl + C
+```
+
+で終了）。
+
+### 3-3. ブラウザでアクセス
+
+```
+http://サーバーのIPアドレス:5678
+```
+
+にアクセスします。初回はオーナーアカウントの作成画面が表示されます。
+
+1.  メールアドレス、パスワード、名前を入力
+2.  「Next」をクリック
+3.  アンケートに回答（スキップ可）
+4.  ライセンス登録画面でメールアドレスを入力し、無料ライセンスキーを取得
+
+## ステップ4：HTTPS化（本番運用向け）
+
+本番環境ではHTTPS化が必須です。ここではCaddyをリバースプロキシとして使用する方法を紹介します。
+
+### 4-1. ドメインのDNS設定
+
+お使いのドメインのDNS設定で、AレコードをVPSのIPアドレスに向けます。
+
+例：
+
+```
+n8n.example.com
+```
+
+ → 
+
+```
+203.0.113.1
+```
+
+### 4-2. docker-compose.ymlの修正
+
+Caddyを追加した構成に変更します。
+
+```plaintext
+version: ‘3.8’
+
+services:
+  caddy:
+    image: caddy:2
+    restart: always
+    ports:
+      - “80:80″
+      - “443:443″
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - n8n
+
+  postgres:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [“CMD-SHELL”, “pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}”]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  n8n:
+    image: n8nio/n8n:latest
+    restart: always
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
+      - DB_POSTGRESDB_USER=${POSTGRES_USER}
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}
+      - N8N_HOST=${N8N_HOST}
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - WEBHOOK_URL=<a href="https://${N8N_HOST}/" target="_blank" rel="noopener">https://${N8N_HOST}/</a>
+      - GENERIC_TIMEZONE=Asia/Tokyo
+      - TZ=Asia/Tokyo
+    volumes:
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  n8n_data:
+  caddy_data:
+  caddy_config:
+```
+
+n8nの
+
+```
+ports
+```
+
+を削除し、Caddyからのみアクセスさせる構成にしています。
+
+### 4-3. Caddyfileの作成
+
+```plaintext
+nano Caddyfile
+```
+
+```plaintext
+n8n.example.com {
+    reverse_proxy n8n:5678
+}
+```
+
+```
+n8n.example.com
+```
+
+を実際のドメインに置き換えてください。CaddyはLet’s Encryptから自動でSSL証明書を取得します。
+
+### 4-4. .envファイルの更新
+
+```plaintext
+# PostgreSQL設定
+POSTGRES_USER=n8n_user
+POSTGRES_PASSWORD=your_secure_password_here
+POSTGRES_DB=n8n
+
+# n8n設定
+N8N_HOST=n8n.example.com
+```
+
+### 4-5. 再起動
+
+```plaintext
+docker compose down
+docker compose up -d
+```
+
+```
+https://n8n.example.com
+```
+
+でアクセスできれば完了です。
+
+## ステップ5：運用・保守
+
+### n8nのアップデート
+
+n8nは頻繁にアップデートされます。以下のコマンドで最新版に更新できます。
+
+```plaintext
+cd ~/n8n
+docker compose pull
+docker compose up -d
+```
+
+現在のバージョン確認：
+
+```plaintext
+docker exec -it n8n-n8n-1 n8n -v
+```
+
+### バックアップ
+
+定期的なバックアップを推奨します。
+
+**データベースのバックアップ**
+
+```plaintext
+docker exec n8n-postgres-1 pg_dump -U n8n_user n8n > backup_$(date +%Y%m%d).sql
+```
+
+**ボリュームごとバックアップ**
+
+```plaintext
+docker compose down
+sudo tar -czvf n8n_backup_$(date +%Y%m%d).tar.gz 
+  /var/lib/docker/volumes/n8n_postgres_data 
+  /var/lib/docker/volumes/n8n_n8n_data
+docker compose up -d
+```
+
+### ログの確認
+
+```plaintext
+# n8nのログ
+docker compose logs -f n8n
+
+# PostgreSQLのログ
+docker compose logs -f postgres
+
+# 直近100行
+docker compose logs –tail=100 n8n
+```
+
+### コンテナの再起動
+
+```plaintext
+docker compose restart
+```
+
+## トラブルシューティング
+
+### コンテナが起動しない
+
+```plaintext
+docker compose logs
+```
+
+でエラー内容を確認します。よくある原因：
+
+-   ポート5678が他のプロセスで使用中
+-   .envファイルの記述ミス
+-   PostgreSQLの接続エラー
+
+### Webhookが動作しない
+
+-   ```
+    WEBHOOK_URL
+    ```
+    
+    が正しく設定されているか確認
+-   ファイアウォールでポート80/443が開いているか確認
+-   ドメインのDNS設定が正しいか確認
+
+### セキュアクッキーのエラー
+
+HTTPでアクセスしている場合に発生します。本番環境ではHTTPS化してください。ローカルテスト時は以下の環境変数を追加することで回避できます（非推奨）。
+
+```plaintext
+environment:
+  - N8N_SECURE_COOKIE=false
+```
+
+### メモリ不足
+
+VPSのメモリが1GB未満の場合、n8nの動作が不安定になることがあります。スワップファイルを追加するか、メモリを増設してください。
+
+```plaintext
+# スワップファイルの追加（2GB）
+sudo fallocate -l 2G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+echo ‘/swapfile none swap sw 0 0’ | sudo tee -a /etc/fstab
+```
+
+## ライセンスについて
+
+n8nは「Sustainable Use License」を採用しています。
+
+-   **無料で利用可能**：社内業務、非商用、個人利用
+-   **商用利用可能**：自社の業務自動化に使用する場合
+-   **有料ライセンス必要**：n8nをホスティングサービスとして第三者に提供する場合、ホワイトラベル提供する場合
+
+自社の業務自動化目的であれば、セルフホストは完全無料で利用できます。
+
+## よくある質問
+
+### Q. Cloud版からセルフホストに移行できますか？
+
+A. はい、可能です。Cloud版のn8nからワークフローをエクスポート（JSON形式）し、セルフホスト環境にインポートできます。ただし、認証情報（Credentials）は再設定が必要です。
+
+### Q. 複数人で使えますか？
+
+A. はい、セルフホスト版でも複数ユーザーを作成できます。ユーザー管理機能は無料で利用可能です。
+
+### Q. PostgreSQLの代わりにSQLiteでも動きますか？
+
+A. はい、環境変数で
+
+```
+DB_TYPE=sqlite
+```
+
+を指定すれば動作します。ただし、本番環境ではPostgreSQLを推奨します。SQLiteはパフォーマンスや同時接続数に制限があります。
+
+### Q. どのくらいのスペックが必要ですか？
+
+A. 最低要件としてCPU 1コア、メモリ1GBで動作しますが、安定運用には2コア、2GB以上を推奨します。ワークフローの複雑さや実行頻度に応じてスケールアップを検討してください。
+
+### Q. 自動バックアップは設定できますか？
+
+A. cronを使って定期バックアップを設定できます。以下は毎日午前3時にバックアップを実行する例です。
+
+```plaintext
+crontab -e
+# 以下を追加
+0 3 * * * cd ~/n8n && docker exec n8n-postgres-1 pg_dump -U n8n_user n8n > ~/backups/n8n_$(date +%Y%m%d).sql
+```
+
+## まとめ
+
+n8nのセルフホストは、初期設定の手間はかかりますが、一度構築すれば低コストで実行回数無制限の自動化環境を手に入れられます。
+
+**この記事で解説した内容**
+
+-   Docker Composeを使ったn8n環境の構築
+-   PostgreSQLをデータベースとして使用する本番構成
+-   CaddyによるHTTPS化
+-   アップデート、バックアップなどの運用方法
+
+まずはCloud版の14日間無料トライアルでn8nの使い方を学び、本格運用の段階でセルフホストに移行するのがおすすめの流れです。
+
+n8nの基本的な使い方については、料金プランの詳細はも参考にしてください。

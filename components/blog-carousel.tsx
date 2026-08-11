@@ -3,10 +3,10 @@
 import { useRef, useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { type WPPost, getFeaturedImageUrl, stripHtml, formatDate } from "@/lib/wordpress"
+import { type BlogPost, getFeaturedImageUrl, getPostTerms, stripHtml, formatDate } from "@/lib/blog-content"
 
 interface BlogCarouselProps {
-  posts: WPPost[]
+  posts: BlogPost[]
   likeCounts: Record<string, number>
 }
 
@@ -132,8 +132,8 @@ export function BlogCarousel({ posts, likeCounts }: BlogCarouselProps) {
         onMouseMove={handleMouseMove}
       >
         {displayPosts.map((post) => {
-          const imageUrl = getFeaturedImageUrl(post, "medium")
-          const postCategories = post._embedded?.["wp:term"]?.[0] || []
+          const imageUrl = getFeaturedImageUrl(post)
+          const postCategories = getPostTerms(post)
           const likeCount = likeCounts[post.slug] || 0
           return (
             <Link
@@ -147,7 +147,7 @@ export function BlogCarousel({ posts, likeCounts }: BlogCarouselProps) {
                   <div className="relative aspect-[16/9] bg-gray-100 dark:bg-gray-700">
                     <Image
                       src={imageUrl}
-                      alt={stripHtml(post.title.rendered)}
+                      alt={stripHtml(post.title)}
                       fill
                       className="object-cover"
                       draggable={false}
@@ -162,7 +162,7 @@ export function BlogCarousel({ posts, likeCounts }: BlogCarouselProps) {
                   )}
                   <h3
                     className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
-                    dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+                    dangerouslySetInnerHTML={{ __html: post.title }}
                   />
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1.5 flex items-center gap-2">
                     <span>{formatDate(post.date)}</span>
