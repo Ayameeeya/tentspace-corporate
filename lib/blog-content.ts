@@ -18,11 +18,12 @@ export interface BlogTerm {
 }
 
 export const DEFAULT_BLOG_AUTHOR: BlogAuthor = {
-  id: "tentspace",
+  id: "81da5c18-b6ec-4463-a751-9d9f8c269883",
   name: "Hirokuma",
   description:
     "AI・自動化・SEOを中心に、実務で役立つ技術と運用の知見を発信しています。",
-  avatarUrl: "/logo_black_symbol.png",
+  avatarUrl:
+    "https://zbgzvbcgjvnsgildrmta.supabase.co/storage/v1/object/public/avatars/avatars/81da5c18-b6ec-4463-a751-9d9f8c269883-1765603536922.png",
 }
 
 const publishedPosts = manifest as ContentManifestEntry[]

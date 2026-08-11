@@ -96,7 +96,7 @@ function generateJsonLd(post: BlogPost) {
         "@type": "Person",
         name: DEFAULT_BLOG_AUTHOR.name,
         description: DEFAULT_BLOG_AUTHOR.description,
-        image: `${SITE_URL}${DEFAULT_BLOG_AUTHOR.avatarUrl}`,
+        image: new URL(DEFAULT_BLOG_AUTHOR.avatarUrl, SITE_URL).toString(),
       },
       publisher: {
         "@type": "Organization",
