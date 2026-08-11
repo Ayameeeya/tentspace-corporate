@@ -2,12 +2,11 @@ import { NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { createStripeCustomer } from '@/lib/stripe'
-import { createWordPressUser } from '@/lib/wordpress'
 
 /**
  * POST /api/user/setup-accounts
  * 
- * ログイン中のユーザーに対して、StripeとWordPressアカウントを作成する
+ * ログイン中のユーザーに対してStripeカスタマーを作成する
  * 既に作成済みの場合はスキップ
  */
 export async function POST() {
@@ -50,7 +49,7 @@ export async function POST() {
     // Get current profile
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
-      .select('stripe_customer_id, wordpress_user_id, display_name')
+      .select('stripe_customer_id, display_name')
       .eq('id', user.id)
       .single()
 
@@ -82,7 +81,6 @@ export async function POST() {
 
     const results: {
       stripe?: { status: string; customerId?: string; error?: string }
-      wordpress?: { status: string; userId?: number; error?: string }
     } = {}
 
     // Create Stripe customer if not exists
@@ -107,31 +105,6 @@ export async function POST() {
       }
     } else {
       results.stripe = { status: 'already_exists', customerId: profile.stripe_customer_id }
-    }
-
-    // Create WordPress user if not exists
-    if (!profile.wordpress_user_id) {
-      const baseUsername = user.email.split('@')[0].replace(/[^a-zA-Z0-9]/g, '')
-      const username = `${baseUsername}_${user.id.slice(0, 8)}`
-      
-      const { userId, error } = await createWordPressUser({
-        email: user.email,
-        username: username,
-        displayName: displayName,
-      })
-
-      if (userId) {
-        await supabase
-          .from('profiles')
-          .update({ wordpress_user_id: userId })
-          .eq('id', user.id)
-
-        results.wordpress = { status: 'created', userId }
-      } else {
-        results.wordpress = { status: 'error', error }
-      }
-    } else {
-      results.wordpress = { status: 'already_exists', userId: profile.wordpress_user_id }
     }
 
     return NextResponse.json({

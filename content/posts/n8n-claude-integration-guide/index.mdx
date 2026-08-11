@@ -1,0 +1,439 @@
+---
+title: "【2025年版】n8n × Claude連携チュートリアル｜Anthropic APIの設定から実践ワークフローまで"
+description: "n8nとClaude（Anthropic）を連携するチュートリアル。APIキー取得から認証設定、テキスト生成・チャットボット・メール要約・RAGなど実践的なワークフロー構築まで、ステップバイステップで解説します。"
+date: 2025-12-17T14:23:22Z
+updated: 2025-12-21T11:00:15Z
+slug: n8n-claude-integration-guide
+categories: ["n8n"]
+tags: ["AI","自動化","Claude","Anthropic"]
+draft: false
+ogImage: "/blog-assets/n8n-claude-integration-guide/featured.webp"
+---
+
+n8nとClaude（Anthropic）を連携することで、高度な文章生成、要約、分析などのAI機能をワークフローに組み込めます。
+
+この記事では、AnthropicのAPIキー取得からn8nでの設定、実際のワークフロー構築まで、ステップバイステップで解説します。
+
+## n8n × Claude連携でできること
+
+| 活用シーン | 具体例 |
+| --- | --- |
+| 文章生成 | メール下書き、ブログ記事、レポート作成 |
+| 要約  | 長文ドキュメント、議事録、ニュース記事の要約 |
+| 翻訳  | 多言語コンテンツの翻訳 |
+| 分類  | 問い合わせメールのカテゴリ分け、感情分析 |
+| データ抽出 | 非構造化テキストから情報を抽出 |
+| チャットボット | カスタマーサポート、社内FAQ対応 |
+| コード生成 | コードレビュー、コード生成、デバッグ支援 |
+
+## 利用可能なClaudeモデル
+
+n8nのAnthropic Chat Modelノードで使用できる主要なモデルです。
+
+| モデル | モデルID | 特徴  |
+| --- | --- | --- |
+| Claude Opus 4 | claude-opus-4-20250514 | 最高性能、複雑な推論に最適 |
+| Claude Sonnet 4 | claude-sonnet-4-20250514 | バランス型、コスト効率良好 |
+| Claude 3.5 Sonnet | claude-3-5-sonnet-20241022 | 高速・高品質、汎用的 |
+| Claude 3.5 Haiku | claude-3-5-haiku-20241022 | 最速・低コスト、シンプルなタスク向け |
+| Claude 3 Opus | claude-3-opus-20240229 | 高度な分析・創作タスク |
+
+## 事前準備：Anthropic APIキーの取得
+
+n8nでClaudeを使用するには、AnthropicのAPIキーが必要です。
+
+### Step 1：Anthropicアカウントの作成
+
+1.  [Anthropic Console](https://console.anthropic.com/)にアクセス
+2.  「Sign Up」をクリック
+3.  メールアドレスまたはGoogleアカウントで登録
+4.  メール認証を完了
+
+### Step 2：APIキーの発行
+
+1.  Anthropic Consoleにログイン
+2.  左メニューから「Settings」→「API Keys」を選択
+3.  「+ Create Key」をクリック
+4.  キーの名前を入力（例：n8n-integration）
+5.  「Create Key」をクリック
+6.  表示されたAPIキーをコピーして安全な場所に保存
+
+**重要**：APIキーは一度しか表示されません。必ずコピーして保存してください。
+
+### Step 3：クレジットの確認
+
+Anthropic APIは従量課金制です。
+
+-   新規アカウントには無料クレジットが付与される場合があります
+-   「Settings」→「Billing」で残高を確認
+-   必要に応じてクレジットを追加
+
+## n8nでのClaude認証情報の設定
+
+取得したAPIキーをn8nに登録します。
+
+### Step 1：認証情報の追加
+
+1.  n8nのメニューから「Credentials」を選択
+2.  「Add Credential」をクリック
+3.  検索ボックスに「Anthropic」と入力
+4.  「Anthropic API」を選択
+
+### Step 2：APIキーの入力
+
+1.  「API Key」フィールドに取得したキーを貼り付け
+2.  「Credential Name」に分かりやすい名前を設定（例：Anthropic Production）
+3.  「Save」をクリック
+
+### 接続テスト
+
+認証情報が正しく設定されているか確認するため、簡単なワークフローでテストします。
+
+1.  新規ワークフローを作成
+2.  「Manual Trigger」ノードを追加
+3.  「AI Agent」ノードを追加して接続
+4.  「Anthropic Chat Model」をAI Agentに接続
+5.  作成した認証情報を選択
+6.  「Test Workflow」で実行
+
+## 基本ワークフロー①：シンプルなテキスト生成
+
+最もシンプルなClaude連携ワークフローを構築します。
+
+### ワークフロー構成
+
+```
+[Manual Trigger] → [AI Agent] → [出力確認]↑[Anthropic Chat Model]
+```
+
+### ノード設定
+
+**1\. Manual Trigger**
+
+設定不要。テスト実行用のトリガーです。
+
+**2\. AI Agent**
+
+-   **Prompt**：Define below
+-   **Text**：「日本の四季について3文で説明してください」
+
+**3\. Anthropic Chat Model（Sub-Node）**
+
+-   **Credential**：作成した認証情報を選択
+-   **Model**：claude-3-5-sonnet-20241022
+-   **Max Tokens**：1024
+
+### 実行結果
+
+テストを実行すると、AI Agentノードの出力にClaudeからの回答が表示されます。
+
+## 基本ワークフロー②：チャットボット
+
+会話履歴を保持するチャットボットを構築します。
+
+### ワークフロー構成
+
+```
+[Chat Trigger] → [AI Agent] → [レスポンス]↑[Anthropic Chat Model][Window Buffer Memory]
+```
+
+### ノード設定
+
+**1\. Chat Trigger**
+
+-   **Mode**：Webhook
+-   **Authentication**：None（テスト用）または適切な認証
+
+**2\. AI Agent**
+
+-   **Agent Type**：Tools Agent
+-   **Prompt**：Take from previous node automatically
+-   **System Message**：
+
+```
+あなたは親切で丁寧なアシスタントです。ユーザーの質問に対して、わかりやすく回答してください。日本語で回答してください。
+```
+
+**3\. Anthropic Chat Model**
+
+-   **Model**：claude-3-5-sonnet-20241022
+-   **Max Tokens**：2048
+-   **Temperature**：0.7
+
+**4\. Window Buffer Memory**
+
+-   **Context Window Length**：10
+-   **Session ID Key**：sessionId
+
+### テスト方法
+
+1.  ワークフローをアクティブ化
+2.  n8nの画面下部「Open Chat」をクリック
+3.  チャット画面でメッセージを送信
+4.  会話を続けて、履歴が保持されていることを確認
+
+## 実践ワークフロー①：メール自動要約
+
+受信したメールをClaudeで自動要約し、Slackに通知するワークフローです。
+
+### ワークフロー構成
+
+```
+[Gmail Trigger] → [Basic LLM Chain] → [Slack]↑[Anthropic Chat Model]
+```
+
+### ノード設定
+
+**1\. Gmail Trigger**
+
+-   **Poll Times**：Every 5 Minutes
+-   **Label Names**：INBOX
+-   **Read Status**：Unread
+
+**2\. Basic LLM Chain**
+
+-   **Prompt**：
+
+```
+以下のメールを3行で要約してください。重要なポイントと必要なアクションがあれば明記してください。
+```
+
+```
+件名：{{ $json.subject }}送信者：{{ $json.from.text }}本文：{{ $json.text }}
+```
+
+```
+【要約】
+```
+
+**3\. Anthropic Chat Model**
+
+-   **Model**：claude-3-5-haiku-20241022（高速・低コスト）
+-   **Max Tokens**：500
+-   **Temperature**：0.3（正確性重視）
+
+**4\. Slack**
+
+-   **Operation**：Send a Message
+-   **Channel**：#notifications
+-   **Text**：
+
+```
+📧 *新着メール要約**件名:* {{ $('Gmail Trigger').item.json.subject }}*送信者:* {{ $('Gmail Trigger').item.json.from.text }}
+```
+
+```
+*要約:*{{ $json.text }}
+```
+
+## 実践ワークフロー②：問い合わせ分類と自動振り分け
+
+問い合わせ内容をClaudeで分類し、適切な担当者に振り分けます。
+
+### ワークフロー構成
+
+```
+[Webhook] → [Text Classifier] → [Switch] → [Slack（各チャンネル）]↑[Anthropic Chat Model]
+```
+
+### Text Classifierの設定
+
+-   **Text to Classify**：\{\{ $json.message \}\}
+-   **Categories**：
+
+```
+技術サポート：製品の使い方、エラー、バグに関する問い合わせ料金・契約：料金プラン、契約内容、請求に関する問い合わせ新規問い合わせ：製品への興味、デモリクエスト、資料請求その他：上記に該当しない問い合わせ
+```
+
+### Switchノードの設定
+
+-   **Mode**：Rules
+-   **Rules**：
+
+```
+技術サポート → Output 1 → #support チャンネル料金・契約 → Output 2 → #sales チャンネル新規問い合わせ → Output 3 → #leads チャンネルその他 → Output 4 → #general チャンネル
+```
+
+## 実践ワークフロー③：RAGチャットボット
+
+社内ドキュメントを参照して回答するRAGチャットボットです。
+
+### ワークフロー構成
+
+```
+[Chat Trigger] → [AI Agent] → [レスポンス]↑[Anthropic Chat Model][Vector Store Tool][Window Buffer Memory]
+```
+
+### AI Agentの設定
+
+**System Message**
+
+```
+あなたは社内ナレッジベースを検索して質問に回答するアシスタントです。
+```
+
+```
+【重要なルール】回答は必ずVector Storeから取得した情報に基づいてください情報が見つからない場合は「該当する情報が見つかりませんでした」と回答してください回答には出典（ドキュメント名）を含めてください推測や一般知識での回答は避けてください
+```
+
+### Vector Store Toolの設定
+
+-   **Name**：search\_knowledge\_base
+-   **Description**：社内ドキュメント（マニュアル、FAQ、規定）を検索します
+-   **Vector Store**：Pinecone / Qdrant / Supabaseを接続
+-   **Top K**：5
+
+## 実践ワークフロー④：コンテンツ生成パイプライン
+
+トピックを入力すると、Claudeがブログ記事を生成してCMSに下書き保存します。
+
+### ワークフロー構成
+
+```
+[Webhook] → [Basic LLM Chain（構成案）] → [Basic LLM Chain（本文）] → [CMS]↑ ↑[Anthropic Chat Model] [Anthropic Chat Model]
+```
+
+### Step 1：構成案生成
+
+**プロンプト**
+
+```
+以下のトピックについて、SEOを意識したブログ記事の構成案を作成してください。
+```
+
+```
+トピック：{{ $json.topic }}ターゲット読者：{{ $json.target }}【出力形式】タイトル案（3つ）見出し構成（H2、H3レベル）各セクションで扱う内容の概要
+```
+
+### Step 2：本文生成
+
+**プロンプト**
+
+```
+以下の構成案に基づいて、2000文字程度のブログ記事を作成してください。
+```
+
+```
+{{ $json.text }}【執筆ガイドライン】読みやすい文章で具体例を含める専門用語には説明を加える結論を先に述べる
+```
+
+### CMS設定
+
+-   **Operation**：Create Post
+-   **Title**：\{\{ $json.title \}\}
+-   **Content**：\{\{ $json.text \}\}
+-   **Status**：Draft
+
+## Claude APIのパラメータ詳細
+
+Anthropic Chat Modelノードで設定できるパラメータを解説します。
+
+### 主要パラメータ
+
+| パラメータ | 説明  | 推奨値 |
+| --- | --- | --- |
+| Max Tokens | 生成する最大トークン数 | 用途に応じて（500〜4096） |
+| Temperature | 出力のランダム性（0〜1） | 正確性重視: 0.2〜0.4、創造性重視: 0.7〜0.9 |
+| Top P | サンプリングの確率しきい値 | 0.9〜1.0 |
+| Top K | サンプリングする候補数 | 40〜100 |
+
+### 用途別の推奨設定
+
+| 用途  | Model | Temperature | Max Tokens |
+| --- | --- | --- | --- |
+| 要約・抽出 | Haiku | 0.2〜0.3 | 500〜1000 |
+| 分類・判定 | Haiku | 0.0〜0.2 | 100〜300 |
+| 文章生成 | Sonnet | 0.7〜0.8 | 2000〜4000 |
+| コード生成 | Sonnet / Opus | 0.2〜0.4 | 2000〜4000 |
+| 複雑な推論 | Opus | 0.3〜0.5 | 4000〜8000 |
+| チャットボット | Sonnet | 0.7 | 1000〜2000 |
+
+## APIコストの管理
+
+Claude APIは従量課金制のため、コスト管理が重要です。
+
+### モデル別料金（2025年時点の参考）
+
+| モデル | 入力（/100万トークン） | 出力（/100万トークン） |
+| --- | --- | --- |
+| Claude 3.5 Haiku | $0.25 | $1.25 |
+| Claude 3.5 Sonnet | $3.00 | $15.00 |
+| Claude Sonnet 4 | $3.00 | $15.00 |
+| Claude Opus 4 | $15.00 | $75.00 |
+
+### コスト削減のポイント
+
+-   **適切なモデル選択**：シンプルなタスクにはHaiku、複雑なタスクのみOpusを使用
+-   **プロンプトの最適化**：不要な説明を削減してトークン数を抑える
+-   **Max Tokensの設定**：必要最小限の値を設定
+-   **キャッシュの活用**：同じ入力に対する結果をキャッシュ
+-   **Batch APIの利用**：大量処理はBatch APIで効率化
+
+## エラーハンドリング
+
+### よくあるエラーと対処法
+
+| エラー | 原因  | 対処法 |
+| --- | --- | --- |
+| 401 Unauthorized | APIキーが無効 | APIキーを再確認・再発行 |
+| 429 Rate Limit | リクエスト数超過 | Wait nodeでリクエスト間隔を空ける |
+| 400 Bad Request | パラメータエラー | Max Tokensやモデル名を確認 |
+| 500 Server Error | Anthropic側の問題 | リトライ処理を実装 |
+| Credit Exhausted | クレジット不足 | Anthropic Consoleで残高確認・チャージ |
+
+### リトライ処理の実装
+
+Error Triggerとリトライロジックを組み合わせます。
+
+```
+[ワークフロー] → [Error Trigger] → [Wait (30秒)] → [Execute Workflow（リトライ）]
+```
+
+## よくある質問（FAQ）
+
+### Q. n8n CloudでもClaude連携は使えますか？
+
+A. はい、n8n CloudでもAnthropic Chat Modelノードを使用してClaude連携が可能です。認証情報の設定方法はセルフホスト版と同じです。
+
+### Q. ClaudeとGPT-4、どちらを使うべきですか？
+
+A. タスクによって異なります。Claudeは長文の処理や分析タスクに強く、GPT-4は汎用性が高いです。コスト面ではClaude Haikuが最も安価です。両方試して、自社のユースケースに合う方を選択することをおすすめします。
+
+### Q. APIキーは複数のワークフローで共有できますか？
+
+A. はい、一度登録した認証情報は複数のワークフローで共有できます。ただし、レート制限はアカウント単位で適用されるため、大量のワークフローで同時使用する場合は注意が必要です。
+
+### Q. 日本語の処理は問題なくできますか？
+
+A. はい、Claudeは日本語を含む多言語に対応しています。日本語での入出力、翻訳、要約などの処理が可能です。
+
+### Q. Claudeのコンテキストウィンドウはどのくらいですか？
+
+A. Claude 3.5 Sonnet/Haikuは200Kトークン、Claude 3 Opusは200Kトークンのコンテキストウィンドウを持っています。長文ドキュメントの処理に適しています。
+
+## まとめ
+
+この記事では、n8nとClaudeの連携方法を解説しました。
+
+**連携の流れ**
+
+1.  Anthropic ConsoleでAPIキーを取得
+2.  n8nの認証情報にAPIキーを登録
+3.  AI AgentまたはBasic LLM ChainにAnthropic Chat Modelを接続
+4.  用途に応じたプロンプトとパラメータを設定
+
+**活用のポイント**
+
+-   シンプルなタスクにはHaiku（低コスト・高速）
+-   汎用的なタスクにはSonnet（バランス型）
+-   複雑な推論にはOpus（最高性能）
+-   Temperatureは用途に応じて調整
+
+**次のステップ**
+
+1.  シンプルなテキスト生成ワークフローで動作確認
+2.  実際の業務で使えるワークフローを構築
+3.  RAGやツール連携で高度な機能を追加
+4.  エラーハンドリングとコスト管理を実装
+
+n8nとClaudeを組み合わせることで、高度なAI機能をノーコードで業務に組み込めます。ぜひ自社の業務効率化に活用してください。

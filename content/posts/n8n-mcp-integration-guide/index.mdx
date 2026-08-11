@@ -1,0 +1,282 @@
+---
+title: "【2025年版】n8nとMCPの連携方法を徹底解説｜AIエージェント自動化の最前線"
+description: "n8nとMCP（Model Context Protocol）の連携方法を徹底解説。MCP Server TriggerとMCP Client Toolの違い、設定手順、Claude Desktopとの連携方法、実践的なユースケースをわかりやすくまとめました。AIエージェント自動化の最前線を理解できます。"
+date: 2025-12-17T13:16:49Z
+updated: 2025-12-21T11:05:08Z
+slug: n8n-mcp-integration-guide
+categories: ["n8n"]
+tags: ["AI","業務効率化","初心者向け","MCP","自動化"]
+draft: false
+ogImage: "/blog-assets/n8n-mcp-integration-guide/featured.webp"
+---
+
+「n8nでMCPを使ってみたいけど、設定方法がわからない」  
+「AIエージェントと自動化ワークフローを連携させたい」  
+「MCP Server TriggerとMCP Client Toolの違いを知りたい」
+
+そんな疑問をお持ちではありませんか？
+
+結論からお伝えすると、n8nは2025年にネイティブMCPノードを実装し、MCP Server TriggerとMCP Client Toolの2つのノードでMCPに完全対応しました。これにより、n8nワークフローをAIエージェントから呼び出したり、外部のMCPサーバーをn8nから利用したりできるようになります。
+
+この記事では、n8nとMCPの連携方法から、具体的な設定手順、実践的なユースケースまで、わかりやすく解説します。
+
+**この記事でわかること**
+
+-   MCPとは何か、n8nとの関係性
+-   MCP Server TriggerとMCP Client Toolの役割と違い
+-   n8nでMCPサーバーを構築する具体的な手順
+-   外部MCPサーバーをn8nから利用する方法
+-   Claude DesktopやCursorとの連携方法
+
+## MCPとは？n8nとの関係性
+
+MCP（Model Context Protocol）は、2024年末にAnthropicがオープンソースとしてリリースしたプロトコルです。AIモデルと外部システムを標準化された方法で接続するための仕組みで、「AIのための統一コネクタ」とも言えます。
+
+従来、AIエージェントがさまざまなツールやデータソースに接続するには、それぞれ個別のカスタム実装が必要でした。MCPはこの課題を解決し、一度のセットアップで多様なサービスと連携できる環境を実現します。
+
+### n8nがMCPに対応した意義
+
+n8nは400以上のサービスと連携できるオープンソースのワークフロー自動化プラットフォームです。2025年2月〜4月にかけて、n8nチームは2つの重要なノードを公式に導入しました。
+
+-   MCP Server Trigger：n8nワークフローをMCPサーバーとして公開
+-   MCP Client Tool：外部のMCPサーバーをn8nから利用
+
+これにより、n8nはMCPエコシステムにおいてサーバーとしてもクライアントとしても機能できるようになり、AIエージェントとの連携の可能性が大きく広がりました。
+
+## MCP Server TriggerとMCP Client Toolの違い
+
+n8nでMCPを活用する際は、2つのノードの役割を理解することが重要です。
+
+### MCP Server Trigger：n8nをMCPサーバーにする
+
+MCP Server Triggerノードは、n8nワークフローをMCPサーバーとして外部に公開するためのノードです。
+
+**主な機能**
+
+-   n8nワークフローをMCPエンドポイントとして公開
+-   外部のAIエージェント（Claude Desktop、Cursorなど）からn8nのツールを呼び出せる
+-   Bearer認証やOAuth2による認証設定が可能
+-   SSE（Server-Sent Events）とストリーマブルHTTPをサポート
+
+つまり、MCP Server Triggerを使えば「AIエージェントがn8nワークフローを自由に呼び出せる状態」を作れます。
+
+### MCP Client Tool：外部MCPサーバーを利用する
+
+MCP Client Toolノードは、n8nワークフローから外部のMCPサーバーに接続するためのノードです。
+
+**主な機能**
+
+-   外部MCPサーバーが提供するツールをn8nから呼び出せる
+-   n8nのAIエージェントノードと組み合わせて利用
+-   Brave Search、Filesystem、GitHubなど多様なMCPサーバーに対応
+-   利用するツールを「すべて」または「選択」で指定可能
+
+既存のMCPサーバーをn8nのワークフロー内で活用したい場合に使用します。
+
+### 2つのノードの使い分け
+
+| ノード | 役割  | ユースケース |
+| --- | --- | --- |
+| MCP Server Trigger | n8nをサーバーとして公開 | Claude DesktopやCursorからn8nワークフローを呼び出す |
+| MCP Client Tool | 外部サーバーに接続 | n8nのAIエージェントで外部MCPサーバーのツールを使う |
+
+## MCP Server Triggerでn8nをMCPサーバー化する手順
+
+n8nワークフローをMCPサーバーとして公開する具体的な手順を解説します。
+
+### ステップ1：新しいワークフローを作成
+
+n8nエディタで新規ワークフローを作成します。このワークフローがAIエージェントから呼び出される「ハブ」となります。
+
+### ステップ2：MCP Server Triggerノードを追加
+
+ノード追加パネルから「MCP Server Trigger」を検索して追加します。
+
+**設定項目**
+
+-   MCP URL Path：自動生成されるユニークなパス（カスタマイズ可能）
+-   Authentication：認証方式（None、Bearer、Header Auth、OAuth2）
+
+テスト段階では認証を「None」に設定しても構いませんが、本番環境では必ずBearer認証などを設定してください。
+
+### ステップ3：ツールノードを接続
+
+MCP Server Triggerノードに、公開したいツールを接続します。
+
+**接続できるツールの例**
+
+-   Google Calendar、Gmail、Slackなどのビルトイン連携ノード
+-   HTTP Requestノードで外部APIを呼び出すカスタムツール
+-   Custom n8n Workflow Toolノードで他のワークフローを公開
+
+### ステップ4：ワークフローを有効化
+
+ワークフローを「Active」に切り替えます。これにより、Production URLが生成され、外部からアクセス可能になります。
+
+### ステップ5：Claude Desktopと連携する
+
+Claude DesktopからMCP Server Triggerに接続するには、mcp-remoteプロキシを使用します。
+
+Claude Desktopの設定ファイルに以下を追加します。
+
+```json
+{
+  ”mcpServers”: {
+    ”n8n”: {
+      ”command”: “npx”,
+      ”args”: [
+        ”mcp-remote”,
+        ””,
+        ”–header”,
+        ”Authorization: Bearer “
+      ]
+    }
+  }
+}
+```
+
+「MCP\_URL」はMCP Server Triggerノードで生成されたProduction URLに、「TOKEN」はBearer認証のトークンに置き換えてください。
+
+## MCP Client Toolで外部MCPサーバーを利用する手順
+
+n8nのAIエージェントから外部MCPサーバーのツールを利用する手順を解説します。
+
+### ステップ1：AIエージェントワークフローを作成
+
+チャットトリガーなどを起点として、AIエージェントノードを追加します。OpenAIやAnthropicなどのLLMモデルを設定しておきます。
+
+### ステップ2：MCP Client Toolノードを追加
+
+AIエージェントノードのToolsセクションに「MCP Client Tool」ノードを追加します。
+
+**設定項目**
+
+-   SSE Endpoint：接続先MCPサーバーのSSEエンドポイント
+-   Authentication：MCPサーバーの認証方式
+-   Tools to Include：利用するツールの選択（All / Selected）
+
+### ステップ3：MCPサーバーの認証情報を設定
+
+接続するMCPサーバーに応じて、適切な認証情報（APIキーなど）を設定します。
+
+### 利用可能なMCPサーバーの例
+
+GitHubのmodelcontextprotocol/serversリポジトリで、さまざまなMCPサーバーが公開されています。
+
+-   Brave Search：Web検索とローカル検索
+-   Filesystem：ローカルファイルシステムの操作
+-   GitHub：リポジトリ操作やIssue管理
+-   Slack：メッセージ送信やチャンネル管理
+-   Google Drive：ファイル操作
+
+## n8n × MCP連携の実践的なユースケース
+
+n8nとMCPを組み合わせることで、さまざまな自動化が実現できます。
+
+### ユースケース1：AIパワードチケットトリアージ
+
+SlackやLinearからのサポートチケットを自動的にAIが分析・分類。特定の絵文字がついたSlackメッセージをトリガーにして、AIがチケットを構造化データに変換し、適切なチームに振り分けます。
+
+### ユースケース2：自動リサーチ要約
+
+検索クエリの実行、Webスクレイピング、コンテンツ分析、構造化レポート作成までを自動化。AIが複数のソースから情報を収集し、要約レポートを生成します。
+
+### ユースケース3：セルフヒーリングDevOpsスクリプト
+
+システムアラートをAIが監視・分析し、Azure DevOpsなどに自動でIssueを作成。ホスト障害やドメイン問題などを検知して、適切な対応タスクを生成します。
+
+### ユースケース4：パーソナルToDoボット
+
+AIにタスク作成やリマインダー設定を依頼すると、NotionやAirtableに自動的にタスクが追加される。自然言語でのタスク管理が可能になります。
+
+## n8n × MCP連携の注意点
+
+### 注意点1：セキュリティ設定は必須
+
+MCP Server Triggerで公開するエンドポイントには、必ず認証を設定してください。認証なしで公開すると、悪意のある第三者にワークフローを実行される可能性があります。
+
+### 注意点2：キューモードでの制限
+
+n8nをキューモードで複数のWebhookレプリカと運用している場合、MCP Server Triggerノードには注意が必要です。SSEやストリーマブルHTTPは同一サーバーインスタンスでの永続接続を必要とするため、すべての/mcp\*リクエストを単一のレプリカにルーティングする設定が必要です。
+
+### 注意点3：ツールの説明を明確に
+
+外部AIエージェントはツールの名前と説明を頼りに適切なツールを選択します。各ツールには明確な名前と詳細な説明を設定しましょう。パラメータの型や有効な値の説明も含めると、AIエージェントがより適切な判断を行えます。
+
+### 注意点4：レート制限の実装
+
+コストのかかる操作や外部APIを呼び出すツールには、レート制限を実装することを推奨します。これにより、悪用や予期せぬ高コストを防止できます。
+
+## コミュニティノードを使った拡張
+
+n8nには公式ノード以外にも、コミュニティが開発したMCP関連ノードがあります。
+
+### n8n-nodes-mcp（コミュニティノード）
+
+nerding-ioが開発したコミュニティノードで、より柔軟なMCP連携を実現します。
+
+**インストール手順**
+
+1.  n8n管理画面の「Settings」→「Community Nodes」にアクセス
+2.  「n8n-nodes-mcp」を検索してインストール
+3.  リスク了承のチェックボックスをオンにしてインストール完了
+
+注意点として、コミュニティノードはセルフホスト版のn8nでのみ利用可能です。n8n Cloudでは現在サポートされていません。
+
+### 環境変数の設定
+
+コミュニティノードをAIエージェントのツールとして使用するには、以下の環境変数を設定します。
+
+```bash
+N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true
+```
+
+Dockerで起動する場合は以下のようになります。
+
+```bash
+docker run -it –rm 
+  –name n8n 
+  -p 5678:5678 
+  -v n8n_data:/home/node/.n8n 
+  -e N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true 
+  docker.n8n.io/n8nio/n8n
+```
+
+## よくある質問（FAQ）
+
+### Q. MCP Server Triggerはn8n Cloudで使えますか？
+
+A. はい、n8n Cloudでも利用可能です。ただし、コミュニティノード（n8n-nodes-mcp）はセルフホスト版でのみ利用できます。公式のMCP Server TriggerとMCP Client Toolノードはn8n Cloudでもサポートされています。
+
+### Q. Claude Desktop以外のクライアントからも接続できますか？
+
+A. はい、MCP対応のクライアントであれば接続可能です。Cursor、RooCode、Craineなど、MCPをサポートするIDEやAIツールから接続できます。
+
+### Q. MCPサーバーを見つけるにはどこを見ればいいですか？
+
+A. GitHubのmodelcontextprotocol/serversリポジトリや、awesome-mcp-serversリポジトリで多数のMCPサーバーが公開されています。Brave Search、Filesystem、GitHubなど、さまざまなサービス向けのサーバーがあります。
+
+### Q. n8nとMCPの組み合わせでできないことはありますか？
+
+A. MCPは標準化されたプロトコルですが、すべてのサービスがMCPに対応しているわけではありません。MCP非対応のサービスとは従来どおりn8nの既存ノードやHTTP Requestノードで連携する形になります。
+
+## まとめ：n8n × MCPでAIエージェント自動化を加速しよう
+
+この記事では、n8nとMCPの連携方法について解説しました。
+
+**重要ポイント**
+
+-   MCPはAIモデルと外部システムを標準化された方法で接続するプロトコル
+-   n8nは2025年にMCP Server TriggerとMCP Client Toolを公式実装
+-   MCP Server Trigger：n8nワークフローをAIエージェントから呼び出せるように公開
+-   MCP Client Tool：外部MCPサーバーのツールをn8nから利用
+-   Claude Desktop、Cursor、RooCodeなど多様なMCPクライアントと連携可能
+
+**次のステップ**
+
+1.  n8nのセルフホスト環境またはn8n Cloudを準備する
+2.  MCP Server Triggerで簡単なワークフローを公開してみる
+3.  Claude Desktopからn8nワークフローを呼び出してみる
+4.  MCP Client Toolで外部MCPサーバーを試してみる
+
+n8nとMCPの組み合わせにより、AIエージェントと自動化ワークフローがシームレスに連携できるようになりました。従来のZapierやMake.comでは難しかったリアルタイムかつ双方向の連携が可能になり、より高度なAI自動化が実現します。ぜひ、この新しい連携の可能性を試してみてください。

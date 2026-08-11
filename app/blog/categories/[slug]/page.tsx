@@ -17,12 +17,12 @@ import {
   getCategories,
   getCategoryBySlug,
   getFeaturedImageUrl,
+  getPostTerms,
   stripHtml,
   formatDate,
-  getReadingTime,
-  type WPPost,
-  type WPCategory
-} from "@/lib/wordpress"
+  type BlogPost,
+} from "@/lib/blog-content"
+import type { BlogCategory } from "@/lib/content/manifest-query"
 import { fetchLikeCounts } from "@/lib/blog-likes"
 
 // Get random card variant
@@ -124,11 +124,11 @@ function getContentVariant(index: number): 'title-only' | 'with-excerpt' | 'full
 }
 
 // Masonry Blog Card
-function MasonryBlogCard({ post, likes = 0, index = 0, isMobile = false }: { post: WPPost; likes?: number; index?: number; isMobile?: boolean }) {
-  const imageUrl = getFeaturedImageUrl(post, 'large')
-  const excerpt = stripHtml(post.excerpt.rendered)
-  const readingTime = getReadingTime(post.content.rendered)
-  const categories = post._embedded?.['wp:term']?.[0] || []
+function MasonryBlogCard({ post, likes = 0, index = 0, isMobile = false }: { post: BlogPost; likes?: number; index?: number; isMobile?: boolean }) {
+  const imageUrl = getFeaturedImageUrl(post)
+  const excerpt = stripHtml(post.description)
+  const readingTime = post.readingTime
+  const categories = getPostTerms(post)
 
   const variant = getCardVariant(index, isMobile)
   const contentVariant = getContentVariant(index)
@@ -160,7 +160,7 @@ function MasonryBlogCard({ post, likes = 0, index = 0, isMobile = false }: { pos
             }}>
               <Image
                 src={finalImageUrl}
-                alt={post.title.rendered}
+                alt={post.title}
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-700"
               />
@@ -199,7 +199,7 @@ function MasonryBlogCard({ post, likes = 0, index = 0, isMobile = false }: { pos
             {/* Title - always show */}
             <h3
               className="font-bold text-foreground group-hover:text-accent leading-tight text-lg md:text-xl line-clamp-2 mb-3 transition-colors duration-300"
-              dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+              dangerouslySetInnerHTML={{ __html: post.title }}
             />
 
             {/* Pattern 2: with-excerpt - show description */}
@@ -234,9 +234,9 @@ export default function CategoryPage() {
   const slug = params.slug as string
   const loadMoreRef = useRef<HTMLDivElement>(null)
 
-  const [category, setCategory] = useState<WPCategory | null>(null)
-  const [categories, setCategories] = useState<WPCategory[]>([])
-  const [posts, setPosts] = useState<WPPost[]>([])
+  const [category, setCategory] = useState<BlogCategory | null>(null)
+  const [categories, setCategories] = useState<BlogCategory[]>([])
+  const [posts, setPosts] = useState<BlogPost[]>([])
   const [loading, setLoading] = useState(true)
   const [loadingMore, setLoadingMore] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -393,7 +393,7 @@ export default function CategoryPage() {
     const isMobileLayout = currentColumns <= 2
 
     const colHeights = new Array(currentColumns).fill(0)
-    const columns: WPPost[][] = Array.from({ length: currentColumns }, () => [])
+    const columns: BlogPost[][] = Array.from({ length: currentColumns }, () => [])
 
     posts.forEach((post, index) => {
       const variant = getCardVariant(index, isMobileLayout)

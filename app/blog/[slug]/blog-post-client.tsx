@@ -6,7 +6,7 @@ import Image from "next/image"
 import { BlogHeader } from "@/components/blog-header"
 import { BlogComments } from "@/components/blog-comments"
 import { BlogFavorite } from "@/components/blog-favorite"
-import { formatDate, getReadingTime, stripHtml, getFeaturedImageUrl, type WPPost, type WPAuthor, type WPTerm } from "@/lib/wordpress"
+import { formatDate, getPostTerms, stripHtml, getFeaturedImageUrl, type BlogPost, type BlogAuthor, type BlogTerm } from "@/lib/blog-content"
 import { addLike, fetchHasLiked, fetchLikeCounts, getClientId } from "@/lib/blog-likes"
 
 // Highlight.js for syntax highlighting
@@ -538,18 +538,20 @@ function useCodeBlockEnhancement(containerRef: React.RefObject<HTMLElement | nul
 
 // Props type
 interface BlogPostClientProps {
-  post: WPPost
+  post: BlogPost
+  contentHtml: string
   imageUrl: string | null
-  categories: WPTerm[]
-  author: WPAuthor | undefined
+  categories: BlogTerm[]
+  author: BlogAuthor | undefined
   readingTime: number
   canonicalUrl: string
-  relatedPosts?: WPPost[]
+  relatedPosts?: BlogPost[]
 }
 
 // Main Blog Post Client Component
-export default function BlogPostClient({ 
-  post, 
+export default function BlogPostClient({
+  post,
+  contentHtml,
   imageUrl, 
   categories, 
   author, 
@@ -557,8 +559,8 @@ export default function BlogPostClient({
   canonicalUrl,
   relatedPosts = []
 }: BlogPostClientProps) {
-  const processedContent = processContent(post.content.rendered)
-  const plainTitle = stripHtml(post.title.rendered)
+  const processedContent = processContent(contentHtml)
+  const plainTitle = stripHtml(post.title)
   const articleRef = useRef<HTMLDivElement>(null)
   
   // Enhance code blocks after content is rendered
@@ -621,16 +623,16 @@ export default function BlogPostClient({
             {/* Title */}
             <h1
               className="text-2xl md:text-4xl font-bold text-foreground mb-6 leading-tight"
-              dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+              dangerouslySetInnerHTML={{ __html: post.title }}
             />
 
             {/* Author & Meta */}
             <div className="flex items-center justify-between flex-wrap gap-4">
               {author && (
                 <address className="flex items-center gap-3 not-italic">
-                  {author.avatar_urls?.['96'] ? (
+                  {author.avatarUrl ? (
                     <Image
-                      src={author.avatar_urls['96']}
+                      src={author.avatarUrl}
                       alt={author.name}
                       width={40}
                       height={40}
@@ -712,8 +714,8 @@ export default function BlogPostClient({
                   </div>
                   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     {relatedPosts.map((relatedPost) => {
-                      const relatedImageUrl = getFeaturedImageUrl(relatedPost, 'medium')
-                      const relatedCategories = relatedPost._embedded?.['wp:term']?.[0] || []
+                      const relatedImageUrl = getFeaturedImageUrl(relatedPost)
+                      const relatedCategories = getPostTerms(relatedPost)
                       return (
                         <Link
                           key={relatedPost.id}
@@ -725,7 +727,7 @@ export default function BlogPostClient({
                               <div className="relative aspect-[16/9] bg-muted">
                                 <Image
                                   src={relatedImageUrl}
-                                  alt={stripHtml(relatedPost.title.rendered)}
+                                  alt={stripHtml(relatedPost.title)}
                                   fill
                                   className="object-cover"
                                 />
@@ -739,12 +741,12 @@ export default function BlogPostClient({
                               )}
                               <h4 
                                 className="text-sm font-medium text-foreground line-clamp-2 group-hover:text-blue-500 transition-colors"
-                                dangerouslySetInnerHTML={{ __html: relatedPost.title.rendered }}
+                                dangerouslySetInnerHTML={{ __html: relatedPost.title }}
                               />
                               <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
                                 <time>{formatDate(relatedPost.date)}</time>
                                 <span>·</span>
-                                <span>{getReadingTime(relatedPost.content.rendered)}分</span>
+                                <span>{relatedPost.readingTime}分</span>
                               </div>
                             </div>
                           </div>
@@ -759,9 +761,9 @@ export default function BlogPostClient({
               {author && (
                 <aside className="mt-8 bg-card rounded-xl border border-border p-6" aria-label="著者情報">
                   <div className="flex items-start gap-4">
-                    {author.avatar_urls?.['96'] ? (
+                    {author.avatarUrl ? (
                       <Image
-                        src={author.avatar_urls['96']}
+                        src={author.avatarUrl}
                         alt={author.name}
                         width={64}
                         height={64}
@@ -952,7 +954,7 @@ export default function BlogPostClient({
 
             {/* Sidebar - Table of Contents */}
             <aside className="hidden lg:block w-64 flex-shrink-0" aria-label="サイドバー">
-              <TableOfContents content={post.content.rendered} />
+              <TableOfContents content={contentHtml} />
             </aside>
           </div>
         </div>

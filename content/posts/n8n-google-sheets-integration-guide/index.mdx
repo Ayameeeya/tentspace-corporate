@@ -1,0 +1,410 @@
+---
+title: "【2025年版】n8n × Google Sheets連携ガイド｜データ自動入力から分析まで実践レシピ5選"
+description: "n8nとGoogle Sheetsの連携方法を徹底解説。OAuth認証・サービスアカウント認証の設定から、Get/Append/Update/Delete操作の使い方、Gmail連携やAI分析結果の自動記録など実践レシピ5選を紹介。スプレッドシート作業を完全自動化できます。"
+date: 2025-12-17T14:02:33Z
+updated: 2025-12-21T11:01:57Z
+slug: n8n-google-sheets-integration-guide
+categories: ["n8n"]
+tags: ["AI","業務効率化","自動化","Google Sheets"]
+draft: false
+ogImage: "/blog-assets/n8n-google-sheets-integration-guide/featured.webp"
+---
+
+「スプレッドシートへのデータ入力を自動化したい」  
+「Gmailの内容を自動でシートに記録できないか」  
+「AIで分析した結果をスプレッドシートに保存したい」
+
+そんな悩みを持つビジネスパーソンの方も多いのではないでしょうか。
+
+n8nのGoogle Sheetsノードを使えば、データの読み取り・書き込み・更新・削除といったスプレッドシート操作を完全に自動化できます。Gmailやフォームからのデータ収集、AIによる分析結果の記録、日次レポートの自動生成まで、手作業で行っていた作業を劇的に効率化できます。
+
+この記事では、n8nとGoogle Sheetsの連携方法から、すぐに使える実践的な自動化レシピまで詳しく解説します。
+
+**この記事でわかること**
+
+-   n8nとGoogle Sheetsを連携するための認証設定
+-   Google Sheetsノードの全操作（読み取り・追加・更新・削除）
+-   実践的な自動化レシピ5選
+-   連携時のよくあるトラブルと解決方法
+
+## n8n × Google Sheets連携でできること
+
+n8nのGoogle Sheetsノードを使うと、Google Sheets APIを通じて様々な操作を自動化できます。
+
+### Google Sheetsノードの主な機能
+
+| リソース | 操作  | 用途  |
+| --- | --- | --- |
+| Spreadsheet | 作成 / 削除 | 新規スプレッドシートの自動作成 |
+| Sheet Within Document | Append Row（行追加） | 新しいデータの追記 |
+| Sheet Within Document | Append or Update Row | 既存行の更新または新規追加 |
+| Sheet Within Document | Get Row(s)（行取得） | データの読み取り |
+| Sheet Within Document | Update Row（行更新） | 既存データの更新 |
+| Sheet Within Document | Delete Rows or Columns | 行・列の削除 |
+| Sheet Within Document | Clear / Create / Delete | シートの初期化・作成・削除 |
+
+### 代表的な自動化ユースケース
+
+-   Gmailの受信内容を自動でスプレッドシートに記録
+-   Webhookで受け取ったフォームデータを自動保存
+-   AIで分析・要約した結果をシートに追記
+-   日次・週次の売上データを自動集計
+-   タスクリストから未完了タスクを抽出してSlack通知
+-   スプレッドシートをデータベースとしたREST APIの構築
+
+## 事前準備：Google認証の設定
+
+n8nからGoogle Sheetsを操作するには、Google APIの認証設定が必要です。認証方法は2種類あり、用途に応じて選択します。
+
+### 認証方法の比較
+
+| 認証方法 | 特徴  | おすすめの用途 |
+| --- | --- | --- |
+| OAuth 2.0 | 設定が簡単、7日ごとに再認証が必要（テストモード時） | 個人利用、小規模プロジェクト |
+| サービスアカウント | 初期設定は複雑だが、再認証不要で長期安定稼働 | 24時間365日稼働の本番環境 |
+
+### 方法1：OAuth 2.0認証（簡単設定）
+
+n8n Cloudを使用している場合、最も簡単な認証方法です。
+
+**手順**
+
+1.  n8nでGoogle Sheetsノードを追加
+2.  「Credential to connect with」で「Create New Credential」を選択
+3.  「Sign in with Google」をクリック
+4.  Googleアカウントを選択し、アクセスを許可
+5.  「Credential saved」と表示されれば完了
+
+**注意点**
+
+OAuth 2.0のテストモードでは、トークンが7日間で期限切れになります。長期運用する場合は、Googleのアプリ検証を完了するか、サービスアカウント認証を検討してください。
+
+### 方法2：サービスアカウント認証（本番環境向け）
+
+再認証不要で長期安定稼働させたい場合は、サービスアカウント認証がおすすめです。
+
+**Google Cloud Platformでの設定**
+
+1.  Google Cloud Console（[https://console.cloud.google.com）にアクセス](https://console.cloud.google.com）にアクセス)
+2.  新規プロジェクトを作成（または既存プロジェクトを選択）
+3.  「APIとサービス」→「ライブラリ」でGoogle Sheets APIを有効化
+4.  「APIとサービス」→「認証情報」→「認証情報を作成」→「サービスアカウント」
+5.  サービスアカウント名を入力して作成
+6.  作成したサービスアカウントの「鍵」タブでJSONキーを生成・ダウンロード
+
+**Google Sheetsへの共有設定**
+
+1.  操作したいGoogle Sheetsを開く
+2.  右上の「共有」をクリック
+3.  サービスアカウントのメールアドレス（JSONファイル内の
+    
+    ```
+    client_email
+    ```
+    
+    ）を入力
+4.  権限を「編集者」に設定して共有
+
+**n8nでの認証設定**
+
+1.  Google Sheetsノードを追加
+2.  「Create New Credential」を選択
+3.  「Authentication Method」で「Service Account」を選択
+4.  ダウンロードしたJSONファイルをアップロード（または内容をペースト）
+5.  「Test Credential」で接続確認
+
+## Google Sheetsノードの基本操作
+
+Google Sheetsノードの各操作を詳しく解説します。
+
+### Get Row(s)：データの読み取り
+
+スプレッドシートからデータを取得する基本操作です。
+
+**設定項目**
+
+-   **Document**：対象のスプレッドシート（リストから選択 / URL / ID）
+-   **Sheet**：対象のシート名
+-   **Options**：フィルター条件、取得範囲の指定
+
+**フィルター機能の活用**
+
+Optionsの「Filters」を使うと、条件に合う行だけを取得できます。例えば「ステータスが未完了の行だけ取得」といった絞り込みが可能です。
+
+### Append Row：行の追加
+
+シートの末尾に新しい行を追加します。
+
+**設定項目**
+
+-   **Mapping Column Mode**：列のマッピング方法
+    -   Map Each Column Manually：各列を手動で指定（おすすめ）
+    -   Map Automatically：自動マッピング
+
+**手動マッピングのメリット**
+
+どのデータをどの列に入れるかを明示的に指定できるため、データの整合性が保たれます。ドラッグ＆ドロップで直感的に設定できます。
+
+### Append or Update Row：追加または更新
+
+既存の行があれば更新し、なければ新規追加する便利な操作です。
+
+**活用例**
+
+-   注文番号をキーにして、同じ注文の情報を上書き更新
+-   顧客IDで既存顧客情報を更新、新規顧客は追加
+
+**設定のポイント**
+
+「Matching Columns」で一意のキーとなる列を指定します。この列の値が一致する行があれば更新、なければ追加されます。
+
+### Update Row：行の更新
+
+特定の行を更新します。行番号または一意のキー列を指定して対象行を特定します。
+
+### Delete Rows or Columns：行・列の削除
+
+指定した行や列を削除します。
+
+**設定項目**
+
+-   **Start Row Number**：削除開始行
+-   **Number of Rows to Delete**：削除する行数
+
+## 実践レシピ①：Gmail受信→スプレッドシート自動記録
+
+受信したメールの内容を自動でスプレッドシートに記録するワークフローです。
+
+### ユースケース
+
+-   広告売上レポートメールを自動集計
+-   注文確認メールから注文データを抽出・記録
+-   日報メールを自動でシートに蓄積
+
+### ワークフロー構成
+
+1.  **Gmail Trigger**：特定条件のメール受信を検知
+2.  **Code（JavaScript）**：メール本文からデータを抽出・整形
+3.  **Google Sheets（Append or Update Row）**：シートに記録
+
+### Code ノードでのデータ抽出例
+
+受信メールから必要な情報を抽出するJavaScriptの例：
+
+```
+// メール本文から注文情報を抽出const text = $input.first().json.text;
+```
+
+```
+// 正規表現でデータを抽出const orderMatch = text.match(/注文番号(d+)/);const amountMatch = text.match(/金額：([d,]+)円/);
+```
+
+```
+return [{json: {recordDate: new Date().toISOString(),orderNumber: orderMatch ? orderMatch[1] : '',amount: amountMatch ? amountMatch[1].replace(',', '') : ''}}];
+```
+
+### スプレッドシートの準備
+
+以下の列を持つシートを事前に作成しておきます：記録日時、注文番号、商品名、金額、ステータス
+
+## 実践レシピ②：Webhook→フォームデータ自動保存
+
+Webフォームからの送信データを自動でスプレッドシートに保存するワークフローです。
+
+### ワークフロー構成
+
+1.  **Webhook**：フォーム送信データを受信
+2.  **Google Sheets（Append Row）**：データを追記
+3.  **Respond to Webhook**：成功レスポンスを返す
+
+### Webhookノードの設定
+
+-   **HTTP Method**：POST
+-   **Path**：任意のパス（例：form-submit）
+-   **Response**：「Using ‘Respond to Webhook’ Node」を選択
+
+### テスト方法
+
+n8nのWebhookノードで生成される「Test URL」を使ってテストできます。ブラウザで以下のようなURLにアクセス：
+
+[https://your-n8n-url/webhook-test/form-submit?name=テスト太郎&email=test@example.com&inquiry=お問い合わせ内容](https://your-n8n-url/webhook-test/form-submit?name=テスト太郎&email=test@example.com&inquiry=お問い合わせ内容)
+
+## 実践レシピ③：AI分析結果の自動記録
+
+AIで分析・要約した結果をスプレッドシートに自動保存するワークフローです。
+
+### ワークフロー構成
+
+1.  **Schedule Trigger**：定期実行（例：毎日9時）
+2.  **HTTP Request**：ニュースAPIからデータ取得
+3.  **OpenAI**：ニュースを要約・分析
+4.  **Google Sheets（Append Row）**：分析結果を記録
+
+### OpenAIノードのプロンプト例
+
+```
+以下のニュース記事を分析し、JSON形式で出力してください。
+```
+
+```
+【記事】{{ $json.content }}
+```
+
+```
+【出力形式】{"summary": "100文字以内の要約","category": "カテゴリ（政治/経済/テクノロジー/その他）","sentiment": "ポジティブ/ネガティブ/中立","keywords": ["キーワード1", "キーワード2", "キーワード3"]}
+```
+
+## 実践レシピ④：タスク管理の自動リマインド
+
+スプレッドシートのタスクリストから未完了タスクを抽出し、Slackで通知するワークフローです。
+
+### ワークフロー構成
+
+1.  **Schedule Trigger**：毎日決まった時間に実行
+2.  **Google Sheets（Get Row(s)）**：タスクリストを取得
+3.  **IF**：ステータスが「未完了」のタスクをフィルター
+4.  **Slack**：担当者にメンション付きで通知
+
+### スプレッドシートの構成例
+
+| タスク名 | 担当者 | 期限  | ステータス |
+| --- | --- | --- | --- |
+| レポート作成 | 田中  | 2025-01-20 | 未完了 |
+| ミーティング準備 | 佐藤  | 2025-01-18 | 完了  |
+
+### IFノードの条件設定
+
+-   **Value 1**：\{\{ $json.ステータス \}\}
+-   **Operation**：Equal
+-   **Value 2**：未完了
+
+## 実践レシピ⑤：スプレッドシートを簡易データベースにしたREST API
+
+Google Sheetsをデータベース代わりに使い、CRUD操作ができるREST APIを構築します。
+
+### エンドポイント構成
+
+| 操作  | HTTPメソッド | Google Sheets操作 |
+| --- | --- | --- |
+| 全件取得（Read） | GET | Get Row(s) |
+| 1件取得（Read） | GET + id | Get Row(s) + Filter |
+| 新規作成（Create） | POST | Append Row |
+| 更新（Update） | PUT | Update Row |
+| 削除（Delete） | DELETE | Delete Rows or Columns |
+
+### 新規作成（POST）のワークフロー例
+
+1.  **Webhook**：HTTP Method を POST に設定
+2.  **Google Sheets（Append Row）**：受信データを追記
+3.  **Respond to Webhook**：成功メッセージを返す
+
+### curlでのテスト例
+
+```
+curl -X POST https://your-n8n-url/webhook/items-H "Content-Type: application/json"-d '{"name": "商品A", "price": 1000, "stock": 50}'
+```
+
+## トラブルシューティング
+
+n8nとGoogle Sheets連携でよくある問題と解決方法をまとめます。
+
+### 認証エラー（401 / 403）
+
+**原因と解決策**
+
+-   OAuth認証が期限切れ → 認証を再実行
+-   サービスアカウントにシートが共有されていない → 共有設定を確認
+-   Google Sheets APIが有効化されていない → GCPで有効化
+
+### データが追加されない / 上書きされる
+
+**原因**
+
+シートのデータ構造に不整合（空行や空列）がある場合、Append操作で意図しない位置にデータが追加されることがあります。
+
+**解決策**
+
+-   シートの空行・空列を削除してデータ構造を整理
+-   「Use Append」オプションを有効にしてAPI直接呼び出しモードを使用（データ構造が整っている場合にパフォーマンス向上）
+
+### 列名が認識されない
+
+**原因**
+
+ヘッダー行（1行目）が正しく設定されていない、または列名に特殊文字が含まれている。
+
+**解決策**
+
+-   1行目にヘッダー行を必ず設定
+-   列名は英数字とアンダースコアで構成（日本語も可だが、英語名が安定）
+
+### 日本語の文字化け
+
+**解決策**
+
+Setノードで文字エンコーディングをUTF-8に明示的に設定します。
+
+## より高度な活用のヒント
+
+### Loop Over Itemsでの一括処理
+
+複数のデータを順番に処理する場合、Loop Over Itemsノードを使います。例えば、100件のデータを1件ずつGoogle Sheetsに書き込む場合に有効です。
+
+### エラーハンドリング
+
+Error Triggerノードを使って、ワークフロー実行エラー時の通知を設定できます。Google Sheets APIのレート制限に引っかかった場合などに備えて、リトライロジックを組み込むことも可能です。
+
+### スプレッドシートを簡易マスタデータとして活用
+
+設定値や変換テーブルをスプレッドシートで管理し、ワークフロー内で参照する使い方も便利です。コードを変更せずに設定変更が可能になります。
+
+## よくある質問（FAQ）
+
+### Q. n8n Cloudの無料プランで使えますか？
+
+A. はい、Google Sheets連携は無料プランで利用可能です。ただし、月100回までのワークフロー実行制限があります。
+
+### Q. 共有ドライブ（チームドライブ）のスプレッドシートも操作できますか？
+
+A. はい、サービスアカウント認証で、共有ドライブのスプレッドシートにアクセス権限を付与すれば操作できます。
+
+### Q. 大量のデータを一括で書き込むとエラーになります
+
+A. Google Sheets APIにはレート制限があります。大量データの場合は、Split In Batchesノードでバッチ分割し、Waitノードで間隔を空けて処理することをおすすめします。
+
+### Q. 特定のセル範囲だけ取得できますか？
+
+A. はい、Get Row(s)操作のOptionsで「Range」を指定すれば、特定のセル範囲（例：A1:D10）だけを取得できます。
+
+### Q. 複数のシートを同時に操作できますか？
+
+A. はい、複数のGoogle Sheetsノードを配置することで、異なるシートやスプレッドシートを同時に操作できます。並列処理も可能です。
+
+## まとめ：n8nでスプレッドシート作業を自動化しよう
+
+この記事では、n8nとGoogle Sheetsの連携方法と実践的な自動化レシピを紹介しました。
+
+**連携の基本ステップ**
+
+1.  Google認証の設定（OAuth 2.0 または サービスアカウント）
+2.  Google Sheetsノードで操作を選択（Get / Append / Update / Delete）
+3.  ワークフローを作成して自動化を開始
+
+**実践レシピ5選**
+
+1.  Gmail受信→スプレッドシート自動記録
+2.  Webhook→フォームデータ自動保存
+3.  AI分析結果の自動記録
+4.  タスク管理の自動リマインド
+5.  スプレッドシートを簡易データベースにしたREST API
+
+**次のステップ**
+
+1.  Google認証の設定（初心者はOAuth 2.0がおすすめ）
+2.  簡単な「データ取得→表示」ワークフローでテスト
+3.  Append Rowでデータ追加を試す
+4.  Gmail連携やAI連携に挑戦
+
+n8nとGoogle Sheetsの連携により、手作業でのデータ入力や転記作業から解放されます。スプレッドシートを簡易データベースとして活用すれば、専門知識がなくても業務システムを構築できます。
+
+まずは簡単なワークフローから始めて、徐々に自動化の範囲を広げていきましょう。

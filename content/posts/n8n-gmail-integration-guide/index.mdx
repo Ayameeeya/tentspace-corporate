@@ -1,0 +1,491 @@
+---
+title: "【2025年版】n8n × Gmail連携ガイド｜AIで自動返信を実現する実践レシピ5選"
+description: "n8nとGmailを連携したAI自動返信ワークフローの構築方法を徹底解説。OAuth認証設定から、AIによる返信判定・文案生成、下書き保存まで5ステップで実装。問い合わせ一次返信、スプレッドシート転記など実践レシピ5選で月20時間以上の業務効率化を実現。"
+date: 2025-12-17T14:12:25Z
+updated: 2025-12-21T11:01:25Z
+slug: n8n-gmail-integration-guide
+categories: ["n8n"]
+tags: ["AI","業務効率化","自動化","Gmail"]
+draft: false
+ogImage: "/blog-assets/n8n-gmail-integration-guide/featured.webp"
+---
+
+「毎日大量のメール対応に追われている」  
+「メール返信の文面作成に時間がかかる」  
+「返信が遅れて顧客満足度が下がっている」
+
+そんな悩みを持つビジネスパーソンの方も多いのではないでしょうか。
+
+n8nとGmailを連携し、AIを活用すれば、メール返信業務を劇的に効率化できます。受信メールの自動分類、AIによる返信文案の生成、下書き保存まで完全自動化。月間20時間以上の作業時間削減も可能です。
+
+この記事では、n8nとGmailの連携方法から、AIを活用した自動返信ワークフローの構築まで詳しく解説します。
+
+**この記事でわかること**
+
+-   n8nとGmailを連携するための認証設定
+-   Gmailノードでできる操作一覧
+-   AIを活用した自動返信ワークフローの構築方法
+-   実践的な自動化レシピ5選
+-   運用時の注意点とトラブル対策
+
+## n8n × Gmail連携でできること
+
+n8nのGmailノードを使うと、Gmail APIを通じて様々なメール操作を自動化できます。
+
+### Gmailノードの主な機能
+
+| リソース | 操作  | 用途  |
+| --- | --- | --- |
+| Message | Send（送信） | 新規メールの送信 |
+| Message | Reply（返信） | 受信メールへの返信 |
+| Message | Get / Get Many | メールの取得・検索 |
+| Message | Delete | メールの削除 |
+| Message | Add Label / Remove Label | ラベルの追加・削除 |
+| Message | Mark as Read / Unread | 既読・未読の切り替え |
+| Draft | Create（作成） | 下書きの作成 |
+| Draft | Get / Delete | 下書きの取得・削除 |
+| Label | Create / Delete / Get Many | ラベルの管理 |
+| Thread | Get / Reply / Add Label / Trash | スレッドの操作 |
+
+### Gmail Triggerで検知できるイベント
+
+-   **On message received**：新着メール受信時にワークフローを起動
+
+Gmail Triggerは「ポーリング方式」で動作し、指定した間隔で新着メールをチェックします。フィルター条件を指定して、特定の差出人や件名のメールだけをトリガーにすることも可能です。
+
+### 代表的な自動化ユースケース
+
+-   AIによるメール返信文案の自動生成・下書き保存
+-   返信が必要なメールの自動判定・分類
+-   問い合わせメールへの一次返信の自動化
+-   メール内容のスプレッドシート自動転記
+-   重要メール受信時のSlack通知
+-   添付ファイルのGoogle Drive自動保存
+-   日次・週次のメールサマリーレポート生成
+
+## 事前準備：Google OAuth認証の設定
+
+n8nからGmailを操作するには、Google Cloud PlatformでOAuth認証を設定する必要があります。
+
+### Google Cloud Platformでの設定手順
+
+**1\. プロジェクトの作成**
+
+1.  Google Cloud Console（[https://console.cloud.google.com）にアクセス](https://console.cloud.google.com）にアクセス)
+2.  上部の「プロジェクトを選択」→「新しいプロジェクト」をクリック
+3.  プロジェクト名（例：n8n-gmail-automation）を入力して「作成」
+
+**2\. Gmail APIの有効化**
+
+1.  左メニュー「APIとサービス」→「ライブラリ」を選択
+2.  検索窓で「Gmail API」を検索
+3.  「Gmail API」を選択し「有効にする」をクリック
+
+**3\. OAuth同意画面の設定**
+
+1.  「APIとサービス」→「OAuth同意画面」を選択
+2.  User Typeで「外部」を選択（G Suiteの場合は「内部」も可）
+3.  アプリ名、ユーザーサポートメール、デベロッパー連絡先を入力
+4.  スコープの追加で「[https://mail.google.com/」を選択](https://mail.google.com/」を選択)
+5.  テストユーザーに自分のGmailアドレスを追加
+
+**4\. OAuth クライアントIDの作成**
+
+1.  「APIとサービス」→「認証情報」を選択
+2.  「認証情報を作成」→「OAuthクライアントID」をクリック
+3.  アプリケーションの種類で「ウェブアプリケーション」を選択
+4.  名前を入力（例：n8n-client）
+5.  「承認済みのリダイレクトURI」にn8nのコールバックURLを追加
+    -   n8n Cloud：[https://oauth.n8n.cloud/oauth2/callback](https://oauth.n8n.cloud/oauth2/callback)
+    -   セルフホスト：[https://your-n8n-domain/rest/oauth2-credential/callback](https://your-n8n-domain/rest/oauth2-credential/callback)
+6.  「作成」をクリック
+7.  表示されたクライアントIDとクライアントシークレットをコピーして保存
+
+### n8nでの認証設定
+
+1.  n8nでGmailノードを追加
+2.  「Credential to connect with」で「Create New Credential」を選択
+3.  「Gmail OAuth2 API」を選択
+4.  Client IDとClient Secretを入力
+5.  「Sign in with Google」をクリック
+6.  Googleアカウントを選択し、アクセスを許可
+7.  「Credential saved」と表示されれば完了
+
+### OAuth認証の注意点
+
+**テストモードの制限**
+
+OAuth同意画面が「テストモード」の場合、アクセストークンは7日間で期限切れになります。長期運用する場合は以下の対策が必要です。
+
+-   Googleのアプリ検証を完了する（本番公開）
+-   定期的に再認証を行う
+-   エラー発生時の通知設定を追加
+
+**スコープの設定**
+
+Gmailの操作に必要なスコープを適切に設定してください。
+
+-   **メール読み取り**：[https://www.googleapis.com/auth/gmail.readonly](https://www.googleapis.com/auth/gmail.readonly)
+-   **メール送信**：[https://www.googleapis.com/auth/gmail.send](https://www.googleapis.com/auth/gmail.send)
+-   **フルアクセス**：[https://mail.google.com/（すべての操作が可能）](https://mail.google.com/（すべての操作が可能）)
+
+## 基本ワークフロー：AI自動返信の構築
+
+最も人気のある「AIによるメール自動返信（下書き保存）」ワークフローを構築します。このワークフローはn8nの入門としても最適で、実用性も高い定番の自動化パターンです。
+
+### ワークフローの全体像
+
+1.  **Gmail Trigger**：新着メール受信を検知
+2.  **OpenAI（分類）**：返信が必要なメールかAIが判定
+3.  **IF**：返信必要/不要で分岐
+4.  **OpenAI（返信生成）**：返信文案をAIが作成
+5.  **Gmail（Draft Create）**：下書きとして保存
+
+### なぜ「下書き保存」なのか
+
+AIが自動で返信を「送信」するのではなく、「下書き」として保存する設計には重要な理由があります。
+
+-   **誤送信リスクの回避**：AIの判断ミスや不適切な文面を人がチェックできる
+-   **品質の担保**：最終確認を経ることで返信品質を維持
+-   **安心して運用開始**：いきなり自動送信は怖い、という心理的ハードルを下げる
+-   **学習機会の確保**：AIの出力を見ながら、プロンプトを改善できる
+
+運用に慣れてきたら、特定条件のメール（定型的な問い合わせなど）のみ自動送信に切り替えることも可能です。
+
+### STEP1：Gmail Triggerの設定
+
+1.  ワークフローにGmail Triggerノードを追加
+2.  「Trigger」→「On message received」を選択
+3.  Credentialを設定（前述のOAuth認証）
+4.  「Poll Times」で実行間隔を設定
+
+**Poll Timesの設定例**
+
+-   **Every 1 Minute**：即時性重視（API消費が多い）
+-   **Every 5 Minutes**：バランス型（おすすめ）
+-   **Every 15 Minutes**：コスト重視
+
+**フィルター設定（オプション）**
+
+特定のフォルダやラベルのメールだけを対象にする場合、「Filters」で条件を指定できます。
+
+-   **Label Names or IDs**：特定ラベルのメールのみ処理
+-   **Read Status**：未読メールのみ処理
+-   **Sender**：特定の差出人からのメールのみ
+
+### STEP2：返信が必要かAIに判定させる
+
+マーケティングメール、ニュースレター、自動通知など、返信不要なメールを除外します。
+
+1.  OpenAIノードを追加
+2.  「Resource」→「Message a Model」を選択
+3.  「Model」→「gpt-4o-mini」（コスト重視）または「gpt-4o」（精度重視）
+
+**System Prompt**
+
+```
+あなたはメール分類の専門家です。受信したメールが「返信が必要なメール」か「返信不要なメール」かを正確に判定してください。
+```
+
+**User Message**
+
+```
+以下のメールが「返信が必要なメール」か「返信不要なメール」かを判定してください。
+```
+
+```
+【判定基準】返信不要のメール：マーケティングメール、広告、プロモーションニュースレター、メールマガジン自動通知（システム通知、アラート）配信停止リンクがあるメールnoreply@などの返信不可アドレスからのメール返信が必要なメール：個人からの直接の問い合わせや質問ビジネス上の依頼、提案、相談確認事項や承認依頼ミーティングの調整クレームや問題報告【メール情報】差出人：{{ $json.from }}件名：{{ $json.subject }}本文（最初の500文字）：{{ $json.text.substring(0, 500) }}
+```
+
+```
+【出力】「true」（返信必要）または「false」（返信不要）のみを出力してください。
+```
+
+### STEP3：IFノードで分岐
+
+AIの判定結果に基づいて処理を分岐させます。
+
+1.  IFノードを追加
+2.  Gmail Triggerとの間にOpenAIノードを接続
+3.  条件を設定
+
+**IFノードの設定**
+
+-   **Value 1**：\{\{ $json.message.content \}\}
+-   **Operation**：Contains
+-   **Value 2**：true
+
+**分岐先の設定**
+
+-   **True**：返信生成ノードへ接続
+-   **False**：NoOpノード（何もしない）へ接続、または処理終了
+
+### STEP4：返信文案をAIに作成させる
+
+返信が必要と判定されたメールに対して、AIが返信文案を生成します。
+
+1.  新しいOpenAIノードを追加
+2.  IFノードのTrueブランチから接続
+3.  「Resource」→「Message a Model」
+
+**System Prompt**
+
+```
+あなたは〇〇株式会社のビジネスアシスタントです。受信したメールに対する適切な返信文案を作成してください。
+```
+
+```
+【返信のガイドライン】ビジネスメールとして適切な敬語を使用簡潔かつ的確に要点を伝える相手の質問や依頼に対して明確に回答必要に応じて確認事項や次のアクションを提示署名は含めない（後で追加するため）
+```
+
+**User Message**
+
+```
+以下のメールに対する返信文案を作成してください。
+```
+
+```
+【元のメール】差出人：{{ $('Gmail Trigger').item.json.from }}件名：{{ $('Gmail Trigger').item.json.subject }}本文：{{ $('Gmail Trigger').item.json.text }}【出力形式】件名：Re: 〇〇本文：〇〇様お世話になっております。[返信内容]
+```
+
+```
+何卒よろしくお願いいたします。
+```
+
+### STEP5：下書きとして保存
+
+1.  Gmailノードを追加
+2.  OpenAI（返信生成）ノードから接続
+3.  以下の設定を行う
+
+**Gmailノードの設定**
+
+-   **Resource**：Draft
+-   **Operation**：Create
+-   **To**：\{\{ $(‘Gmail Trigger’).item.json.from \}\}（元の差出人）
+-   **Subject**：AIが生成した件名（Codeノードでパースするか、固定で「Re: 元の件名」）
+-   **Message**：AIが生成した本文
+
+**Options設定**
+
+-   **Thread ID**：\{\{ $(‘Gmail Trigger’).item.json.threadId \}\}（元のスレッドに紐づけ）
+
+これで元のメールのスレッドに返信として下書きが作成されます。
+
+## 実践レシピ②：問い合わせメールへの一次返信
+
+特定のメールアドレス（例：info@会社.com）への問い合わせに対して、自動で一次返信を送るワークフローです。
+
+### ワークフロー構成
+
+1.  **Gmail Trigger**：新着メール受信
+2.  **IF**：宛先が問い合わせ用アドレスか判定
+3.  **Gmail（Send Message）**：一次返信を自動送信
+4.  **Slack**：担当者に通知
+5.  **Google Sheets**：問い合わせ履歴を記録
+
+### IFノードの条件
+
+-   **Value 1**：\{\{ $json.to \}\}
+-   **Operation**：Contains
+-   **Value 2**：info@会社.com
+
+### 一次返信メッセージ例
+
+```
+{{ $json.from.split('<')[0].trim() }} 様
+```
+
+```
+この度はお問い合わせいただき、誠にありがとうございます。お問い合わせ内容を確認させていただき、担当者より2営業日以内にご連絡いたします。なお、お急ぎの場合は下記までお電話ください。TEL: 03-XXXX-XXXX（平日9:00〜18:00）何卒よろしくお願いいたします。
+```
+
+```
+〇〇株式会社 カスタマーサポートinfo@会社.com
+```
+
+## 実践レシピ③：メール内容のスプレッドシート自動転記
+
+受信したメールの内容を自動でGoogle Sheetsに記録するワークフローです。売上レポートや注文確認メールの集計に便利です。
+
+### ワークフロー構成
+
+1.  **Gmail Trigger**：新着メール受信（特定ラベル指定）
+2.  **Code**：メール本文から必要な情報を抽出
+3.  **Google Sheets（Append Row）**：シートに追記
+
+### Codeノードでのデータ抽出例
+
+```
+// メール本文を取得const text = $input.first().json.text;const subject = $input.first().json.subject;const from = $input.first().json.from;const date = $input.first().json.date;
+```
+
+```
+// 正規表現でデータを抽出（例：注文確認メール）const orderMatch = text.match(/注文番号[：:]s*(d+)/);const amountMatch = text.match(/合計[：:]s*([d,]+)円/);const productMatch = text.match(/商品名[：:]s*(.+)/);// 抽出できなかった場合のデフォルト値const orderNumber = orderMatch ? orderMatch[1] : '不明';const amount = amountMatch ? amountMatch[1].replace(/,/g, '') : '0';const product = productMatch ? productMatch[1].trim() : '不明';// タイムゾーンを日本時間に変換const jstDate = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+```
+
+```
+return [{json: {recordDate: jstDate,from: from,subject: subject,orderNumber: orderNumber,product: product,amount: amount}}];
+```
+
+## 実践レシピ④：重要メールのSlack即時通知
+
+特定の条件に合致する重要メールを受信したら、Slackに即時通知するワークフローです。
+
+### ワークフロー構成
+
+1.  **Gmail Trigger**：新着メール受信
+2.  **IF**：重要度を判定（件名、差出人、キーワードなど）
+3.  **Slack（Send Message）**：担当チャンネルに通知
+
+### 複数条件での判定
+
+IFノードで複数の条件を組み合わせることができます。
+
+**条件1：件名に緊急キーワードを含む**
+
+-   Value 1：\{\{ $json.subject \}\}
+-   Operation：Regex Match
+-   Value 2：緊急|至急|重要|URGENT|【重要】
+
+**条件2：特定の差出人からのメール**
+
+-   Value 1：\{\{ $json.from \}\}
+-   Operation：Contains
+-   Value 2：ceo@重要取引先.com
+
+### Slack通知メッセージ例
+
+```
+🚨 *重要メールを受信しました*
+```
+
+```
+*差出人:* {{ $json.from }}*件名:* {{ $json.subject }}*受信日時:* {{ $now.format('YYYY-MM-DD HH:mm') }}*本文プレビュー:*{{ $json.text.substring(0, 300) }}...
+```
+
+```
+確認をお願いします。
+```
+
+## 実践レシピ⑤：添付ファイルのGoogle Drive自動保存
+
+メールの添付ファイルを自動でGoogle Driveに保存するワークフローです。
+
+### ワークフロー構成
+
+1.  **Gmail Trigger**：新着メール受信（フィルター：has:attachment）
+2.  **Gmail（Get Message）**：添付ファイルのバイナリデータを取得
+3.  **Google Drive（Upload）**：指定フォルダにアップロード
+4.  **Google Sheets（Append Row）**：ファイル情報を記録
+
+### Gmail Triggerのフィルター設定
+
+-   **Filters** → **Search**：has:attachment
+
+### 保存先フォルダの自動振り分け例
+
+Codeノードでファイル名や差出人に応じて保存先を決定できます。
+
+```
+const filename = $input.first().json.attachments[0].filename;const from = $input.first().json.from;
+```
+
+```
+let folderPath = '/メール添付/その他/';if (filename.includes('請求書') || filename.includes('invoice')) {folderPath = '/メール添付/請求書/2025/';} else if (filename.includes('契約書') || filename.includes('contract')) {folderPath = '/メール添付/契約書/';} else if (from.includes('@重要取引先.com')) {folderPath = '/メール添付/重要取引先/';}
+```
+
+```
+return [{ json: { folderPath: folderPath } }];
+```
+
+## 運用時の注意点とトラブル対策
+
+n8nとGmailを連携したワークフローを安定運用するためのポイントです。
+
+### API利用料金の管理
+
+OpenAI APIは従量課金制です。意図しないコスト増を防ぐために以下を実施しましょう。
+
+-   OpenAIダッシュボードで使用量を定期的に確認
+-   月間利用額の上限（Usage Limits）を設定
+-   処理量が少ない場合はgpt-4o-miniを使用してコスト削減
+-   不要なメールを早い段階でフィルタリング
+
+### 認証トークンの期限管理
+
+OAuth認証のテストモードでは、トークンが7日で期限切れになります。
+
+-   Error Triggerでエラー発生時にSlack通知を設定
+-   週次で認証状態を確認する運用ルールを設定
+-   本番運用前にGoogleアプリ検証の完了を検討
+
+### レート制限への対応
+
+Gmail APIにはリクエスト数の制限があります。
+
+-   Poll Timesの間隔を適切に設定（5分以上推奨）
+-   大量メール処理時はSplit In Batchesノードでバッチ分割
+-   Waitノードでリクエスト間に間隔を設ける
+
+### よくあるエラーと対処法
+
+| エラー | 原因  | 対処法 |
+| --- | --- | --- |
+| 401 Unauthorized | 認証トークンの期限切れ | クレデンシャルを再認証 |
+| 403 Forbidden | スコープ不足 | 必要なスコープを追加して再認証 |
+| 429 Too Many Requests | レート制限超過 | Poll間隔を延ばす、リトライ設定追加 |
+| 400 Bad Request | パラメータ不正 | To/Subject/Messageの値を確認 |
+
+## よくある質問（FAQ）
+
+### Q. n8n Cloudの無料プランで使えますか？
+
+A. はい、Gmail連携は無料プランで利用可能です。ただし、月100回までのワークフロー実行制限があります。メール量が多い場合は有料プラン（月€20〜）を検討してください。
+
+### Q. 複数のGmailアカウントを連携できますか？
+
+A. はい、アカウントごとにクレデンシャルを作成すれば、複数のGmailアカウントを連携できます。ワークフロー内でアカウントを使い分けることも可能です。
+
+### Q. 自動返信を「下書き」ではなく「送信」にできますか？
+
+A. はい、GmailノードのResourceを「Draft」から「Message」に変更し、Operationを「Send」または「Reply」にすれば自動送信できます。ただし、誤送信リスクがあるため、十分なテストと条件設定を行ってください。
+
+### Q. 添付ファイル付きのメールを送信できますか？
+
+A. はい、GmailノードのOptionsで「Attachments」を設定できます。HTTP Requestで取得したファイルや、他のノードで生成したファイルを添付可能です。
+
+### Q. 特定のラベルのメールだけを処理できますか？
+
+A. はい、Gmail Triggerの「Filters」→「Label Names or IDs」で特定ラベルを指定すれば、そのラベルのメールだけをトリガーにできます。Gmailのフィルター機能と組み合わせると効果的です。
+
+## まとめ：n8nでメール返信を自動化しよう
+
+この記事では、n8nとGmailの連携方法とAIを活用した自動返信ワークフローを紹介しました。
+
+**連携の基本ステップ**
+
+1.  Google Cloud PlatformでOAuth認証を設定
+2.  n8nでGmailクレデンシャルを作成
+3.  Gmail Triggerでメール受信を検知
+4.  AIで返信要否を判定
+5.  返信文案を生成し、下書きとして保存
+
+**実践レシピ5選**
+
+1.  AI自動返信（下書き保存）
+2.  問い合わせメールへの一次返信
+3.  メール内容のスプレッドシート自動転記
+4.  重要メールのSlack即時通知
+5.  添付ファイルのGoogle Drive自動保存
+
+**次のステップ**
+
+1.  Google Cloud PlatformでOAuth認証を設定
+2.  n8nでGmail Triggerのテスト実行
+3.  AIによる返信判定ワークフローを構築
+4.  下書き保存で運用開始、慣れたら自動送信に移行
+
+AIを活用したメール自動返信により、月間20時間以上の作業時間削減が可能です。返信品質の向上と一貫性も実現でき、本質的な業務に集中する時間を確保できます。
+
+まずは「下書き保存」の安全なワークフローから始めて、徐々に自動化の範囲を広げていきましょう。

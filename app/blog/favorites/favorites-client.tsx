@@ -6,7 +6,7 @@ import Image from "next/image"
 import { supabaseAuth } from "@/lib/supabase/client"
 import { BlogHeader } from "@/components/blog-header"
 import { Heart, Loader2 } from "lucide-react"
-import { type WPPost, stripHtml, formatDate, getFeaturedImageUrl } from "@/lib/wordpress"
+import { type BlogPost, getPostBySlug, stripHtml, formatDate, getFeaturedImageUrl } from "@/lib/blog-content"
 
 interface Favorite {
   id: string
@@ -18,7 +18,7 @@ export default function FavoritesClient() {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [favorites, setFavorites] = useState<Favorite[]>([])
-  const [posts, setPosts] = useState<WPPost[]>([])
+  const [posts, setPosts] = useState<BlogPost[]>([])
   const [loadingPosts, setLoadingPosts] = useState(false)
 
   useEffect(() => {
@@ -63,7 +63,7 @@ export default function FavoritesClient() {
 
       setFavorites(favoritesData || [])
 
-      // Fetch post details from WordPress
+      // Resolve favorite slugs against the generated content manifest.
       if (favoritesData && favoritesData.length > 0) {
         const slugs = favoritesData.map((f) => f.post_slug)
         await fetchPosts(slugs)
@@ -77,8 +77,6 @@ export default function FavoritesClient() {
 
   const fetchPosts = async (slugs: string[]) => {
     try {
-      const WP_API_URL = 'https://blog.tentspace.net/wp-json/wp/v2'
-      
       // Decode slugs if they are already encoded
       const decodedSlugs = slugs.map(slug => {
         try {
@@ -89,18 +87,10 @@ export default function FavoritesClient() {
         }
       })
       
-      // WordPress REST APIで各記事を個別に取得
-      const postPromises = decodedSlugs.map(async (slug) => {
-        const response = await fetch(
-          `${WP_API_URL}/posts?slug=${encodeURIComponent(slug)}&_embed`
-        )
-        if (!response.ok) return null
-        const data = await response.json()
-        return data[0] || null
-      })
+      const postPromises = decodedSlugs.map((slug) => getPostBySlug(slug))
       
       const postsData = await Promise.all(postPromises)
-      const validPosts = postsData.filter((post): post is WPPost => post !== null)
+      const validPosts = postsData.filter((post): post is BlogPost => post !== null)
       setPosts(validPosts)
     } catch (error) {
       console.error("Error fetching posts:", error)
@@ -221,8 +211,8 @@ export default function FavoritesClient() {
             <div className="grid gap-6 md:grid-cols-2">
               {posts.map((post) => {
                 const imageUrl = getFeaturedImageUrl(post)
-                const plainTitle = stripHtml(post.title.rendered)
-                const plainExcerpt = stripHtml(post.excerpt.rendered)
+                const plainTitle = stripHtml(post.title)
+                const plainExcerpt = stripHtml(post.description)
 
                 return (
                   <article

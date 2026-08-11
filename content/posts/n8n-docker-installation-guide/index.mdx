@@ -1,0 +1,465 @@
+---
+title: "n8n Dockerインストール完全ガイド｜docker composeで本番環境を構築する手順"
+description: "n8nをDockerでインストールする手順を解説。docker runによる簡単起動からDocker Compose、PostgreSQL連携、HTTPS対応まで、ローカル開発から本番環境までカバーする完全ガイドです。"
+date: 2025-12-18T07:22:54Z
+updated: 2025-12-21T10:51:37Z
+slug: n8n-docker-installation-guide
+categories: ["n8n"]
+tags: ["Docker","n8n","PostgreSQL","セルフホスト","Docker Compose","インストール"]
+draft: false
+ogImage: "/blog-assets/n8n-docker-installation-guide/featured.webp"
+---
+
+n8nをDockerでセルフホストすれば、実行回数無制限で月額コストを大幅に削減できます。この記事では、ローカル開発環境から本番環境まで、Docker/Docker Composeを使ったn8nのインストール手順を解説します。
+
+## 前提条件
+
+### 必要な環境
+
+-   Docker Engine 20.10以上
+-   Docker Compose v2以上
+-   メモリ：最低2GB（推奨4GB以上）
+-   ストレージ：10GB以上の空き容量
+
+### Dockerのインストール確認
+
+以下のコマンドでDockerがインストールされているか確認します。
+
+```plaintext
+docker –version
+docker compose version
+```
+
+バージョン情報が表示されればOKです。未インストールの場合は、Docker公式サイトからDocker Desktopをインストールしてください。
+
+## 方法1：docker runで手軽に起動（ローカル開発向け）
+
+最もシンプルな方法です。ローカルでn8nを試したい場合に最適です。
+
+### 基本の起動コマンド
+
+```plaintext
+docker run -it –rm 
+  –name n8n 
+  -p 5678:5678 
+  -v n8n_data:/home/node/.n8n 
+  n8nio/n8n
+```
+
+起動後、ブラウザで [http://localhost:5678](http://localhost:5678) にアクセスするとn8nの画面が表示されます。
+
+### コマンドの解説
+
+| オプション | 説明  |
+| --- | --- |
+| \-it | 対話モード（ログをターミナルに表示） |
+| –rm | コンテナ停止時に自動削除 |
+| –name n8n | コンテナ名を指定 |
+| \-p 5678:5678 | ポートマッピング |
+| \-v n8n\_data:/home/node/.n8n | データ永続化（名前付きボリューム） |
+
+### バックグラウンドで起動
+
+ターミナルを閉じてもn8nを動かし続けたい場合は、-dオプションを使用します。
+
+```plaintext
+docker run -d 
+  –name n8n 
+  -p 5678:5678 
+  -v n8n_data:/home/node/.n8n 
+  –restart unless-stopped 
+  n8nio/n8n
+```
+
+–restart unless-stopped により、PCを再起動してもn8nが自動起動します。
+
+## 方法2：Docker Compose（推奨）
+
+設定をファイルで管理できるDocker Composeを使う方法です。環境変数やデータベース連携が簡単に設定でき、本番運用にも対応できます。
+
+### ディレクトリ構成
+
+```plaintext
+n8n/
+├── docker-compose.yml
+├── .env
+└── n8n_data/          # データ永続化用（自動作成）
+```
+
+### 基本のdocker-compose.yml
+
+まずはシンプルな構成から始めましょう。
+
+```plaintext
+services:
+  n8n:
+    image: n8nio/n8n
+    container_name: n8n
+    ports:
+      - “5678:5678″
+    environment:
+      - GENERIC_TIMEZONE=Asia/Tokyo
+      - TZ=Asia/Tokyo
+    volumes:
+      - n8n_data:/home/node/.n8n
+    restart: unless-stopped
+
+volumes:
+  n8n_data:
+```
+
+### .envファイル
+
+環境変数は.envファイルで管理すると便利です。
+
+```plaintext
+# タイムゾーン
+GENERIC_TIMEZONE=Asia/Tokyo
+TZ=Asia/Tokyo
+```
+
+### 起動コマンド
+
+```plaintext
+# 起動
+docker compose up -d
+
+# ログ確認
+docker compose logs -f n8n
+
+# 停止
+docker compose down
+
+# 停止（ボリューム削除も含む）
+docker compose down -v
+```
+
+## 方法3：PostgreSQL連携（本番環境向け）
+
+本番環境では、デフォルトのSQLiteではなくPostgreSQLを使用することを推奨します。データの信頼性とパフォーマンスが向上します。
+
+### docker-compose.yml（PostgreSQL版）
+
+```plaintext
+services:
+  n8n:
+    image: n8nio/n8n
+    container_name: n8n
+    ports:
+      - “5678:5678″
+    environment:
+      - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
+      - TZ=${TZ}
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
+      - DB_POSTGRESDB_USER=${POSTGRES_USER}
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
+    volumes:
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15
+    container_name: n8n-postgres
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [“CMD-SHELL”, “pg_isready -h localhost -U ${POSTGRES_USER} -d ${POSTGRES_DB}”]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  n8n_data:
+  postgres_data:
+```
+
+### .env（PostgreSQL版）
+
+```plaintext
+# タイムゾーン
+GENERIC_TIMEZONE=Asia/Tokyo
+TZ=Asia/Tokyo
+
+# PostgreSQL設定
+POSTGRES_USER=n8n
+POSTGRES_PASSWORD=your_secure_password_here
+POSTGRES_DB=n8n
+
+# n8n暗号化キー（認証情報の暗号化に使用）
+# 以下のコマンドで生成: openssl rand -hex 32
+N8N_ENCRYPTION_KEY=your_32_char_encryption_key_here
+```
+
+### 暗号化キーの生成
+
+N8N\_ENCRYPTION\_KEYは認証情報の暗号化に使用される重要なキーです。以下のコマンドで生成してください。
+
+```plaintext
+openssl rand -hex 32
+```
+
+**重要**：このキーは変更するとすべての認証情報が復号できなくなります。必ずバックアップしてください。
+
+## 方法4：HTTPS対応（外部公開向け）
+
+n8nを外部に公開する場合は、HTTPSが必要です。TraefikまたはCaddyをリバースプロキシとして使用します。
+
+### docker-compose.yml（Traefik版）
+
+```plaintext
+services:
+  traefik:
+    image: traefik:v2.10
+    container_name: traefik
+    command:
+      - “–api.insecure=false”
+      - “–providers.docker=true”
+      - “–providers.docker.exposedbydefault=false”
+      - “–entrypoints.web.address=:80″
+      - “–entrypoints.websecure.address=:443″
+      - “–certificatesresolvers.letsencrypt.acme.tlschallenge=true”
+      - “–certificatesresolvers.letsencrypt.acme.email=${SSL_EMAIL}”
+      - “–certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json”
+      - “–entrypoints.web.http.redirections.entrypoint.to=websecure”
+    ports:
+      - “80:80″
+      - “443:443″
+    volumes:
+      - traefik_data:/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: unless-stopped
+
+  n8n:
+    image: n8nio/n8n
+    container_name: n8n
+    environment:
+      - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
+      - N8N_HOST=${N8N_HOST}
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - WEBHOOK_URL=<a href="https://${N8N_HOST}/" target="_blank" rel="noopener">https://${N8N_HOST}/</a>
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
+      - DB_POSTGRESDB_USER=${POSTGRES_USER}
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
+    volumes:
+      - n8n_data:/home/node/.n8n
+    labels:
+      - “traefik.enable=true”
+      - “traefik.http.routers.n8n.rule=Host(<code>${N8N_HOST}</code>)”
+      - “traefik.http.routers.n8n.entrypoints=websecure”
+      - “traefik.http.routers.n8n.tls.certresolver=letsencrypt”
+      - “traefik.http.services.n8n.loadbalancer.server.port=5678″
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15
+    container_name: n8n-postgres
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [“CMD-SHELL”, “pg_isready -h localhost -U ${POSTGRES_USER} -d ${POSTGRES_DB}”]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  n8n_data:
+  postgres_data:
+  traefik_data:
+```
+
+### .env（HTTPS版）
+
+```plaintext
+# ドメイン設定
+N8N_HOST=n8n.example.com
+SSL_EMAIL=admin@example.com
+
+# タイムゾーン
+GENERIC_TIMEZONE=Asia/Tokyo
+TZ=Asia/Tokyo
+
+# PostgreSQL設定
+POSTGRES_USER=n8n
+POSTGRES_PASSWORD=your_secure_password_here
+POSTGRES_DB=n8n
+
+# n8n暗号化キー
+N8N_ENCRYPTION_KEY=your_32_char_encryption_key_here
+```
+
+## 初期設定
+
+### オーナーアカウントの作成
+
+n8nに初めてアクセスすると、オーナーアカウントの作成画面が表示されます。
+
+1.  メールアドレスを入力
+2.  名前を入力
+3.  パスワードを設定
+4.  「Next」または「Set up」をクリック
+
+このアカウントがn8nの管理者アカウントになります。
+
+### タイムゾーンの確認
+
+設定画面でタイムゾーンが「Asia/Tokyo」になっていることを確認してください。スケジュール実行の時刻に影響します。
+
+## n8nのアップデート
+
+### Docker Composeの場合
+
+```plaintext
+# 最新イメージを取得
+docker compose pull
+
+# コンテナを再作成（データは保持）
+docker compose up -d
+```
+
+### 特定バージョンを指定
+
+docker-compose.ymlのimageを変更してバージョンを固定できます。
+
+```plaintext
+services:
+  n8n:
+    image: n8nio/n8n:1.70.0  # バージョン指定
+```
+
+### バージョン確認
+
+n8nの画面左下に現在のバージョンが表示されます。また、以下のコマンドでも確認できます。
+
+```plaintext
+docker exec n8n n8n –version
+```
+
+## バックアップと復元
+
+### データのバックアップ
+
+**PostgreSQL使用時**
+
+```plaintext
+# データベースのバックアップ
+docker exec n8n-postgres pg_dump -U n8n n8n > backup_$(date +%Y%m%d).sql
+```
+
+**SQLite使用時（デフォルト）**
+
+```plaintext
+# ボリュームのバックアップ
+docker run –rm -v n8n_data:/data -v $(pwd):/backup alpine tar cvf /backup/n8n_backup.tar /data
+```
+
+### ワークフローのエクスポート
+
+n8nのUI上からもワークフローをJSONファイルとしてエクスポートできます。
+
+1.  ワークフロー一覧画面を開く
+2.  エクスポートしたいワークフローを選択
+3.  「…」メニューから「Download」を選択
+
+## トラブルシューティング
+
+### コンテナが起動しない
+
+```plaintext
+# ログを確認
+docker compose logs n8n
+
+# コンテナの状態を確認
+docker compose ps
+```
+
+### ポートが使用中
+
+5678ポートが他のアプリケーションで使用されている場合は、docker-compose.ymlのポートマッピングを変更します。
+
+```plaintext
+ports:
+  - “15678:5678″  # ホスト側を15678に変更
+```
+
+### パーミッションエラー
+
+n8nはUID 1000で動作します。ボリュームマウント時に権限エラーが出る場合は、以下を実行します。
+
+```plaintext
+sudo chown -R 1000:1000 ./n8n_data
+```
+
+### PostgreSQLに接続できない
+
+-   depends\_onでpostgresの起動を待っているか確認
+-   healthcheckが正常に動作しているか確認
+-   .envファイルの認証情報が正しいか確認
+
+```plaintext
+# PostgreSQLの状態確認
+docker compose exec postgres pg_isready -U n8n
+```
+
+## 主要な環境変数
+
+| 環境変数 | 説明  | デフォルト値 |
+| --- | --- | --- |
+| GENERIC\_TIMEZONE | タイムゾーン | UTC |
+| N8N\_HOST | ホスト名 | localhost |
+| N8N\_PORT | ポート番号 | 5678 |
+| N8N\_PROTOCOL | プロトコル（http/https） | http |
+| WEBHOOK\_URL | Webhook用のベースURL | –   |
+| N8N\_ENCRYPTION\_KEY | 認証情報の暗号化キー | –   |
+| DB\_TYPE | データベースタイプ | sqlite |
+| NODE\_FUNCTION\_ALLOW\_EXTERNAL | Functionノードで許可する外部パッケージ | –   |
+| EXECUTIONS\_DATA\_PRUNE | 実行履歴の自動削除 | true |
+| EXECUTIONS\_DATA\_MAX\_AGE | 実行履歴の保持期間（時間） | 336 |
+
+## セキュリティのベストプラクティス
+
+-   **N8N\_ENCRYPTION\_KEYを必ず設定**：認証情報を暗号化
+-   **PostgreSQLを外部に公開しない**：Dockerネットワーク内のみでアクセス
+-   **HTTPSを使用**：外部公開時は必須
+-   **強力なパスワード**：オーナーアカウントとDB認証
+-   **定期的なバックアップ**：データとワークフローを保護
+-   **最新バージョンを維持**：セキュリティパッチの適用
+
+## まとめ
+
+n8nをDockerでインストールする方法を解説しました。
+
+| 方法  | 用途  | 難易度 |
+| --- | --- | --- |
+| docker run | お試し・ローカル開発 | 簡単  |
+| Docker Compose（基本） | ローカル開発・小規模運用 | 簡単  |
+| Docker Compose + PostgreSQL | 本番環境 | 中程度 |
+| Docker Compose + PostgreSQL + HTTPS | 外部公開・本番環境 | やや複雑 |
+
+ローカルで試すなら「docker run」、本番運用なら「PostgreSQL + HTTPS」構成がおすすめです。
+
+n8nの基本的な使い方は、セルフホストの詳細についてはも参考にしてください。

@@ -1,0 +1,475 @@
+---
+title: "【上級者向け】n8nのLangChain統合を完全理解する｜AI Agent・Chain・Memory・Toolsの技術解説"
+description: "n8nのAI機能を支えるLangChain統合を徹底解説。AI Agent・Chain・Memory・Toolsの70種類以上のノードの使い分け、Root NodesとSub Nodesのアーキテクチャ、LangChain Code Nodeによる高度なカスタマイズ、Multi Agent構成まで上級者向けに詳しく解…"
+date: 2025-12-17T14:20:37Z
+updated: 2025-12-21T11:00:29Z
+slug: n8n-langchain-integration-guide
+categories: ["n8n"]
+tags: ["AI","自動化","LangChain","AIエージェント"]
+draft: false
+ogImage: "/blog-assets/n8n-langchain-integration-guide/featured.webp"
+---
+
+n8nのAI機能は、LangChainフレームワークをベースに構築されています。AI Agentノード、Chat Modelノード、Vector Storeノードなど、普段使っているAIノードの背後にはLangChainの機能が動いています。
+
+この記事では、n8nにおけるLangChain統合の仕組みを理解し、約70種類以上のAI関連ノードを使いこなすための技術的な詳細を解説します。
+
+**この記事でわかること**
+
+-   n8nのAIノードとLangChainの関係
+-   Root NodesとSub-Nodesのアーキテクチャ
+-   AI Agent、Chain、Memory、Toolsの使い分け
+-   LangChain Code Nodeによる高度なカスタマイズ
+-   Multi-Agent構成とオーケストレーション
+
+## n8nのLangChain統合アーキテクチャ
+
+n8nは@n8n/n8n-nodes-langchainパッケージを通じて、LangChain JavaScript/TypeScriptライブラリと統合しています。この統合により、LangChainの主要な概念をノードとして利用できます。
+
+### LangChainの主要概念とn8nノードの対応
+
+| LangChain概念 | n8nノードカテゴリ | 役割  |
+| --- | --- | --- |
+| Language Models | Chat Models / LLMs | テキスト生成の中核エンジン |
+| Agents | AI Agent | ツール選択と実行の自律的判断 |
+| Chains | Chain Nodes | 処理の連鎖的実行 |
+| Memory | Memory Nodes | 会話履歴の保持 |
+| Tools | Tool Nodes | 外部システムとの連携 |
+| Vector Stores | Vector Store Nodes | 埋め込みデータの格納・検索 |
+| Embeddings | Embeddings Nodes | テキストのベクトル化 |
+| Document Loaders | Data Loader Nodes | ドキュメントの読み込み |
+| Text Splitters | Text Splitter Nodes | テキストのチャンク分割 |
+| Output Parsers | Output Parser Nodes | LLM出力の構造化 |
+
+### Root NodesとSub-Nodesの関係
+
+n8nのLangChainノードは、Root Nodes（ルートノード）とSub-Nodes（サブノード）の2種類に分類されます。
+
+**Root Nodes（ルートノード）**
+
+ワークフローのメインの処理を担当し、execute()メソッドを実装します。
+
+-   AI Agent
+-   Basic LLM Chain
+-   Question and Answer Chain
+-   Summarization Chain
+-   Information Extractor
+-   Text Classifier
+-   Sentiment Analysis
+
+**Sub-Nodes（サブノード）**
+
+Root Nodesにアタッチして機能を提供し、supplyData()メソッドを実装します。
+
+-   Chat Models（OpenAI、Anthropic、Gemini、Ollama等）
+-   Memory（Window Buffer Memory、Postgres Chat Memory等）
+-   Tools（HTTP Request Tool、Calculator、Code Tool等）
+-   Vector Stores（Pinecone、Qdrant、Supabase等）
+-   Embeddings（OpenAI、Gemini等）
+-   Document Loaders
+-   Text Splitters
+-   Output Parsers
+
+### ノード接続の仕組み
+
+Sub-NodesはRoot Nodesの特定のコネクタに接続します。AI Agentノードの場合：
+
+-   **Chat Model**：必須。GPT-4o、Claude、Gemini等のLLMを接続
+-   **Memory**：オプション。会話履歴を保持
+-   **Tools**：オプション。エージェントが使用できるツール群
+-   **Output Parser**：オプション。出力を構造化
+
+## AI Agentノードの詳細
+
+AI Agentノードは、n8nのLangChain統合で最も重要なノードです。LLMを使って自律的に判断し、ツールを選択・実行します。
+
+### AI Agentの種類
+
+| Agent Type | 特徴  | 用途  |
+| --- | --- | --- |
+| Tools Agent | OpenAI Function Callingベース | 最も汎用的、推奨 |
+| Conversational Agent | 会話に最適化 | チャットボット |
+| OpenAI Functions Agent | OpenAI専用 | OpenAIモデル使用時 |
+| ReAct Agent | Reasoning + Acting | 複雑な推論タスク |
+| Plan and Execute Agent | 計画→実行 | 複数ステップのタスク |
+
+### Tools Agentの設定
+
+**基本パラメータ**
+
+-   **Agent Type**：Tools Agent（推奨）
+-   **Prompt**：Take from previous node automatically または Define below
+-   **System Message**：エージェントの役割と制約を定義
+-   **Max Iterations**：ツール実行の最大回数（デフォルト: 10）
+-   **Return Intermediate Steps**：推論過程を出力に含めるか
+
+**System Messageの設計例**
+
+```
+あなたは社内ナレッジベースを検索して質問に回答するアシスタントです。
+```
+
+```
+【役割】ユーザーの質問に対して、まずナレッジベース検索ツールで関連情報を取得取得した情報に基づいて回答を生成情報が見つからない場合は正直に「該当する情報がありません」と回答【制約】推測や一般知識での回答は禁止必ずツールで取得した情報に基づいて回答回答には必ず出典（ドキュメント名）を含める【利用可能なツール】{tools}
+```
+
+```
+【ユーザーの質問】{input}
+```
+
+### Agentの実行フロー
+
+1.  ユーザーからの入力を受け取る
+2.  System MessageとToolsの情報をLLMに渡す
+3.  LLMがどのツールを使うか判断
+4.  選択されたツールを実行
+5.  ツールの結果をLLMに渡す
+6.  さらにツールが必要か判断（Max Iterationsまで繰り返し）
+7.  最終回答を生成
+
+## Chainノードの使い方
+
+Chainノードは、より構造化された処理フローを提供します。Agentほど自律的ではありませんが、予測可能な動作が必要な場合に適しています。
+
+### 主要なChainノード
+
+**Basic LLM Chain**
+
+シンプルなプロンプト→レスポンスの処理。
+
+-   用途：テキスト生成、翻訳、要約など
+-   接続：Chat Model（必須）、Memory（オプション）
+
+**Question and Answer Chain**
+
+ドキュメントに基づく質問応答。
+
+-   用途：RAGシステムの回答生成部分
+-   接続：Chat Model、Retriever（Vector Store経由）
+
+**Summarization Chain**
+
+長文の要約。
+
+-   用途：ドキュメント要約、議事録要約
+-   接続：Chat Model、Document Loader
+-   戦略：Map Reduce、Refine、Stuff
+
+### ChainとAgentの使い分け
+
+| 要件  | 推奨  | 理由  |
+| --- | --- | --- |
+| 決まった処理フロー | Chain | 予測可能な動作 |
+| 外部ツールの動的選択 | Agent | 自律的判断が必要 |
+| 単純なQ&A | Chain（Q&A） | オーバーヘッドが少ない |
+| 複雑なマルチステップタスク | Agent | 柔軟な対応が可能 |
+| コスト最適化重視 | Chain | トークン消費が少ない |
+
+## Memoryノードの活用
+
+Memoryノードは、会話の履歴を保持してコンテキストを維持します。
+
+### Memory Nodeの種類
+
+| Memory Type | 保存先 | 特徴  |
+| --- | --- | --- |
+| Window Buffer Memory | インメモリ | 直近N件の会話を保持、セッション間で消失 |
+| Postgres Chat Memory | PostgreSQL | 永続化、複数セッション対応 |
+| Redis Chat Memory | Redis | 高速、TTL設定可能 |
+| Motorhead Memory | Motorhead | 長期記憶の管理 |
+| Xata Memory | Xata | サーバーレス対応 |
+| Zep Memory | Zep | 要約機能付き |
+
+### Window Buffer Memoryの設定
+
+-   **Context Window Length**：保持するメッセージ数（デフォルト: 5）
+-   **Session ID Key**：セッション識別子のキー
+
+**Session IDの設計**
+
+ユーザーごと、または会話ごとに一意のセッションIDを設定します。
+
+```
+// ユーザーIDベース{{ $json.userId }}
+```
+
+```
+// 会話IDベース{{ $json.conversationId }}
+```
+
+```
+// Webhook経由の場合{{ $json.headers['x-session-id'] }}
+```
+
+### Postgres Chat Memoryの設定
+
+永続的な会話履歴が必要な場合に使用します。
+
+**必要なテーブル**
+
+```
+CREATE TABLE IF NOT EXISTS n8n_chat_histories (id SERIAL PRIMARY KEY,session_id VARCHAR(255) NOT NULL,message JSONB NOT NULL,created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+```
+
+```
+CREATE INDEX idx_session_id ON n8n_chat_histories(session_id);
+```
+
+**パラメータ**
+
+-   **Session ID**：セッション識別子
+-   **Table Name**：履歴を保存するテーブル名
+-   **Context Window Length**：コンテキストに含めるメッセージ数
+
+## Toolsの設計と実装
+
+Toolsは、AI Agentが外部システムと連携するためのインターフェースです。
+
+### 標準Tool Nodes
+
+| Tool | 用途  | 設定のポイント |
+| --- | --- | --- |
+| HTTP Request Tool | 任意のAPIを呼び出し | URLとパラメータを動的に設定 |
+| Calculator | 数値計算 | 設定不要 |
+| Code Tool | JavaScript実行 | カスタムロジック |
+| Vector Store Tool | ベクトル検索 | RAG用途 |
+| Wikipedia | Wikipedia検索 | 設定不要 |
+| SerpAPI | Google検索 | APIキー必要 |
+| Workflow Tool | サブワークフロー呼び出し | モジュール化に有効 |
+
+### Tool設計のベストプラクティス
+
+**1\. 明確なName と Description**
+
+LLMがツールを選択する際の判断材料になります。
+
+```
+Name: search_company_policiesDescription: 社内規定や就業規則を検索します。有給休暇、勤務時間、福利厚生などに関する質問に使用してください。
+```
+
+**2\. 入力スキーマの定義**
+
+ツールが受け取るパラメータを明確に定義します。
+
+```
+{"type": "object","properties": {"query": {"type": "string","description": "検索クエリ"},"category": {"type": "string","enum": ["人事", "経理", "IT"],"description": "検索カテゴリ"}},"required": ["query"]}
+```
+
+**3\. Workflow Toolによるモジュール化**
+
+複雑な処理は別ワークフローとして切り出し、Workflow Toolで呼び出します。
+
+-   メインワークフロー：AI Agent + Workflow Tool
+-   サブワークフロー：データ取得、加工、外部API連携など
+
+## LangChain Code Nodeによる高度なカスタマイズ
+
+標準ノードでは実現できない機能は、LangChain Code Nodeで直接LangChainのコードを書くことで実装できます。
+
+### LangChain Code Nodeの特徴
+
+-   **制限**：セルフホスト版のn8nでのみ利用可能（Cloud版では不可）
+-   **入力**：Language Model、Memory、Tools、Document Loaderなど
+-   **出力**：カスタム処理の結果
+
+### 入力の追加方法
+
+1.  LangChain Code Nodeを追加
+2.  「Add Input」をクリック
+3.  必要な入力タイプを選択（Language Model、Memory、Tool等）
+4.  対応するSub-Nodeを接続
+
+### コード実装例：カスタムプロンプトテンプレート
+
+```
+const { ChatPromptTemplate } = require("@langchain/core/prompts");const { RunnableSequence } = require("@langchain/core/runnables");
+```
+
+```
+// 入力からLanguage Modelを取得const model = await this.getInputConnectionData('ai_languageModel', 0);// カスタムプロンプトテンプレートconst prompt = ChatPromptTemplate.fromMessages([["system", あなたは{role}です。以下のガイドラインに従って回答してください：{guidelines}],["human", "{input}"]]);// チェーンの構築const chain = RunnableSequence.from([prompt,model]);// 実行const result = await chain.invoke({role: "技術サポートエンジニア",guidelines: "専門用語は避け、わかりやすく説明してください",input: $input.first().json.question});
+```
+
+```
+return [{ json: { response: result.content } }];
+```
+
+### コード実装例：カスタムエージェント
+
+```
+const { AgentExecutor, createToolCallingAgent } = require("langchain/agents");const { ChatPromptTemplate, MessagesPlaceholder } = require("@langchain/core/prompts");
+```
+
+```
+// 入力の取得const model = await this.getInputConnectionData('ai_languageModel', 0);const tools = await this.getInputConnectionData('ai_tool', 0);const memory = await this.getInputConnectionData('ai_memory', 0);// プロンプトテンプレートconst prompt = ChatPromptTemplate.fromMessages([["system", "あなたは有能なアシスタントです。"],new MessagesPlaceholder("chat_history"),["human", "{input}"],new MessagesPlaceholder("agent_scratchpad")]);// エージェントの作成const agent = await createToolCallingAgent({llm: model,tools: tools,prompt: prompt});// エグゼキューターの作成const executor = new AgentExecutor({agent,tools,memory,maxIterations: 10,verbose: true});// 実行const result = await executor.invoke({input: $input.first().json.question});
+```
+
+```
+return [{ json: result }];
+```
+
+## Multi-Agent構成
+
+複数のエージェントを協調させる構成は、複雑なタスクを処理する際に有効です。
+
+### AI Agent Tool によるオーケストレーション
+
+AI Agent ToolノードをSub-Nodeとして使用することで、あるエージェントが別のエージェントを呼び出す階層構造を作れます。
+
+**構成例：専門エージェントの委譲**
+
+```
+[メインAgent]├── Tool: search_agent (検索専門Agent)├── Tool: calculation_agent (計算専門Agent)└── Tool: writing_agent (文章作成専門Agent)
+```
+
+**設定のポイント**
+
+-   各専門エージェントは独立したワークフローとして構築
+-   メインエージェントのToolsにAI Agent Toolとして接続
+-   AI Agent Toolの「Description」で専門分野を明確に記述
+
+### Workflow Toolによるモジュール構成
+
+より柔軟な構成として、Workflow Toolを使ったアプローチもあります。
+
+**構成例**
+
+```
+[Main Workflow]├── AI Agent│ ├── Tool: HR_Workflow (人事関連処理)│ ├── Tool: Finance_Workflow (経理関連処理)│ └── Tool: IT_Workflow (IT関連処理)
+```
+
+```
+[HR_Workflow]├── Trigger: Execute Workflow├── AI Agent (HR専門)└── Response
+```
+
+```
+[Finance_Workflow]├── Trigger: Execute Workflow├── AI Agent (経理専門)└── Response
+```
+
+## Output Parserによる出力の構造化
+
+LLMの出力を構造化されたデータとして取得するためにOutput Parserを使用します。
+
+### Structured Output Parser
+
+JSON形式で出力を構造化します。
+
+**スキーマ定義例**
+
+```
+{"type": "object","properties": {"summary": {"type": "string","description": "内容の要約"},"sentiment": {"type": "string","enum": ["positive", "negative", "neutral"],"description": "感情分析結果"},"keywords": {"type": "array","items": { "type": "string" },"description": "キーワードリスト"},"score": {"type": "number","description": "重要度スコア（1-10）"}},"required": ["summary", "sentiment"]}
+```
+
+### Auto-fixing Output Parser
+
+LLMの出力がスキーマに合わない場合、自動的に修正を試みます。
+
+-   内部でLLMを再度呼び出して修正
+-   コストが増加する可能性あり
+-   重要なタスクでは有効
+
+## デバッグとモニタリング
+
+### n8n内でのデバッグ
+
+**Intermediate Stepsの確認**
+
+AI AgentノードのReturn Intermediate Stepsをオンにすると、エージェントの思考過程と各ツール呼び出しの結果を確認できます。
+
+**実行履歴の確認**
+
+n8nの実行履歴から、各ノードの入出力データを確認できます。
+
+### Langsmith連携（セルフホスト版）
+
+LangChainの公式モニタリングツールLangsmithと連携することで、より詳細なトレースが可能になります。
+
+**環境変数の設定**
+
+```
+LANGCHAIN_TRACING_V2=trueLANGCHAIN_API_KEY=your-langsmith-api-keyLANGCHAIN_PROJECT=n8n-production
+```
+
+**Langsmithで確認できる情報**
+
+-   トークン使用量とコスト
+-   各ステップのレイテンシ
+-   エラーの詳細
+-   プロンプトと出力の履歴
+
+## パフォーマンス最適化
+
+### トークン消費の削減
+
+-   System Messageを簡潔に
+-   不要なツールの説明を削除
+-   Max Iterationsを適切に設定
+-   必要に応じてgpt-4o-miniなど軽量モデルを使用
+
+### レイテンシの改善
+
+-   ストリーミング出力の活用
+-   並列実行可能な処理の分離
+-   キャッシュの活用（頻出クエリ）
+
+### エラーハンドリング
+
+-   Error Triggerでエラーをキャッチ
+-   リトライロジックの実装
+-   フォールバック処理の設計
+
+## よくある質問（FAQ）
+
+### Q. LangChain Code Nodeはn8n Cloudで使えますか？
+
+A. いいえ、LangChain Code Nodeはセルフホスト版のn8nでのみ利用可能です。Cloud版では標準のAIノードを組み合わせて実装してください。
+
+### Q. AI AgentとBasic LLM Chainはどちらを使うべきですか？
+
+A. 外部ツールを使った動的な処理が必要な場合はAI Agent、シンプルなプロンプト→レスポンスの処理ならBasic LLM Chainを使用してください。Chainの方がトークン消費が少なく、動作も予測しやすいです。
+
+### Q. Memoryはセッション間で保持されますか？
+
+A. Window Buffer Memoryはインメモリのため、ワークフロー実行間で消失します。永続化が必要な場合はPostgres Chat MemoryやRedis Chat Memoryを使用してください。
+
+### Q. Multi-Agent構成のコストを抑えるには？
+
+A. 専門エージェントにはgpt-4o-miniなどコスト効率の良いモデルを使用し、メインエージェントのみgpt-4oを使用する構成が有効です。また、必要な場合のみ専門エージェントを呼び出すよう、ToolのDescriptionを適切に設計してください。
+
+### Q. ToolのDescriptionはどの程度詳細に書くべきですか？
+
+A. LLMがツールを正しく選択できるよう、具体的なユースケースや使用条件を記述してください。短すぎると誤選択の原因になり、長すぎるとトークン消費が増加します。1-3文程度が目安です。
+
+## まとめ
+
+この記事では、n8nのLangChain統合について技術的な詳細を解説しました。
+
+**アーキテクチャの要点**
+
+-   n8nのAIノードはLangChainをベースに構築
+-   Root Nodes（Agent、Chain）とSub-Nodes（Model、Memory、Tools）の階層構造
+-   約70種類以上のAI関連ノードが利用可能
+
+**主要コンポーネント**
+
+-   **AI Agent**：自律的なツール選択と実行
+-   **Chain**：構造化された処理フロー
+-   **Memory**：会話履歴の保持
+-   **Tools**：外部システム連携
+-   **Output Parser**：出力の構造化
+
+**高度なテクニック**
+
+-   LangChain Code Nodeによるカスタム実装（セルフホスト版）
+-   AI Agent ToolによるMulti-Agent構成
+-   Workflow Toolによるモジュール化
+-   Langsmith連携によるモニタリング
+
+**次のステップ**
+
+1.  基本的なAI Agent + Tools構成を構築
+2.  Memoryを追加して会話コンテキストを保持
+3.  Output Parserで出力を構造化
+4.  Workflow Toolでモジュール化
+5.  （セルフホスト版）LangChain Code Nodeで高度なカスタマイズ
+
+n8nのLangChain統合を理解することで、より柔軟で高度なAIワークフローを構築できます。標準ノードの組み合わせで解決できない要件は、LangChain Code Nodeでの直接実装を検討してください。

@@ -1,0 +1,559 @@
+---
+title: "【完全版】n8n VPS構築ガイド｜Ubuntu・Docker・SSL設定からセルフホスト本番運用まで"
+description: "n8nをVPSにセルフホストする完全構築ガイド。VPS選定からUbuntu初期設定、Dockerインストール、独自ドメイン・SSL証明書の取得、PostgreSQL設定、バックアップ自動化まで、本番運用に必要な全工程を詳しく解説。"
+date: 2025-12-17T14:34:25Z
+updated: 2025-12-21T10:58:13Z
+slug: n8n-vps-deployment-guide
+categories: ["n8n"]
+tags: ["Docker","n8n","VPS","セルフホスト"]
+draft: false
+ogImage: "/blog-assets/n8n-vps-deployment-guide/featured.webp"
+---
+
+n8nをVPSにセルフホストすることで、月額3,000円以上のクラウド版と同等の機能を、月額500〜1,500円程度のコストで運用できます。
+
+ワークフロー数や実行回数の制限がなく、データを自社管理下に置けるため、セキュリティ面でも優れています。
+
+この記事では、VPSの選定からUbuntu環境の構築、Docker設定、SSL証明書の取得、独自ドメインでの公開まで、n8nセルフホストの全工程を詳しく解説します。
+
+## セルフホストのメリットとクラウド版との比較
+
+### n8n Cloudとセルフホストの比較
+
+| 項目  | n8n Cloud | セルフホスト（VPS） |
+| --- | --- | --- |
+| 月額費用 | €20〜（約3,000〜4,500円） | VPS代のみ（500〜1,500円） |
+| ワークフロー数 | プランにより制限あり | 無制限 |
+| 実行回数 | プランにより制限あり | 無制限 |
+| データ管理 | Anthropic社サーバー | 自社管理 |
+| カスタマイズ | 制限あり | 完全に自由 |
+| 運用負担 | なし  | 自己責任 |
+| サポート | 公式サポートあり | コミュニティのみ |
+
+### セルフホストが向いているケース
+
+-   月額コストを抑えたい
+-   大量のワークフローを実行する
+-   機密データを外部に置きたくない
+-   カスタムノードを使用したい
+-   サーバー管理の基礎知識がある
+
+## VPSの選定とスペック要件
+
+### n8nの最低システム要件
+
+| 項目  | 最低要件 | 推奨スペック |
+| --- | --- | --- |
+| CPU | 1 vCPU | 2 vCPU以上 |
+| メモリ | 2GB RAM | 4GB以上 |
+| ストレージ | 10GB SSD | 20GB以上（NVMe推奨） |
+| OS  | Ubuntu 20.04+ | Ubuntu 22.04 / 24.04 |
+
+### おすすめVPSプロバイダー
+
+**国内サービス**
+
+| サービス | 最小プラン | 月額料金 | 特徴  |
+| --- | --- | --- | --- |
+| XServer VPS | 2GB | 830円〜 | 国内最安クラス、無料枠あり |
+| ConoHa VPS | 1GB | 682円〜 | 時間課金対応、管理画面が使いやすい |
+| さくらのVPS | 1GB | 880円〜 | 安定性、サポート充実 |
+
+**海外サービス**
+
+| サービス | 最小プラン | 月額料金 | 特徴  |
+| --- | --- | --- | --- |
+| DigitalOcean | 1GB | $6〜 | n8nテンプレートあり |
+| Vultr | 1GB | $5〜 | 東京リージョンあり |
+| Hetzner | 2GB | €4〜 | コスパ最強 |
+
+## Ubuntu環境の初期セットアップ
+
+VPSを契約したら、まずUbuntu環境の初期設定を行います。
+
+### Step 1：SSHでサーバーに接続
+
+```
+ssh root@your_server_ip
+```
+
+### Step 2：システムの更新
+
+```
+# パッケージリストの更新sudo apt update
+```
+
+\# インストール済みパッケージの更新  
+sudo apt upgrade -y
+
+### Step 3：新規ユーザーの作成（推奨）
+
+rootでの運用は避け、一般ユーザーを作成します。
+
+```
+# 新規ユーザー作成adduser n8nadmin
+```
+
+\# sudo権限を付与  
+usermod -aG sudo n8nadmin
+
+\# 新ユーザーでログイン確認  
+su – n8nadmin
+
+### Step 4：ファイアウォールの設定
+
+```
+# UFWの有効化sudo ufw allow OpenSSHsudo ufw allow 80/tcpsudo ufw allow 443/tcpsudo ufw allow 5678/tcpsudo ufw enable
+```
+
+\# 設定確認  
+sudo ufw status
+
+### Step 5：タイムゾーンの設定
+
+```
+sudo timedatectl set-timezone Asia/Tokyo
+```
+
+## Dockerのインストール
+
+n8nの運用にはDockerを使用することを強く推奨します。
+
+### Docker Engineのインストール
+
+```
+# 公式スクリプトでインストールcurl -fsSL https://get.docker.com | bash
+```
+
+\# 一般ユーザーでDockerを実行できるようにする  
+sudo usermod -aG docker $USER
+
+\# 設定を反映（再ログインが必要）  
+newgrp docker
+
+\# 動作確認  
+docker –version
+
+### Docker Composeのインストール
+
+```
+# Docker Compose v2（プラグイン版）sudo apt install docker-compose-plugin -y
+```
+
+\# 動作確認  
+docker compose version
+
+## n8nのインストールと起動
+
+### Step 1：作業ディレクトリの作成
+
+```
+mkdir -p ~/n8n-dockercd ~/n8n-docker
+```
+
+### Step 2：環境変数ファイルの作成
+
+```
+nano .env
+```
+
+以下の内容を入力：
+
+```
+# n8n設定N8N_BASIC_AUTH_ACTIVE=trueN8N_BASIC_AUTH_USER=adminN8N_BASIC_AUTH_PASSWORD=your_secure_password
+```
+
+\# サーバー設定  
+N8N\_HOST=your\_server\_ip  
+N8N\_PORT=5678  
+N8N\_PROTOCOL=http  
+WEBHOOK\_URL=[http://your\_server\_ip:5678/](http://your_server_ip:5678/)
+
+\# タイムゾーン  
+TZ=Asia/Tokyo
+
+\# 暗号化キー（32文字以上のランダム文字列）  
+N8N\_ENCRYPTION\_KEY=your\_32\_char\_encryption\_key\_here
+
+### Step 3：docker-compose.ymlの作成
+
+```
+nano docker-compose.yml
+```
+
+以下の内容を入力：
+
+```
+version: "3.8"
+```
+
+services:  
+n8n:  
+image: n8nio/n8n:latest  
+container\_name: n8n  
+restart: always  
+ports:  
+– “5678:5678”  
+environment:  
+– N8N\_BASIC\_AUTH\_ACTIVE=$\{N8N\_BASIC\_AUTH\_ACTIVE\}  
+– N8N\_BASIC\_AUTH\_USER=$\{N8N\_BASIC\_AUTH\_USER\}  
+– N8N\_BASIC\_AUTH\_PASSWORD=$\{N8N\_BASIC\_AUTH\_PASSWORD\}  
+– N8N\_HOST=$\{N8N\_HOST\}  
+– N8N\_PORT=$\{N8N\_PORT\}  
+– N8N\_PROTOCOL=$\{N8N\_PROTOCOL\}  
+– WEBHOOK\_URL=$\{WEBHOOK\_URL\}  
+– GENERIC\_TIMEZONE=$\{TZ\}  
+– TZ=$\{TZ\}  
+– N8N\_ENCRYPTION\_KEY=$\{N8N\_ENCRYPTION\_KEY\}  
+– N8N\_SECURE\_COOKIE=false  
+volumes:  
+– n8n\_data:/home/node/.n8n
+
+volumes:  
+n8n\_data:
+
+### Step 4：n8nの起動
+
+```
+# コンテナを起動docker compose up -d
+```
+
+\# ログ確認  
+docker compose logs -f n8n
+
+### Step 5：動作確認
+
+ブラウザで以下にアクセス：
+
+```
+http://your_server_ip:5678
+```
+
+.envで設定したユーザー名とパスワードでログインします。
+
+## 独自ドメインとSSL証明書の設定
+
+本番運用では、独自ドメインとHTTPS接続が必須です。
+
+### Step 1：ドメインのDNS設定
+
+ドメインのDNS管理画面で、Aレコードを追加します。
+
+```
+Type: AName: n8n（またはサブドメイン）Value: your_server_ipTTL: 3600
+```
+
+### Step 2：Nginxのインストール
+
+```
+sudo apt install nginx -ysudo systemctl enable nginxsudo systemctl start nginx
+```
+
+### Step 3：Nginx設定ファイルの作成
+
+```
+sudo nano /etc/nginx/sites-available/n8n
+```
+
+以下の内容を入力（n8n.yourdomain.comを自分のドメインに置換）：
+
+```
+server {listen 80;server_name n8n.yourdomain.com;
+```
+
+location / \{  
+proxy\_pass [http://localhost:5678;](http://localhost:5678;)  
+proxy\_http\_version 1.1;  
+proxy\_set\_header Upgrade $http\_upgrade;  
+proxy\_set\_header Connection “upgrade”;  
+proxy\_set\_header Host $host;  
+proxy\_set\_header X-Real-IP $remote\_addr;  
+proxy\_set\_header X-Forwarded-For $proxy\_add\_x\_forwarded\_for;  
+proxy\_set\_header X-Forwarded-Proto $scheme;  
+chunked\_transfer\_encoding off;  
+proxy\_buffering off;  
+proxy\_cache off;  
+\}  
+\}
+
+### Step 4：設定の有効化
+
+```
+# シンボリックリンクの作成sudo ln -s /etc/nginx/sites-available/n8n /etc/nginx/sites-enabled/
+```
+
+\# 設定テスト  
+sudo nginx -t
+
+\# Nginx再起動  
+sudo systemctl reload nginx
+
+### Step 5：SSL証明書の取得（Let’s Encrypt）
+
+```
+# Certbotのインストールsudo apt install certbot python3-certbot-nginx -y
+```
+
+\# SSL証明書の取得と設定  
+sudo certbot –nginx -d n8n.yourdomain.com
+
+メールアドレスの入力と利用規約への同意が求められます。
+
+### Step 6：環境変数の更新
+
+SSL設定後、.envファイルを更新します。
+
+```
+N8N_HOST=n8n.yourdomain.comN8N_PROTOCOL=httpsWEBHOOK_URL=https://n8n.yourdomain.com/
+```
+
+docker-compose.ymlも更新：
+
+```
+environment:# ...他の設定- N8N_SECURE_COOKIE=true
+```
+
+### Step 7：n8nの再起動
+
+```
+docker compose downdocker compose up -d
+```
+
+これで [https://n8n.yourdomain.com](https://n8n.yourdomain.com) でアクセスできます。
+
+## PostgreSQLの追加（本番向け）
+
+本番運用では、SQLiteではなくPostgreSQLを使用します。
+
+### docker-compose.yml（PostgreSQL版）
+
+```
+version: "3.8"
+```
+
+services:  
+postgres:  
+image: postgres:15-alpine  
+container\_name: n8n-postgres  
+restart: always  
+environment:  
+– POSTGRES\_USER=n8n  
+– POSTGRES\_PASSWORD=$\{POSTGRES\_PASSWORD\}  
+– POSTGRES\_DB=n8n  
+volumes:  
+– postgres\_data:/var/lib/postgresql/data  
+healthcheck:  
+test: \[‘CMD-SHELL’, ‘pg\_isready -U n8n’\]  
+interval: 10s  
+timeout: 5s  
+retries: 5
+
+n8n:  
+image: n8nio/n8n:latest  
+container\_name: n8n  
+restart: always  
+ports:  
+– “5678:5678”  
+environment:  
+– DB\_TYPE=postgresdb  
+– DB\_POSTGRESDB\_HOST=postgres  
+– DB\_POSTGRESDB\_PORT=5432  
+– DB\_POSTGRESDB\_DATABASE=n8n  
+– DB\_POSTGRESDB\_USER=n8n  
+– DB\_POSTGRESDB\_PASSWORD=$\{POSTGRES\_PASSWORD\}  
+– N8N\_BASIC\_AUTH\_ACTIVE=$\{N8N\_BASIC\_AUTH\_ACTIVE\}  
+– N8N\_BASIC\_AUTH\_USER=$\{N8N\_BASIC\_AUTH\_USER\}  
+– N8N\_BASIC\_AUTH\_PASSWORD=$\{N8N\_BASIC\_AUTH\_PASSWORD\}  
+– N8N\_HOST=$\{N8N\_HOST\}  
+– N8N\_PORT=$\{N8N\_PORT\}  
+– N8N\_PROTOCOL=$\{N8N\_PROTOCOL\}  
+– WEBHOOK\_URL=$\{WEBHOOK\_URL\}  
+– GENERIC\_TIMEZONE=$\{TZ\}  
+– TZ=$\{TZ\}  
+– N8N\_ENCRYPTION\_KEY=$\{N8N\_ENCRYPTION\_KEY\}  
+– N8N\_SECURE\_COOKIE=true  
+volumes:  
+– n8n\_data:/home/node/.n8n  
+depends\_on:  
+postgres:  
+condition: service\_healthy
+
+volumes:  
+postgres\_data:  
+n8n\_data:
+
+.envにPostgreSQLのパスワードを追加：
+
+```
+POSTGRES_PASSWORD=your_db_password_here
+```
+
+## n8nのアップデート方法
+
+### Dockerイメージの更新
+
+```
+# 作業ディレクトリに移動cd ~/n8n-docker
+```
+
+\# 最新イメージをプル  
+docker compose pull
+
+\# コンテナを再作成  
+docker compose up -d
+
+\# 古いイメージを削除  
+docker image prune -f
+
+### アップデート前の確認事項
+
+-   リリースノートで破壊的変更を確認
+-   バックアップを取得
+-   テスト環境で動作確認（可能であれば）
+
+## バックアップの設定
+
+### 自動バックアップスクリプト
+
+```
+nano ~/n8n-backup.sh
+```
+
+```
+#!/bin/bashBACKUP_DIR="/home/n8nadmin/backups"DATE=$(date +%Y%m%d_%H%M%S)
+```
+
+\# ディレクトリ作成  
+mkdir -p $\{BACKUP\_DIR\}
+
+\# PostgreSQLバックアップ（PostgreSQL使用時）  
+docker exec n8n-postgres pg\_dump -U n8n -d n8n | gzip > $\{BACKUP\_DIR\}/n8n\_db\_$\{DATE\}.sql.gz
+
+\# n8nデータボリュームのバックアップ  
+docker run –rm -v n8n-docker\_n8n\_data:/data -v $\{BACKUP\_DIR\}:/backup alpine  
+tar czf /backup/n8n\_data\_$\{DATE\}.tar.gz -C /data .
+
+\# 7日より古いバックアップを削除  
+find $\{BACKUP\_DIR\} -name “\*.gz” -mtime +7 -delete
+
+echo “Backup completed: $\{DATE\}”
+
+```
+# 実行権限を付与chmod +x ~/n8n-backup.sh
+```
+
+### cronで自動実行
+
+```
+crontab -e
+```
+
+以下を追加：
+
+```
+0 3 * * * /home/n8nadmin/n8n-backup.sh >> /home/n8nadmin/backup.log 2>&1
+```
+
+## セキュリティ強化
+
+### SSH鍵認証の設定
+
+```
+# ローカルPCで鍵を生成ssh-keygen -t ed25519 -C "your_email@example.com"
+```
+
+\# 公開鍵をサーバーにコピー  
+ssh-copy-id n8nadmin@your\_server\_ip
+
+\# パスワード認証を無効化  
+sudo nano /etc/ssh/sshd\_config  
+\# PasswordAuthentication no に変更
+
+sudo systemctl restart sshd
+
+### Fail2banの導入
+
+```
+sudo apt install fail2ban -ysudo systemctl enable fail2bansudo systemctl start fail2ban
+```
+
+### 自動セキュリティ更新
+
+```
+sudo apt install unattended-upgrades -ysudo dpkg-reconfigure -plow unattended-upgrades
+```
+
+## トラブルシューティング
+
+### よくある問題と解決方法
+
+| 問題  | 原因  | 解決方法 |
+| --- | --- | --- |
+| ブラウザでアクセスできない | ファイアウォール設定 | UFWでポート5678を許可 |
+| Webhookが動作しない | WEBHOOK\_URLの設定ミス | 外部からアクセス可能なURLを設定 |
+| 認証情報が保存されない | ボリュームマウントの問題 | docker-compose.ymlのvolumes設定を確認 |
+| SSL証明書エラー | DNS設定の反映待ち | 数分〜数時間待って再試行 |
+| コンテナが再起動を繰り返す | 設定エラー | docker compose logs で確認 |
+
+### ログの確認方法
+
+```
+# n8nのログdocker compose logs -f n8n
+```
+
+\# Nginxのログ  
+sudo tail -f /var/log/nginx/error.log
+
+\# システムログ  
+sudo journalctl -u docker -f
+
+## よくある質問（FAQ）
+
+### Q. VPSのスペックはどれくらい必要ですか？
+
+A. 小〜中規模のワークフローであれば、2GB RAM / 1 vCPUで十分です。複雑なワークフローや同時実行が多い場合は、4GB RAM以上を推奨します。
+
+### Q. セルフホストでも公式サポートは受けられますか？
+
+A. Community版（セルフホスト）では公式サポートはありません。コミュニティフォーラムやGitHubのIssueを活用してください。Enterprise版を契約すれば公式サポートが受けられます。
+
+### Q. SQLiteのままでも問題ないですか？
+
+A. 個人利用や小規模な使用であれば問題ありません。ただし、Webhookを多数受け付ける場合や、本番運用ではPostgreSQLを推奨します。
+
+### Q. アップデートでデータは消えませんか？
+
+A. Dockerボリュームを使用していれば、イメージの更新でデータは消えません。ただし、念のためアップデート前にバックアップを取得してください。
+
+### Q. 複数人で使用できますか？
+
+A. Community版では複数ユーザーの管理機能は制限されています。チームでの利用にはEnterprise版の検討をおすすめします。
+
+## まとめ
+
+この記事では、n8nのVPSセルフホスト構築を解説しました。
+
+**構築の流れ**
+
+1.  VPSの契約（2GB RAM以上推奨）
+2.  Ubuntu環境の初期設定
+3.  Docker / Docker Composeのインストール
+4.  n8nのdocker-compose.yml作成と起動
+5.  独自ドメインとSSL証明書の設定
+6.  PostgreSQLの追加（本番向け）
+7.  バックアップの自動化
+
+**本番運用のポイント**
+
+-   N8N\_ENCRYPTION\_KEYを必ず設定・バックアップ
+-   SSL証明書でHTTPS接続を有効化
+-   PostgreSQLでデータベースを永続化
+-   定期的なバックアップを自動化
+-   セキュリティ設定（SSH鍵認証、Fail2ban）
+
+**コスト比較**
+
+-   n8n Cloud：月額€20〜（約3,000〜4,500円）
+-   セルフホスト：月額500〜1,500円（VPS代のみ）
+
+セルフホストにより、年間で2〜4万円のコスト削減が可能です。サーバー管理の手間はありますが、一度構築すれば安定して運用できます。ぜひチャレンジしてみてください。

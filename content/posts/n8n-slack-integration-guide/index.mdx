@@ -1,0 +1,437 @@
+---
+title: "【2025年版】n8n × Slack連携ガイド｜通知自動化からAIボットまで実践レシピ5選"
+description: "n8nとSlackの連携方法を徹底解説。Slackアプリの作成からBot Token取得、メッセージ送信、Triggerの設定まで詳しく説明。毎朝ニュース配信、フォーム通知、GitHub連携、AIボットなど実践レシピ5選で業務効率化を実現できます。"
+date: 2025-12-17T14:07:09Z
+updated: 2025-12-21T11:01:41Z
+slug: n8n-slack-integration-guide
+categories: ["n8n"]
+tags: ["AI","業務効率化","自動化","Slack"]
+draft: false
+ogImage: "/blog-assets/n8n-slack-integration-guide/featured.webp"
+---
+
+「重要な情報をSlackで見落としてしまう」  
+「手動で通知を送る手間がかかる」  
+「AIを使ってSlackボットを作りたい」
+
+そんな悩みを持つビジネスパーソンの方も多いのではないでしょうか。
+
+n8nとSlackを連携すれば、メッセージの自動送信、チャンネル管理、ファイル操作から、AIを組み込んだ自動応答ボットまで、様々な通知・コミュニケーションを自動化できます。設定は20分程度で完了し、ノーコードで高度な自動化が実現できます。
+
+この記事では、n8nとSlackの連携方法から、実践的な自動化レシピまで詳しく解説します。
+
+**この記事でわかること**
+
+-   n8nとSlackを連携するための認証設定
+-   Slackノードでできる操作一覧
+-   実践的な自動化レシピ5選（ニュース通知、AI応答ボットなど）
+-   Slack Triggerの設定方法とよくあるトラブル対策
+
+## n8n × Slack連携でできること
+
+n8nのSlackノードを使うと、Slack APIを通じて様々な操作を自動化できます。
+
+### Slackノードの主な機能
+
+| リソース | 操作  | 用途  |
+| --- | --- | --- |
+| Message | Send / Update / Delete / Get Permalink | メッセージの送信・更新・削除 |
+| Channel | Create / Archive / Close / Get / Invite / Join / Leave / Kick | チャンネルの作成・管理 |
+| User | Get / Get Many / Get Status | ユーザー情報の取得 |
+| File | Get / Get Many / Upload | ファイルのアップロード・取得 |
+| Reaction | Add / Remove / Get | リアクションの追加・削除 |
+| Star | Add / Remove / Get Many | スターの管理 |
+
+### Slack Triggerで検知できるイベント
+
+| トリガー | 発火条件 |
+| --- | --- |
+| On bot app mention | ボットにメンションされたとき |
+| On message posted | チャンネルにメッセージが投稿されたとき |
+| On file shared | ファイルが共有されたとき |
+| On reaction added | リアクションが追加されたとき |
+
+### 代表的な自動化ユースケース
+
+-   毎朝のニュース・RSSフィードをSlackに自動配信
+-   フォーム送信や注文発生時にSlackへ即時通知
+-   GitHub IssueやPull Request作成時にチャンネルへ通知
+-   AIエージェントによる自動応答ボット
+-   タスク管理システムの期限リマインダー
+-   日次・週次レポートの自動配信
+
+## 事前準備：Slackアプリの作成
+
+n8nからSlackを操作するには、Slack側でアプリを作成し、認証トークンを取得する必要があります。
+
+### Slackアプリの作成手順
+
+1.  Slack API管理ページ（[https://api.slack.com/apps）にアクセス](https://api.slack.com/apps）にアクセス)
+2.  「Create New App」をクリック
+3.  「From scratch」を選択
+4.  アプリ名（例：n8n-automation）を入力し、ワークスペースを選択
+5.  「Create App」をクリック
+
+### Bot Token Scopesの設定
+
+作成したアプリに必要な権限を付与します。
+
+1.  左サイドバーの「OAuth & Permissions」をクリック
+2.  「Bot Token Scopes」セクションまでスクロール
+3.  「Add an OAuth Scope」をクリックして必要なスコープを追加
+
+**基本的なスコープ**
+
+-   **chat:write**：メッセージの送信
+-   **channels:read**：チャンネル情報の取得
+-   **channels:history**：チャンネル履歴の取得
+-   **users:read**：ユーザー情報の取得
+-   **files:read**：ファイルの取得
+-   **files:write**：ファイルのアップロード
+
+**Triggerを使う場合の追加スコープ**
+
+-   **app\_mentions:read**：ボットへのメンション検知
+
+### アプリのインストールとトークン取得
+
+1.  「OAuth & Permissions」ページで「Install to Workspace」をクリック
+2.  権限を確認して「許可する」をクリック
+3.  表示された「Bot User OAuth Token」をコピーして保存
+
+**注意**
+
+Bot User OAuth Tokenは「xoxb-」で始まります。このトークンは機密情報として安全に管理してください。
+
+### ボットをチャンネルに招待
+
+メッセージを送信したいSlackチャンネルで、以下のコマンドを実行してボットを招待します。
+
+```
+/invite @アプリ名
+```
+
+この招待を忘れると「not\_in\_channel」エラーが発生します。
+
+## n8nでSlackクレデンシャルを設定
+
+n8nにSlackの認証情報を登録します。
+
+### 設定手順
+
+1.  n8nでSlackノードを追加
+2.  「Credential to connect with」で「Create New Credential」を選択
+3.  「Access Token」欄に、先ほど取得したBot User OAuth Tokenをペースト
+4.  「Test Credential」で接続確認
+5.  成功したら「Save」をクリック
+
+## 実践レシピ①：毎朝ニュースをSlackに自動配信
+
+RSSフィードからニュースを取得し、毎朝Slackに配信するワークフローです。
+
+### ワークフロー構成
+
+1.  **Schedule Trigger**：毎日朝8時に実行
+2.  **RSS Read**：ニュースサイトのRSSを取得
+3.  **Limit**：上位5件に絞り込み
+4.  **Slack（Send Message）**：チャンネルに投稿
+
+### Schedule Triggerの設定
+
+-   **Trigger Interval**：Days
+-   **Hour**：8
+-   **Minute**：0
+
+### RSS Readの設定
+
+-   **URL**：RSSフィードのURL（例：[https://rss.itmedia.co.jp/rss/2.0/news\_bursts.xml）](https://rss.itmedia.co.jp/rss/2.0/news_bursts.xml）)
+
+### Slackノードの設定
+
+-   **Resource**：Message
+-   **Operation**：Send
+-   **Channel**：送信先チャンネル名または ID
+-   **Text**：メッセージ本文（式を使って動的に設定）
+
+**メッセージ本文の例**
+
+```
+📰 *{{ $json.title }}*{{ $json.link }}
+```
+
+### 重複配信を防ぐ工夫
+
+PostgreSQLやGoogle Sheetsに配信済みのURLを記録し、次回実行時にフィルターすることで、同じニュースの重複配信を防げます。
+
+## 実践レシピ②：フォーム送信をSlackへ即時通知
+
+Webhookで受け取ったフォームデータを即座にSlackに通知するワークフローです。
+
+### ワークフロー構成
+
+1.  **Webhook**：フォーム送信データを受信
+2.  **Slack（Send Message）**：担当チャンネルに通知
+3.  **Respond to Webhook**：成功レスポンスを返す
+
+### Slackメッセージのフォーマット例
+
+```
+🔔 *新しいお問い合わせが届きました*
+```
+
+```
+*お名前:* {{ $json.body.name }}*メール:* {{ $json.body.email }}*内容:*{{ $json.body.message }}
+```
+
+```
+受信日時: {{ $now.format('YYYY-MM-DD HH:mm') }}
+```
+
+### メンションの追加
+
+担当者に即座に気づいてもらうため、メンションを追加できます。
+
+-   個人へのメンション：
+-   チャンネル全体：
+-   ここにいる人全員：
+
+## 実践レシピ③：GitHub連携で開発通知
+
+GitHub上のイベント（Issue作成、PR作成など）をSlackに通知するワークフローです。
+
+### ワークフロー構成
+
+1.  **GitHub Trigger**：Issue / PR作成を検知
+2.  **IF**：イベントの種類で分岐
+3.  **Slack（Send Message）**：適切なチャンネルに通知
+
+### Issue作成時の通知メッセージ例
+
+```
+🐛 *新しいIssueが作成されました*
+```
+
+```
+*タイトル:* {{ $json.issue.title }}*作成者:* {{ $json.issue.user.login }}*リポジトリ:* {{ $json.repository.full_name }}
+```
+
+```
+{{ $json.issue.html_url }}
+```
+
+### PR作成時の通知メッセージ例
+
+```
+🔀 *新しいPull Requestが作成されました*
+```
+
+```
+*タイトル:* {{ $json.pull_request.title }}*作成者:* {{ $json.pull_request.user.login }}*ブランチ:* {{ $json.pull_request.head.ref }} → {{ $json.pull_request.base.ref }}
+```
+
+```
+{{ $json.pull_request.html_url }}
+```
+
+## 実践レシピ④：AIエージェントによる自動応答ボット
+
+Slackでボットにメンションすると、AIが自動で応答するワークフローです。
+
+### ワークフロー構成
+
+1.  **Slack Trigger（On bot app mention）**：メンションを検知
+2.  **OpenAI（Message a Model）**：メッセージ内容をAIに送信
+3.  **Slack（Send Message）**：AIの応答をスレッドに返信
+
+### Slack Triggerの設定
+
+Slack TriggerはEvent Subscriptionsの設定が必要です。
+
+**n8n側の設定**
+
+1.  Slack Triggerノードを追加
+2.  「On bot app mention」を選択
+3.  Credentialを設定
+4.  表示される「Webhook URL」をコピー
+
+**Slack側の設定**
+
+1.  Slack API管理ページでアプリを選択
+2.  左サイドバーの「Event Subscriptions」をクリック
+3.  「Enable Events」をONに
+4.  「Request URL」にn8nのWebhook URLをペースト
+5.  「Subscribe to bot events」で「app\_mention」を追加
+6.  「Save Changes」をクリック
+
+**重要**
+
+Request URLを設定する際、n8nのワークフローが「Waiting for trigger event」状態になっている必要があります。先にn8nで「Test workflow」をクリックしてから、Slack側でURLを設定してください。
+
+### OpenAIノードの設定
+
+-   **Resource**：Message a Model
+-   **Model**：gpt-4o（または gpt-4o-mini）
+-   **Messages**：Slackから受け取ったメッセージを設定
+
+**System Promptの例**
+
+```
+あなたは親切なアシスタントです。Slackで質問されたことに対して、簡潔かつ丁寧に回答してください。技術的な質問には具体的なコード例や手順を含めてください。
+```
+
+### スレッドへの返信設定
+
+元のメッセージのスレッドに返信するには、Slackノードで「Thread TS」にSlack Triggerから取得したtsを設定します。
+
+-   **Options** → **Thread TS**：\{\{ $(‘Slack Trigger’).item.json.ts \}\}
+
+## 実践レシピ⑤：タスク期限のリマインダー通知
+
+Google Sheetsのタスクリストから期限が近いタスクを抽出し、Slackで通知するワークフローです。
+
+### ワークフロー構成
+
+1.  **Schedule Trigger**：毎日朝9時に実行
+2.  **Google Sheets（Get Row(s)）**：タスクリストを取得
+3.  **Code**：期限が今日または明日のタスクをフィルター
+4.  **IF**：該当タスクがある場合のみ続行
+5.  **Slack（Send Message）**：リマインダーを送信
+
+### Codeノードでの期限フィルター例
+
+```
+const today = new Date();today.setHours(0, 0, 0, 0);
+```
+
+```
+const tomorrow = new Date(today);tomorrow.setDate(tomorrow.getDate() + 1);const dayAfterTomorrow = new Date(today);dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
+```
+
+```
+return $input.all().filter(item => {const dueDate = new Date(item.json.期限);return dueDate >= today && dueDate < dayAfterTomorrow;});
+```
+
+### リマインダーメッセージの例
+
+```
+⏰ *タスクリマインダー*
+```
+
+```
+以下のタスクの期限が近づいています：{{ $json.map(task => • *${task.タスク名}* - 期限: ${task.期限} - 担当: ${task.担当者}).join('n') }}
+```
+
+```
+早めの対応をお願いします！
+```
+
+## トラブルシューティング
+
+n8nとSlack連携でよくある問題と解決方法をまとめます。
+
+### not\_in\_channelエラー
+
+**原因**：ボットがチャンネルに招待されていない
+
+**解決策**：送信先チャンネルで 
+
+```
+/invite @アプリ名
+```
+
+ を実行
+
+### missing\_scopeエラー
+
+**原因**：必要な権限（スコープ）が不足している
+
+**解決策**：Slack API管理ページの「OAuth & Permissions」で必要なスコープを追加し、アプリを再インストール
+
+### Slack TriggerでVerifiedにならない
+
+**原因**
+
+-   n8nのワークフローがアクティブになっていない
+-   Webhook URLの設定ミス
+
+**解決策**
+
+1.  n8nで「Test workflow」をクリックして待機状態にする
+2.  Request URLには「Test URL」ではなく「Production URL」を使用
+3.  ワークフローを有効化（Active）にする
+
+### channel\_not\_foundエラー
+
+**原因**：チャンネル名またはIDが正しくない
+
+**解決策**
+
+-   チャンネル名は「#」を含めずに指定（例：general）
+-   プライベートチャンネルの場合はチャンネルIDを使用
+
+## より高度な活用のヒント
+
+### Block Kit Builderでリッチなメッセージ
+
+SlackのBlock Kit Builderを使うと、ボタンやドロップダウンを含むインタラクティブなメッセージを作成できます。n8nのSlackノードの「Blocks」オプションでBlock Kit JSONを設定できます。
+
+### スレッド返信の活用
+
+関連する通知をスレッドにまとめることで、チャンネルの見通しが良くなります。最初のメッセージのtsを保存し、後続の通知でThread TSとして使用します。
+
+### エラー通知の自動化
+
+Error Triggerノードを使って、ワークフロー実行エラーが発生した際にSlackの運用チャンネルに自動通知できます。
+
+## よくある質問（FAQ）
+
+### Q. n8n Cloudの無料プランで使えますか？
+
+A. はい、Slack連携は無料プランで利用可能です。ただし、月100回までのワークフロー実行制限があります。
+
+### Q. プライベートチャンネルにも投稿できますか？
+
+A. はい、ボットをプライベートチャンネルに招待すれば投稿できます。チャンネル指定にはチャンネルIDを使用してください。
+
+### Q. DMを送ることはできますか？
+
+A. はい、Slackノードの「Channel」にユーザーIDを指定することでDMを送信できます。追加で「im:write」スコープが必要です。
+
+### Q. ファイルを添付して送信できますか？
+
+A. はい、Slackノードの「File」リソースでUpload操作を使います。HTTP Requestで取得したファイルや、他のノードで生成したファイルをアップロードできます。
+
+### Q. 複数のワークスペースに対応できますか？
+
+A. はい、ワークスペースごとにSlackアプリを作成し、n8nで複数のクレデンシャルを登録することで対応できます。
+
+## まとめ：n8nでSlack通知を自動化しよう
+
+この記事では、n8nとSlackの連携方法と実践的な自動化レシピを紹介しました。
+
+**連携の基本ステップ**
+
+1.  Slack API管理ページでアプリを作成
+2.  Bot Token Scopesで必要な権限を付与
+3.  Bot User OAuth Tokenを取得
+4.  n8nでクレデンシャルを設定
+5.  ボットを対象チャンネルに招待
+
+**実践レシピ5選**
+
+1.  毎朝ニュースをSlackに自動配信
+2.  フォーム送信をSlackへ即時通知
+3.  GitHub連携で開発通知
+4.  AIエージェントによる自動応答ボット
+5.  タスク期限のリマインダー通知
+
+**次のステップ**
+
+1.  Slackアプリを作成してBot Token取得
+2.  n8nでクレデンシャルを設定
+3.  シンプルな「メッセージ送信」ワークフローでテスト
+4.  RSSニュース配信やAIボットに挑戦
+
+n8nとSlackの連携により、重要な情報の見落としを防ぎ、チーム全体の情報伝達スピードと正確性が向上します。AIと組み合わせれば、通知内容の自動生成や、質問への自動応答も実現できます。
+
+まずは簡単なメッセージ送信から始めて、徐々に自動化の範囲を広げていきましょう。

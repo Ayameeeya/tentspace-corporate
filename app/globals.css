@@ -382,25 +382,6 @@ html {
   line-height: inherit;
 }
 
-/* WordPress Gutenberg code block */
-.article-content .wp-block-code,
-.article-content .wp-block-preformatted,
-.article-content figure.wp-block-code {
-  background: #1e293b !important;
-  border-radius: 0.75rem;
-  padding: 1.25rem !important;
-  overflow-x: auto;
-  margin: 1.5rem 0;
-  color: #f8fafc !important;
-}
-
-.article-content .wp-block-code *,
-.article-content .wp-block-preformatted *,
-.article-content figure.wp-block-code * {
-  color: #f8fafc !important;
-  background: transparent !important;
-}
-
 .article-content ul {
   margin: 1.25rem 0;
   padding-left: 1.5rem;
@@ -569,7 +550,7 @@ html {
 }
 
 /* ======================================
-   ts-code Block Styles (WordPress Custom Code Block)
+   ts-code Block Styles
    ====================================== */
 .ts-code-wrapper {
   margin: 1.5rem 0;

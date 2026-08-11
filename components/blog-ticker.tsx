@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { getPosts, type WPPost } from "@/lib/wordpress"
+import { DEFAULT_BLOG_AUTHOR, getPosts, type BlogPost } from "@/lib/blog-content"
 
 export function BlogTicker() {
-  const [posts, setPosts] = useState<WPPost[]>([])
+  const [posts, setPosts] = useState<BlogPost[]>([])
 
   useEffect(() => {
     async function loadPosts() {
@@ -30,9 +30,8 @@ export function BlogTicker() {
       <div className="ticker-wrapper">
         <div className="ticker-content">
           {duplicatedPosts.map((post, index) => {
-            const author = post._embedded?.author?.[0]
-            const authorName = author?.name || "tent space"
-            const avatarUrl = author?.avatar_urls?.["48"] || author?.avatar_urls?.["96"] || ""
+            const authorName = DEFAULT_BLOG_AUTHOR.name
+            const avatarUrl = DEFAULT_BLOG_AUTHOR.avatarUrl
 
             return (
               <Link
@@ -65,7 +64,7 @@ export function BlogTicker() {
                 {/* タイトル */}
                 <span
                   className="text-xs md:text-sm font-light"
-                  dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+                  dangerouslySetInnerHTML={{ __html: post.title }}
                 />
 
                 {/* 区切り */}
