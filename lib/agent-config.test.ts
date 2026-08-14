@@ -52,6 +52,32 @@ describe("project agent configuration", () => {
     expect(criticFix).toContain("エスカレーション")
   })
 
+  it("記事PRはチェック通過後に自己マージまで自動化する", async () => {
+    const [agents, writeBlog, criticFix, routine, runbook, findings] =
+      await Promise.all([
+        read("AGENTS.md"),
+        read(".claude/skills/write-blog/SKILL.md"),
+        read(".claude/skills/critic-fix/SKILL.md"),
+        read("docs/routines/write-blog.md"),
+        read("docs/migration/runbook.md"),
+        read("docs/migration/findings.md"),
+      ])
+
+    expect(agents).toContain("記事 PR の自己マージを許可する")
+    expect(agents).toContain("content/posts/**")
+    expect(writeBlog).toContain(
+      "gh pr merge --auto --squash --delete-branch",
+    )
+    expect(writeBlog).toContain("gh pr create")
+    expect(criticFix).toContain(
+      "gh pr merge --auto --squash --delete-branch",
+    )
+    expect(routine).toContain("自己マージまで完了")
+    expect(routine).toContain("コード・設定を含む PR は自動マージしない")
+    expect(runbook).toContain("現在の記事執筆フロー")
+    expect(findings).toContain("現在の記事運用は `AGENTS.md` を正とする")
+  })
+
   it("Claude Codeフックがガード・即時検証・停止時checkを接続する", async () => {
     const settings = JSON.parse(await read(".claude/settings.json"))
 
@@ -69,7 +95,6 @@ describe("project agent configuration", () => {
   })
 
   it.each([
-    "gh pr merge 123",
     "gh pr review --approve 123",
     "git push origin main",
     "git push --force origin feature/test",
@@ -84,6 +109,20 @@ describe("project agent configuration", () => {
 
     expect(result.status).toBe(2)
     expect(result.stderr.trim()).not.toBe("")
+  })
+
+  it("記事PRのauto-mergeコマンドを許可する", () => {
+    const result = spawnSync("bash", [path.join(root, "hooks/guard-bash.sh")], {
+      cwd: root,
+      input: JSON.stringify({
+        tool_input: {
+          command: "gh pr merge --auto --squash --delete-branch 123",
+        },
+      }),
+      encoding: "utf8",
+    })
+
+    expect(result.status).toBe(0)
   })
 
   it("通常のBashコマンドは許可する", () => {

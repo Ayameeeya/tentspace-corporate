@@ -5,8 +5,9 @@ description: ブログ記事（MDX）の執筆に関わる作業では必ずこ�
 
 # Write Blog
 
-新規記事を 1 本だけ設計・執筆し、レビュー可能な content-only PR にする。
-執筆文脈はメインループに保持し、レビュー判定は `content-critic` に分離する。
+新規記事を 1 本だけ設計・執筆し、content-only PR の作成、必須チェック、
+自己マージまで完了する。執筆文脈はメインループに保持し、レビュー判定は
+`content-critic` に分離する。
 
 ## 事前確認
 
@@ -89,7 +90,12 @@ description: ブログ記事（MDX）の執筆に関わる作業では必ずこ�
 
 失敗を修正し、すべて通るまで PR を作らない。
 
-## 6. PR 作成
+## 6. critic と PR 作成
+
+1. `content-critic` を起動し、記事と `social.md` を
+   `docs/review-rubric.md` に照らして判定する。
+2. `RESULT: FAIL` の場合は PR を作らず、指摘を修正して再判定する。
+3. `RESULT: PASS` の場合だけ、ready PR を作る。
 
 PR 本文は次の構成にする。
 
@@ -112,8 +118,32 @@ PR 本文は次の構成にする。
 - [ ] content/posts/ 内だけの差分
 ```
 
-`gh pr create` まで行い、PR URL と検証結果を報告して終了する。自己承認・
-自己マージは行わない。
+4. 記事ディレクトリだけを stage・commit してブランチを push する。
+5. 上記本文を使い、`gh pr create --title "<title>" --body-file <body-file>` で
+   ready PR を作る。`--draft` は付けない。
+6. PR URL と番号を控え、続けてチェックと自己マージへ進む。
+
+## 7. チェックと自己マージ
+
+1. `gh pr diff <number> --name-only` を確認し、差分が
+   `content/posts/<slug>/**` だけであることを再確認する。1 ファイルでも外に
+   出ていればマージせず、人間へエスカレーションする。
+2. `gh pr checks <number> --watch` で必須チェックを待つ。
+3. 失敗した場合は原因を修正して push する。`content-critic` の FAIL は
+   `critic-fix` を使い、最大 2 回までとする。
+4. 全必須チェック成功、`RESULT: PASS`、未解決指摘なしを確認する。
+5. 次のコマンドで自己マージを予約する。
+
+   ```bash
+   gh pr merge --auto --squash --delete-branch <number>
+   ```
+
+6. GitHub の auto-merge が利用できない場合は、全必須チェック成功後に
+   `gh pr merge --squash --delete-branch <number>` で自己マージする。
+7. `gh pr view <number> --json state` が `MERGED` になるまで確認し、PR URL、
+   検証結果、マージ完了を報告して終了する。
+
+記事 PR の自己マージは許可されているが、自己承認は行わない。
 
 ## 書かないこと
 
@@ -122,3 +152,4 @@ PR 本文は次の構成にする。
 - `facts.md` にない自社情報
 - 出典のない事実断定
 - 2 本目の記事
+- 必須チェック失敗中、critic FAIL 中、または混在差分の自己マージ

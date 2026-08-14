@@ -25,6 +25,23 @@ content-critic の FAIL を同じ記事 PR 内で安全に修正する。修正�
 6. `npm run validate-content -- --file <article-path>` と `npm run check` を行う。
 7. `critic-fix attempt: N/2` を含むコミットを同じ PR へ push する。
 
+## PASS 後の自己マージ
+
+修正後に `content-critic` が `RESULT: PASS` となったら、次を行う。
+
+1. `gh pr diff <number> --name-only` で差分が `content/posts/**` のみに閉じて
+   いることを確認する。混在差分なら人間へエスカレーションして停止する。
+2. `gh pr checks <number> --watch` で必須チェックの成功を確認する。
+3. 未解決指摘がないことを確認し、次で自己マージを予約する。
+
+   ```bash
+   gh pr merge --auto --squash --delete-branch <number>
+   ```
+
+4. GitHub の auto-merge が利用できない場合は、全必須チェック成功後に
+   `gh pr merge --squash --delete-branch <number>` で自己マージする。
+5. PR の状態が `MERGED` になったことを確認して終了する。
+
 ## エスカレーション
 
 2 回修正しても FAIL の場合は、次の PR コメントを残して停止する。
@@ -37,5 +54,5 @@ critic-fix escalation
 - Human decision needed: <判断が必要な点>
 ```
 
-自己承認・自己マージは行わない。critic 指摘を避けるために `facts.md`、
-rubric、CI、hooks を変更しない。
+FAIL のまま自己マージせず、自己承認も行わない。critic 指摘を避けるために
+`facts.md`、rubric、CI、hooks を変更しない。

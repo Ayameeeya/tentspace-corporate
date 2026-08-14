@@ -5,11 +5,10 @@
 Next.js 16 App Router + MDX のコンテンツ・アズ・コードブログ。記事は
 `content/posts/<slug>/index.mdx` で管理する。
 
-現在の公開フローは PR → CI（content validation / generated-content drift /
-test / typecheck / build）→ 人間によるマージ → Vercel デプロイ。ローカルの
-`content-critic` 定義は本リポジトリに置くが、CI critic・content-only
-自動マージ・CODEOWNERS は未接続のため、それらが人間によって設定されるまでは
-すべての PR を人間がレビューしてマージする。
+記事執筆の公開フローは、執筆 → ローカル検証 → `content-critic` の
+`RESULT: PASS` → ready PR → 必須 CI（content validation /
+generated-content drift / test / typecheck / build）→ 作成エージェントによる
+自己マージ → Vercel デプロイまでを一連で自動化する。
 
 ## コマンド
 
@@ -41,18 +40,25 @@ test / typecheck / build）→ 人間によるマージ → Vercel デプロイ�
 - `main` への直接 push と force pushを禁止する。
 - 1 記事 1 PR。PR 説明に「狙い」「検証する仮説（Notion の仮説ページへの
   リンク）」「実験属性」「セルフチェック結果」を書く。
-- 自己マージ・自己承認は禁止。`gh pr merge` と
-  `gh pr review --approve` を使わない。
+- 自己承認は禁止。`gh pr review --approve` を使わない。
+- diff が `content/posts/**` に完全に閉じた記事 PR の自己マージを許可する。
 - `draft: false` への変更は、公開準備が完了した記事 PR 内でのみ行う。
 
 ## マージ規約
 
-- 自動マージを将来有効化する場合、diff が `content/posts/**` に完全に閉じた
-  PR のみに限定する。それ以外はすべて人間レビューとする。
+- 記事 PR の自己マージを許可する。対象は diff が `content/posts/**` に完全に
+  閉じ、`content-critic` が `RESULT: PASS`、必須 CI がすべて成功し、未解決の
+  レビュー指摘がない PR のみとする。
+- 条件を満たした記事 PR は
+  `gh pr merge --auto --squash --delete-branch <number>` で自動マージを予約し、
+  `MERGED` を確認してから終了する。GitHub の auto-merge が利用できない場合は、
+  必須 CI の成功確認後に `gh pr merge --squash --delete-branch <number>` で
+  自己マージする。記事 PR のマージに人間の承認は必須としない。
+- `content/posts/**` 外を 1 ファイルでも含む PR は自己マージせず、人間レビューに
+  エスカレーションする。
 - 憲法層（`facts.md` / `docs/review-rubric.md` / `.github/` / `hooks/` /
   `.claude/settings.json`）は変更を起案できるが、マージは必ず人間が行う。
-- CI・自動マージ・所有者規則は既存設定を正とし、エージェントが無断で
-  置き換えない。
+- CI・所有者規則は既存設定を正とし、エージェントが無断で置き換えない。
 
 ## 禁止事項
 

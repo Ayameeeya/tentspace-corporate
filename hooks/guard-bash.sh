@@ -24,7 +24,6 @@ deny() {
 }
 
 command_boundary='(^|[[:space:];|&])'
-gh_merge_pattern="${command_boundary}gh[[:space:]]+pr[[:space:]]+merge([[:space:]]|$)"
 gh_approve_pattern="${command_boundary}gh[[:space:]]+pr[[:space:]]+review([^;|&]*[[:space:]])--approve([[:space:]]|$)"
 force_push_pattern="${command_boundary}git[[:space:]]+push([^;|&]*[[:space:]])(--force|-f)([=[:space:]]|$)"
 force_with_lease_pattern="${command_boundary}git[[:space:]]+push([^;|&]*[[:space:]])--force-with-lease([=[:space:]]|$)"
@@ -32,10 +31,6 @@ main_push_pattern="${command_boundary}git[[:space:]]+push([^;|&]*[[:space:]])(ma
 implicit_push_pattern='^[[:space:]]*git[[:space:]]+push([[:space:]]+[^[:space:];|&]+)?[[:space:]]*$'
 wrangler_pattern="${command_boundary}wrangler[[:space:]]+(deploy|publish|secret)([[:space:]]|$)"
 env_read_pattern="${command_boundary}(cat|less|more|head|tail|grep|rg|sed|awk)[[:space:]][^;|&]*(\\.env([^/[:space:];|&]*)?|\\.dev\\.vars)([/[:space:];|&]|$)"
-
-if [[ "$command" =~ $gh_merge_pattern ]]; then
-  deny "self-merge is prohibited; leave the PR for human review"
-fi
 
 if [[ "$command" =~ $gh_approve_pattern ]]; then
   deny "self-approval is prohibited"
