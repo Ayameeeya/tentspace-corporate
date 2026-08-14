@@ -89,6 +89,67 @@ export async function loadPostBySlug(
   }
 }
 
+async function validateParsedPost(
+  parsed: ReturnType<typeof parsePostSource>,
+  postSlugs: Set<string>,
+  publicDirectory: string,
+) {
+  try {
+    const contentHtml = await renderMdxToHtml(parsed.body, { publicDirectory })
+
+    for (const source of extractHtmlImageSources(contentHtml)) {
+      if (/^(?:https?:)?\/\//.test(source)) {
+        throw new Error(`External article image is not allowed: ${source}`)
+      }
+      if (!source.startsWith("/")) {
+        throw new Error(
+          `Article image must use a root-relative local path: ${source}`,
+        )
+      }
+    }
+
+    for (const reference of extractHtmlAttributeValues(contentHtml, "href")) {
+      const slug = getBlogPostSlug(reference)
+      if (slug && !postSlugs.has(slug)) {
+        throw new Error(`Missing blog post for internal link: ${reference}`)
+      }
+    }
+  } catch (error) {
+    const reason = error instanceof Error ? error.message : String(error)
+    throw new Error(`${parsed.sourcePath}: ${reason}`, { cause: error })
+  }
+}
+
+export async function validatePostFile(
+  sourcePath: string,
+  postsDirectory = POSTS_DIRECTORY,
+  options: ContentValidationOptions = {},
+) {
+  const absoluteSourcePath = path.resolve(sourcePath)
+  const absolutePostsDirectory = path.resolve(postsDirectory)
+  const relativePath = path.relative(absolutePostsDirectory, absoluteSourcePath)
+  if (relativePath.startsWith("..") || path.isAbsolute(relativePath)) {
+    throw new Error(`Article must be inside ${absolutePostsDirectory}`)
+  }
+
+  const source = await readFile(absoluteSourcePath, "utf8")
+  let parsed: ReturnType<typeof parsePostSource>
+  try {
+    parsed = parsePostSource(source, absoluteSourcePath)
+  } catch (error) {
+    const reason = error instanceof Error ? error.message : String(error)
+    throw new Error(`${absoluteSourcePath}: ${reason}`, { cause: error })
+  }
+
+  const files = await readPostFiles(absolutePostsDirectory)
+  const postSlugs = new Set(
+    files.map((file) => path.basename(path.dirname(file.sourcePath))),
+  )
+  const publicDirectory =
+    options.publicDirectory ?? path.join(process.cwd(), "public")
+  await validateParsedPost(parsed, postSlugs, publicDirectory)
+}
+
 export async function validateContentRepository(
   postsDirectory = POSTS_DIRECTORY,
   options: ContentValidationOptions = {},
@@ -100,30 +161,7 @@ export async function validateContentRepository(
     options.publicDirectory ?? path.join(process.cwd(), "public")
 
   for (const parsed of parsedPosts) {
-    try {
-      const contentHtml = await renderMdxToHtml(parsed.body, { publicDirectory })
-
-      for (const source of extractHtmlImageSources(contentHtml)) {
-        if (/^(?:https?:)?\/\//.test(source)) {
-          throw new Error(`External article image is not allowed: ${source}`)
-        }
-        if (!source.startsWith("/")) {
-          throw new Error(
-            `Article image must use a root-relative local path: ${source}`,
-          )
-        }
-      }
-
-      for (const reference of extractHtmlAttributeValues(contentHtml, "href")) {
-        const slug = getBlogPostSlug(reference)
-        if (slug && !postSlugs.has(slug)) {
-          throw new Error(`Missing blog post for internal link: ${reference}`)
-        }
-      }
-    } catch (error) {
-      const reason = error instanceof Error ? error.message : String(error)
-      throw new Error(`${parsed.sourcePath}: ${reason}`, { cause: error })
-    }
+    await validateParsedPost(parsed, postSlugs, publicDirectory)
   }
 
   return createContentManifest(files)

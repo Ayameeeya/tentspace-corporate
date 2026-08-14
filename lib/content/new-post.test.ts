@@ -53,7 +53,7 @@ describe("createPostTemplate", () => {
       tags: ["検証"],
       experiment: {
         hook: "question",
-        cta: "contact",
+        cta: "inquiry",
         targetKw: "AI 導入",
         utmCampaign: "blog_2026w33",
       },
@@ -65,7 +65,7 @@ describe("createPostTemplate", () => {
     )
     expect(parsed.metadata.experiment).toEqual({
       hook: "question",
-      cta: "contact",
+      cta: "inquiry",
       targetKw: "AI 導入",
       utmCampaign: "blog_2026w33",
     })
@@ -73,7 +73,11 @@ describe("createPostTemplate", () => {
 
   it("SNS告知文の雛形を生成する", () => {
     const moduleWithSocial = newPost as typeof newPost & {
-      createSocialTemplate?: (input: { title: string; slug: string }) => string
+      createSocialTemplate?: (input: {
+        title: string
+        slug: string
+        utmCampaign?: string
+      }) => string
     }
 
     expect(typeof moduleWithSocial.createSocialTemplate).toBe("function")
@@ -82,8 +86,11 @@ describe("createPostTemplate", () => {
     const social = moduleWithSocial.createSocialTemplate({
       title: "MDXで記事を書く",
       slug: "writing-with-mdx",
+      utmCampaign: "blog_2026w33",
     })
     expect(social).toContain("# SNS告知文")
     expect(social).toContain("/blog/writing-with-mdx")
+    expect(social).toContain("utm_source=threads")
+    expect(social).toContain("utm_campaign=blog_2026w33")
   })
 })

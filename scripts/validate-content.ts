@@ -2,10 +2,24 @@ import { writeFile } from "node:fs/promises"
 import path from "node:path"
 import {
   loadPostBySlug,
+  validatePostFile,
   validateContentRepository,
 } from "../lib/content/repository"
 
 async function main() {
+  const args = process.argv.slice(2)
+  if (args.length > 0) {
+    if (args.length !== 2 || args[0] !== "--file" || !args[1]) {
+      throw new Error(
+        "Usage: npm run validate-content -- --file content/posts/<slug>/index.mdx",
+      )
+    }
+    const sourcePath = path.resolve(process.cwd(), args[1])
+    await validatePostFile(sourcePath)
+    console.log(`Validated ${sourcePath}`)
+    return
+  }
+
   const manifest = await validateContentRepository()
   const manifestPath = path.join(process.cwd(), "content-manifest.json")
   const renderedEntries = await Promise.all(

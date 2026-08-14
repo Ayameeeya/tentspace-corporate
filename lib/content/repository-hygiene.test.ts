@@ -77,15 +77,19 @@ describe("repository hygiene", () => {
       )
     }
 
-    const instructions = await readFile(
+    const claudeInstructions = await readFile(
       path.join(process.cwd(), "CLAUDE.md"),
       "utf8",
     )
-    expect(instructions).not.toContain("content:migrate-all")
-    expect(instructions).toContain("## Article workflow")
-    expect(instructions).toContain("## Branch and PR rules")
-    expect(instructions).toContain("## Writing style")
-    expect(instructions).toContain("## Prohibited changes")
+    const sharedInstructions = await readFile(
+      path.join(process.cwd(), "AGENTS.md"),
+      "utf8",
+    )
+    expect(claudeInstructions).toBe("@AGENTS.md\n")
+    expect(sharedInstructions).not.toContain("content:migrate-all")
+    expect(sharedInstructions).toContain("## コンテンツ規約")
+    expect(sharedInstructions).toContain("## ブランチ・PR 規約")
+    expect(sharedInstructions).toContain("## 禁止事項")
   })
 
   it("公開URLは一つのSITE_URL定義を使う", async () => {
