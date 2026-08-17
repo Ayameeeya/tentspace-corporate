@@ -276,7 +276,7 @@ export default function AboutPage() {
   }, [])
 
   return (
-    <div ref={containerRef} className="relative min-h-screen text-white overflow-x-hidden" style={{ WebkitOverflowScrolling: 'touch' }}>
+    <div ref={containerRef} className="relative min-h-screen bg-[#020212] text-white overflow-x-hidden" style={{ WebkitOverflowScrolling: 'touch' }}>
       <SmoothScroll />
       <Header />
 
@@ -288,7 +288,7 @@ export default function AboutPage() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10">
+      <main id="main-content" className="relative z-10">
         {/* Hero */}
         <section className="min-h-screen flex items-center px-6 md:px-12 lg:px-24 overflow-hidden">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center max-w-7xl mx-auto w-full">
@@ -335,7 +335,7 @@ export default function AboutPage() {
               </div>
 
               <div className="hero-line mt-6 md:mt-10 pt-4 md:pt-6 border-t border-white/10">
-                <p className="text-white/40 text-[10px] md:text-xs tracking-wider">EST. 2023 — IZU, JAPAN</p>
+                <p className="text-white/70 text-[10px] md:text-xs tracking-wider">EST. 2023 — IZU, JAPAN</p>
               </div>
             </div>
           </div>
@@ -362,7 +362,7 @@ export default function AboutPage() {
             </div>
             <div className="relative parallax-fast">
               <div className="aspect-square border border-white/10 backdrop-blur-sm flex items-center justify-center">
-                <span className="text-[12rem] font-bold text-blue-500/10">AI</span>
+                <span aria-hidden="true" className="text-[12rem] font-bold text-blue-500/70">AI</span>
               </div>
               <div className="absolute -top-4 -left-4 w-8 h-8 border-t-2 border-l-2 border-blue-500" />
               <div className="absolute -bottom-4 -right-4 w-8 h-8 border-b-2 border-r-2 border-blue-500" />
@@ -410,7 +410,7 @@ export default function AboutPage() {
               ].map((stat, i) => (
                 <div key={i} className="text-center">
                   <div className="text-3xl md:text-7xl font-bold text-blue-500 mb-1 md:mb-2">{stat.value}</div>
-                  <div className="text-white/40 font-tech text-[10px] md:text-xs tracking-wider">{stat.label}</div>
+                  <div className="text-white/70 font-tech text-[10px] md:text-xs tracking-wider">{stat.label}</div>
                 </div>
               ))}
             </div>
@@ -476,12 +476,12 @@ export default function AboutPage() {
                   className="group flex items-center justify-between p-4 md:p-6 border-b border-white/10 hover:border-blue-500/50 transition-all cursor-default"
                 >
                   <div className="flex items-center gap-4 md:gap-8">
-                    <span className="font-tech text-blue-500/50 text-xs md:text-sm">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="font-tech text-blue-400 text-xs md:text-sm">{String(i + 1).padStart(2, "0")}</span>
                     <h3 className="text-lg md:text-3xl font-bold group-hover:text-blue-400 transition-colors">
                       {service.title}
                     </h3>
                   </div>
-                  <p className="hidden md:block text-white/40 max-w-md text-right">{service.desc}</p>
+                  <p className="hidden md:block text-white/70 max-w-md text-right">{service.desc}</p>
                 </div>
               ))}
             </div>
@@ -539,8 +539,8 @@ export default function AboutPage() {
         <div className="h-32" />
 
         {/* Footer */}
-        <Footer copyrightClassName="text-background/60" />
-      </div>
+        <Footer copyrightClassName="text-white/70" />
+      </main>
     </div>
   )
 }

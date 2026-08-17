@@ -3,7 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 
-export function PageFooter({ copyrightClassName = "text-primary-foreground/60" }: { copyrightClassName?: string }) {
+export function PageFooter({ copyrightClassName = "text-muted-foreground" }: { copyrightClassName?: string }) {
   return (
     <div className="relative z-20 px-6 md:px-12 lg:px-20">
       {/* Footer */}
@@ -30,18 +30,18 @@ export function PageFooter({ copyrightClassName = "text-primary-foreground/60" }
                 />
               </div>
             </Link>
-            <div className="text-background/80 space-y-0.5">
+            <div className="text-primary-foreground space-y-0.5">
               <a
                 href="mailto:back-office@tentspace.net"
                 className="text-xs md:text-sm font-medium hover:text-background transition-colors inline-block"
               >
                 back-office@tentspace.net
               </a>
-              <p className="text-[10px] md:text-xs text-background/60">323 Kadoyama, Ogawa, Hiki District, Saitama 355-0316, Japan</p>
+              <p className="text-[10px] md:text-xs text-primary-foreground">323 Kadoyama, Ogawa, Hiki District, Saitama 355-0316, Japan</p>
             </div>
           </div>
           <div className="flex flex-col items-start md:items-end gap-2 md:gap-3 md:pb-2">
-            <div className="flex items-center gap-3 md:gap-4 text-[10px] md:text-xs text-background/60">
+            <nav aria-label="フッターナビゲーション" className="flex items-center gap-3 md:gap-4 text-[10px] md:text-xs text-primary-foreground">
               <Link href="/about" className="hover:text-background transition-colors">
                 About Us
               </Link>
@@ -57,7 +57,7 @@ export function PageFooter({ copyrightClassName = "text-primary-foreground/60" }
               <Link href="/legal" className="hover:text-background transition-colors">
                 Legal
               </Link>
-            </div>
+            </nav>
           </div>
         </div>
       </div>
@@ -73,4 +73,3 @@ export function PageFooter({ copyrightClassName = "text-primary-foreground/60" }
     </div>
   )
 }
-

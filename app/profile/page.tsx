@@ -102,7 +102,7 @@ export default function ProfilePage() {
     return (
       <div className="min-h-screen bg-background">
         <BlogHeader />
-        <main className="pt-24 pb-12">
+        <main id="main-content" className="pt-24 pb-12">
           <div className="animate-pulse space-y-4 max-w-6xl mx-auto px-4">
             <div className="h-8 bg-muted rounded w-1/4"></div>
             <div className="h-64 bg-muted rounded"></div>
@@ -123,7 +123,7 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-background">
       <BlogHeader />
 
-      <main className="pt-24 pb-12 max-w-6xl mx-auto px-4">
+      <main id="main-content" className="pt-24 pb-12 max-w-6xl mx-auto px-4">
         {/* Breadcrumb */}
         <nav className="mb-6" aria-label="パンくずリスト">
           <ol className="flex items-center gap-2 text-sm text-muted-foreground">

@@ -20,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const description = category?.description || "SEOに関する記事一覧です。tent spaceのエンジニアがSEOについて実践的な技術情報をお届けします。"
 
   return {
-    title: "SEO特設サイト | tent space Blog",
+    title: "SEO特設サイト",
     description,
     openGraph: {
       title: "SEO特設サイト | tent space Blog",
@@ -84,7 +84,7 @@ function BlogCard({ post }: { post: BlogPost }) {
 
           {/* Content */}
           <div className="flex-1 min-w-0">
-            <h4
+            <h3
               className="text-base font-bold text-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors"
               dangerouslySetInnerHTML={{ __html: post.title }}
             />
@@ -197,7 +197,7 @@ export default async function SEOPage() {
       return (
         <div className="min-h-screen bg-background">
           <BlogHeader />
-          <main className="pt-[104px] md:pt-[120px]">
+          <main id="main-content" className="pt-[104px] md:pt-[120px]">
             <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-16">
               <h1 className="text-4xl font-bold mb-4">カテゴリが見つかりません</h1>
               <p className="text-muted-foreground mb-6">
@@ -377,7 +377,7 @@ export default async function SEOPage() {
           </div>
 
           {/* Main Content */}
-          <main className="pt-16 md:pt-20 relative z-10">
+          <main id="main-content" className="pt-16 md:pt-20 relative z-10">
             {/* Hero Section */}
             <div className="border-b border-border">
               <div className="max-w-[1000px] mx-auto px-6 md:px-12 lg:px-16 py-16 md:py-24">
@@ -479,9 +479,9 @@ export default async function SEOPage() {
                 {/* 関連記事 */}
                 {posts.find(post => decodeURIComponent(post.slug).includes('cloudflare-pay-per-crawl') || decodeURIComponent(post.slug).includes('ai')) && (
                   <div className="bg-background p-6 border border-primary/30">
-                    <h4 className="text-sm font-bold text-primary mb-3 uppercase tracking-wider">
+                    <h3 className="text-sm font-bold text-primary mb-3 uppercase tracking-wider">
                       📖 詳しく読む
-                    </h4>
+                    </h3>
                     {posts
                       .filter(post => 
                         decodeURIComponent(post.slug).includes('cloudflare-pay-per-crawl') || 
@@ -507,7 +507,7 @@ export default async function SEOPage() {
                               </div>
                             )}
                             <div className="flex-1">
-                              <h5 
+                              <h4
                                 className="text-lg font-bold text-foreground mb-2 group-hover:text-primary transition-colors"
                                 dangerouslySetInnerHTML={{ __html: post.title }}
                               />
@@ -613,7 +613,7 @@ export default async function SEOPage() {
     return (
       <div className="min-h-screen bg-background">
         <BlogHeader />
-        <main className="pt-16 md:pt-20">
+          <main id="main-content" className="pt-16 md:pt-20">
           <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-16">
             <h1 className="text-4xl font-bold mb-4">エラーが発生しました</h1>
             <p className="text-muted-foreground mb-6">

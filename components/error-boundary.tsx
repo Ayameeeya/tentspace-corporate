@@ -169,7 +169,7 @@ function DefaultErrorFallback({ error }: { error?: Error }) {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       {/* Main Content */}
-      <main className="flex-1 flex items-center justify-center px-4 pt-16">
+      <main id="main-content" className="flex-1 flex items-center justify-center px-4 pt-16">
         <div className="max-w-2xl w-full text-center py-12">
           {/* Eye Animation */}
           <div className="mb-6 flex justify-center">

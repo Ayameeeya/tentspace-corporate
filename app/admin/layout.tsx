@@ -64,7 +64,7 @@ export default async function AdminLayout({
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
         <AdminSidebar />
-        <main className="flex-1">
+        <main id="main-content" className="flex-1">
           <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-6">
             <SidebarTrigger />
             <Separator orientation="vertical" className="h-6" />

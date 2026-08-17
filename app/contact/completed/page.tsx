@@ -21,7 +21,7 @@ export default function ContactCompletedPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
+      <main id="main-content" className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
         <div className="mx-auto max-w-4xl px-6 py-24 pt-32">
           {/* Success Icon and Message */}
           <div className="text-center">

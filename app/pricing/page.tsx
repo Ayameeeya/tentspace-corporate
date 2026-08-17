@@ -78,10 +78,10 @@ export default function PricingPage() {
     <div className="min-h-screen bg-background">
       <BlogHeader />
       
-      <main className="pt-20 pb-16">
+      <main id="main-content" className="pt-20 pb-16">
         {/* Hero Section */}
         <div className="max-w-5xl mx-auto px-4 text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/10 text-violet-500 text-sm font-medium mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/10 text-violet-700 text-sm font-medium mb-4">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
@@ -116,7 +116,7 @@ export default function PricingPage() {
               }`}
             >
               年払い
-              <span className="ml-1.5 text-xs text-green-500 font-semibold">2ヶ月分お得</span>
+              <span className="ml-1.5 text-xs text-green-700 font-semibold">2ヶ月分お得</span>
             </button>
           </div>
         </div>
@@ -142,7 +142,7 @@ export default function PricingPage() {
                 )}
 
                 <div className="mb-6">
-                  <h3 className="text-xl font-bold text-foreground mb-1">{plan.name}</h3>
+                  <h2 className="text-xl font-bold text-foreground mb-1">{plan.name}</h2>
                   <p className="text-sm text-muted-foreground">{plan.description}</p>
                 </div>
 
@@ -160,7 +160,7 @@ export default function PricingPage() {
                     <li key={index} className="flex items-start gap-2 text-sm text-muted-foreground">
                       <svg
                         className={`w-5 h-5 flex-shrink-0 ${
-                          plan.popular ? "text-violet-500" : "text-green-500"
+                          plan.popular ? "text-violet-600" : "text-green-700"
                         }`}
                         fill="none"
                         stroke="currentColor"

@@ -115,6 +115,12 @@ export default function RootLayout({
         </Script>
       </head>
       <body className="font-sans antialiased">
+        <a
+          href="#main-content"
+          className="sr-only fixed left-4 top-4 z-[10000] rounded-md bg-background px-4 py-3 font-semibold text-foreground shadow-lg focus:not-sr-only focus:outline-none focus:ring-2 focus:ring-primary"
+        >
+          本文へスキップ
+        </a>
         <ErrorBoundary>
           <ClientErrorTracker />
           {children}

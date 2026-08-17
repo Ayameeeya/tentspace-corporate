@@ -216,7 +216,7 @@ export default function TermsPage() {
         <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-blue-500/3 blur-3xl" />
       </div>
 
-      <div className="relative z-10">
+      <main id="main-content" className="relative z-10">
         {/* Hero */}
         <div className="min-h-[50vh] flex flex-col justify-end px-6 md:px-12 lg:px-20 pb-12 md:pb-16">
           <div className="max-w-5xl">
@@ -247,7 +247,7 @@ export default function TermsPage() {
             {sections.map((section) => (
               <section key={section.id} className="terms-section mb-12 md:mb-16 last:mb-0">
                 <div className="flex items-start gap-4 md:gap-6">
-                  <span className="text-blue-500 text-xs md:text-sm font-tech mt-1.5">{section.id}</span>
+                  <span className="text-blue-700 text-xs md:text-sm font-tech mt-1.5">{section.id}</span>
                   <div className="flex-1">
                     <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-foreground">{section.title}</h2>
                     <p className="text-muted-foreground text-sm md:text-base leading-relaxed">{section.content}</p>
@@ -269,7 +269,7 @@ export default function TermsPage() {
             {/* Contact */}
             <section className="terms-section mt-12 md:mt-20 pt-12 md:pt-16 border-t border-border">
               <div className="flex items-start gap-4 md:gap-6">
-                <span className="text-blue-500 text-xs md:text-sm font-tech mt-1.5">06</span>
+                <span className="text-blue-700 text-xs md:text-sm font-tech mt-1.5">06</span>
                 <div className="flex-1">
                   <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-foreground">お問い合わせ</h2>
                   <p className="text-muted-foreground text-sm md:text-base mb-4 md:mb-6">
@@ -279,25 +279,25 @@ export default function TermsPage() {
                     <table className="w-full">
                       <tbody className="divide-y divide-border">
                         <tr className="hover:bg-background/50 transition-colors">
-                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm font-medium text-muted-foreground w-1/3 md:w-1/4">
+                          <th scope="row" className="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium text-muted-foreground w-1/3 md:w-1/4">
                             事業者名
-                          </td>
+                          </th>
                           <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-foreground">
                             株式会社tent space
                           </td>
                         </tr>
                         <tr className="hover:bg-background/50 transition-colors">
-                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm font-medium text-muted-foreground w-1/3 md:w-1/4">
+                          <th scope="row" className="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium text-muted-foreground w-1/3 md:w-1/4">
                             所在地
-                          </td>
+                          </th>
                           <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-foreground">
                             〒355-0316 埼玉県比企郡小川町大字角山323
                           </td>
                         </tr>
                         <tr className="hover:bg-background/50 transition-colors">
-                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm font-medium text-muted-foreground w-1/3 md:w-1/4">
+                          <th scope="row" className="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium text-muted-foreground w-1/3 md:w-1/4">
                             Email
-                          </td>
+                          </th>
                           <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-foreground">
                             <a
                               href="mailto:back-office@tentspace.net"
@@ -318,7 +318,7 @@ export default function TermsPage() {
 
         {/* Footer */}
         <PageFooter />
-      </div>
+      </main>
     </div>
   )
 }

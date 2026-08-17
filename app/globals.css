@@ -333,7 +333,8 @@ html {
 
 .article-content a {
   color: #2563eb;
-  text-decoration: none;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
   transition: color 0.2s;
 }
 
@@ -656,6 +657,7 @@ html {
 .ts-code-wrapper pre.ts-code code.hljs {
   background: transparent !important;
   padding: 0 !important;
+  overflow-x: visible;
 }
 
 /* Prism.js Token Colors (VS Code Dark+ inspired) */

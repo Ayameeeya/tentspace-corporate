@@ -216,7 +216,7 @@ function MasonryBlogCard({ post, likes = 0, index = 0, isMobile = false }: { pos
                   {excerpt}
                 </p>
                 <blockquote className="border-l-2 border-border pl-3 py-1">
-                  <p className="text-muted-foreground/70 text-xs italic line-clamp-2">
+                  <p className="text-muted-foreground text-xs italic line-clamp-2">
                     &quot;{getQuote(excerpt)}...&quot;
                   </p>
                 </blockquote>
@@ -420,7 +420,7 @@ export default function CategoryPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/30 to-background" />
       </div>
 
-      <main className="pt-[104px] md:pt-[120px] relative z-10">
+      <main id="main-content" className="pt-[104px] md:pt-[120px] relative z-10">
         <div className="border-b border-border">
           <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-12 md:py-16">
             <div className="text-center max-w-3xl mx-auto">
@@ -432,7 +432,7 @@ export default function CategoryPage() {
                   {category.description && (
                     <p className="text-base md:text-lg text-muted-foreground mb-4" dangerouslySetInnerHTML={{ __html: category.description }} />
                   )}
-                  <p className="text-base text-muted-foreground/70 font-pixel">
+                  <p className="text-base text-muted-foreground font-pixel">
                     {totalPosts} {totalPosts === 1 ? 'Article' : 'Articles'}
                   </p>
                 </>
@@ -447,6 +447,7 @@ export default function CategoryPage() {
         />
 
         <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-12 md:py-16">
+          <h2 className="sr-only">記事一覧</h2>
           {loading ? (
             <div className="flex justify-center items-center min-h-[400px]">
               <EyeLoader />

@@ -120,7 +120,7 @@ export default function FavoritesClient() {
     return (
       <div className="min-h-screen bg-background">
         <BlogHeader />
-        <main className="pt-[120px]">
+        <main id="main-content" className="pt-[120px]">
           <div className="max-w-5xl mx-auto px-4 py-12 flex items-center justify-center">
             <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
           </div>
@@ -133,7 +133,7 @@ export default function FavoritesClient() {
     return (
       <div className="min-h-screen bg-background">
         <BlogHeader />
-        <main className="pt-[120px]">
+        <main id="main-content" className="pt-[120px]">
           <div className="max-w-5xl mx-auto px-4 py-12">
             <div className="bg-card rounded-xl border border-border p-12 text-center">
               <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
@@ -163,7 +163,7 @@ export default function FavoritesClient() {
   return (
     <div className="min-h-screen bg-background">
       <BlogHeader />
-      <main className="pt-20">
+      <main id="main-content" className="pt-20">
         <div className="max-w-5xl mx-auto px-4 py-12">
           {/* Header */}
           <div className="mb-8">

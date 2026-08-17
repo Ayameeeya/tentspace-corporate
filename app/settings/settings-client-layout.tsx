@@ -46,7 +46,7 @@ export default function SettingsClientLayout({
     return (
       <div className="min-h-screen bg-background">
         <BlogHeader />
-        <main className="pt-24 pb-12">
+        <main id="main-content" className="pt-24 pb-12">
           <div className="animate-pulse space-y-4 max-w-6xl mx-auto px-4">
             <div className="h-8 bg-muted rounded w-1/4"></div>
             <div className="h-64 bg-muted rounded"></div>
@@ -98,7 +98,7 @@ export default function SettingsClientLayout({
               </div>
             </aside>
 
-            <main className="flex-1 ml-56 p-8">{children}</main>
+            <main id="main-content" className="flex-1 ml-56 p-8">{children}</main>
           </div>
         </div>
       </div>
