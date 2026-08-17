@@ -324,6 +324,19 @@ export const LogoLoop = React.memo<LogoLoopProps>(
         }
 
         const isNodeItem = 'node' in item;
+        const itemAriaLabel = isNodeItem
+          ? ((item as any).ariaLabel ?? (item as any).title)
+          : ((item as any).alt ?? (item as any).title);
+        const node = isNodeItem ? (item as { node: React.ReactNode }).node : null;
+        const decorativeNode = React.isValidElement(node)
+          ? React.cloneElement(
+              node as React.ReactElement<{
+                'aria-hidden'?: boolean;
+                focusable?: boolean;
+              }>,
+              { 'aria-hidden': true, focusable: false }
+            )
+          : node;
 
         const content = isNodeItem ? (
           <span
@@ -333,9 +346,10 @@ export const LogoLoop = React.memo<LogoLoopProps>(
               scaleOnHover &&
                 'transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover/item:scale-120'
             )}
-            aria-hidden={!!(item as any).href && !(item as any).ariaLabel}
+            role={isNodeItem && itemAriaLabel ? 'img' : undefined}
+            aria-label={isNodeItem ? itemAriaLabel : undefined}
           >
-            {(item as any).node}
+            {decorativeNode}
           </span>
         ) : (
           <img
@@ -359,10 +373,6 @@ export const LogoLoop = React.memo<LogoLoopProps>(
             draggable={false}
           />
         );
-
-        const itemAriaLabel = isNodeItem
-          ? ((item as any).ariaLabel ?? (item as any).title)
-          : ((item as any).alt ?? (item as any).title);
 
         const inner = (item as any).href ? (
           <a

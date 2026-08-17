@@ -53,6 +53,7 @@ export function ContactForm() {
               type="text"
               id="name"
               name="name"
+              autoComplete="name"
               required
               disabled={isSubmitting}
               className="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
@@ -70,6 +71,8 @@ export function ContactForm() {
               type="email"
               id="email"
               name="email"
+              autoComplete="email"
+              spellCheck={false}
               required
               disabled={isSubmitting}
               className="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
@@ -87,6 +90,7 @@ export function ContactForm() {
             type="text"
             id="company"
             name="company"
+            autoComplete="organization"
             disabled={isSubmitting}
             className="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
             placeholder="株式会社Example"
@@ -102,6 +106,7 @@ export function ContactForm() {
             type="tel"
             id="phone"
             name="phone"
+            autoComplete="tel"
             disabled={isSubmitting}
             className="w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-3 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
             placeholder="03-1234-5678"

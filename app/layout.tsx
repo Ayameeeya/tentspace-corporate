@@ -6,9 +6,14 @@ import Script from "next/script"
 import { CookieConsent } from "@/components/cookie-consent"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { ClientErrorTracker } from "@/components/client-error-tracker"
+import { SITE_URL } from "@/lib/site"
 import "./globals.css"
 
 const GA_MEASUREMENT_ID = "G-1XCFVFP5DX"
+const SITE_TITLE = "tent␣ - AI-Driven Development"
+const SITE_DESCRIPTION =
+  "tent space(テントスペース)は、AI駆動開発と実績のある専門知識を組み合わせて、より迅速でスマートなソリューションを提供するテックスタジオです。"
+const DEFAULT_SOCIAL_IMAGE = `${SITE_URL}/logo_gradation_yoko.png`
 
 const inter = Inter({
   subsets: ["latin"],
@@ -33,9 +38,32 @@ const vt323 = VT323({
 })
 
 export const metadata: Metadata = {
-  title: "tent␣ - AI-Driven Development",
-  description: "tent space(テントスペース)は、AI駆動開発と実績のある専門知識を組み合わせて、より迅速でスマートなソリューションを提供するテックスタジオです。",
-  generator: "v0.app",
+  metadataBase: new URL(SITE_URL),
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  alternates: { canonical: SITE_URL },
+  openGraph: {
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    siteName: "tent space",
+    locale: "ja_JP",
+    type: "website",
+    images: [
+      {
+        url: DEFAULT_SOCIAL_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: "tent space",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    images: [DEFAULT_SOCIAL_IMAGE],
+  },
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon-16x16.png",
@@ -87,6 +115,12 @@ export default function RootLayout({
         </Script>
       </head>
       <body className="font-sans antialiased">
+        <a
+          href="#main-content"
+          className="sr-only fixed left-4 top-4 z-[10000] rounded-md bg-background px-4 py-3 font-semibold text-foreground shadow-lg focus:not-sr-only focus:outline-none focus:ring-2 focus:ring-primary"
+        >
+          本文へスキップ
+        </a>
         <ErrorBoundary>
           <ClientErrorTracker />
           {children}

@@ -21,7 +21,17 @@ const source = "mdx"
     expect(html).toContain("<table>")
     expect(html).toContain('class="ts-code"')
     expect(html).toContain('data-lang="typescript"')
+    expect(html).toContain('tabindex="0"')
     expect(html).toContain("const source")
+  })
+
+  it("言語指定のないコードブロックもキーボードでスクロールできる", async () => {
+    const html = await renderMdxToHtml(`\`\`\`
+const source = "mdx"
+\`\`\`
+`)
+
+    expect(html).toContain('<pre tabindex="0"><code>')
   })
 
   it("埋め込みコンポーネントを安全なHTMLへ変換する", async () => {

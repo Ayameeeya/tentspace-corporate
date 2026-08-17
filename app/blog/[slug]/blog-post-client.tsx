@@ -179,7 +179,7 @@ function TableOfContents({ content }: { content: string }) {
             <li key={section.id}>
               <a
                 href={`#${section.id}`}
-                className={`flex items-center gap-1 py-1.5 text-sm transition-colors ${isActive ? 'text-blue-500 font-medium' : 'text-muted-foreground hover:text-foreground'
+                className={`flex items-center gap-1 py-1.5 text-sm transition-colors ${isActive ? 'text-blue-700 dark:text-blue-300 font-medium' : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 {section.children.length > 0 && (
@@ -202,7 +202,7 @@ function TableOfContents({ content }: { content: string }) {
                     <li key={child.id}>
                       <a
                         href={`#${child.id}`}
-                        className={`block py-1 pl-7 text-xs transition-colors ${activeId === child.id ? 'text-blue-500 font-medium' : 'text-muted-foreground hover:text-foreground'
+                        className={`block py-1 pl-7 text-xs transition-colors ${activeId === child.id ? 'text-blue-700 dark:text-blue-300 font-medium' : 'text-muted-foreground hover:text-foreground'
                         }`}
                       >
                         {child.text}
@@ -570,7 +570,7 @@ export default function BlogPostClient({
     <div className="min-h-screen bg-background">
       <BlogHeader />
 
-      <main className="pt-[120px]">
+      <main id="main-content" className="pt-[120px]">
         {/* Breadcrumb Navigation */}
         <nav className="max-w-5xl mx-auto px-4 py-4" aria-label="パンくずリスト">
           <ol className="flex items-center gap-2 text-sm text-muted-foreground" itemScope itemType="https://schema.org/BreadcrumbList">
@@ -612,7 +612,7 @@ export default function BlogPostClient({
                 {categories.map((cat) => (
                   <span
                     key={cat.id}
-                    className="inline-flex items-center px-3 py-1 text-xs font-medium bg-blue-500/10 text-blue-500 rounded-full"
+                    className="inline-flex items-center px-3 py-1 text-xs font-medium bg-blue-500/10 text-blue-700 dark:text-blue-300 rounded-full"
                   >
                     {cat.name}
                   </span>
@@ -735,12 +735,12 @@ export default function BlogPostClient({
                             )}
                             <div className="p-3">
                               {relatedCategories[0] && (
-                                <span className="inline-block px-2 py-0.5 text-[10px] font-medium bg-blue-500/10 text-blue-500 rounded mb-1.5">
+                                <span className="inline-block px-2 py-0.5 text-[10px] font-medium bg-blue-500/10 text-blue-700 dark:text-blue-300 rounded mb-1.5">
                                   {relatedCategories[0].name}
                                 </span>
                               )}
                               <h4 
-                                className="text-sm font-medium text-foreground line-clamp-2 group-hover:text-blue-500 transition-colors"
+                                className="text-sm font-medium text-foreground line-clamp-2 group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors"
                                 dangerouslySetInnerHTML={{ __html: relatedPost.title }}
                               />
                               <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
@@ -812,7 +812,7 @@ export default function BlogPostClient({
                     href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(canonicalUrl)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2.5 bg-[#1877F2] text-white rounded-lg hover:bg-[#166FE5] transition-colors"
+                    className="flex items-center gap-2 px-4 py-2.5 bg-[#0B57B7] text-white rounded-lg hover:bg-[#08458F] transition-colors"
                     aria-label="Facebookでシェア"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
@@ -826,7 +826,7 @@ export default function BlogPostClient({
                     href={`https://b.hatena.ne.jp/add?mode=confirm&url=${encodeURIComponent(canonicalUrl)}&title=${encodeURIComponent(plainTitle)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2.5 bg-[#00A4DE] text-white rounded-lg hover:bg-[#0095C9] transition-colors"
+                    className="flex items-center gap-2 px-4 py-2.5 bg-[#006B91] text-white rounded-lg hover:bg-[#005471] transition-colors"
                     aria-label="はてなブックマークに追加"
                   >
                     <span className="font-bold text-sm">B!</span>
@@ -852,7 +852,7 @@ export default function BlogPostClient({
                     href={`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(canonicalUrl)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2.5 bg-[#06C755] text-white rounded-lg hover:bg-[#05B64D] transition-colors"
+                    className="flex items-center gap-2 px-4 py-2.5 bg-[#087A36] text-white rounded-lg hover:bg-[#06612B] transition-colors"
                     aria-label="LINEでシェア"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">

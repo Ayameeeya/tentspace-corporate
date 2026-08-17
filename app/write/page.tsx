@@ -238,7 +238,7 @@ export default function WritePage() {
       </header>
 
       {/* Main Editor Area */}
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main id="main-content" className="flex-1 flex flex-col overflow-hidden">
         {/* Title */}
         <div className="px-4 md:px-8 py-4 border-b border-border">
           <input

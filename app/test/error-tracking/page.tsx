@@ -6,15 +6,18 @@ export const metadata = {
     index: false, // テストページなのでインデックスしない
     follow: false,
   },
+  alternates: { canonical: null },
+  openGraph: null,
+  twitter: null,
 };
 
 export default function ErrorTrackingTestPage() {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <main id="main-content" className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto py-12">
         <ErrorTrackingDemo />
       </div>
-    </div>
+    </main>
   );
 }
 

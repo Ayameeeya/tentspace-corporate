@@ -730,11 +730,11 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
               <span className="font-medium text-gray-900 dark:text-gray-100 text-sm">
                 {comment.display_name}
               </span>
-              <span className="text-xs text-gray-400 dark:text-gray-500">
+              <span className="text-xs text-gray-600 dark:text-gray-400">
                 {getRelativeTime(comment.created_at)}
               </span>
               {comment.updated_at !== comment.created_at && (
-                <span className="text-xs text-gray-400 dark:text-gray-500">(編集済み)</span>
+                <span className="text-xs text-gray-600 dark:text-gray-400">(編集済み)</span>
               )}
             </div>
 
@@ -775,7 +775,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
                         </div>
                       )}
                     </div>
-                    <span className="text-xs text-gray-400 dark:text-gray-500">Ctrl + Enter で保存</span>
+                    <span className="text-xs text-gray-600 dark:text-gray-400">Ctrl + Enter で保存</span>
                   </div>
                   <div className="flex gap-1.5">
                     <Button
@@ -813,7 +813,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
                         setReplyingTo(comment.id)
                         setReplyContent("")
                       }}
-                      className="text-xs text-gray-400 dark:text-gray-500 hover:text-blue-500 dark:hover:text-blue-400 font-medium"
+                      className="text-xs text-gray-600 dark:text-gray-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
                     >
                       返信
                     </button>
@@ -825,13 +825,13 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
                           setEditingId(comment.id)
                           setEditContent(comment.content)
                         }}
-                        className="text-xs text-gray-400 dark:text-gray-500 hover:text-blue-500 dark:hover:text-blue-400 font-medium"
+                        className="text-xs text-gray-600 dark:text-gray-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
                       >
                         編集
                       </button>
                       <button
                         onClick={() => handleDelete(comment.id)}
-                        className="text-xs text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 font-medium"
+                        className="text-xs text-gray-600 dark:text-gray-400 hover:text-red-700 dark:hover:text-red-300 font-medium"
                       >
                         削除
                       </button>
@@ -929,7 +929,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
                         </div>
                       )}
                     </div>
-                    <span className="text-xs text-gray-400 dark:text-gray-500">Ctrl + Enter で送信</span>
+                    <span className="text-xs text-gray-600 dark:text-gray-400">Ctrl + Enter で送信</span>
                   </div>
                   <div className="flex gap-1.5">
                     <Button
@@ -1048,7 +1048,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
                   )}
                 </div>
                 
-                <span className="text-xs text-gray-400 dark:text-gray-500">
+                <span className="text-xs text-gray-600 dark:text-gray-400">
                   Ctrl + Enter で送信
                 </span>
               </div>
@@ -1083,7 +1083,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
           </svg>
           <p className="text-sm">まだコメントはありません</p>
-          <p className="text-xs mt-1 text-gray-400 dark:text-gray-500">最初のコメントを投稿しましょう</p>
+          <p className="text-xs mt-1 text-gray-600 dark:text-gray-400">最初のコメントを投稿しましょう</p>
         </div>
       ) : (
         <>

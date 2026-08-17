@@ -256,7 +256,7 @@ export default async function N8nFeaturedPage() {
         </div>
 
         {/* Main Content */}
-        <main className="pt-16 md:pt-20 relative z-10">
+        <main id="main-content" className="pt-16 md:pt-20 relative z-10">
           {/* Hero Section */}
           <div className="border-b border-slate-200 dark:border-border">
             <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-16 md:py-24">

@@ -57,7 +57,7 @@ export default function PrivacyPage() {
         <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-blue-500/3 blur-3xl" />
       </div>
 
-      <div className="relative z-10">
+      <main id="main-content" className="relative z-10">
         {/* Hero */}
         <div className="min-h-[50vh] flex flex-col justify-end px-6 md:px-12 lg:px-20 pb-12 md:pb-16">
           <div className="max-w-5xl">
@@ -90,7 +90,7 @@ export default function PrivacyPage() {
             {/* はじめに */}
             <section className="privacy-section mb-12 md:mb-16">
               <div className="flex items-start gap-4 md:gap-6">
-                <span className="text-blue-500 text-xs md:text-sm font-tech mt-1.5">00</span>
+                <span className="text-blue-700 text-xs md:text-sm font-tech mt-1.5">00</span>
                 <div className="flex-1">
                   <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-foreground">はじめに</h2>
                   <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
@@ -103,7 +103,7 @@ export default function PrivacyPage() {
             {/* 第1条 */}
             <section className="privacy-section mb-12 md:mb-16">
               <div className="flex items-start gap-4 md:gap-6">
-                <span className="text-blue-500 text-xs md:text-sm font-tech mt-1.5">01</span>
+                <span className="text-blue-700 text-xs md:text-sm font-tech mt-1.5">01</span>
                 <div className="flex-1">
                   <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-foreground">個人情報の定義</h2>
                   <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
@@ -116,32 +116,32 @@ export default function PrivacyPage() {
             {/* 第2条 */}
             <section className="privacy-section mb-12 md:mb-16">
               <div className="flex items-start gap-4 md:gap-6">
-                <span className="text-blue-500 text-xs md:text-sm font-tech mt-1.5">02</span>
+                <span className="text-blue-700 text-xs md:text-sm font-tech mt-1.5">02</span>
                 <div className="flex-1">
                   <h2 className="text-lg md:text-xl font-semibold mb-4 md:mb-6 text-foreground">事業者情報</h2>
                   <div className="overflow-hidden rounded-lg border border-border">
                     <table className="w-full">
                       <tbody className="divide-y divide-border">
                         <tr className="hover:bg-muted/50 transition-colors">
-                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm font-medium text-muted-foreground bg-muted/50 w-1/3">
+                          <th scope="row" className="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium text-muted-foreground bg-muted/50 w-1/3">
                             法人名
-                          </td>
+                          </th>
                           <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-foreground">
                             株式会社tent space
                           </td>
                         </tr>
                         <tr className="hover:bg-muted/50 transition-colors">
-                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm font-medium text-muted-foreground bg-muted/50 w-1/3">
+                          <th scope="row" className="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium text-muted-foreground bg-muted/50 w-1/3">
                             住所
-                          </td>
+                          </th>
                           <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-foreground">
                             〒355-0316 埼玉県比企郡小川町大字角山323
                           </td>
                         </tr>
                         <tr className="hover:bg-muted/50 transition-colors">
-                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm font-medium text-muted-foreground bg-muted/50 w-1/3">
+                          <th scope="row" className="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium text-muted-foreground bg-muted/50 w-1/3">
                             代表者
-                          </td>
+                          </th>
                           <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-foreground">
                             石井 絢子
                           </td>
@@ -156,7 +156,7 @@ export default function PrivacyPage() {
             {/* 第3条 */}
             <section className="privacy-section mb-12 md:mb-16">
               <div className="flex items-start gap-4 md:gap-6">
-                <span className="text-blue-500 text-xs md:text-sm font-tech mt-1.5">03</span>
+                <span className="text-blue-700 text-xs md:text-sm font-tech mt-1.5">03</span>
                 <div className="flex-1">
                   <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-foreground">個人情報の取得方法</h2>
                   <p className="text-muted-foreground text-sm md:text-base leading-relaxed mb-3 md:mb-4">
@@ -172,7 +172,7 @@ export default function PrivacyPage() {
             {/* 第4条 */}
             <section className="privacy-section mb-12 md:mb-16">
               <div className="flex items-start gap-4 md:gap-6">
-                <span className="text-blue-500 text-xs md:text-sm font-tech mt-1.5">04</span>
+                <span className="text-blue-700 text-xs md:text-sm font-tech mt-1.5">04</span>
                 <div className="flex-1">
                   <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-foreground">個人情報の利用目的</h2>
                   <p className="text-muted-foreground text-sm md:text-base leading-relaxed mb-3 md:mb-4">
@@ -223,7 +223,7 @@ export default function PrivacyPage() {
             {/* 第5条 - 第10条は省略して主要なセクションのみ表示 */}
             <section className="privacy-section mb-12 md:mb-16">
               <div className="flex items-start gap-4 md:gap-6">
-                <span className="text-blue-500 text-xs md:text-sm font-tech mt-1.5">05</span>
+                <span className="text-blue-700 text-xs md:text-sm font-tech mt-1.5">05</span>
                 <div className="flex-1">
                   <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-foreground">個人データの安全対策</h2>
                   <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
@@ -236,7 +236,7 @@ export default function PrivacyPage() {
             {/* お問い合わせ */}
             <section className="privacy-section mt-12 md:mt-20 pt-12 md:pt-16 border-t border-border">
               <div className="flex items-start gap-4 md:gap-6">
-                <span className="text-blue-500 text-xs md:text-sm font-tech mt-1.5">06</span>
+                <span className="text-blue-700 text-xs md:text-sm font-tech mt-1.5">06</span>
                 <div className="flex-1">
                   <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-foreground">お問い合わせ</h2>
                   <p className="text-muted-foreground text-sm md:text-base mb-4 md:mb-6">
@@ -246,25 +246,25 @@ export default function PrivacyPage() {
                     <table className="w-full">
                       <tbody className="divide-y divide-border">
                         <tr className="hover:bg-background/50 transition-colors">
-                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm font-medium text-muted-foreground w-1/3 md:w-1/4">
+                          <th scope="row" className="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium text-muted-foreground w-1/3 md:w-1/4">
                             事業者名
-                          </td>
+                          </th>
                           <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-foreground">
                             株式会社tent space
                           </td>
                         </tr>
                         <tr className="hover:bg-background/50 transition-colors">
-                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm font-medium text-muted-foreground w-1/3 md:w-1/4">
+                          <th scope="row" className="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium text-muted-foreground w-1/3 md:w-1/4">
                             所在地
-                          </td>
+                          </th>
                           <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-foreground">
                             〒355-0316 埼玉県比企郡小川町大字角山323
                           </td>
                         </tr>
                         <tr className="hover:bg-background/50 transition-colors">
-                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm font-medium text-muted-foreground w-1/3 md:w-1/4">
+                          <th scope="row" className="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium text-muted-foreground w-1/3 md:w-1/4">
                             Email
-                          </td>
+                          </th>
                           <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-foreground">
                             <a
                               href="mailto:back-office@tentspace.net"
@@ -285,7 +285,7 @@ export default function PrivacyPage() {
 
         {/* Footer */}
         <PageFooter />
-      </div>
+      </main>
     </div>
   )
 }

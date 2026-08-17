@@ -1,4 +1,4 @@
-const DEFAULT_SITE_URL = "https://tentspace.net"
+const DEFAULT_SITE_URL = "https://www.tentspace.net"
 
 function normalizeSiteUrl(value: string): string {
   const url = new URL(value)

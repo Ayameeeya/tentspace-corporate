@@ -40,7 +40,7 @@ export default function NotFound() {
       <BlogHeader />
 
       {/* Main Content */}
-      <main className="pt-[136px] pb-16 px-4">
+      <main id="main-content" className="pt-[136px] pb-16 px-4">
         <div className="max-w-3xl mx-auto">
           {/* Breadcrumb */}
           <nav className="mb-8" aria-label="パンくずリスト">

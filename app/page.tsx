@@ -729,7 +729,7 @@ function TextOverlay({ activeSection, isDark }: { activeSection: number; isDark:
       <div className="h-screen flex items-center justify-center">
         <div ref={section3Ref} className="text-center px-4">
           <h2 className="text-4xl md:text-8xl font-bold font-tech text-white glow-text-white">INNOVATE</h2>
-          <p className="text-xs md:text-xl text-primary/80 mt-4 md:mt-8 tracking-wider">次世代のソリューションを構築</p>
+          <p className="text-xs md:text-xl text-blue-300 mt-4 md:mt-8 tracking-wider">次世代のソリューションを構築</p>
         </div>
       </div>
 
@@ -746,7 +746,7 @@ function TextOverlay({ activeSection, isDark }: { activeSection: number; isDark:
           <h2 className="text-4xl md:text-8xl font-bold font-tech italic tracking-wider text-white glow-text-white uppercase">
             Overdrive
           </h2>
-          <p className="text-xs md:text-xl text-primary/80 mt-4 md:mt-8 tracking-[0.3em] font-tech uppercase">
+          <p className="text-xs md:text-xl text-blue-300 mt-4 md:mt-8 tracking-[0.3em] font-tech uppercase">
             Engaging light speed
           </p>
         </div>
@@ -805,13 +805,15 @@ export default function Home() {
       <Header scrollProgress={progress} />
 
       {/* Text Overlay */}
-      <TextOverlay activeSection={activeSection} isDark={isDark} />
+      <main id="main-content">
+        <TextOverlay activeSection={activeSection} isDark={isDark} />
 
-      {/* Status Bar */}
-      <StatusBar currentSection={activeSection} isDark={isDark} />
+        {/* Status Bar */}
+        <StatusBar currentSection={activeSection} isDark={isDark} />
+      </main>
 
       {/* Footer */}
-      <Footer />
+      <Footer copyrightClassName="text-white/70" />
     </div>
   )
 }

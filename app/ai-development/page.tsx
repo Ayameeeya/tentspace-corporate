@@ -6,7 +6,7 @@ import Image from "next/image"
 
 export default function AIDevelopmentLP() {
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-900">
+    <main id="main-content" className="min-h-screen bg-slate-50 text-slate-900">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -300,7 +300,7 @@ export default function AIDevelopmentLP() {
                 <tr>
                   <td className="p-3 md:p-4 font-medium">開発費用</td>
                   <td className="p-3 md:p-4 text-center">300万円</td>
-                  <td className="p-3 md:p-4 text-center bg-blue-50 font-bold text-red-500">350万円（高い）</td>
+                  <td className="p-3 md:p-4 text-center bg-blue-50 font-bold text-red-700">350万円（高い）</td>
                 </tr>
                 <tr>
                   <td className="p-3 md:p-4 font-medium">品質</td>
@@ -351,7 +351,7 @@ export default function AIDevelopmentLP() {
             {/* Case 1 */}
             <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
               <div className="bg-blue-600 text-white p-4 md:p-6">
-                <p className="text-blue-200 text-sm mb-1">CASE 01</p>
+                <p className="text-blue-50 text-sm mb-1">CASE 01</p>
                 <h3 className="text-xl md:text-2xl font-bold">「安い開発会社」からの作り直し</h3>
               </div>
               <div className="p-6 md:p-8">
@@ -364,7 +364,7 @@ export default function AIDevelopmentLP() {
                       <li>・運用3ヶ月後...月2回の障害</li>
                       <li>・セキュリティホール発見</li>
                       <li>・ドキュメントなく誰も触れない</li>
-                      <li className="text-red-600 font-bold">・改修見積もり: 300万円</li>
+                      <li className="text-red-700 font-bold">・改修見積もり: 300万円</li>
                     </ul>
                   </div>
                   <div className="bg-blue-50 rounded-xl p-4">
@@ -391,7 +391,7 @@ export default function AIDevelopmentLP() {
             {/* Case 2 */}
             <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
               <div className="bg-blue-600 text-white p-4 md:p-6">
-                <p className="text-blue-200 text-sm mb-1">CASE 02</p>
+                <p className="text-blue-50 text-sm mb-1">CASE 02</p>
                 <h3 className="text-xl md:text-2xl font-bold">技術選定の重要性</h3>
               </div>
               <div className="p-6 md:p-8">

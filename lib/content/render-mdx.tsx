@@ -106,7 +106,11 @@ export async function renderMdxToHtml(
 
   html = html.replace(
     /<pre><code class="language-([^"\s]+)">/g,
-    '<pre class="ts-code" data-lang="$1"><code class="language-$1">',
+    '<pre class="ts-code" data-lang="$1" tabindex="0"><code class="language-$1">',
+  )
+  html = html.replace(
+    /<pre(?![^>]*\btabindex=)([^>]*)>/g,
+    '<pre$1 tabindex="0">',
   )
 
   return addLocalImageDimensions(

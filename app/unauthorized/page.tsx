@@ -10,17 +10,22 @@ export const metadata = {
     index: false,
     follow: false,
   },
+  alternates: { canonical: null },
+  openGraph: null,
+  twitter: null,
 }
 
 export default function UnauthorizedPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted/10 p-4">
+    <main id="main-content" className="flex min-h-screen items-center justify-center bg-muted/10 p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-destructive/10">
             <ShieldAlert className="h-8 w-8 text-destructive" />
           </div>
-          <CardTitle className="text-2xl">アクセス権限がありません</CardTitle>
+          <CardTitle className="text-2xl">
+            <h1>アクセス権限がありません</h1>
+          </CardTitle>
           <CardDescription>
             このページにアクセスする権限がありません。
             <br />
@@ -58,7 +63,7 @@ export default function UnauthorizedPage() {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </main>
   )
 }
 

@@ -163,17 +163,17 @@ export function ErrorTrackingDemo() {
 
   return (
     <div className="p-8 max-w-3xl mx-auto">
-      <h2 className="text-3xl font-bold mb-2">🔴 エラートラッキング デモ</h2>
+      <h1 className="text-3xl font-bold mb-2">🔴 エラートラッキング デモ</h1>
       <p className="text-gray-600 dark:text-gray-400 mb-6">
         Sentryライクなエラートラッキングシステム（CloudWatch Logs統合）
       </p>
       
       <div className="space-y-4">
         <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900 dark:to-purple-900 p-6 rounded-lg border border-blue-200 dark:border-blue-700">
-          <h3 className="font-semibold mb-2 flex items-center gap-2">
+          <h2 className="font-semibold mb-2 flex items-center gap-2">
             <span>✨</span>
             <span>実装済み機能</span>
-          </h3>
+          </h2>
           <ul className="text-sm space-y-1 text-gray-700 dark:text-gray-300">
             <li>✅ エラーグルーピング（フィンガープリント）</li>
             <li>✅ ブレッドクラム（イベント履歴）</li>
@@ -197,6 +197,7 @@ export function ErrorTrackingDemo() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <button
+            type="button"
             onClick={triggerError}
             className="px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium"
           >
@@ -204,13 +205,15 @@ export function ErrorTrackingDemo() {
           </button>
 
           <button
+            type="button"
             onClick={triggerPromiseRejection}
-            className="px-4 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors font-medium"
+            className="px-4 py-3 bg-orange-700 text-white rounded-lg hover:bg-orange-800 transition-colors font-medium"
           >
             2️⃣ Promise拒否
           </button>
 
           <button
+            type="button"
             onClick={triggerManualLog}
             className="px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
           >
@@ -218,6 +221,7 @@ export function ErrorTrackingDemo() {
           </button>
 
           <button
+            type="button"
             onClick={triggerWithUserContext}
             className="px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
           >
@@ -225,6 +229,7 @@ export function ErrorTrackingDemo() {
           </button>
 
           <button
+            type="button"
             onClick={simulateUserFlow}
             className="px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium md:col-span-2"
           >
@@ -232,8 +237,9 @@ export function ErrorTrackingDemo() {
           </button>
 
           <button
+            type="button"
             onClick={checkAPIStatus}
-            className="px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium md:col-span-2"
+            className="px-4 py-3 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors font-medium md:col-span-2"
           >
             📊 APIステータスを確認
           </button>
@@ -247,7 +253,7 @@ export function ErrorTrackingDemo() {
 
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="p-4 bg-blue-50 dark:bg-blue-900 rounded-lg">
-            <h3 className="font-semibold mb-2">📋 確認方法</h3>
+            <h2 className="font-semibold mb-2">📋 確認方法</h2>
             <ul className="text-sm space-y-1 list-disc list-inside">
               <li>ブラウザのコンソールを開く（F12）</li>
               <li>エラーボタンをクリック</li>
@@ -257,7 +263,7 @@ export function ErrorTrackingDemo() {
           </div>
 
           <div className="p-4 bg-purple-50 dark:bg-purple-900 rounded-lg">
-            <h3 className="font-semibold mb-2">🔍 CloudWatch Logs Insights</h3>
+            <h2 className="font-semibold mb-2">🔍 CloudWatch Logs Insights</h2>
             <ul className="text-sm space-y-1 list-disc list-inside">
               <li>ロググループ: <code className="text-xs">/tentspace/frontend-errors/*</code></li>
               <li>フィンガープリントでグルーピング可能</li>
@@ -268,8 +274,8 @@ export function ErrorTrackingDemo() {
         </div>
 
         <div className="p-4 bg-yellow-50 dark:bg-yellow-900 rounded-lg border border-yellow-200 dark:border-yellow-700">
-          <h3 className="font-semibold mb-2">💡 CloudWatch Logs Insights クエリ例</h3>
-          <pre className="text-xs bg-gray-900 text-green-400 p-3 rounded overflow-x-auto">
+          <h2 className="font-semibold mb-2">💡 CloudWatch Logs Insights クエリ例</h2>
+          <pre tabIndex={0} className="text-xs bg-gray-900 text-green-400 p-3 rounded overflow-x-auto">
 {`# エラーをフィンガープリント別にグルーピング
 fields @timestamp, @fingerprint, error.message
 | filter level = "error"
@@ -281,4 +287,3 @@ fields @timestamp, @fingerprint, error.message
     </div>
   );
 }
-

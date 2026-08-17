@@ -1,26 +1,33 @@
 import type { Metadata } from "next"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { SITE_URL } from "@/lib/site"
 import { ContactForm } from "./contact-form"
 
+const title = "お問い合わせ | tent space"
+const description =
+  "tent spaceへのお問い合わせはこちらから。AI開発、業務自動化、システム開発に関するご相談を承ります。"
+const canonicalUrl = `${SITE_URL}/contact`
+const socialImage = `${SITE_URL}/logo_gradation_yoko.png`
+
 export const metadata: Metadata = {
-  title: "お問い合わせ | tent space",
-  description:
-    "tent spaceへのお問い合わせはこちらから。AI開発、業務自動化、システム開発に関するご相談を承ります。",
+  title,
+  description,
+  alternates: { canonical: canonicalUrl },
   openGraph: {
-    title: "お問い合わせ | tent space",
-    description:
-      "tent spaceへのお問い合わせはこちらから。AI開発、業務自動化、システム開発に関するご相談を承ります。",
-    url: "https://tentspace.net/contact",
+    title,
+    description,
+    url: canonicalUrl,
     siteName: "tent space",
     locale: "ja_JP",
     type: "website",
+    images: [{ url: socialImage, width: 1200, height: 630, alt: title }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "お問い合わせ | tent space",
-    description:
-      "tent spaceへのお問い合わせはこちらから。AI開発、業務自動化、システム開発に関するご相談を承ります。",
+    title,
+    description,
+    images: [socialImage],
   },
 }
 
@@ -28,7 +35,7 @@ export default function ContactPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
+      <main id="main-content" className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
         <div className="mx-auto max-w-4xl px-6 py-24 pt-32">
           {/* Header Section */}
           <div className="mb-16 text-center">
