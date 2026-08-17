@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises"
 import path from "node:path"
 import { describe, expect, it } from "vitest"
+import robots from "../app/robots"
 import sitemap from "../app/sitemap"
 import * as categoryLayout from "../app/blog/categories/[slug]/layout"
 import { SITE_URL } from "./site"
@@ -29,6 +30,17 @@ describe("SEO configuration", () => {
       ]),
     )
     expect(urls).not.toContain(`${SITE_URL}/blog/favorites`)
+  })
+
+  it("robots.txtはレンダリング資産を許可し、非公開領域だけをクロール拒否する", () => {
+    expect(robots()).toEqual({
+      rules: {
+        userAgent: "*",
+        allow: "/",
+        disallow: ["/api/", "/admin/"],
+      },
+      sitemap: `${SITE_URL}/sitemap.xml`,
+    })
   })
 
   it("カテゴリページへ固有のcanonicalとOG URLを設定する", async () => {
