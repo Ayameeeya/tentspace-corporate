@@ -32,12 +32,12 @@ describe("SEO configuration", () => {
     expect(urls).not.toContain(`${SITE_URL}/blog/favorites`)
   })
 
-  it("robots.txtはレンダリング資産を許可し、非公開領域だけをクロール拒否する", () => {
+  it("robots.txtはレンダリング資産とnoindexページを許可し、APIだけをクロール拒否する", () => {
     expect(robots()).toEqual({
       rules: {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/admin/"],
+        disallow: "/api/",
       },
       sitemap: `${SITE_URL}/sitemap.xml`,
     })
