@@ -490,7 +490,9 @@ function useCodeBlockEnhancement(containerRef: React.RefObject<HTMLElement | nul
       
       // Copy button
       const copyBtn = document.createElement('button')
+      copyBtn.type = 'button'
       copyBtn.className = 'ts-code-copy'
+      copyBtn.setAttribute('aria-label', 'コードをコピー')
       copyBtn.innerHTML = `
         <svg class="copy-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
@@ -511,12 +513,14 @@ function useCodeBlockEnhancement(containerRef: React.RefObject<HTMLElement | nul
           copyIcon.style.display = 'none'
           checkIcon.style.display = 'block'
           copyText.textContent = 'コピー完了!'
+          copyBtn.setAttribute('aria-label', 'コピー完了')
           copyBtn.classList.add('copied')
           
           setTimeout(() => {
             copyIcon.style.display = 'block'
             checkIcon.style.display = 'none'
             copyText.textContent = 'コピー'
+            copyBtn.setAttribute('aria-label', 'コードをコピー')
             copyBtn.classList.remove('copied')
           }, 2000)
         } catch (err) {

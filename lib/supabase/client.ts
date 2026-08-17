@@ -14,6 +14,7 @@ export const supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
     autoRefreshToken: false,
     persistSession: false,
     detectSessionInUrl: false,
+    storageKey: "tentspace-anonymous",
   },
 })
 
