@@ -1,15 +1,14 @@
 import type React from "react"
 import type { Metadata, Viewport } from "next"
 import { Inter, VT323, Audiowide, Geist_Mono } from "next/font/google"
-import { Analytics } from "@vercel/analytics/next"
 import Script from "next/script"
 import { CookieConsent } from "@/components/cookie-consent"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { ClientErrorTracker } from "@/components/client-error-tracker"
+import { GoogleAnalytics } from "@/components/google-analytics"
 import { SITE_URL } from "@/lib/site"
 import "./globals.css"
 
-const GA_MEASUREMENT_ID = "G-1XCFVFP5DX"
 const SITE_TITLE = "tent␣ - AI-Driven Development"
 const SITE_DESCRIPTION =
   "tent space(テントスペース)は、AI駆動開発と実績のある専門知識を組み合わせて、より迅速でスマートなソリューションを提供するテックスタジオです。"
@@ -23,18 +22,21 @@ const inter = Inter({
 const audiowide = Audiowide({
   subsets: ["latin"],
   weight: ["400"],
-  variable: "--font-audiowide"
+  variable: "--font-audiowide",
+  preload: false,
 })
 
 const geistMono = Geist_Mono({
   subsets: ["latin"],
-  variable: "--font-geist-mono"
+  variable: "--font-geist-mono",
+  preload: false,
 })
 
 const vt323 = VT323({
   subsets: ["latin"],
   weight: ["400"],
-  variable: "--font-vt323"
+  variable: "--font-vt323",
+  preload: false,
 })
 
 export const metadata: Metadata = {
@@ -100,19 +102,6 @@ export default function RootLayout({
           `}
         </Script>
 
-        {/* Google Analytics */}
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${GA_MEASUREMENT_ID}');
-          `}
-        </Script>
       </head>
       <body className="font-sans antialiased">
         <a
@@ -124,7 +113,7 @@ export default function RootLayout({
         <ErrorBoundary>
           <ClientErrorTracker />
           {children}
-          <Analytics />
+          <GoogleAnalytics />
           <CookieConsent />
         </ErrorBoundary>
       </body>

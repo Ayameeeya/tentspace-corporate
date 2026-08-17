@@ -1,12 +1,10 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { lazy, Suspense, useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
-import { gsap } from "gsap"
-import { AuthModal } from "@/components/auth-modal"
 import { BlogTicker } from "@/components/blog-ticker"
 import { getCurrentUser, getProfile, onAuthStateChange, type Profile } from "@/lib/auth"
 import type { User } from "@supabase/supabase-js"
@@ -20,6 +18,10 @@ import {
 import { signOut } from "@/lib/auth"
 import GlassSurface from "@/components/GlassSurface"
 
+const AuthModal = lazy(() => import("@/components/auth-modal").then((module) => ({
+  default: module.AuthModal,
+})))
+
 export function BlogHeader() {
   const router = useRouter()
   const [user, setUser] = useState<User | null>(null)
@@ -30,34 +32,12 @@ export function BlogHeader() {
   const [signingOut, setSigningOut] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const mobileMenuRef = useRef<HTMLDivElement>(null)
   const hamburgerRef = useRef<HTMLButtonElement>(null)
   const { theme, setTheme } = useTheme()
 
   useEffect(() => {
     setMounted(true)
   }, [])
-
-  // Mobile menu animation
-  useEffect(() => {
-    if (!mobileMenuRef.current) return
-
-    if (mobileMenuOpen) {
-      // Open animation
-      gsap.to(mobileMenuRef.current, {
-        x: 0,
-        duration: 0.4,
-        ease: "power2.out",
-      })
-    } else {
-      // Close animation
-      gsap.to(mobileMenuRef.current, {
-        x: "100%",
-        duration: 0.3,
-        ease: "power2.in",
-      })
-    }
-  }, [mobileMenuOpen])
 
   // Close menu on escape key
   useEffect(() => {
@@ -180,13 +160,15 @@ export function BlogHeader() {
           <div className="pointer-events-auto">
             <Link
               href="/"
+              prefetch={false}
               className="flex items-center relative block group"
             >
               <Image
                 src={mounted && theme === 'dark' ? "/logo_white_yoko.png" : "/logo_black_yoko.png"}
                 alt="tent space"
-                width={110}
-                height={50}
+                width={682}
+                height={125}
+                sizes="(max-width: 768px) 80px, 110px"
                 className="transition-all duration-500 relative z-10 w-[80px] h-auto md:w-[110px]"
                 priority
               />
@@ -345,9 +327,7 @@ export function BlogHeader() {
 
       {/* Mobile Menu Panel */}
       <div
-        ref={mobileMenuRef}
-        className="fixed top-0 right-0 bottom-0 w-[280px] bg-background border-l border-border z-[70] md:hidden"
-        style={{ transform: 'translateX(100%)' }}
+        className={`fixed top-0 right-0 bottom-0 w-[280px] bg-background border-l border-border z-[70] md:hidden transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-col h-full p-6">
@@ -355,14 +335,15 @@ export function BlogHeader() {
           <div className="flex items-center justify-between mb-8">
             <Link
               href="/"
+              prefetch={false}
               onClick={() => setMobileMenuOpen(false)}
               className="flex items-center"
             >
               <Image
                 src="/logo_black_yoko.png"
                 alt="tent space"
-                width={110}
-                height={50}
+                width={682}
+                height={125}
                 className="w-[90px] h-auto"
                 priority
               />
@@ -384,6 +365,7 @@ export function BlogHeader() {
           <nav className="flex flex-col gap-6 mb-8">
             <Link
               href="/about"
+              prefetch={false}
               onClick={() => setMobileMenuOpen(false)}
               className="text-foreground text-2xl font-pixel tracking-wider hover:text-primary transition-colors"
             >
@@ -514,14 +496,18 @@ export function BlogHeader() {
         </div>
       </div>
 
-      <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => {
-          setShowAuthModal(false)
-          setPendingRedirect(null)
-        }}
-        onSuccess={handleAuthSuccess}
-      />
+      {showAuthModal && (
+        <Suspense fallback={null}>
+          <AuthModal
+            isOpen
+            onClose={() => {
+              setShowAuthModal(false)
+              setPendingRedirect(null)
+            }}
+            onSuccess={handleAuthSuccess}
+          />
+        </Suspense>
+      )}
     </>
   )
 }
