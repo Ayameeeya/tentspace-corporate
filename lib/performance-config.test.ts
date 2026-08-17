@@ -124,4 +124,22 @@ describe("performance configuration", () => {
     expect(consent).toContain('detail: "granted"')
     expect(consent).toContain('detail: "denied"')
   })
+
+  it("モバイルで非表示になるコードコピー文言をアクセシブル名で補う", async () => {
+    const article = await read("app/blog/[slug]/blog-post-client.tsx")
+
+    expect(article).toContain("copyBtn.type = 'button'")
+    expect(article).toContain(
+      "copyBtn.setAttribute('aria-label', 'コードをコピー')",
+    )
+    expect(article).toContain(
+      "copyBtn.setAttribute('aria-label', 'コピー完了')",
+    )
+  })
+
+  it("匿名用と認証用のSupabaseクライアントで認証ストレージを共有しない", async () => {
+    const client = await read("lib/supabase/client.ts")
+
+    expect(client).toContain('storageKey: "tentspace-anonymous"')
+  })
 })
