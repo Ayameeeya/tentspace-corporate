@@ -23,7 +23,7 @@ export const DEFAULT_BLOG_AUTHOR: BlogAuthor = {
   description:
     "AI・自動化・SEOを中心に、実務で役立つ技術と運用の知見を発信しています。",
   avatarUrl:
-    "https://zbgzvbcgjvnsgildrmta.supabase.co/storage/v1/object/public/avatars/avatars/81da5c18-b6ec-4463-a751-9d9f8c269883-1765603536922.png",
+    "https://zbgzvbcgjvnsgildrmta.supabase.co/storage/v1/object/public/avatars/avatars/81da5c18-b6ec-4463-a751-9d9f8c269883-1786975082028.jpg",
 }
 
 const publishedPosts = manifest as ContentManifestEntry[]
