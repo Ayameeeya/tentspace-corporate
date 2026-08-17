@@ -51,18 +51,20 @@ ${experiment}---
 export function createSocialTemplate(input: {
   title: string
   slug: string
+  utmCampaign?: string
 }): string {
+  const campaign = encodeURIComponent(
+    input.utmCampaign ?? `blog_${input.slug.replaceAll("-", "_")}`,
+  )
+  const articleUrl = `${SITE_URL}/blog/${input.slug}?utm_source=threads&utm_medium=social&utm_campaign=${campaign}`
+
   return `# SNS告知文
 
 記事: ${input.title}
-URL: ${SITE_URL}/blog/${input.slug}
-
-## X
-
-告知文を記入します。
+URL: ${articleUrl}
 
 ## Threads
 
-告知文を記入します。
+500字以内で告知文を記入します。
 `
 }

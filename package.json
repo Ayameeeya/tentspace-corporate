@@ -4,13 +4,16 @@
   "private": true,
   "scripts": {
     "build": "npm run content:validate && next build",
+    "check": "npm run typecheck && npm run lint && npm run validate-content",
     "content:new": "vite-node scripts/new-post.ts",
     "content:validate": "vite-node scripts/validate-content.ts",
     "dev": "next dev",
-    "lint": "eslint .",
+    "lint": "eslint . --quiet",
+    "new-post": "vite-node scripts/new-post.ts",
     "start": "next start",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "validate-content": "vite-node scripts/validate-content.ts"
   },
   "dependencies": {
     "@aws-sdk/client-cloudwatch-logs": "^3.709.0",
@@ -104,6 +107,8 @@
     "@types/probe-image-size": "^7.2.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.0.7",
     "postcss": "^8.5",
     "tailwindcss": "^4.1.9",
     "tsx": "^4.23.12",

@@ -14,10 +14,15 @@ export const postFrontmatterSchema = z.object({
   ogImage: z.string().optional(),
   experiment: z
     .object({
-      hook: z.enum(["question", "number", "contrarian", "story", "howto"]).optional(),
-      cta: z.string().optional(),
-      targetKw: z.string().optional(),
-      utmCampaign: z.string().optional(),
+      hook: z.enum(["question", "number", "contrarian", "story", "howto"]),
+      cta: z.enum([
+        "inquiry",
+        "app-download",
+        "camp-reservation",
+        "note-paid",
+      ]),
+      targetKw: z.string().min(1),
+      utmCampaign: z.string().min(1),
     })
     .optional(),
 })
@@ -38,10 +43,10 @@ export interface ContentManifestEntry {
   wordCount: number
   ogImage?: string
   experiment?: {
-    hook?: "question" | "number" | "contrarian" | "story" | "howto"
-    cta?: string
-    targetKw?: string
-    utmCampaign?: string
+    hook: "question" | "number" | "contrarian" | "story" | "howto"
+    cta: "inquiry" | "app-download" | "camp-reservation" | "note-paid"
+    targetKw: string
+    utmCampaign: string
   }
 }
 

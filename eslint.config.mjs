@@ -1,0 +1,31 @@
+import { defineConfig, globalIgnores } from "eslint/config"
+import nextVitals from "eslint-config-next/core-web-vitals"
+import nextTypeScript from "eslint-config-next/typescript"
+
+export default defineConfig([
+  ...nextVitals,
+  ...nextTypeScript,
+  {
+    // The application predates this lint gate. Keep existing debt visible as
+    // warnings with `eslint .` while making new, unlisted rule failures block
+    // `npm run check`.
+    rules: {
+      "@typescript-eslint/no-empty-object-type": "warn",
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-require-imports": "warn",
+      "prefer-const": "warn",
+      "react-hooks/error-boundaries": "warn",
+      "react-hooks/immutability": "warn",
+      "react-hooks/purity": "warn",
+      "react-hooks/set-state-in-effect": "warn",
+      "react/no-unescaped-entities": "warn",
+    },
+  },
+  globalIgnores([
+    ".next/**",
+    "out/**",
+    "build/**",
+    "output/**",
+    "next-env.d.ts",
+  ]),
+])

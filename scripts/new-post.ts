@@ -13,7 +13,7 @@ function readArguments(args: string[]) {
     const value = args[index + 1]
     if (!key?.startsWith("--") || !value) {
       throw new Error(
-        "Usage: npm run content:new -- --slug post-slug --title \"Title\" --description \"Description\" [--categories テクノロジー] [--tags MDX,SEO] [--hook howto] [--cta contact] [--target-kw \"keyword\"] [--utm-campaign campaign]",
+        "Usage: npm run new-post -- --slug post-slug --title \"Title\" --description \"Description\" --hook howto [--cta inquiry] --target-kw \"keyword\" --utm-campaign campaign [--categories テクノロジー] [--tags MDX,SEO]",
       )
     }
     values.set(key.slice(2), value)
@@ -22,8 +22,13 @@ function readArguments(args: string[]) {
   const slug = values.get("slug")
   const title = values.get("title")
   const description = values.get("description")
-  if (!slug || !title || !description) {
-    throw new Error("--slug, --title and --description are required")
+  const hook = values.get("hook")
+  const targetKw = values.get("target-kw")
+  const utmCampaign = values.get("utm-campaign")
+  if (!slug || !title || !description || !hook || !targetKw || !utmCampaign) {
+    throw new Error(
+      "--slug, --title, --description, --hook, --target-kw and --utm-campaign are required",
+    )
   }
 
   return {
@@ -40,14 +45,10 @@ function readArguments(args: string[]) {
       .map((tag) => tag.trim())
       .filter(Boolean),
     experiment: {
-      ...(values.get("hook") ? { hook: values.get("hook") } : {}),
-      ...(values.get("cta") ? { cta: values.get("cta") } : {}),
-      ...(values.get("target-kw")
-        ? { targetKw: values.get("target-kw") }
-        : {}),
-      ...(values.get("utm-campaign")
-        ? { utmCampaign: values.get("utm-campaign") }
-        : {}),
+      hook,
+      cta: values.get("cta") ?? "inquiry",
+      targetKw,
+      utmCampaign,
     },
   }
 }
@@ -65,7 +66,15 @@ async function main() {
     writeFile(outputPath, createPostTemplate({ ...input, experiment }), {
       flag: "wx",
     }),
-    writeFile(socialPath, createSocialTemplate(input), { flag: "wx" }),
+    writeFile(
+      socialPath,
+      createSocialTemplate({
+        title: input.title,
+        slug: input.slug,
+        utmCampaign: input.experiment.utmCampaign,
+      }),
+      { flag: "wx" },
+    ),
   ])
   console.log(`Created draft: ${outputPath}`)
   console.log(`Created social copy: ${socialPath}`)

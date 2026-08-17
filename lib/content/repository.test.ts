@@ -2,12 +2,10 @@ import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises"
 import os from "node:os"
 import path from "node:path"
 import { afterEach, describe, expect, it } from "vitest"
-import {
-  loadPostBySlug,
-  readPostFiles,
-  validateContentRepository,
-} from "./repository"
+import * as repository from "./repository"
 import { loadPostMarkdownBySlug } from "./markdown"
+
+const { loadPostBySlug, readPostFiles, validateContentRepository } = repository
 
 const temporaryDirectories: string[] = []
 
@@ -106,6 +104,42 @@ describe("content repository", () => {
     await expect(validateContentRepository(postsDirectory)).rejects.toThrow(
       /broken-post\/index\.mdx/,
     )
+  })
+
+  it("編集した1記事だけをfrontmatterとMDXまで検証する", async () => {
+    const postsDirectory = await createRepository()
+    await createPost(postsDirectory, "valid-draft", "## 下書き", "draft: true\n")
+    await createPost(postsDirectory, "broken-draft", "<YouTube", "draft: true\n")
+    await createPost(
+      postsDirectory,
+      "invalid-neighbor",
+      "## 未編集中の記事",
+      "slug: INVALID_NEIGHBOR\n",
+    )
+    const validatePostFile = (
+      repository as typeof repository & {
+        validatePostFile?: (
+          sourcePath: string,
+          postsDirectory?: string,
+        ) => Promise<void>
+      }
+    ).validatePostFile
+
+    expect(typeof validatePostFile).toBe("function")
+    if (!validatePostFile) return
+
+    await expect(
+      validatePostFile(
+        path.join(postsDirectory, "valid-draft", "index.mdx"),
+        postsDirectory,
+      ),
+    ).resolves.toBeUndefined()
+    await expect(
+      validatePostFile(
+        path.join(postsDirectory, "broken-draft", "index.mdx"),
+        postsDirectory,
+      ),
+    ).rejects.toThrow(/broken-draft\/index\.mdx/)
   })
 
   it("存在しないローカル画像を報告する", async () => {

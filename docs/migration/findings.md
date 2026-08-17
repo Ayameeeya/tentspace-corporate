@@ -85,6 +85,10 @@ verified from the unchanged 94 slugs instead.
 
 ## Automated publication readiness
 
+> 以下は MDX 移行 compliance PR 作成時点の履歴である。
+> 現在の記事運用は `AGENTS.md` を正とする。content-only PR は critic と
+> 必須 CI の成功後に作成者が自己マージする。
+
 Automated publication is not enabled in this migration compliance PR. The
 repository currently has no readable branch-protection rule, configured writer
 bot identity, semantic critic credential, or Slack notification secret. Enabling

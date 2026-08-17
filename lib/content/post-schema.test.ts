@@ -10,7 +10,9 @@ categories: [テクノロジー]
 tags: [MDX, n8n]
 experiment:
   hook: howto
+  cta: inquiry
   targetKw: "Next.js MDX"
+  utmCampaign: blog_2026w33
 ---
 
 ## MDXで管理する
@@ -45,6 +47,27 @@ describe("parsePostSource", () => {
     expect(() =>
       parsePostSource(source, "content/posts/MDX_UI_PARITY/index.mdx"),
     ).toThrow(/slug/i)
+  })
+
+  it("experimentがある新規記事では全属性と許可済みCTAを要求する", () => {
+    const missingCampaign = validSource.replace(
+      "  utmCampaign: blog_2026w33\n",
+      "",
+    )
+    const unsupportedCta = validSource.replace("cta: inquiry", "cta: contact")
+
+    expect(() =>
+      parsePostSource(
+        missingCampaign,
+        "content/posts/mdx-ui-parity/index.mdx",
+      ),
+    ).toThrow(/utmCampaign/i)
+    expect(() =>
+      parsePostSource(
+        unsupportedCta,
+        "content/posts/mdx-ui-parity/index.mdx",
+      ),
+    ).toThrow(/cta|invalid/i)
   })
 })
 

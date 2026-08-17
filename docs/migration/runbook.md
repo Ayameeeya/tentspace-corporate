@@ -56,6 +56,10 @@ Rollback when any of the following is confirmed:
 
 ## Automated publication prerequisites
 
+> この節は MDX 移行時に検討した前提条件の記録である。現在の記事執筆フローは
+> `AGENTS.md` と `docs/routines/write-blog.md` を正とし、content-only PR は
+> critic と必須 CI の成功後に作成者が自己マージする。
+
 Before enabling content-only auto-merge, a separate human-reviewed change must
 provide all of the following:
 
