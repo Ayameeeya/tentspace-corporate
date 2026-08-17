@@ -10,6 +10,9 @@ export const metadata = {
     index: false,
     follow: false,
   },
+  alternates: { canonical: null },
+  openGraph: null,
+  twitter: null,
 }
 
 export default function UnauthorizedPage() {

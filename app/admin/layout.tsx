@@ -13,6 +13,9 @@ export const metadata: Metadata = {
     index: false,
     follow: false,
   },
+  alternates: { canonical: null },
+  openGraph: null,
+  twitter: null,
 }
 
 export default async function AdminLayout({

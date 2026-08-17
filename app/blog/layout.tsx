@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   },
   description: 'AI開発、テクノロジー、最新の取り組みについて発信しています。tent spaceのエンジニアが実践的な技術情報をお届けします。',
   openGraph: {
+    title: 'tent space Blog - AI開発・テクノロジー情報',
+    description: 'AI開発、テクノロジー、最新の取り組みについて発信しています。tent spaceのエンジニアが実践的な技術情報をお届けします。',
+    url: `${SITE_URL}/blog`,
     type: 'website',
     locale: 'ja_JP',
     siteName: 'tent space Blog',
@@ -23,6 +26,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
+    title: 'tent space Blog - AI開発・テクノロジー情報',
+    description: 'AI開発、テクノロジー、最新の取り組みについて発信しています。tent spaceのエンジニアが実践的な技術情報をお届けします。',
     images: [`${SITE_URL}/logo_gradation_yoko.png`],
   },
   robots: {

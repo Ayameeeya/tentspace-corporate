@@ -6,6 +6,9 @@ export const metadata = {
     index: false, // テストページなのでインデックスしない
     follow: false,
   },
+  alternates: { canonical: null },
+  openGraph: null,
+  twitter: null,
 };
 
 export default function ErrorTrackingTestPage() {
