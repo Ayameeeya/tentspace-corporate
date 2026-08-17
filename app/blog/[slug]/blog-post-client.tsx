@@ -9,64 +9,7 @@ import { BlogFavorite } from "@/components/blog-favorite"
 import { formatDate, getPostTerms, stripHtml, getFeaturedImageUrl, type BlogPost, type BlogAuthor, type BlogTerm } from "@/lib/blog-content"
 import { addLike, fetchHasLiked, fetchLikeCounts, getClientId } from "@/lib/blog-likes"
 
-// Highlight.js for syntax highlighting
-import hljs from 'highlight.js/lib/core'
-import javascript from 'highlight.js/lib/languages/javascript'
-import typescript from 'highlight.js/lib/languages/typescript'
-import python from 'highlight.js/lib/languages/python'
-import go from 'highlight.js/lib/languages/go'
-import rust from 'highlight.js/lib/languages/rust'
-import java from 'highlight.js/lib/languages/java'
-import kotlin from 'highlight.js/lib/languages/kotlin'
-import swift from 'highlight.js/lib/languages/swift'
-import php from 'highlight.js/lib/languages/php'
-import ruby from 'highlight.js/lib/languages/ruby'
-import bash from 'highlight.js/lib/languages/bash'
-import json from 'highlight.js/lib/languages/json'
-import yaml from 'highlight.js/lib/languages/yaml'
-import sql from 'highlight.js/lib/languages/sql'
-import css from 'highlight.js/lib/languages/css'
-import scss from 'highlight.js/lib/languages/scss'
-import xml from 'highlight.js/lib/languages/xml'
-import csharp from 'highlight.js/lib/languages/csharp'
-import c from 'highlight.js/lib/languages/c'
-import cpp from 'highlight.js/lib/languages/cpp'
-import dockerfile from 'highlight.js/lib/languages/dockerfile'
-import graphql from 'highlight.js/lib/languages/graphql'
 import 'highlight.js/styles/github-dark.css'
-
-// Register languages
-hljs.registerLanguage('javascript', javascript)
-hljs.registerLanguage('js', javascript)
-hljs.registerLanguage('typescript', typescript)
-hljs.registerLanguage('ts', typescript)
-hljs.registerLanguage('python', python)
-hljs.registerLanguage('py', python)
-hljs.registerLanguage('go', go)
-hljs.registerLanguage('rust', rust)
-hljs.registerLanguage('java', java)
-hljs.registerLanguage('kotlin', kotlin)
-hljs.registerLanguage('swift', swift)
-hljs.registerLanguage('php', php)
-hljs.registerLanguage('ruby', ruby)
-hljs.registerLanguage('bash', bash)
-hljs.registerLanguage('shell', bash)
-hljs.registerLanguage('sh', bash)
-hljs.registerLanguage('json', json)
-hljs.registerLanguage('yaml', yaml)
-hljs.registerLanguage('yml', yaml)
-hljs.registerLanguage('sql', sql)
-hljs.registerLanguage('css', css)
-hljs.registerLanguage('scss', scss)
-hljs.registerLanguage('html', xml)
-hljs.registerLanguage('xml', xml)
-hljs.registerLanguage('csharp', csharp)
-hljs.registerLanguage('cs', csharp)
-hljs.registerLanguage('c', c)
-hljs.registerLanguage('cpp', cpp)
-hljs.registerLanguage('dockerfile', dockerfile)
-hljs.registerLanguage('docker', dockerfile)
-hljs.registerLanguage('graphql', graphql)
 
 
 // Heading structure type
@@ -418,8 +361,90 @@ function useCodeBlockEnhancement(containerRef: React.RefObject<HTMLElement | nul
     if (!containerRef.current) return
 
     const codeBlocks = containerRef.current.querySelectorAll('pre.ts-code')
-    
-    codeBlocks.forEach((block) => {
+    if (codeBlocks.length === 0) return
+
+    let cancelled = false
+
+    async function enhanceCodeBlocks() {
+      const { default: hljs } = await import('highlight.js/lib/core')
+      const [
+        { default: javascript },
+        { default: typescript },
+        { default: python },
+        { default: go },
+        { default: rust },
+        { default: java },
+        { default: kotlin },
+        { default: swift },
+        { default: php },
+        { default: ruby },
+        { default: bash },
+        { default: json },
+        { default: yaml },
+        { default: sql },
+        { default: css },
+        { default: scss },
+        { default: xml },
+        { default: csharp },
+        { default: c },
+        { default: cpp },
+        { default: dockerfile },
+        { default: graphql },
+      ] = await Promise.all([
+        import('highlight.js/lib/languages/javascript'),
+        import('highlight.js/lib/languages/typescript'),
+        import('highlight.js/lib/languages/python'),
+        import('highlight.js/lib/languages/go'),
+        import('highlight.js/lib/languages/rust'),
+        import('highlight.js/lib/languages/java'),
+        import('highlight.js/lib/languages/kotlin'),
+        import('highlight.js/lib/languages/swift'),
+        import('highlight.js/lib/languages/php'),
+        import('highlight.js/lib/languages/ruby'),
+        import('highlight.js/lib/languages/bash'),
+        import('highlight.js/lib/languages/json'),
+        import('highlight.js/lib/languages/yaml'),
+        import('highlight.js/lib/languages/sql'),
+        import('highlight.js/lib/languages/css'),
+        import('highlight.js/lib/languages/scss'),
+        import('highlight.js/lib/languages/xml'),
+        import('highlight.js/lib/languages/csharp'),
+        import('highlight.js/lib/languages/c'),
+        import('highlight.js/lib/languages/cpp'),
+        import('highlight.js/lib/languages/dockerfile'),
+        import('highlight.js/lib/languages/graphql'),
+      ])
+
+      if (cancelled) return
+
+      for (const [names, language] of [
+        [['javascript', 'js'], javascript],
+        [['typescript', 'ts'], typescript],
+        [['python', 'py'], python],
+        [['go'], go],
+        [['rust'], rust],
+        [['java'], java],
+        [['kotlin'], kotlin],
+        [['swift'], swift],
+        [['php'], php],
+        [['ruby'], ruby],
+        [['bash', 'shell', 'sh'], bash],
+        [['json'], json],
+        [['yaml', 'yml'], yaml],
+        [['sql'], sql],
+        [['css'], css],
+        [['scss'], scss],
+        [['html', 'xml'], xml],
+        [['csharp', 'cs'], csharp],
+        [['c'], c],
+        [['cpp'], cpp],
+        [['dockerfile', 'docker'], dockerfile],
+        [['graphql'], graphql],
+      ] as const) {
+        for (const name of names) hljs.registerLanguage(name, language)
+      }
+
+      codeBlocks.forEach((block) => {
       // Skip if already enhanced
       if (block.classList.contains('enhanced')) return
       block.classList.add('enhanced')
@@ -531,7 +556,14 @@ function useCodeBlockEnhancement(containerRef: React.RefObject<HTMLElement | nul
           codeElement.textContent = code
         }
       }
-    })
+      })
+    }
+
+    void enhanceCodeBlocks()
+
+    return () => {
+      cancelled = true
+    }
   }, [containerRef])
 }
 
@@ -575,7 +607,7 @@ export default function BlogPostClient({
         <nav className="max-w-5xl mx-auto px-4 py-4" aria-label="パンくずリスト">
           <ol className="flex items-center gap-2 text-sm text-muted-foreground" itemScope itemType="https://schema.org/BreadcrumbList">
             <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
-              <Link href="/" className="hover:text-foreground transition-colors" itemProp="item">
+              <Link href="/" prefetch={false} className="hover:text-foreground transition-colors" itemProp="item">
                 <span itemProp="name">ホーム</span>
               </Link>
               <meta itemProp="position" content="1" />
@@ -673,6 +705,7 @@ export default function BlogPostClient({
                 fill
                 className="object-cover"
                 priority
+                fetchPriority="high"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 896px"
               />
             </div>
@@ -918,6 +951,7 @@ export default function BlogPostClient({
                     </a>
                     <Link
                       href="/about"
+                      prefetch={false}
                       className="inline-flex items-center justify-center px-6 py-3 bg-white/10 text-white font-medium rounded-lg hover:bg-white/20 transition-colors border border-white/30"
                     >
                       会社について詳しく見る
@@ -974,7 +1008,7 @@ export default function BlogPostClient({
                 <span className="text-sm text-muted-foreground">© 2025 tent space Inc.</span>
               </div>
               <nav className="flex items-center gap-6 text-sm text-muted-foreground" aria-label="フッターナビゲーション">
-                <Link href="/about" className="hover:text-foreground transition-colors">
+                <Link href="/about" prefetch={false} className="hover:text-foreground transition-colors">
                   About
                 </Link>
                 <Link href="/terms" className="hover:text-foreground transition-colors">

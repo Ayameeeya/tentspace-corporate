@@ -51,12 +51,18 @@ export function CookieConsent() {
   const handleAccept = () => {
     setCookie(CONSENT_COOKIE_NAME, "granted", CONSENT_EXPIRY_DAYS)
     updateGtagConsent(true)
+    window.dispatchEvent(
+      new CustomEvent("cookie-consent-changed", { detail: "granted" }),
+    )
     setShowBanner(false)
   }
 
   const handleDecline = () => {
     setCookie(CONSENT_COOKIE_NAME, "denied", CONSENT_EXPIRY_DAYS)
     updateGtagConsent(false)
+    window.dispatchEvent(
+      new CustomEvent("cookie-consent-changed", { detail: "denied" }),
+    )
     setShowBanner(false)
   }
 
@@ -121,7 +127,7 @@ export function CookieConsent() {
 // Extend Window interface for gtag
 declare global {
   interface Window {
-    gtag: (command: string, action: string, params?: Record<string, string>) => void
+    gtag: (...args: unknown[]) => void
     dataLayer: unknown[]
   }
 }
