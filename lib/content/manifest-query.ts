@@ -22,6 +22,31 @@ export interface PostQueryResult {
   total: number
 }
 
+export function buildBlogPageHref(
+  basePath: string,
+  page: number,
+  search?: string,
+): string {
+  const params = new URLSearchParams()
+  const normalizedSearch = search?.trim()
+  if (normalizedSearch) params.set("search", normalizedSearch)
+  if (page > 1) params.set("page", String(Math.floor(page)))
+  const query = params.toString()
+  return query ? `${basePath}?${query}` : basePath
+}
+
+export function distributePostIndices(
+  postCount: number,
+  columns: number,
+): number[][] {
+  const columnCount = Math.max(1, Math.floor(columns))
+  const distributed = Array.from({ length: columnCount }, () => [] as number[])
+  for (let index = 0; index < postCount; index += 1) {
+    distributed[index % columnCount].push(index)
+  }
+  return distributed
+}
+
 export function tagToSlug(tag: string): string {
   return encodeURIComponent(tag.trim().toLowerCase()).toLowerCase()
 }

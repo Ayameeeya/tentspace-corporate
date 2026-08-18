@@ -24,10 +24,10 @@ describe("semantic HTML", () => {
       "app/pricing/page.tsx",
       "app/contact/page.tsx",
       "app/contact/completed/page.tsx",
-      "app/blog/page.tsx",
+      "app/blog/blog-page-client.tsx",
       "app/blog/seo/page.tsx",
       "app/blog/n8n/page.tsx",
-      "app/blog/categories/[slug]/page.tsx",
+      "app/blog/categories/[slug]/category-page-client.tsx",
       "app/blog/[slug]/blog-post-client.tsx",
       "app/blog/[slug]/not-found.tsx",
       "app/blog/favorites/favorites-client.tsx",
@@ -57,7 +57,10 @@ describe("semantic HTML", () => {
   })
 
   it("ブログ一覧とカテゴリ一覧に記事群を表すh2を置く", async () => {
-    for (const file of ["app/blog/page.tsx", "app/blog/categories/[slug]/page.tsx"]) {
+    for (const file of [
+      "app/blog/blog-page-client.tsx",
+      "app/blog/categories/[slug]/category-page-client.tsx",
+    ]) {
       const source = await read(file)
       expect(source, file).toMatch(/<h2[^>]*className="sr-only"[^>]*>\s*記事一覧\s*<\/h2>/)
     }
@@ -103,7 +106,7 @@ describe("semantic HTML", () => {
   })
 
   it("ブログ検索欄に明示的なラベルを付ける", async () => {
-    const source = await read("app/blog/page.tsx")
+    const source = await read("app/blog/blog-page-client.tsx")
 
     expect(source).toContain('<label htmlFor="blog-search" className="sr-only">')
     expect(source).toContain('id="blog-search"')
@@ -213,7 +216,10 @@ describe("semantic HTML", () => {
   })
 
   it("ブログカードの小さい引用文に透明色を使わない", async () => {
-    for (const file of ["app/blog/page.tsx", "app/blog/categories/[slug]/page.tsx"]) {
+    for (const file of [
+      "app/blog/blog-page-client.tsx",
+      "app/blog/categories/[slug]/category-page-client.tsx",
+    ]) {
       const source = await read(file)
       expect(source, file).not.toContain("text-muted-foreground/70")
     }

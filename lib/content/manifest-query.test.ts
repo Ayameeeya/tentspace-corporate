@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest"
 import type { ContentManifestEntry } from "./post-schema"
-import { listCategories, queryPosts } from "./manifest-query"
+import * as manifestQuery from "./manifest-query"
+
+const { listCategories, queryPosts } = manifestQuery
 
 const posts: ContentManifestEntry[] = [
   {
@@ -68,5 +70,48 @@ describe("listCategories", () => {
         count: 1,
       },
     ])
+  })
+})
+
+describe("buildBlogPageHref", () => {
+  it("一覧・検索・カテゴリのページ番号をクロール可能なURLへ変換する", () => {
+    const buildBlogPageHref = (
+      manifestQuery as typeof manifestQuery & {
+        buildBlogPageHref?: (
+          basePath: string,
+          page: number,
+          search?: string,
+        ) => string
+      }
+    ).buildBlogPageHref
+
+    expect(buildBlogPageHref).toBeTypeOf("function")
+    if (!buildBlogPageHref) return
+
+    expect(buildBlogPageHref("/blog", 1)).toBe("/blog")
+    expect(buildBlogPageHref("/blog", 2)).toBe("/blog?page=2")
+    expect(buildBlogPageHref("/blog", 2, "n8n 入門")).toBe(
+      "/blog?search=n8n+%E5%85%A5%E9%96%80&page=2",
+    )
+    expect(buildBlogPageHref("/blog/categories/seo", 3)).toBe(
+      "/blog/categories/seo?page=3",
+    )
+  })
+})
+
+describe("distributePostIndices", () => {
+  it("ブラウザ計測前も全記事を決定的にMasonry列へ割り当てる", () => {
+    const distributePostIndices = (
+      manifestQuery as typeof manifestQuery & {
+        distributePostIndices?: (postCount: number, columns: number) => number[][]
+      }
+    ).distributePostIndices
+
+    expect(distributePostIndices).toBeTypeOf("function")
+    if (!distributePostIndices) return
+
+    expect(distributePostIndices(5, 3)).toEqual([[0, 3], [1, 4], [2]])
+    expect(distributePostIndices(3, 1)).toEqual([[0, 1, 2]])
+    expect(distributePostIndices(0, 3)).toEqual([[], [], []])
   })
 })

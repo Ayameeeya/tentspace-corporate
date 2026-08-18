@@ -5,6 +5,7 @@ import robots from "../app/robots"
 import sitemap from "../app/sitemap"
 import * as categoryLayout from "../app/blog/categories/[slug]/layout"
 import { SITE_URL } from "./site"
+import * as siteModule from "./site"
 
 const root = process.cwd()
 
@@ -13,6 +14,20 @@ async function read(relativePath: string) {
 }
 
 describe("SEO configuration", () => {
+  it("apexのSITE_URL設定もcanonicalなwwwホストへ正規化する", () => {
+    const normalizeSiteUrl = (
+      siteModule as typeof siteModule & {
+        normalizeSiteUrl?: (value: string) => string
+      }
+    ).normalizeSiteUrl
+
+    expect(normalizeSiteUrl).toBeTypeOf("function")
+    if (!normalizeSiteUrl) return
+    expect(normalizeSiteUrl("https://tentspace.net")).toBe(
+      "https://www.tentspace.net",
+    )
+  })
+
   it("公開URLを最終到達先のwwwホストへ統一する", () => {
     expect(SITE_URL).toBe("https://www.tentspace.net")
   })
@@ -119,5 +134,67 @@ describe("SEO configuration", () => {
       expect(source, file).toContain("canonical")
       expect(source, file).toMatch(/openGraph:[\s\S]*url:/)
     }
+  })
+
+  it("ブログのページネーションへ自己参照canonicalを設定する", async () => {
+    const buildBlogListingMetadata = (
+      siteModule as typeof siteModule & {
+        buildBlogListingMetadata?: (input: {
+          basePath: string
+          page: number
+          search?: string
+        }) => {
+          alternates?: { canonical?: unknown }
+          robots?: { index?: unknown; follow?: unknown }
+        }
+      }
+    ).buildBlogListingMetadata
+
+    expect(buildBlogListingMetadata).toBeTypeOf("function")
+    if (!buildBlogListingMetadata) return
+
+    const pageTwo = buildBlogListingMetadata({
+      basePath: "/blog",
+      page: 2,
+    })
+    expect(pageTwo.alternates?.canonical).toBe(`${SITE_URL}/blog?page=2`)
+    expect(pageTwo.robots).toMatchObject({ index: true, follow: true })
+
+    const search = buildBlogListingMetadata({
+      basePath: "/blog",
+      page: 1,
+      search: "n8n",
+    })
+    expect(search.robots).toMatchObject({ index: false, follow: true })
+
+    const pageSource = await read("app/blog/page.tsx")
+    expect(pageSource).toContain("generateMetadata")
+    expect(pageSource).toContain("buildBlogListingMetadata")
+  })
+
+  it("カテゴリのページネーションへ自己参照canonicalを設定する", async () => {
+    const buildBlogListingMetadata = (
+      siteModule as typeof siteModule & {
+        buildBlogListingMetadata?: (input: {
+          basePath: string
+          page: number
+        }) => { alternates?: { canonical?: unknown } }
+      }
+    ).buildBlogListingMetadata
+
+    expect(buildBlogListingMetadata).toBeTypeOf("function")
+    if (!buildBlogListingMetadata) return
+
+    const metadata = buildBlogListingMetadata({
+      basePath: "/blog/categories/seo",
+      page: 2,
+    })
+    expect(metadata.alternates?.canonical).toBe(
+      `${SITE_URL}/blog/categories/seo?page=2`,
+    )
+
+    const pageSource = await read("app/blog/categories/[slug]/page.tsx")
+    expect(pageSource).toContain("generateMetadata")
+    expect(pageSource).toContain("buildBlogListingMetadata")
   })
 })
