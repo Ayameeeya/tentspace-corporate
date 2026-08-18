@@ -3,7 +3,9 @@
 import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { BlogHeader } from "@/components/blog-header"
+import { MonoBlogNav } from "@/components/home/MonoBlogNav"
+import { MonoFooterStandalone } from "@/components/home/MonoFooterStandalone"
+import { MainBtn } from "@/components/home/MainBtn"
 import { BlogComments } from "@/components/blog-comments"
 import { BlogFavorite } from "@/components/blog-favorite"
 import { formatDate, getPostTerms, stripHtml, getFeaturedImageUrl, type BlogPost, type BlogAuthor, type BlogTerm } from "@/lib/blog-content"
@@ -106,12 +108,16 @@ function TableOfContents({ content }: { content: string }) {
   if (sections.length === 0) return null
 
   return (
-    <nav className="sticky top-24 p-4 bg-muted rounded-xl max-h-[calc(100vh-120px)] overflow-y-auto" aria-label="目次">
-      <h3 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
-        </svg>
+    <nav
+      className="sticky top-24 pl-4 py-1 max-h-[calc(100vh-120px)] overflow-y-auto"
+      style={{ borderLeft: "1px solid var(--m-ink, #000)" }}
+      aria-label="目次"
+    >
+      <h3 className="text-sm font-bold text-foreground mb-3 flex items-baseline gap-2">
         目次
+        <span className="text-xs font-normal" style={{ opacity: 0.45 }}>
+          contents
+        </span>
       </h3>
       <ul className="space-y-1">
         {sections.map((section) => {
@@ -122,7 +128,7 @@ function TableOfContents({ content }: { content: string }) {
             <li key={section.id}>
               <a
                 href={`#${section.id}`}
-                className={`flex items-center gap-1 py-1.5 text-sm transition-colors ${isActive ? 'text-blue-700 dark:text-blue-300 font-medium' : 'text-muted-foreground hover:text-foreground'
+                className={`flex items-center gap-1 py-1.5 text-sm transition-colors ${isActive ? 'text-[#0f00b0] font-medium' : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 {section.children.length > 0 && (
@@ -145,7 +151,7 @@ function TableOfContents({ content }: { content: string }) {
                     <li key={child.id}>
                       <a
                         href={`#${child.id}`}
-                        className={`block py-1 pl-7 text-xs transition-colors ${activeId === child.id ? 'text-blue-700 dark:text-blue-300 font-medium' : 'text-muted-foreground hover:text-foreground'
+                        className={`block py-1 pl-7 text-xs transition-colors ${activeId === child.id ? 'text-[#0f00b0] font-medium' : 'text-muted-foreground hover:text-foreground'
                         }`}
                       >
                         {child.text}
@@ -175,7 +181,7 @@ function ShareButtons({ url, title }: { url: string; title: string }) {
         href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="w-9 h-9 flex items-center justify-center rounded-full bg-muted text-muted-foreground hover:bg-accent transition-colors"
+        className="mono-icon-btn"
         title="Xでシェア"
         aria-label="Xでシェア"
       >
@@ -185,7 +191,7 @@ function ShareButtons({ url, title }: { url: string; title: string }) {
       </a>
       <button
         onClick={handleCopy}
-        className="w-9 h-9 flex items-center justify-center rounded-full bg-muted text-muted-foreground hover:bg-accent transition-colors"
+        className="mono-icon-btn"
         title="リンクをコピー"
         aria-label="リンクをコピー"
       >
@@ -250,14 +256,15 @@ function BlogLikeButton({ slug }: { slug: string }) {
         type="button"
         onClick={handleLike}
         disabled={pending || hasLiked}
-        className={`inline-flex items-center gap-2 px-3 py-2 rounded-full border text-sm transition-colors ${hasLiked ? 'bg-red-500/10 border-red-500/20 text-red-500' : 'border-border text-muted-foreground hover:bg-muted'}`}
+        className="mono-action-btn"
+        data-active={hasLiked}
         aria-pressed={hasLiked}
       >
         <svg className="w-4 h-4" viewBox="0 0 24 24" fill={hasLiked ? 'currentColor' : 'none'} stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 21s-6.75-4.35-6.75-9.75A4.25 4.25 0 0112 7.25a4.25 4.25 0 016.75 4c0 5.4-6.75 9.75-6.75 9.75z" />
         </svg>
         <span className="font-medium">{count ?? '–'}</span>
-        <span className="text-xs text-muted-foreground">{hasLiked ? 'ありがとう！' : 'いいね'}</span>
+        <span className="text-xs">{hasLiked ? 'ありがとう！' : 'いいね'}</span>
       </button>
       {error && <span className="text-xs text-red-500">{error}</span>}
     </div>
@@ -603,36 +610,32 @@ export default function BlogPostClient({
   useCodeBlockEnhancement(articleRef)
 
   return (
-    <div className="min-h-screen bg-background">
-      <BlogHeader />
+    <div className="mono-page min-h-screen" style={{ background: "#ffffff" }}>
+      <MonoBlogNav />
 
       <main id="main-content" className="pt-[120px]">
         {/* Breadcrumb Navigation */}
-        <nav className="max-w-5xl mx-auto px-4 py-4" aria-label="パンくずリスト">
-          <ol className="flex items-center gap-2 text-sm text-muted-foreground" itemScope itemType="https://schema.org/BreadcrumbList">
+        <nav className="max-w-3xl mx-auto px-4 py-5" aria-label="パンくずリスト">
+          <ol className="flex items-center gap-3 text-xs" itemScope itemType="https://schema.org/BreadcrumbList">
             <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
-              <Link href="/" prefetch={false} className="hover:text-foreground transition-colors" itemProp="item">
-                <span itemProp="name">ホーム</span>
+              <Link href="/" prefetch={false} className="mono-ul" style={{ opacity: 0.55 }} itemProp="item">
+                <span itemProp="name">home</span>
               </Link>
               <meta itemProp="position" content="1" />
             </li>
-            <li aria-hidden="true">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
+            <li aria-hidden="true" style={{ opacity: 0.35 }}>
+              /
             </li>
             <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
-              <Link href="/blog" className="hover:text-foreground transition-colors" itemProp="item">
-                <span itemProp="name">ブログ</span>
+              <Link href="/blog" className="mono-ul" style={{ opacity: 0.55 }} itemProp="item">
+                <span itemProp="name">blog</span>
               </Link>
               <meta itemProp="position" content="2" />
             </li>
-            <li aria-hidden="true">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
+            <li aria-hidden="true" style={{ opacity: 0.35 }}>
+              /
             </li>
-            <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem" className="text-foreground truncate max-w-xs">
+            <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem" className="truncate max-w-xs">
               <span itemProp="name">{plainTitle}</span>
               <meta itemProp="position" content="3" />
             </li>
@@ -640,16 +643,13 @@ export default function BlogPostClient({
         </nav>
 
         {/* Article Header */}
-        <header className="bg-card border-b border-border">
+        <header style={{ borderBottom: "1px solid var(--m-ink)" }}>
           <div className="max-w-3xl mx-auto px-4 py-8 md:py-12">
             {/* Categories */}
             {categories.length > 0 && (
-              <div className="flex items-center gap-2 mb-4">
+              <div className="mono-works__tags mb-5">
                 {categories.map((cat) => (
-                  <span
-                    key={cat.id}
-                    className="inline-flex items-center px-3 py-1 text-xs font-medium bg-blue-500/10 text-blue-700 dark:text-blue-300 rounded-full"
-                  >
+                  <span key={cat.id} className="mono-works__tag">
                     {cat.name}
                   </span>
                 ))}
@@ -675,7 +675,7 @@ export default function BlogPostClient({
                       className="rounded-full"
                     />
                   ) : (
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-medium">
+                    <div className="w-10 h-10 rounded-full bg-[#0f00b0] flex items-center justify-center text-white font-medium">
                       {author.name.charAt(0)}
                     </div>
                   )}
@@ -701,8 +701,8 @@ export default function BlogPostClient({
 
         {/* Featured Image */}
         {imageUrl && (
-          <figure className="max-w-4xl mx-auto px-4 -mt-4 md:-mt-6">
-            <div className="relative aspect-[16/9] rounded-xl overflow-hidden shadow-lg">
+          <figure className="max-w-4xl mx-auto px-4 mt-8 md:mt-10">
+            <div className="relative aspect-[16/9] overflow-hidden" style={{ border: "1px solid var(--m-ink)" }}>
               <Image
                 src={imageUrl}
                 alt={plainTitle}
@@ -721,7 +721,7 @@ export default function BlogPostClient({
           <div className="flex gap-8">
             {/* Main Content */}
             <article className="flex-1 min-w-0" itemScope itemType="https://schema.org/Article">
-              <div className="bg-card rounded-xl border border-border p-6 md:p-10">
+              <div className="py-2 md:py-4">
                 <div
                   ref={articleRef}
                   className="article-content"
@@ -735,17 +735,13 @@ export default function BlogPostClient({
 
               {/* Related Posts Section */}
               {relatedPosts.length > 0 && (
-                <aside className="mt-8 bg-card rounded-xl border border-border p-6" aria-label="関連記事">
-                  <div className="flex items-center gap-2 mb-5">
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center">
-                      <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-                      </svg>
-                    </div>
+                <aside className="mt-12 pt-6" style={{ borderTop: "1px solid var(--m-ink)" }} aria-label="関連記事">
+                  <div className="flex items-baseline gap-3 mb-6 flex-wrap">
                     <h3 className="font-bold text-foreground">他の記事もどうぞ</h3>
+                    <span className="text-xs text-muted-foreground">related</span>
                     {categories[0] && (
-                      <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded">
-                        {categories[0].name}カテゴリより
+                      <span className="mono-works__tag" style={{ fontSize: "0.7rem" }}>
+                        {categories[0].name}
                       </span>
                     )}
                   </div>
@@ -796,7 +792,7 @@ export default function BlogPostClient({
 
               {/* Author Card */}
               {author && (
-                <aside className="mt-8 bg-card rounded-xl border border-border p-6" aria-label="著者情報">
+                <aside className="mt-8 p-6" style={{ border: "1px solid var(--m-ink)" }} aria-label="著者情報">
                   <div className="flex items-start gap-4">
                     {author.avatarUrl ? (
                       <Image
@@ -807,7 +803,7 @@ export default function BlogPostClient({
                         className="rounded-full flex-shrink-0"
                       />
                     ) : (
-                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
+                      <div className="w-16 h-16 rounded-full bg-[#0f00b0] flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
                         {author.name.charAt(0)}
                       </div>
                     )}
@@ -825,9 +821,9 @@ export default function BlogPostClient({
               )}
 
               {/* Share CTA Section */}
-              <aside className="mt-8 bg-card rounded-xl border border-border p-6 md:p-8" aria-label="記事をシェア">
+              <aside className="mt-8 p-6 md:p-8" style={{ border: "1px solid var(--m-ink)" }} aria-label="記事をシェア">
                 <h3 className="text-center font-bold text-foreground mb-6">
-                  📢 記事をシェアする
+                  記事をシェアする
                 </h3>
                 <div className="flex flex-wrap justify-center gap-3">
                   {/* Twitter/X */}
@@ -835,7 +831,7 @@ export default function BlogPostClient({
                     href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(canonicalUrl)}&text=${encodeURIComponent(plainTitle)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2.5 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
+                    className="mono-share-btn"
                     aria-label="Xでシェア"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
@@ -849,7 +845,7 @@ export default function BlogPostClient({
                     href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(canonicalUrl)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2.5 bg-[#0B57B7] text-white rounded-lg hover:bg-[#08458F] transition-colors"
+                    className="mono-share-btn"
                     aria-label="Facebookでシェア"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
@@ -863,7 +859,7 @@ export default function BlogPostClient({
                     href={`https://b.hatena.ne.jp/add?mode=confirm&url=${encodeURIComponent(canonicalUrl)}&title=${encodeURIComponent(plainTitle)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2.5 bg-[#006B91] text-white rounded-lg hover:bg-[#005471] transition-colors"
+                    className="mono-share-btn"
                     aria-label="はてなブックマークに追加"
                   >
                     <span className="font-bold text-sm">B!</span>
@@ -875,7 +871,7 @@ export default function BlogPostClient({
                     href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(canonicalUrl)}&title=${encodeURIComponent(plainTitle)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2.5 bg-[#0A66C2] text-white rounded-lg hover:bg-[#095196] transition-colors"
+                    className="mono-share-btn"
                     aria-label="LinkedInでシェア"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
@@ -889,7 +885,7 @@ export default function BlogPostClient({
                     href={`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(canonicalUrl)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2.5 bg-[#087A36] text-white rounded-lg hover:bg-[#06612B] transition-colors"
+                    className="mono-share-btn"
                     aria-label="LINEでシェア"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
@@ -904,7 +900,7 @@ export default function BlogPostClient({
                       navigator.clipboard.writeText(canonicalUrl)
                       alert('URLをコピーしました！')
                     }}
-                    className="flex items-center gap-2 px-4 py-2.5 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                    className="mono-share-btn"
                     aria-label="URLをコピー"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -916,47 +912,33 @@ export default function BlogPostClient({
               </aside>
 
               {/* AI Development CTA Section */}
-              <aside className="mt-8 bg-gradient-to-br from-blue-600 to-purple-700 rounded-xl p-6 md:p-8 text-white overflow-hidden relative" aria-label="お問い合わせ">
-                {/* Background decoration */}
-                <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
-                <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
-                
-                <div className="relative z-10">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <p className="text-sm text-white/80">tent space Inc.</p>
-                      <p className="font-bold text-lg">AI開発でお困りですか？</p>
-                    </div>
+              <aside className="mt-8 p-6 md:p-8" style={{ background: "var(--m-indigo)", color: "#e5e5e5" }} aria-label="お問い合わせ">
+                <div>
+                  <div className="mb-4">
+                    <p className="text-sm" style={{ opacity: 0.7 }}>with tent space</p>
+                    <p className="font-bold text-lg">AI開発、お手伝いできます。</p>
                   </div>
-                  
-                  <p className="text-white/90 mb-6 leading-relaxed">
+
+                  <p className="mb-6 leading-relaxed" style={{ opacity: 0.9 }}>
                     tent spaceでは、ChatGPT・Claude・Geminiなどの生成AIを活用した
-                    <strong className="text-white">業務効率化ツール</strong>や
-                    <strong className="text-white">AIチャットボット</strong>、
-                    <strong className="text-white">自動化システム</strong>の開発を行っています。
+                    業務効率化ツールやAIチャットボット、自動化システムの開発を行っています。
                     <br />
-                    <span className="text-white/80 text-sm">「こんなことできる？」というご相談だけでもお気軽にどうぞ。</span>
+                    <span className="text-sm" style={{ opacity: 0.8 }}>「こんなことできる？」というご相談だけでもお気軽にどうぞ。</span>
                   </p>
                   
                   <div className="flex flex-col sm:flex-row gap-3">
-                    <a
-                      href="mailto:back-office@tentspace.net"
-                      className="inline-flex items-center justify-center px-6 py-3 bg-white text-blue-700 font-bold rounded-lg hover:bg-blue-50 transition-colors shadow-lg"
+                    <Link
+                      href="/contact"
+                      className="inline-flex items-center justify-center px-6 py-3 font-bold transition-colors"
+                      style={{ background: "#e5e5e5", color: "#0f00b0" }}
                     >
-                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
                       無料で相談する
-                    </a>
+                    </Link>
                     <Link
                       href="/about"
                       prefetch={false}
-                      className="inline-flex items-center justify-center px-6 py-3 bg-white/10 text-white font-medium rounded-lg hover:bg-white/20 transition-colors border border-white/30"
+                      className="inline-flex items-center justify-center px-6 py-3 font-medium transition-colors"
+                      style={{ border: "1px solid rgba(229,229,229,0.5)", color: "#e5e5e5" }}
                     >
                       会社について詳しく見る
                       <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -965,28 +947,21 @@ export default function BlogPostClient({
                     </Link>
                   </div>
                   
-                  <div className="mt-6 pt-4 border-t border-white/20">
+                  <div className="mt-6 pt-4" style={{ borderTop: "1px solid rgba(229,229,229,0.3)" }}>
                     <div className="flex flex-wrap gap-2">
-                      <span className="px-3 py-1 bg-white/10 rounded-full text-xs">ChatGPT連携</span>
-                      <span className="px-3 py-1 bg-white/10 rounded-full text-xs">業務自動化</span>
-                      <span className="px-3 py-1 bg-white/10 rounded-full text-xs">AIチャットボット</span>
-                      <span className="px-3 py-1 bg-white/10 rounded-full text-xs">LLMアプリ開発</span>
+                      {["ChatGPT連携", "業務自動化", "AIチャットボット", "LLMアプリ開発"].map((t) => (
+                        <span key={t} className="px-3 py-1 text-xs" style={{ border: "1px solid rgba(229,229,229,0.5)" }}>
+                          {t}
+                        </span>
+                      ))}
                     </div>
                   </div>
                 </div>
               </aside>
 
               {/* Back to list */}
-              <nav className="mt-8 text-center" aria-label="記事一覧へ戻る">
-                <Link
-                  href="/blog"
-                  className="inline-flex items-center px-6 py-3 bg-primary text-primary-foreground text-sm font-medium rounded-lg hover:bg-primary/90 transition-colors"
-                >
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                  </svg>
-                  他の記事を読む
-                </Link>
+              <nav className="mt-10 flex justify-center" aria-label="記事一覧へ戻る">
+                <MainBtn label="他の記事を読む" href="/blog" variant="inside" />
               </nav>
             </article>
 
@@ -998,39 +973,9 @@ export default function BlogPostClient({
         </div>
 
         {/* Footer */}
-        <footer className="bg-card border-t border-border">
-          <div className="max-w-5xl mx-auto px-4 py-8">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <Image
-                  src="/logo_black_symbol.png"
-                  alt="tent space"
-                  width={32}
-                  height={32}
-                  className="opacity-60 dark:invert"
-                />
-                <span className="text-sm text-muted-foreground">© 2025 tent space Inc.</span>
-              </div>
-              <nav className="flex items-center gap-6 text-sm text-muted-foreground" aria-label="フッターナビゲーション">
-                <Link href="/about" prefetch={false} className="hover:text-foreground transition-colors">
-                  About
-                </Link>
-                <Link href="/terms" className="hover:text-foreground transition-colors">
-                  利用規約
-                </Link>
-                <Link href="/privacy" className="hover:text-foreground transition-colors">
-                  プライバシー
-                </Link>
-                <a 
-                  href="mailto:back-office@tentspace.net" 
-                  className="hover:text-foreground transition-colors"
-                >
-                  お問い合わせ
-                </a>
-              </nav>
-            </div>
-          </div>
-        </footer>
+        <div className="mt-16">
+          <MonoFooterStandalone />
+        </div>
       </main>
     </div>
   )

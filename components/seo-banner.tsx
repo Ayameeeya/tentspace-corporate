@@ -41,7 +41,7 @@ export function SeoBanner({ layout = 'vertical' }: SeoBannerProps) {
 
                   {/* 下部CTA */}
                   <div className="mt-8">
-                    <span className="inline-flex items-center px-6 py-2 bg-foreground text-background rounded-lg font-medium text-sm hover:bg-foreground/90 transition-all">
+                    <span className="inline-flex items-center px-6 py-2 bg-foreground text-background font-medium text-sm hover:bg-foreground/90 transition-all">
                       SEO特設サイトを見る
                     </span>
                   </div>
@@ -110,7 +110,7 @@ export function SeoBanner({ layout = 'vertical' }: SeoBannerProps) {
 
             {/* 下部CTA */}
             <div className="mt-6">
-              <span className="inline-flex items-center px-6 py-2 bg-foreground text-background rounded-lg font-medium text-sm hover:bg-foreground/90 transition-all">
+              <span className="inline-flex items-center px-6 py-2 bg-foreground text-background font-medium text-sm hover:bg-foreground/90 transition-all">
                 SEO特設サイトを見る
               </span>
             </div>

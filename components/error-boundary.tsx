@@ -1,8 +1,9 @@
 'use client';
 
+import '@/app/home.css';
+
 import React, { Component, ErrorInfo as ReactErrorInfo, ReactNode } from 'react';
 import { ErrorInfo } from '@/hooks/use-error-tracking';
-import { EyeLoader } from '@/components/eye-loader';
 
 interface Props {
   children: ReactNode;
@@ -164,58 +165,44 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 }
 
-// デフォルトエラーフォールバックコンポーネント
+// デフォルトエラーフォールバック（mono様式・アニメーション等の依存なしの静的マークアップ）
 function DefaultErrorFallback({ error }: { error?: Error }) {
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
-      {/* Main Content */}
-      <main id="main-content" className="flex-1 flex items-center justify-center px-4 pt-16">
-        <div className="max-w-2xl w-full text-center py-12">
-          {/* Eye Animation */}
-          <div className="mb-6 flex justify-center">
-            <div className="scale-75 md:scale-100">
-              <EyeLoader variant="end" />
+    <div className="mono-page" style={{ minHeight: '100dvh', display: 'flex', alignItems: 'center' }}>
+      <main id="main-content" style={{ width: '100%' }}>
+        <div className="mono-container">
+          <div className="mono-chapter">
+            <span>error</span>
+            <div className="mono-chapter__wrap">
+              <div className="mono-chapter__line" />
+              <div className="mono-chapter__box" />
+              <div className="mono-chapter__line" />
             </div>
           </div>
-
-          {/* Error Code */}
-          <div className="mb-8">
-            <h1 className="text-[120px] md:text-[180px] font-black font-tech text-foreground/60 leading-none select-none">
-              ERROR
-            </h1>
-          </div>
-
-          {/* Message */}
-          <div className="mb-12">
-            <h2 className="text-2xl md:text-4xl font-bold font-tech text-foreground mb-4">
-              エラーが発生しました
-            </h2>
-            <p className="text-muted-foreground mb-6">
-              申し訳ございません。予期しないエラーが発生しました
-            </p>
-            {error && process.env.NODE_ENV === 'development' && (
-              <div className="mt-4 text-left max-w-md mx-auto">
-                <details className="text-xs text-muted-foreground bg-muted/30 border border-border rounded-lg p-4">
-                  <summary className="cursor-pointer font-mono mb-2">
-                    エラー詳細（開発環境のみ）
-                  </summary>
-                  <pre className="overflow-auto font-mono text-[10px] mt-2">
-                    {error.message}
-                    {'\n\n'}
-                    {error.stack}
-                  </pre>
-                </details>
-              </div>
-            )}
-          </div>
-
-          {/* Reload Button */}
+          <h1 className="heading-xl">something went wrong</h1>
+          <p className="paragraph-m opacity-64" style={{ marginTop: '1.5em', marginBottom: '3em' }}>
+            申し訳ございません。予期しないエラーが発生しました。
+          </p>
           <button
+            type="button"
             onClick={() => window.location.reload()}
-            className="px-8 py-3 bg-foreground text-background font-bold rounded-full hover:opacity-90 transition-opacity"
+            className="paragraph-m mono-ul mono-ul--static mono-submit"
+            style={{ cursor: 'crosshair' }}
           >
-            ページをリロード
+            reload page
           </button>
+          {error && process.env.NODE_ENV === 'development' && (
+            <details style={{ marginTop: '4em', maxWidth: '62em' }}>
+              <summary className="paragraph-s opacity-64" style={{ cursor: 'crosshair' }}>
+                エラー詳細（開発環境のみ）
+              </summary>
+              <pre className="paragraph-s" style={{ overflow: 'auto', marginTop: '1em', whiteSpace: 'pre-wrap' }}>
+                {error.message}
+                {'\n\n'}
+                {error.stack}
+              </pre>
+            </details>
+          )}
         </div>
       </main>
     </div>

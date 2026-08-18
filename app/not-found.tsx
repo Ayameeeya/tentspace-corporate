@@ -1,57 +1,31 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
-import { Header } from "@/components/header"
-import { PageFooter } from "@/components/page-footer"
-import { EyeLoader } from "@/components/eye-loader"
+import { MonoShell } from "@/components/home/MonoShell"
+import { ChapterLabel } from "@/components/home/ChapterText"
+import { ScrambleText } from "@/components/home/ScrambleText"
+import { MainBtn } from "@/components/home/MainBtn"
 
 export default function NotFound() {
-  const router = useRouter()
-  const [searchInput, setSearchInput] = useState('')
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (searchInput.trim()) {
-      router.push(`/blog?search=${encodeURIComponent(searchInput.trim())}`)
-    }
-  }
-
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <Header scrollProgress={1} />
-
-      {/* Main Content */}
-      <main id="main-content" className="flex-1 flex items-center justify-center px-4 pt-16">
-        <div className="max-w-2xl w-full text-center py-12">
-          {/* Eye Animation */}
-          <div className="mb-6 flex justify-center">
-            <div className="scale-75 md:scale-100">
-              <EyeLoader variant="end" />
-            </div>
+    <MonoShell footer={false}>
+      <main
+        id="main-content"
+        className="mono-doc"
+        style={{ minHeight: "100dvh", display: "flex", flexDirection: "column", justifyContent: "center", paddingBottom: "10vh" }}
+      >
+        <div className="mono-container">
+          <ChapterLabel label="404" />
+          <ScrambleText as="h1" className="heading-xl" mode="load" intensity={5}>
+            page not found
+          </ScrambleText>
+          <div className="mono-doc__meta" style={{ marginBottom: "4em" }}>
+            <ScrambleText as="p" className="paragraph-m opacity-64" mode="load" intensity={5}>
+              お探しのページは存在しないか、移動した可能性があります。
+            </ScrambleText>
           </div>
-
-          {/* 404 */}
-          <div className="mb-8">
-            <h1 className="text-[120px] md:text-[180px] font-black font-tech text-foreground/60 leading-none select-none">
-              404
-            </h1>
-          </div>
-
-          {/* Message */}
-          <div className="mb-12">
-            <h2 className="text-2xl md:text-4xl font-bold font-tech text-foreground mb-4">
-              ページが見つかりません
-            </h2>
-            <p className="text-muted-foreground">
-              お探しのページは存在しないか、移動した可能性があります
-            </p>
-          </div>
+          <MainBtn label="back to home" href="/" variant="inside" />
         </div>
       </main>
-
-      <PageFooter />
-    </div>
+    </MonoShell>
   )
 }

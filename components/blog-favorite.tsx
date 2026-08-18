@@ -133,9 +133,9 @@ export function BlogFavorite({ postSlug }: BlogFavoriteProps) {
 
   if (loading) {
     return (
-      <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100 text-gray-400">
+      <div className="mono-action-btn" style={{ opacity: 0.4 }}>
         <Heart className="w-4 h-4" />
-        <span className="text-sm font-medium">お気に入りに登録しませんか？</span>
+        <span className="text-xs">お気に入り</span>
       </div>
     )
   }
@@ -144,24 +144,13 @@ export function BlogFavorite({ postSlug }: BlogFavoriteProps) {
     <>
       <button
         onClick={handleToggleFavorite}
-        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all ${
-          isFavorited
-            ? "bg-red-50 text-red-600 hover:bg-red-100"
-            : user
-            ? "bg-blue-50 text-blue-600 hover:bg-blue-100"
-            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-        }`}
+        className="mono-action-btn"
+        data-active={isFavorited}
         aria-label={isFavorited ? "お気に入りから削除" : "お気に入りに追加"}
       >
-        <Heart
-          className={`w-4 h-4 transition-all ${isFavorited ? "fill-current" : ""}`}
-        />
-        <span className="text-sm font-medium">
-          {user
-            ? isFavorited
-              ? `お気に入り登録済み (${favoriteCount})`
-              : "お気に入りに登録する"
-            : "お気に入りに登録しませんか？"}
+        <Heart className={`w-4 h-4 transition-all ${isFavorited ? "fill-current" : ""}`} />
+        <span className="text-xs">
+          {isFavorited ? `お気に入り済み (${favoriteCount})` : "お気に入り"}
         </span>
       </button>
 

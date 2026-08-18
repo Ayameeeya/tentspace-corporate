@@ -39,11 +39,12 @@ export function CookieConsent() {
 
   const updateGtagConsent = (granted: boolean) => {
     if (typeof window !== "undefined" && typeof window.gtag === "function") {
+      // This site serves no ads: only analytics storage is ever granted.
       window.gtag("consent", "update", {
         analytics_storage: granted ? "granted" : "denied",
-        ad_storage: granted ? "granted" : "denied",
-        ad_user_data: granted ? "granted" : "denied",
-        ad_personalization: granted ? "granted" : "denied",
+        ad_storage: "denied",
+        ad_user_data: "denied",
+        ad_personalization: "denied",
       })
     }
   }

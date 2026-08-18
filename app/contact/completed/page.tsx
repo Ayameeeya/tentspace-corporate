@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
+import { MonoFooterStandalone } from "@/components/home/MonoFooterStandalone"
 import { CheckCircle2 } from "lucide-react"
 import Link from "next/link"
 
@@ -174,7 +174,7 @@ export default function ContactCompletedPage() {
           </div>
         </div>
       </main>
-      <Footer />
+      <MonoFooterStandalone />
     </>
   )
 }

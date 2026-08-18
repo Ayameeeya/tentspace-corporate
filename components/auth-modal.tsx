@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
+import { HeroVisual } from "@/components/home/HeroVisual"
 import { supabaseAuth } from "@/lib/supabase/client"
 import { recordLoginHistory } from "@/lib/dashboard"
 import {
@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/dialog"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 import { Input } from "@/components/ui/input"
-import GlassSurface from "@/components/GlassSurface"
 
 interface AuthModalProps {
   isOpen: boolean
@@ -284,7 +283,10 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-5xl p-0 bg-card border-none overflow-hidden">
+      <DialogContent
+        className="sm:max-w-5xl p-0 overflow-hidden rounded-none"
+        style={{ background: "#ffffff", border: "1px solid #000" }}
+      >
         <VisuallyHidden>
           <DialogTitle>
             {mfaRequired ? "二段階認証" :
@@ -299,14 +301,17 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
             <div className="max-w-md mx-auto w-full">
               {/* Header */}
               <div className="mb-6">
-                <p className="text-sm font-pixel tracking-widest uppercase text-muted-foreground mb-1">
-                  DON'T MISS A THING
+                <p className="text-xs tracking-widest text-muted-foreground mb-2">
+                  {mfaRequired ? "two-factor" :
+                    mode === "login" ? "sign in" :
+                      mode === "signup" ? "sign up" :
+                        "reset password"}
                 </p>
                 <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-foreground leading-tight">
                   {mfaRequired ? "認証コードを入力" :
-                    mode === "login" ? "Welcome back to our blog" :
-                      mode === "signup" ? "Join our community" :
-                        "Reset your password"}
+                    mode === "login" ? "おかえりなさい。" :
+                      mode === "signup" ? "アカウントを作成" :
+                        "パスワードを再設定"}
                 </h2>
               </div>
 
@@ -316,17 +321,9 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                   <p className="text-muted-foreground">{message}</p>
                   <button
                     onClick={handleClose}
-                    className="w-full"
+                    className="w-full py-3 bg-black text-white text-sm font-semibold hover:bg-[#0f00b0] transition-colors rounded-none"
                   >
-                    <GlassSurface
-                      width="100%"
-                      height={48}
-                      borderRadius={8}
-                      blur={10}
-                      className="py-3"
-                    >
-                      <span className="font-semibold text-foreground">閉じる</span>
-                    </GlassSurface>
+                    閉じる
                   </button>
                 </div>
               ) : (
@@ -338,7 +335,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                 } className="space-y-4">
                   {/* Error Message */}
                   {error && (
-                    <div className="bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-400 px-3 py-2.5 text-xs rounded-md border border-red-200 dark:border-red-900/50">
+                    <div className="bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-400 px-3 py-2.5 text-xs rounded-none border border-red-200 dark:border-red-900/50">
                       {error}
                     </div>
                   )}
@@ -353,7 +350,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                         onChange={(e) => setMfaCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                         maxLength={6}
                         required
-                        className="w-full py-2.5 px-3.5 border border-border/50 text-center text-xl font-mono tracking-wider"
+                        className="w-full py-2.5 px-3.5 border border-black rounded-none text-center text-xl font-mono tracking-wider"
                         autoFocus
                       />
                     </div>
@@ -366,7 +363,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                           placeholder="Display Name"
                           value={displayName}
                           onChange={(e) => setDisplayName(e.target.value)}
-                          className="w-full py-2.5 px-3.5 border border-border/50 text-sm placeholder:text-muted-foreground/60"
+                          className="w-full py-2.5 px-3.5 border border-black rounded-none text-sm placeholder:text-muted-foreground/60"
                         />
                       )}
 
@@ -377,7 +374,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
-                        className="w-full py-2.5 px-3.5 border border-border/50 text-sm placeholder:text-muted-foreground/60"
+                        className="w-full py-2.5 px-3.5 border border-black rounded-none text-sm placeholder:text-muted-foreground/60"
                       />
 
                       {/* Password Input */}
@@ -390,7 +387,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                             onChange={(e) => setPassword(e.target.value)}
                             required
                             minLength={8}
-                            className="w-full py-2.5 px-3.5 pr-11 border border-border/50 text-sm placeholder:text-muted-foreground/60"
+                            className="w-full py-2.5 px-3.5 pr-11 border border-black rounded-none text-sm placeholder:text-muted-foreground/60"
                           />
                           <button
                             type="button"
@@ -422,7 +419,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             required
                             minLength={8}
-                            className="w-full py-2.5 px-3.5 pr-11 border border-border/50 text-sm placeholder:text-muted-foreground/60"
+                            className="w-full py-2.5 px-3.5 pr-11 border border-black rounded-none text-sm placeholder:text-muted-foreground/60"
                           />
                           <button
                             type="button"
@@ -450,34 +447,26 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="group relative w-full disabled:opacity-50"
+                    className="w-full py-3 bg-black text-white text-sm font-semibold tracking-wide hover:bg-[#0f00b0] transition-colors rounded-none disabled:opacity-50"
                   >
-                    <GlassSurface
-                      width="100%"
-                      height={44}
-                      borderRadius={8}
-                      blur={10}
-                      className="py-2.5"
-                    >
-                      <div className="flex items-center justify-center gap-2 text-sm font-semibold tracking-wide text-foreground">
-                        {loading ? (
-                          <>
-                            <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                            </svg>
-                            処理中...
-                          </>
-                        ) : (
-                          <>
-                            {mfaRequired ? "確認" :
-                              mode === "login" ? "Sign In" :
-                                mode === "signup" ? "Sign Up" :
-                                  "Send Reset Link"}
-                          </>
-                        )}
-                      </div>
-                    </GlassSurface>
+                    <span className="flex items-center justify-center gap-2">
+                      {loading ? (
+                        <>
+                          <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                          </svg>
+                          処理中...
+                        </>
+                      ) : (
+                        <>
+                          {mfaRequired ? "確認" :
+                            mode === "login" ? "sign in" :
+                              mode === "signup" ? "sign up" :
+                                "send reset link"}
+                        </>
+                      )}
+                    </span>
                   </button>
 
                   {/* Links */}
@@ -539,15 +528,9 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
             </div>
           </div>
 
-          {/* Right Side - Image */}
-          <div className="hidden md:block md:w-1/2 relative bg-primary">
-            <Image
-              src="/blog-placeholders/krystal-ng-1PlVbeOCd78.jpg"
-              alt=""
-              fill
-              className="object-cover"
-              priority
-            />
+          {/* Right Side - contributions field */}
+          <div className="hidden md:block md:w-1/2 relative" style={{ background: "#e5e5e5", borderLeft: "1px solid #000" }}>
+            <HeroVisual />
           </div>
         </div>
       </DialogContent>

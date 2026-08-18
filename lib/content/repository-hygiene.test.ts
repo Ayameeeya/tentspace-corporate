@@ -28,6 +28,8 @@ const retiredCmsMarkers = [
   "blog" + ".tentspace.net",
   "word" + "press" + "_user_id",
 ]
+// 技術スタックに載せているCMSのロゴ表記は提供サービスであり、移行元の識別子ではない
+const allowedFiles = new Set(["components/home/stack-logos.tsx"])
 
 async function findRetiredCmsReferences(directory: string): Promise<string[]> {
   const matches: string[] = []
@@ -48,6 +50,7 @@ async function findRetiredCmsReferences(directory: string): Promise<string[]> {
     }
 
     if (!textExtensions.has(path.extname(entry.name))) continue
+    if (allowedFiles.has(relativePath)) continue
     const source = (await readFile(absolutePath, "utf8")).toLowerCase()
     if (retiredCmsMarkers.some((marker) => source.includes(marker))) {
       matches.push(relativePath)
