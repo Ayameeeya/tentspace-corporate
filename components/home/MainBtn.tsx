@@ -32,6 +32,12 @@ export function PixelArrow() {
   )
 }
 
+function twoLineLabel(label: string) {
+  const i = label.lastIndexOf(" ")
+  if (i < 0) return label
+  return `${label.slice(0, i)}\n${label.slice(i + 1)}`
+}
+
 export function MainBtn({
   label,
   href,
@@ -51,7 +57,7 @@ export function MainBtn({
   const inner = (
     <>
       <p className="main-btn__text" data-mono-hover-target>
-        {label}
+        {variant === "outside" ? twoLineLabel(label) : label}
       </p>
       <div className="main-btn__wrap">
         <div className="main-btn__line" />

@@ -17,14 +17,6 @@ export const NAV_SECTIONS = [
 const MENU_ROWS = 6
 const MENU_COLS = 4
 
-function Cropmark() {
-  return (
-    <svg viewBox="0 0 6 6" aria-hidden="true">
-      <path d="M0.5 5.5V0.5H4.5H5.5" stroke="currentColor" fill="none" />
-    </svg>
-  )
-}
-
 export function MonoNav() {
   const navRef = useRef<HTMLElement>(null)
   const barRef = useRef<HTMLDivElement>(null)
@@ -33,7 +25,6 @@ export function MonoNav() {
   const cellsRef = useRef<HTMLDivElement>(null)
   const linksRef = useRef<HTMLDivElement>(null)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [menuTab, setMenuTab] = useState<"product" | "news">("product")
   const [activeSection, setActiveSection] = useState("")
   const openTl = useRef<gsap.core.Timeline | null>(null)
 
@@ -228,37 +219,12 @@ export function MonoNav() {
           ))}
         </div>
         <div className="mono-menu__content">
-          <div className="mono-tabs">
-            {(["product", "news"] as const).map((tab) => (
-              <button key={tab} type="button" className="mono-tab" data-active={menuTab === tab} onClick={() => setMenuTab(tab)}>
-                {tab === "product" ? "product" : "news"}
-                {menuTab === tab && (
-                  <span className="mono-cropmarks" style={{ inset: 0 }}>
-                    <Cropmark />
-                    <Cropmark />
-                    <Cropmark />
-                    <Cropmark />
-                  </span>
-                )}
+          <div ref={linksRef} className="mono-menu__links">
+            {NAV_SECTIONS.map((s) => (
+              <button key={s.id} type="button" className="mono-menu__link" onClick={() => jumpTo(s.id)}>
+                <span className="mono-menu__link-inner">{s.label}</span>
               </button>
             ))}
-          </div>
-          <div ref={linksRef} className="mono-menu__links">
-            {menuTab === "product"
-              ? NAV_SECTIONS.map((s) => (
-                  <button key={s.id} type="button" className="mono-menu__link" onClick={() => jumpTo(s.id)}>
-                    <span className="mono-menu__link-inner">{s.label}</span>
-                  </button>
-                ))
-              : [
-                  { href: "/blog", label: "all posts" },
-                  { href: "/about", label: "about tent space" },
-                  { href: "/contact", label: "contact" },
-                ].map((l) => (
-                  <Link key={l.href} href={l.href} className="mono-menu__link">
-                    <span className="mono-menu__link-inner">{l.label}</span>
-                  </Link>
-                ))}
           </div>
           <div className="mono-menu__bottom">
             <div style={{ display: "flex", gap: "1.5em" }}>
