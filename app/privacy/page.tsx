@@ -1,291 +1,158 @@
 "use client"
 
-import { useEffect, useRef } from "react"
-import { Header } from "@/components/header"
-import { PageFooter } from "@/components/page-footer"
-import { gsap } from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { MonoDoc } from "@/components/home/MonoDoc"
 
-gsap.registerPlugin(ScrollTrigger)
+const COMPANY_ROWS: [string, React.ReactNode][] = [
+  ["法人名", "株式会社tent space"],
+  ["所在地", "〒355-0316 埼玉県比企郡小川町大字角山323"],
+  ["代表者", "代表取締役 石井 絢子"],
+  [
+    "個人情報に関する窓口",
+    <a key="mail" href="mailto:back-office@tentspace.net" className="mono-ul">
+      back-office@tentspace.net
+    </a>,
+  ],
+]
+
+const COOKIE_ROWS: [string, React.ReactNode][] = [
+  ["cookie_consent", "Cookieの利用に同意されたかどうかを記録します（保存期間: 1年）。"],
+  ["sb- で始まるCookie", "ログイン状態を維持するための認証情報です（Supabase が発行）。"],
+  ["_ga / _ga_ で始まるCookie", "Google Analytics が利用状況の測定のために発行します。同意された場合にのみ設定されます。"],
+  [
+    "tentspace_blog_client_id",
+    "ブラウザのローカルストレージに保存される識別子です。同一ブラウザからの「いいね」の重複を防ぎ、ログインせずに投稿されたコメントを識別するために使用します。",
+  ],
+]
 
 export default function PrivacyPage() {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from(".privacy-title span", {
-        y: 120,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.08,
-        ease: "power4.out",
-      })
-
-      gsap.from(".privacy-subtitle", {
-        y: 40,
-        opacity: 0,
-        duration: 0.8,
-        delay: 0.5,
-        ease: "power3.out",
-      })
-
-      gsap.from(".privacy-section", {
-        y: 40,
-        opacity: 0,
-        duration: 0.6,
-        stagger: 0.1,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: contentRef.current,
-          start: "top 85%",
-        },
-      })
-    }, containerRef)
-
-    return () => ctx.revert()
-  }, [])
-
   return (
-    <div ref={containerRef} className="min-h-screen bg-background text-foreground">
-      <Header scrollProgress={1} />
-
-      {/* Subtle gradient background */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/30 to-background" />
-        <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-blue-500/5 blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-blue-500/3 blur-3xl" />
-      </div>
-
-      <main id="main-content" className="relative z-10">
-        {/* Hero */}
-        <div className="min-h-[50vh] flex flex-col justify-end px-6 md:px-12 lg:px-20 pb-12 md:pb-16">
-          <div className="max-w-5xl">
-            <p className="privacy-subtitle text-blue-600 text-xs md:text-sm font-medium font-tech tracking-wider mb-4 md:mb-6">
-              PRIVACY POLICY
-            </p>
-            <h1 className="privacy-title text-3xl md:text-7xl lg:text-8xl font-bold tracking-tight overflow-hidden text-foreground">
-              {"プライバシーポリシー".split("").map((char, i) => (
-                <span key={i} className="inline-block">
-                  {char}
-                </span>
-              ))}
-            </h1>
-            <div className="privacy-subtitle mt-6 md:mt-8 flex items-center gap-4 md:gap-6 text-muted-foreground text-xs md:text-sm">
-              <span>最終更新: 2025年12月1日</span>
-              <span className="w-1 h-1 md:w-1.5 md:h-1.5 bg-blue-500 rounded-full" />
-              <span>株式会社tent space</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Divider */}
-        <div className="px-6 md:px-12 lg:px-20">
-          <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-        </div>
-
-        {/* Content */}
-        <div ref={contentRef} className="px-6 md:px-12 lg:px-20 py-12 md:py-20">
-          <div className="max-w-3xl">
-            {/* はじめに */}
-            <section className="privacy-section mb-12 md:mb-16">
-              <div className="flex items-start gap-4 md:gap-6">
-                <span className="text-blue-700 text-xs md:text-sm font-tech mt-1.5">00</span>
-                <div className="flex-1">
-                  <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-foreground">はじめに</h2>
-                  <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
-                    株式会社tent space（以下、「当社」といいます。）は、本ウェブサイト上で提供するサービスにおける個人情報保護の重要性について認識し、個人情報の保護に関する法律を遵守すると共に、以下のプライバシーポリシー（以下、「本ポリシー」といいます。）を定めます。
-                  </p>
-                </div>
-              </div>
-            </section>
-
-            {/* 第1条 */}
-            <section className="privacy-section mb-12 md:mb-16">
-              <div className="flex items-start gap-4 md:gap-6">
-                <span className="text-blue-700 text-xs md:text-sm font-tech mt-1.5">01</span>
-                <div className="flex-1">
-                  <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-foreground">個人情報の定義</h2>
-                  <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
-                    「個人情報」とは、個人情報保護法にいう「個人情報」を指すものとし、生存する個人に関する情報であって、当該情報に含まれる氏名、生年月日、住所、電話番号、連絡先その他の記述等により特定の個人を識別できる情報及び容貌、指紋、声紋にかかるデータ、及び健康保険証の保険者番号などの当該情報単体から特定の個人を識別できる情報（個人識別情報）を指します。
-                  </p>
-                </div>
-              </div>
-            </section>
-
-            {/* 第2条 */}
-            <section className="privacy-section mb-12 md:mb-16">
-              <div className="flex items-start gap-4 md:gap-6">
-                <span className="text-blue-700 text-xs md:text-sm font-tech mt-1.5">02</span>
-                <div className="flex-1">
-                  <h2 className="text-lg md:text-xl font-semibold mb-4 md:mb-6 text-foreground">事業者情報</h2>
-                  <div className="overflow-hidden rounded-lg border border-border">
-                    <table className="w-full">
-                      <tbody className="divide-y divide-border">
-                        <tr className="hover:bg-muted/50 transition-colors">
-                          <th scope="row" className="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium text-muted-foreground bg-muted/50 w-1/3">
-                            法人名
-                          </th>
-                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-foreground">
-                            株式会社tent space
-                          </td>
-                        </tr>
-                        <tr className="hover:bg-muted/50 transition-colors">
-                          <th scope="row" className="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium text-muted-foreground bg-muted/50 w-1/3">
-                            住所
-                          </th>
-                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-foreground">
-                            〒355-0316 埼玉県比企郡小川町大字角山323
-                          </td>
-                        </tr>
-                        <tr className="hover:bg-muted/50 transition-colors">
-                          <th scope="row" className="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium text-muted-foreground bg-muted/50 w-1/3">
-                            代表者
-                          </th>
-                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-foreground">
-                            石井 絢子
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            {/* 第3条 */}
-            <section className="privacy-section mb-12 md:mb-16">
-              <div className="flex items-start gap-4 md:gap-6">
-                <span className="text-blue-700 text-xs md:text-sm font-tech mt-1.5">03</span>
-                <div className="flex-1">
-                  <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-foreground">個人情報の取得方法</h2>
-                  <p className="text-muted-foreground text-sm md:text-base leading-relaxed mb-3 md:mb-4">
-                    当社は、お客さまが利用登録をする際に氏名、生年月日、住所、電話番号、メールアドレス、銀行口座番号、クレジットカード番号、運転免許証番号などの個人情報をお尋ねすることがあります。
-                  </p>
-                  <p className="text-muted-foreground leading-relaxed">
-                    また、お客さまと提携先などとの間でなされたお客さまの個人情報を含む取引記録や決済に関する情報を、当社の提携先（情報提供元、広告主、広告配信先などを含みます。以下、｢提携先｣といいます。）などから収集することがあります。
-                  </p>
-                </div>
-              </div>
-            </section>
-
-            {/* 第4条 */}
-            <section className="privacy-section mb-12 md:mb-16">
-              <div className="flex items-start gap-4 md:gap-6">
-                <span className="text-blue-700 text-xs md:text-sm font-tech mt-1.5">04</span>
-                <div className="flex-1">
-                  <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-foreground">個人情報の利用目的</h2>
-                  <p className="text-muted-foreground text-sm md:text-base leading-relaxed mb-3 md:mb-4">
-                    当社が個人情報を利用する目的は、以下のとおりです。
-                  </p>
-                  <ul className="space-y-2">
-                    <li className="flex items-start gap-2 md:gap-3 text-muted-foreground text-sm md:text-base">
-                      <span className="w-1 h-1 bg-blue-500 rounded-full mt-2 md:mt-2.5 shrink-0" />
-                      <span>当社サービスの提供・運営のため</span>
-                    </li>
-                    <li className="flex items-start gap-2 md:gap-3 text-muted-foreground text-sm md:text-base">
-                      <span className="w-1 h-1 bg-blue-500 rounded-full mt-2 md:mt-2.5 shrink-0" />
-                      <span>お客さまからのお問い合わせに回答するため（本人確認を行うことを含む）</span>
-                    </li>
-                    <li className="flex items-start gap-2 md:gap-3 text-muted-foreground text-sm md:text-base">
-                      <span className="w-1 h-1 bg-blue-500 rounded-full mt-2 md:mt-2.5 shrink-0" />
-                      <span>
-                        お客さまが利用中のサービスの新機能、更新情報、キャンペーン等及び当社が提供する他サービスの案内のメールを送付するため
-                      </span>
-                    </li>
-                    <li className="flex items-start gap-2 md:gap-3 text-muted-foreground text-sm md:text-base">
-                      <span className="w-1 h-1 bg-blue-500 rounded-full mt-2 md:mt-2.5 shrink-0" />
-                      <span>メンテナンス、重要なお知らせなど必要に応じたご連絡のため</span>
-                    </li>
-                    <li className="flex items-start gap-2 md:gap-3 text-muted-foreground text-sm md:text-base">
-                      <span className="w-1 h-1 bg-blue-500 rounded-full mt-2 md:mt-2.5 shrink-0" />
-                      <span>
-                        利用規約に違反したユーザーや、不正・不当な目的でサービスを利用しようとするユーザーの特定をし、ご利用をお断りするため
-                      </span>
-                    </li>
-                    <li className="flex items-start gap-2 md:gap-3 text-muted-foreground text-sm md:text-base">
-                      <span className="w-1 h-1 bg-blue-500 rounded-full mt-2 md:mt-2.5 shrink-0" />
-                      <span>お客さまにご自身の登録情報の閲覧や変更、削除、ご利用状況の閲覧を行っていただくため</span>
-                    </li>
-                    <li className="flex items-start gap-2 md:gap-3 text-muted-foreground text-sm md:text-base">
-                      <span className="w-1 h-1 bg-blue-500 rounded-full mt-2 md:mt-2.5 shrink-0" />
-                      <span>有料サービスにおいて、お客さまに利用料金を請求するため</span>
-                    </li>
-                    <li className="flex items-start gap-2 md:gap-3 text-muted-foreground text-sm md:text-base">
-                      <span className="w-1 h-1 bg-blue-500 rounded-full mt-2 md:mt-2.5 shrink-0" />
-                      <span>上記の利用目的に付随する目的</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </section>
-
-            {/* 第5条 - 第10条は省略して主要なセクションのみ表示 */}
-            <section className="privacy-section mb-12 md:mb-16">
-              <div className="flex items-start gap-4 md:gap-6">
-                <span className="text-blue-700 text-xs md:text-sm font-tech mt-1.5">05</span>
-                <div className="flex-1">
-                  <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-foreground">個人データの安全対策</h2>
-                  <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
-                    当社は、個人情報を保護するため、情報セキュリティに関する規程に基づき、当該個人情報の管理、個人情報の持ち出し方法の指定、第三者からの不正アクセスの防止等の対策を行い、個人情報の漏洩、紛失、改ざん、破壊等の予防を図ります。
-                  </p>
-                </div>
-              </div>
-            </section>
-
-            {/* お問い合わせ */}
-            <section className="privacy-section mt-12 md:mt-20 pt-12 md:pt-16 border-t border-border">
-              <div className="flex items-start gap-4 md:gap-6">
-                <span className="text-blue-700 text-xs md:text-sm font-tech mt-1.5">06</span>
-                <div className="flex-1">
-                  <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-foreground">お問い合わせ</h2>
-                  <p className="text-muted-foreground text-sm md:text-base mb-4 md:mb-6">
-                    当社の個人情報の取扱いに関するご質問やご不明点、苦情、その他のお問い合わせは、下記の窓口までお願いいたします。
-                  </p>
-                  <div className="overflow-hidden rounded-lg border border-border bg-gradient-to-br from-blue-50/30 to-muted/50">
-                    <table className="w-full">
-                      <tbody className="divide-y divide-border">
-                        <tr className="hover:bg-background/50 transition-colors">
-                          <th scope="row" className="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium text-muted-foreground w-1/3 md:w-1/4">
-                            事業者名
-                          </th>
-                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-foreground">
-                            株式会社tent space
-                          </td>
-                        </tr>
-                        <tr className="hover:bg-background/50 transition-colors">
-                          <th scope="row" className="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium text-muted-foreground w-1/3 md:w-1/4">
-                            所在地
-                          </th>
-                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-foreground">
-                            〒355-0316 埼玉県比企郡小川町大字角山323
-                          </td>
-                        </tr>
-                        <tr className="hover:bg-background/50 transition-colors">
-                          <th scope="row" className="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium text-muted-foreground w-1/3 md:w-1/4">
-                            Email
-                          </th>
-                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-foreground">
-                            <a
-                              href="mailto:back-office@tentspace.net"
-                              className="text-blue-600 hover:text-blue-500 transition-colors"
-                            >
-                              back-office@tentspace.net
-                            </a>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </section>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <PageFooter />
-      </main>
-    </div>
+    <MonoDoc
+      label="privacy"
+      title="プライバシーポリシー"
+      meta={["最終改定: 2026年8月18日", "株式会社tent space"]}
+      sections={[
+        {
+          id: "00",
+          title: "はじめに",
+          content:
+            "株式会社tent space（以下「当社」といいます。）は、当社が運営するウェブサイト（tentspace.net、以下「本サイト」といいます。）における個人情報の取扱いについて、個人情報の保護に関する法律その他の関係法令を遵守し、以下のとおりプライバシーポリシー（以下「本ポリシー」といいます。）を定めます。なお、当社がお客様から受託した開発業務において取り扱う情報については、個別に締結する契約または秘密保持契約の定めに従います。",
+        },
+        {
+          id: "01",
+          title: "事業者情報",
+          rows: COMPANY_ROWS,
+        },
+        {
+          id: "02",
+          title: "取得する情報",
+          content: "当社は、本サイトの利用にあたり、次の情報を取得します。",
+          list: [
+            "お問い合わせフォームからご送信いただく情報：お名前、メールアドレス、会社名、電話番号、お問い合わせ種別、お問い合わせ内容",
+            "アカウント登録時にご提供いただく情報：メールアドレス、パスワード（暗号化された状態で保管され、当社が内容を知ることはできません）、表示名、プロフィール画像、自己紹介文",
+            "ブログのご利用に伴い記録される情報：コメントの本文、リアクション、お気に入り、いいねの記録",
+            "ログインに伴い記録される情報：ログイン日時、成否、ブラウザ、OS、デバイス種別",
+            "自動的に記録される情報：Cookie等による識別子、閲覧したページのURL、参照元URL、ユーザーエージェント、画面サイズ、言語設定、タイムゾーン",
+          ],
+        },
+        {
+          id: "03",
+          title: "取得しない情報",
+          content:
+            "当社は、本サイトにおいて、クレジットカード番号、銀行口座番号、運転免許証番号その他の本人確認書類に係る情報を取得することはありません。本サイト上で決済を行う機能は提供していません。",
+        },
+        {
+          id: "04",
+          title: "利用目的",
+          content: "取得した情報は、次の目的の範囲内で利用します。",
+          list: [
+            "お問い合わせへの回答、お見積りのご提示、その後のご連絡のため",
+            "アカウントの認証、本人確認および不正利用の防止のため",
+            "コメント等の投稿機能を提供するため",
+            "本サイトの不具合の把握と改善、安定的な運営のため",
+            "利用状況の統計的な分析による、コンテンツおよびサービスの改善のため",
+            "法令に基づく対応、および当社の権利または財産の保護のため",
+          ],
+        },
+        {
+          id: "05",
+          title: "Cookie等の利用",
+          content:
+            "本サイトでは、Cookieおよびブラウザのローカルストレージを利用しています。主なものは次のとおりです。Cookieの受け入れはブラウザの設定により拒否できますが、その場合、ログイン等の一部機能をご利用いただけないことがあります。",
+          rows: COOKIE_ROWS,
+        },
+        {
+          id: "06",
+          title: "アクセス解析ツールの利用",
+          content:
+            "本サイトでは、利用状況を把握するためにGoogle LLCが提供するGoogle Analyticsを利用しています。初回アクセス時に表示されるバナーで同意いただいた場合にのみ、Google Analyticsの計測が有効になり、Cookieによる識別子および閲覧履歴がGoogleへ送信されます。同意されない場合、計測は行われません。同意はブラウザのCookieを削除することで撤回できます。Googleにおけるデータの取扱いについては、Googleのプライバシーポリシーおよび「Googleのサービスを使用するサイトやアプリから収集した情報のGoogleによる使用」をご確認ください。",
+        },
+        {
+          id: "07",
+          title: "不具合情報の収集",
+          content:
+            "本サイトの安定的な運営のため、ブラウザ上でエラーが発生した場合に、その内容を自動的に記録しています。記録する情報には、エラーの内容、発生したページのURL、参照元URL、ユーザーエージェント、画面サイズ、言語設定、タイムゾーン、および直前の操作履歴が含まれます。これらはAmazon Web Servicesの東京リージョンに保存され、30日を経過した時点で自動的に削除されます。IPアドレスおよびアカウントの識別情報は記録していません。この記録は本サイトを安全かつ正常に提供するために必要な範囲で行うものであり、広告その他の目的には利用しません。",
+        },
+        {
+          id: "08",
+          title: "第三者提供および業務委託",
+          content:
+            "当社は、法令に基づく場合、または人の生命・身体・財産の保護のために必要であって本人の同意を得ることが困難な場合を除き、取得した情報を第三者に提供しません。ただし、本サイトの運営にあたり、次の事業者に情報の取扱いを委託しています。これらの事業者のうち日本国外に所在するものについては、当該国の法制度のもとで情報が取り扱われる場合があります。",
+          list: [
+            "Supabase, Inc.（米国）— アカウント情報、コメント等のデータベースおよびファイルの保管",
+            "Amazon Web Services, Inc.（東京リージョン）— 不具合情報の保存、メールの送信",
+            "Google LLC（米国）— アクセス解析（同意いただいた場合のみ）",
+            "Stripe, Inc.（米国）— アカウント登録時の顧客情報（メールアドレス、表示名）の管理。カード情報の取扱いはありません。",
+            "お問い合わせフォームの送信先として、当社が管理するサーバー（n8n.tentspace.net）",
+          ],
+        },
+        {
+          id: "09",
+          title: "公開される情報",
+          content:
+            "コメントを投稿された場合、その本文、表示名およびプロフィール画像は、本サイトを閲覧するすべての方に公開されます。表示名を設定されていない場合、メールアドレスの「@」より前の部分が表示名として使用されますので、公開されたくない場合はあらかじめ設定画面から表示名をご登録ください。ログインせずに投稿されたコメントは「匿名ユーザー」として表示されます。お気に入りおよびいいねについては、合計数のみが公開され、どなたが行ったかは公開されません。",
+        },
+        {
+          id: "10",
+          title: "安全管理措置",
+          content:
+            "当社は、取得した情報の漏えい、滅失または毀損を防止するため、通信の暗号化、アクセス権限の制限、認証情報の適切な管理などの措置を講じています。パスワードは暗号化された状態で保管され、当社がその内容を知ることはできません。また、二要素認証をご利用いただけます。",
+        },
+        {
+          id: "11",
+          title: "保有期間",
+          content: "取得した情報は、次の期間を目安に保有し、期間の経過後は速やかに削除または匿名化します。",
+          list: [
+            "お問い合わせに関する情報：対応の完了後、必要な範囲で保管します。",
+            "アカウントおよび投稿に関する情報：アカウントを削除されるまで保管します。",
+            "不具合情報：30日間",
+          ],
+        },
+        {
+          id: "12",
+          title: "開示・訂正・利用停止等のご請求",
+          content:
+            "お客様は、当社が保有するご自身の個人情報について、開示、訂正、追加、削除、利用の停止または第三者提供の停止を請求できます。下記の窓口までご連絡いただければ、ご本人であることを確認のうえ、法令に従い対応いたします。なお、アカウントおよび投稿に関する情報は、設定画面からご自身で削除いただくこともできます。",
+        },
+        {
+          id: "13",
+          title: "未成年者の利用",
+          content:
+            "未成年の方がアカウントを登録し、または本サイトを通じて個人情報をご提供いただく場合は、あらかじめ保護者の方の同意を得てください。",
+        },
+        {
+          id: "14",
+          title: "本ポリシーの改定",
+          content:
+            "当社は、法令の変更または本サイトの機能追加等に応じ、本ポリシーを改定することがあります。改定後の内容は、本サイトに掲載した時点から適用されます。重要な変更を行う場合は、本サイト上での告知によりお知らせします。",
+        },
+        {
+          id: "15",
+          title: "お問い合わせ",
+          content:
+            "本ポリシーおよび個人情報の取扱いに関するご質問、ご意見、苦情その他のお問い合わせは、下記の窓口までお願いいたします。",
+          rows: COMPANY_ROWS,
+        },
+      ]}
+    />
   )
 }

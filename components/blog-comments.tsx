@@ -711,7 +711,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
       <div key={comment.id} className={`group ${depth > 0 ? "ml-6 mt-1.5" : ""}`}>
         <div className="flex gap-2.5">
           {/* Avatar */}
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-medium overflow-hidden flex-shrink-0">
+          <div className="w-8 h-8 rounded-full bg-[#0f00b0] flex items-center justify-center text-white text-sm font-medium overflow-hidden flex-shrink-0">
             {comment.avatar_url ? (
               <Image
                 src={comment.avatar_url}
@@ -761,7 +761,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
                       </button>
                       
                       {showTextEmojiPicker === comment.id && (
-                        <div className="absolute left-0 bottom-full mb-1 z-10 bg-white dark:bg-background rounded-lg shadow-lg border border-gray-200 dark:border-border p-2 grid grid-cols-6 gap-1 w-max">
+                        <div className="absolute left-0 bottom-full mb-1 z-10 bg-white dark:bg-background rounded-none shadow-lg border border-gray-200 dark:border-border p-2 grid grid-cols-6 gap-1 w-max">
                           {TEXT_EMOJIS.map((emoji) => (
                             <button
                               key={emoji}
@@ -781,7 +781,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
                     <Button
                       size="sm"
                       onClick={() => handleEdit(comment.id)}
-                      className="bg-blue-600 hover:bg-blue-700 text-white h-8 text-sm px-3"
+                      className="bg-black hover:bg-[#0f00b0] text-white rounded-none h-8 text-sm px-3"
                     >
                       保存
                     </Button>
@@ -852,7 +852,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
                     
                     {/* Emoji Picker */}
                     {showEmojiPicker === comment.id && (
-                      <div className="absolute left-0 top-full mt-1 z-10 bg-white dark:bg-background rounded-lg shadow-lg border border-gray-200 dark:border-border p-2 flex gap-1">
+                      <div className="absolute left-0 top-full mt-1 z-10 bg-white dark:bg-background rounded-none shadow-lg border border-gray-200 dark:border-border p-2 flex gap-1">
                         {COMMON_EMOJIS.map((emoji) => (
                           <button
                             key={emoji}
@@ -874,10 +874,10 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
                       <button
                         key={emoji}
                         onClick={() => toggleReaction(comment.id, emoji)}
-                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs transition-colors ${
+                        className={`inline-flex items-center gap-1 px-2 py-0.5 text-xs transition-colors border ${
                           hasReacted
-                            ? "bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-700"
-                            : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-border hover:bg-gray-200 dark:hover:bg-gray-600"
+                            ? "bg-[#0f00b0] text-[#e5e5e5] border-[#0f00b0]"
+                            : "bg-white dark:bg-background text-gray-600 dark:text-gray-300 border-black dark:border-border hover:bg-black hover:text-white"
                         }`}
                       >
                         <span>{emoji}</span>
@@ -915,7 +915,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
                       </button>
                       
                       {showTextEmojiPicker === 'reply' && (
-                        <div className="absolute left-0 bottom-full mb-1 z-10 bg-white dark:bg-background rounded-lg shadow-lg border border-gray-200 dark:border-border p-2 grid grid-cols-6 gap-1 w-max">
+                        <div className="absolute left-0 bottom-full mb-1 z-10 bg-white dark:bg-background rounded-none shadow-lg border border-gray-200 dark:border-border p-2 grid grid-cols-6 gap-1 w-max">
                           {TEXT_EMOJIS.map((emoji) => (
                             <button
                               key={emoji}
@@ -936,7 +936,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
                       size="sm"
                       onClick={() => handleReplySubmit(comment.id)}
                       disabled={!replyContent.trim() || submitting}
-                      className="bg-blue-600 hover:bg-blue-700 text-white h-8 text-sm px-3"
+                      className="bg-black hover:bg-[#0f00b0] text-white rounded-none h-8 text-sm px-3"
                     >
                       {submitting ? "送信中..." : "返信"}
                     </Button>
@@ -969,14 +969,10 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
   }
 
   return (
-    <aside className="mt-8 bg-white dark:bg-background rounded-xl border border-gray-100 dark:border-border p-5" aria-label="コメント">
-      <div className="flex items-center gap-2 mb-4">
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center">
-          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-          </svg>
-        </div>
+    <aside className="mt-12 pt-6 px-0" style={{ borderTop: "1px solid var(--m-ink, #000)" }} aria-label="コメント">
+      <div className="flex items-baseline gap-3 mb-6">
         <h3 className="font-bold text-gray-900 dark:text-gray-100 text-base">コメント</h3>
+        <span className="text-xs text-gray-500 dark:text-gray-400">comments</span>
         <span className="text-sm text-gray-500 dark:text-gray-400 ml-auto">
           {countTotalComments(comments)}件
         </span>
@@ -985,7 +981,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
       {/* Comment Form - Always shown */}
       <form onSubmit={handleSubmit} className="mb-4">
         <div className="flex items-start gap-2.5">
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-medium overflow-hidden flex-shrink-0">
+          <div className="w-9 h-9 rounded-full bg-[#0f00b0] flex items-center justify-center text-white text-sm font-medium overflow-hidden flex-shrink-0">
             {user && profile?.avatar_url ? (
               <Image
                 src={profile.avatar_url}
@@ -1033,7 +1029,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
                   </button>
                   
                   {showTextEmojiPicker === 'new' && (
-                    <div className="absolute left-0 bottom-full mb-1 z-10 bg-white dark:bg-background rounded-lg shadow-lg border border-gray-200 dark:border-border p-2 grid grid-cols-6 gap-1 w-max">
+                    <div className="absolute left-0 bottom-full mb-1 z-10 bg-white dark:bg-background rounded-none shadow-lg border border-gray-200 dark:border-border p-2 grid grid-cols-6 gap-1 w-max">
                       {TEXT_EMOJIS.map((emoji) => (
                         <button
                           key={emoji}
@@ -1055,7 +1051,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
               <Button
                 type="submit"
                 disabled={!newComment.trim() || submitting}
-                className="bg-blue-600 hover:bg-blue-700 text-white ml-auto h-8 text-sm px-3"
+                className="bg-black hover:bg-[#0f00b0] text-white rounded-none ml-auto h-8 text-sm px-3"
               >
                 {submitting ? "送信中..." : "コメントする"}
               </Button>

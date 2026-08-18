@@ -30,11 +30,12 @@ export function GoogleAnalytics() {
   const initializeAnalytics = useCallback(() => {
     window.dataLayer = window.dataLayer || []
     window.gtag = (...args: unknown[]) => window.dataLayer.push(args)
+    // This site serves no ads: only analytics storage is ever granted.
     window.gtag("consent", "update", {
       analytics_storage: "granted",
-      ad_storage: "granted",
-      ad_user_data: "granted",
-      ad_personalization: "granted",
+      ad_storage: "denied",
+      ad_user_data: "denied",
+      ad_personalization: "denied",
     })
     window.gtag("js", new Date())
     window.gtag("config", GA_MEASUREMENT_ID)

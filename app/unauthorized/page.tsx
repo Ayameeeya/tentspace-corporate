@@ -1,7 +1,7 @@
-import { ShieldAlert, ArrowLeft, Home } from "lucide-react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { MonoShell } from "@/components/home/MonoShell"
+import { ChapterLabel } from "@/components/home/ChapterText"
+import { ScrambleText } from "@/components/home/ScrambleText"
+import { MainBtn } from "@/components/home/MainBtn"
 
 export const metadata = {
   title: "アクセス権限がありません | TentSpace",
@@ -17,53 +17,28 @@ export const metadata = {
 
 export default function UnauthorizedPage() {
   return (
-    <main id="main-content" className="flex min-h-screen items-center justify-center bg-muted/10 p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-destructive/10">
-            <ShieldAlert className="h-8 w-8 text-destructive" />
+    <MonoShell footer={false}>
+      <main
+        id="main-content"
+        className="mono-doc"
+        style={{ minHeight: "100dvh", display: "flex", flexDirection: "column", justifyContent: "center", paddingBottom: "10vh" }}
+      >
+        <div className="mono-container">
+          <ChapterLabel label="403" />
+          <ScrambleText as="h1" className="heading-xl" mode="load" intensity={5}>
+            access denied
+          </ScrambleText>
+          <div className="mono-doc__meta" style={{ marginBottom: "2em" }}>
+            <ScrambleText as="p" className="paragraph-m opacity-64" mode="load" intensity={5}>
+              このページにアクセスする権限がありません。管理者権限が必要です。
+            </ScrambleText>
           </div>
-          <CardTitle className="text-2xl">
-            <h1>アクセス権限がありません</h1>
-          </CardTitle>
-          <CardDescription>
-            このページにアクセスする権限がありません。
-            <br />
-            管理者権限が必要です。
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <p className="text-sm text-muted-foreground">
-              このページは管理者のみがアクセスできます。
-              アクセスが必要な場合は、システム管理者にお問い合わせください。
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-2 sm:flex-row">
-            <Button
-              variant="outline"
-              className="flex-1"
-              asChild
-            >
-              <Link href="javascript:history.back()">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                前のページに戻る
-              </Link>
-            </Button>
-            <Button
-              className="flex-1"
-              asChild
-            >
-              <Link href="/">
-                <Home className="mr-2 h-4 w-4" />
-                ホームに戻る
-              </Link>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </main>
+          <p className="paragraph-regular opacity-64" style={{ maxWidth: "40em", marginBottom: "4em" }}>
+            このページは管理者のみがアクセスできます。アクセスが必要な場合は、システム管理者にお問い合わせください。
+          </p>
+          <MainBtn label="back to home" href="/" variant="inside" />
+        </div>
+      </main>
+    </MonoShell>
   )
 }
-

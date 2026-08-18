@@ -94,6 +94,13 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
 
   const isDarkMode = useDarkMode();
 
+  // Feature detection must not run during SSR/first client render, or the
+  // server and client trees disagree and React reports a hydration mismatch.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const generateDisplacementMap = () => {
     const rect = containerRef.current?.getBoundingClientRect();
     const actualWidth = rect?.width || 400;
@@ -192,6 +199,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
   }, [width, height]);
 
   const supportsSVGFilters = () => {
+    if (!mounted || typeof window === 'undefined') return false;
     const isWebkit = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
     const isFirefox = /Firefox/.test(navigator.userAgent);
 
@@ -205,7 +213,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
   };
 
   const supportsBackdropFilter = () => {
-    if (typeof window === 'undefined') return false;
+    if (!mounted || typeof window === 'undefined') return false;
     return CSS.supports('backdrop-filter', 'blur(10px)');
   };
 

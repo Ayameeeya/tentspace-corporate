@@ -1,324 +1,120 @@
 "use client"
 
-import { useEffect, useRef } from "react"
-import { gsap } from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
-import Link from "next/link"
-import { Header } from "@/components/header"
-import { PageFooter } from "@/components/page-footer"
+import { MonoDoc } from "@/components/home/MonoDoc"
 
-gsap.registerPlugin(ScrollTrigger)
-
-function HomeButton() {
-  const buttonRef = useRef<HTMLAnchorElement>(null)
-  const arrowRef = useRef<SVGSVGElement>(null)
-  const rippleRef = useRef<HTMLDivElement>(null)
-  const glowRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const button = buttonRef.current
-    const arrow = arrowRef.current
-    const ripple = rippleRef.current
-    const glow = glowRef.current
-    if (!button || !arrow || !ripple || !glow) return
-
-    const tl = gsap.timeline({ paused: true })
-
-    tl.to(
-      arrow,
-      {
-        x: -4,
-        scale: 1.15,
-        duration: 0.4,
-        ease: "power3.out",
-      },
-      0,
-    )
-      .to(
-        button,
-        {
-          borderColor: "#3b82f6",
-          backgroundColor: "#3b82f6",
-          duration: 0.3,
-          ease: "power2.out",
-        },
-        0,
-      )
-      .to(
-        ripple,
-        {
-          scale: 1.5,
-          opacity: 0,
-          duration: 0.6,
-          ease: "power2.out",
-        },
-        0,
-      )
-      .to(
-        glow,
-        {
-          opacity: 0.4,
-          scale: 1.2,
-          duration: 0.3,
-          ease: "power2.out",
-        },
-        0,
-      )
-
-    const handleEnter = () => {
-      gsap.to(ripple, { scale: 1, opacity: 0.3, duration: 0 })
-      tl.play()
-    }
-
-    const handleLeave = () => {
-      tl.reverse()
-      gsap.to(arrow, { color: "#94a3b8", duration: 0.2 })
-    }
-
-    const handleClick = () => {
-      gsap.to(button, {
-        scale: 0.9,
-        duration: 0.1,
-        ease: "power2.in",
-        yoyo: true,
-        repeat: 1,
-      })
-    }
-
-    button.addEventListener("mouseenter", handleEnter)
-    button.addEventListener("mouseleave", handleLeave)
-    button.addEventListener("click", handleClick)
-
-    // Initial animation on mount
-    gsap.from(button, {
-      y: 20,
-      opacity: 0,
-      duration: 0.8,
-      delay: 0.5,
-      ease: "power3.out",
-    })
-
-    return () => {
-      button.removeEventListener("mouseenter", handleEnter)
-      button.removeEventListener("mouseleave", handleLeave)
-      button.removeEventListener("click", handleClick)
-    }
-  }, [])
-
-  return (
-    <Link
-      ref={buttonRef}
-      href="/"
-      className="relative inline-flex items-center justify-center w-14 h-14 rounded-full border border-border bg-background overflow-hidden"
-    >
-      <div ref={glowRef} className="absolute inset-0 bg-blue-400 rounded-full blur-xl opacity-0" />
-      <div ref={rippleRef} className="absolute inset-0 rounded-full bg-blue-500 scale-0 opacity-0" />
-      <svg
-        ref={arrowRef}
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        className="relative z-10 text-muted-foreground"
-      >
-        <path d="M19 12H5M12 19l-7-7 7-7" />
-      </svg>
-    </Link>
-  )
-}
+const CONTACT_ROWS: [string, React.ReactNode][] = [
+  ["事業者名", "株式会社tent space"],
+  ["所在地", "〒355-0316 埼玉県比企郡小川町大字角山323"],
+  [
+    "Email",
+    <a key="mail" href="mailto:back-office@tentspace.net" className="mono-ul">
+      back-office@tentspace.net
+    </a>,
+  ],
+]
 
 export default function TermsPage() {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from(".terms-title span", {
-        y: 120,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.08,
-        ease: "power4.out",
-      })
-
-      gsap.from(".terms-subtitle", {
-        y: 40,
-        opacity: 0,
-        duration: 0.8,
-        delay: 0.5,
-        ease: "power3.out",
-      })
-
-      gsap.from(".terms-section", {
-        y: 40,
-        opacity: 0,
-        duration: 0.6,
-        stagger: 0.1,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: contentRef.current,
-          start: "top 85%",
-        },
-      })
-    }, containerRef)
-
-    return () => ctx.revert()
-  }, [])
-
-  const sections = [
-    {
-      id: "01",
-      title: "規約への同意",
-      content:
-        "株式会社tent space（以下、「当社」といいます。）のサービスにアクセスまたは使用することにより、これらの利用規約およびすべての適用法令に拘束されることに同意したものとみなされます。",
-    },
-    {
-      id: "02",
-      title: "サービスの利用",
-      content:
-        "当社のサービスは「現状のまま」提供され、合法的な使用のみを目的としています。すべての適用法令を遵守して当社のサービスを利用することに同意します。",
-      list: [
-        "当社のサービスを利用するには、少なくとも18歳である必要があります。",
-        "アカウントのセキュリティを維持する責任はお客様にあります。",
-        "当社のサービスを悪用したり、妨害しようとしたりしないことに同意します。",
-      ],
-    },
-    {
-      id: "03",
-      title: "知的財産",
-      content:
-        "当社のサービスのすべてのコンテンツ、機能、および機能は当社が所有しており、国際的な著作権、商標、およびその他の知的財産法によって保護されています。",
-    },
-    {
-      id: "04",
-      title: "責任の制限",
-      content:
-        "当社は、お客様のサービスの使用または使用不能に起因する間接的、偶発的、特別、結果的、または懲罰的損害について責任を負いません。",
-    },
-    {
-      id: "05",
-      title: "規約の変更",
-      content:
-        "当社は、いつでもこれらの規約を変更する権利を留保します。重要な変更がある場合は、電子メールまたは当社のサービスを通じてユーザーに通知します。",
-    },
-  ]
-
   return (
-    <div ref={containerRef} className="min-h-screen bg-background text-foreground">
-      <Header scrollProgress={1} />
-
-      {/* Subtle gradient background */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/30 to-background" />
-        <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-blue-500/5 blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-blue-500/3 blur-3xl" />
-      </div>
-
-      <main id="main-content" className="relative z-10">
-        {/* Hero */}
-        <div className="min-h-[50vh] flex flex-col justify-end px-6 md:px-12 lg:px-20 pb-12 md:pb-16">
-          <div className="max-w-5xl">
-            <p className="terms-subtitle text-blue-600 text-xs md:text-sm font-medium font-tech tracking-wider mb-4 md:mb-6">TERMS OF SERVICE</p>
-            <h1 className="terms-title text-3xl md:text-7xl lg:text-8xl font-bold tracking-tight overflow-hidden text-foreground">
-              {"利用規約".split("").map((char, i) => (
-                <span key={i} className="inline-block">
-                  {char}
-                </span>
-              ))}
-            </h1>
-            <div className="terms-subtitle mt-6 md:mt-8 flex items-center gap-4 md:gap-6 text-muted-foreground text-xs md:text-sm">
-              <span>最終更新: 2025年12月1日</span>
-              <span className="w-1 h-1 md:w-1.5 md:h-1.5 bg-blue-500 rounded-full" />
-              <span>株式会社tent space</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Divider */}
-        <div className="px-6 md:px-12 lg:px-20">
-          <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-        </div>
-
-        {/* Content */}
-        <div ref={contentRef} className="px-6 md:px-12 lg:px-20 py-12 md:py-20">
-          <div className="max-w-3xl">
-            {sections.map((section) => (
-              <section key={section.id} className="terms-section mb-12 md:mb-16 last:mb-0">
-                <div className="flex items-start gap-4 md:gap-6">
-                  <span className="text-blue-700 text-xs md:text-sm font-tech mt-1.5">{section.id}</span>
-                  <div className="flex-1">
-                    <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-foreground">{section.title}</h2>
-                    <p className="text-muted-foreground text-sm md:text-base leading-relaxed">{section.content}</p>
-                    {section.list && (
-                      <ul className="mt-3 md:mt-4 space-y-2">
-                        {section.list.map((item, i) => (
-                          <li key={i} className="flex items-start gap-2 md:gap-3 text-muted-foreground text-sm md:text-base">
-                            <span className="w-1 h-1 bg-blue-500 rounded-full mt-2 md:mt-2.5 shrink-0" />
-                            <span>{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                </div>
-              </section>
-            ))}
-
-            {/* Contact */}
-            <section className="terms-section mt-12 md:mt-20 pt-12 md:pt-16 border-t border-border">
-              <div className="flex items-start gap-4 md:gap-6">
-                <span className="text-blue-700 text-xs md:text-sm font-tech mt-1.5">06</span>
-                <div className="flex-1">
-                  <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-foreground">お問い合わせ</h2>
-                  <p className="text-muted-foreground text-sm md:text-base mb-4 md:mb-6">
-                    これらの規約についてのお問い合わせは、下記の窓口までお願いいたします。
-                  </p>
-                  <div className="overflow-hidden rounded-lg border border-border bg-gradient-to-br from-blue-50/30 to-muted/50">
-                    <table className="w-full">
-                      <tbody className="divide-y divide-border">
-                        <tr className="hover:bg-background/50 transition-colors">
-                          <th scope="row" className="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium text-muted-foreground w-1/3 md:w-1/4">
-                            事業者名
-                          </th>
-                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-foreground">
-                            株式会社tent space
-                          </td>
-                        </tr>
-                        <tr className="hover:bg-background/50 transition-colors">
-                          <th scope="row" className="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium text-muted-foreground w-1/3 md:w-1/4">
-                            所在地
-                          </th>
-                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-foreground">
-                            〒355-0316 埼玉県比企郡小川町大字角山323
-                          </td>
-                        </tr>
-                        <tr className="hover:bg-background/50 transition-colors">
-                          <th scope="row" className="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium text-muted-foreground w-1/3 md:w-1/4">
-                            Email
-                          </th>
-                          <td className="px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm text-foreground">
-                            <a
-                              href="mailto:back-office@tentspace.net"
-                              className="text-blue-600 hover:text-blue-500 transition-colors"
-                            >
-                              back-office@tentspace.net
-                            </a>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </section>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <PageFooter />
-      </main>
-    </div>
+    <MonoDoc
+      label="terms"
+      title="利用規約"
+      meta={["最終改定: 2026年8月18日", "株式会社tent space"]}
+      sections={[
+        {
+          id: "01",
+          title: "適用",
+          content:
+            "本規約は、株式会社tent space（以下「当社」といいます。）が運営するウェブサイト（tentspace.net、以下「本サイト」といいます。）の利用条件を定めるものです。本サイトを閲覧・利用された時点で、本規約に同意いただいたものとみなします。",
+        },
+        {
+          id: "02",
+          title: "アカウント",
+          content:
+            "本サイトの一部の機能は、アカウントを登録することでご利用いただけます。登録にあたっては、次の点にご留意ください。",
+          list: [
+            "登録時には正確な情報をご提供ください。",
+            "パスワードおよび二要素認証の管理はお客様の責任において行っていただきます。",
+            "アカウントを第三者に貸与、譲渡、共有することはできません。",
+            "アカウントはいつでも設定画面から削除できます。削除後、当社はアカウントに紐づく情報を速やかに消去します。",
+            "本規約に違反する行為が確認された場合、当社は事前の通知なくアカウントの利用を停止または削除することがあります。",
+          ],
+        },
+        {
+          id: "03",
+          title: "投稿コンテンツ",
+          content:
+            "本サイトでは、コメントの投稿など、お客様が作成した文章・画像等（以下「投稿コンテンツ」といいます。）を送信できる機能を提供する場合があります。",
+          list: [
+            "投稿コンテンツの著作権は投稿者に帰属します。",
+            "当社は、本サイト上での表示・保存・バックアップに必要な範囲で、投稿コンテンツを無償で利用できるものとします。",
+            "投稿コンテンツは、表示名およびプロフィール画像とともに、本サイト上で誰でも閲覧できる状態になります。投稿前に公開範囲をご確認ください。",
+            "当社は、本規約に違反する投稿コンテンツを、事前の通知なく削除できるものとします。",
+            "当社は、投稿コンテンツの内容を監視する義務を負いません。",
+          ],
+        },
+        {
+          id: "04",
+          title: "禁止事項",
+          content: "本サイトのご利用にあたり、次の行為を禁止します。",
+          list: [
+            "法令または公序良俗に違反する行為",
+            "当社、他の利用者または第三者の著作権、商標権、プライバシーその他の権利を侵害する行為",
+            "他人になりすます行為、または虚偽の情報を登録・送信する行為",
+            "誹謗中傷、差別的表現、脅迫にあたる投稿を行う行為",
+            "営業、宣伝、勧誘を目的とした投稿その他の迷惑行為",
+            "不正アクセス、脆弱性の探索、本サイトのリバースエンジニアリングを行う行為",
+            "自動化された手段による過度なアクセスその他、本サイトの運営を妨害する行為",
+          ],
+        },
+        {
+          id: "05",
+          title: "知的財産権",
+          content:
+            "本サイトを構成する文章、画像、デザイン、ロゴ、プログラムその他一切のコンテンツに関する著作権その他の知的財産権は、当社または正当な権利を有する第三者に帰属します。投稿コンテンツについては前条のとおりです。引用の範囲を超えて複製、転載、改変、再配布する場合は、事前に当社の許諾を得てください。",
+        },
+        {
+          id: "06",
+          title: "本サイトの変更・中断",
+          content:
+            "当社は、本サイトの内容および機能を、事前の通知なく変更、追加、中断または終了できるものとします。また、システムの保守、障害、天災その他やむを得ない事由により、本サイトの提供を一時的に停止する場合があります。当社は、本サイトが常に利用可能であること、および内容が最新かつ正確であることを保証するものではありません。",
+        },
+        {
+          id: "07",
+          title: "免責事項",
+          content:
+            "当社は、本サイトに掲載する情報の正確性・有用性について相当の注意を払いますが、その完全性を保証するものではありません。本サイトの利用または利用不能に起因してお客様に生じた損害について、当社は責任を負いません。ただし、当社に故意または重大な過失がある場合、および当該免責が法令により認められない場合は、この限りではありません。",
+        },
+        {
+          id: "08",
+          title: "外部サイト・第三者サービス",
+          content:
+            "本サイトには、外部サイトへのリンクや、第三者が提供するサービスの埋め込みが含まれる場合があります。これらの内容について当社は管理権限を有しておらず、責任を負いません。ご利用にあたっては、各提供者の利用規約およびプライバシーポリシーをご確認ください。",
+        },
+        {
+          id: "09",
+          title: "開発業務等の個別契約との関係",
+          content:
+            "本規約は、本サイトの利用に関してのみ適用されます。当社が提供するシステム開発、デザイン、コンサルティング等の業務については、お客様との間で個別に締結する契約書（業務委託契約、秘密保持契約等）の定めが優先します。本サイトのお問い合わせフォームからのご連絡は、それ自体では契約の申込みまたは承諾を構成するものではありません。",
+        },
+        {
+          id: "10",
+          title: "準拠法・管轄裁判所",
+          content:
+            "本規約の解釈および適用は日本法に準拠します。本サイトに関して当社とお客様との間に紛争が生じた場合、当社の本店所在地を管轄する地方裁判所を第一審の専属的合意管轄裁判所とします。",
+        },
+        {
+          id: "11",
+          title: "本規約の変更",
+          content:
+            "当社は、必要と判断した場合、本規約を変更することがあります。変更後の規約は、本サイトに掲載した時点から効力を生じます。重要な変更を行う場合は、本サイト上での告知またはご登録のメールアドレス宛のご連絡により、事前にお知らせします。",
+        },
+        {
+          id: "12",
+          title: "お問い合わせ",
+          content: "本規約に関するお問い合わせは、下記の窓口までお願いいたします。",
+          rows: CONTACT_ROWS,
+        },
+      ]}
+    />
   )
 }

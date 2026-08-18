@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import Image from "next/image"
 import { DEFAULT_BLOG_AUTHOR, getPosts, type BlogPost } from "@/lib/blog-content"
 
-export function BlogTicker() {
+export function BlogTicker({ fixed = true }: { fixed?: boolean }) {
   const [posts, setPosts] = useState<BlogPost[]>([])
 
   useEffect(() => {
@@ -26,49 +25,40 @@ export function BlogTicker() {
   const duplicatedPosts = [...posts, ...posts]
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 bg-background text-foreground overflow-hidden border-b border-border">
+    <div
+      className={`${fixed ? "fixed top-0 left-0 right-0 z-50" : "relative"} bg-background text-foreground overflow-hidden border-b border-border`}
+    >
       <div className="ticker-wrapper">
         <div className="ticker-content">
           {duplicatedPosts.map((post, index) => {
             const authorName = DEFAULT_BLOG_AUTHOR.name
-            const avatarUrl = DEFAULT_BLOG_AUTHOR.avatarUrl
 
             return (
               <Link
                 key={`${post.id}-${index}`}
                 href={`/blog/${post.slug}`}
-                className="ticker-item inline-flex items-center gap-3 px-6 hover:text-primary transition-colors"
+                className="ticker-item inline-flex items-center gap-3 px-5 hover:text-[#0f00b0] transition-colors"
               >
-                {/* 著者名 */}
-                <span className="text-sm font-medium text-muted-foreground">
-                  {authorName}
+                {/* インデックス */}
+                <span className="text-[10px] tracking-widest" style={{ opacity: 0.4 }}>
+                  {String((index % posts.length) + 1).padStart(2, "0")}
                 </span>
-
-                {/* アイコン */}
-                {avatarUrl ? (
-                  <div className="flex-shrink-0 w-5 h-5 md:w-6 md:h-6 rounded-full overflow-hidden border border-border">
-                    <Image
-                      src={avatarUrl}
-                      alt={authorName}
-                      width={24}
-                      height={24}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                ) : (
-                  <div className="flex-shrink-0 w-4 h-4 md:w-6 md:h-6 bg-muted rounded-full flex items-center justify-center text-[8px] md:text-xs font-bold text-muted-foreground border border-border">
-                    {authorName[0]}
-                  </div>
-                )}
 
                 {/* タイトル */}
                 <span
-                  className="text-xs md:text-sm font-light"
+                  className="text-xs md:text-sm"
                   dangerouslySetInnerHTML={{ __html: post.title }}
                 />
 
+                {/* 著者 */}
+                <span className="text-[10px] tracking-wide" style={{ opacity: 0.45 }}>
+                  {authorName}
+                </span>
+
                 {/* 区切り */}
-                <span className="px-4"></span>
+                <span className="px-3 text-xs" style={{ opacity: 0.3 }} aria-hidden="true">
+                  ·
+                </span>
               </Link>
             )
           })}

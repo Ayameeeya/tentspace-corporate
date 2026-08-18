@@ -1,0 +1,1626 @@
+{
+  "version": "2.15",
+  "children": [
+    {
+      "type": "frame",
+      "id": "xdM9C",
+      "x": 0,
+      "y": 0,
+      "name": "01 Cover",
+      "clip": true,
+      "width": 1240,
+      "fill": "$bg",
+      "layout": "vertical",
+      "gap": 48,
+      "padding": [
+        72,
+        72,
+        64,
+        72
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "zjUMw",
+          "name": "Header",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "children": [
+            {
+              "type": "frame",
+              "id": "Kb3tH",
+              "name": "Kicker Row",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "id": "N7GFH",
+                  "name": "Tick",
+                  "fill": "$accent",
+                  "width": 28,
+                  "height": 2
+                },
+                {
+                  "type": "text",
+                  "id": "R85tK",
+                  "name": "Kicker",
+                  "fill": "$accent",
+                  "content": "PROMPT WRITING KIT — WEBSITE EDITION",
+                  "fontFamily": "$font-mono",
+                  "fontSize": 12,
+                  "fontWeight": "normal",
+                  "letterSpacing": 2.4
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "vvQGY",
+              "name": "Title",
+              "fill": "$text-1",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "値で語るプロンプト設計書",
+              "fontFamily": "$font-jp",
+              "fontSize": 52,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "gstpn",
+              "name": "Subtitle",
+              "fill": "$text-2",
+              "textGrowth": "fixed-width",
+              "width": 820,
+              "content": "実際に高い再現度でLPを生成できた3本のプロンプト(Foldcraft / NovaAI / Mainframe)を分析し、どのWebサイト制作にも流用できる「書き方の型」として整理したキット。",
+              "lineHeight": 1.8,
+              "fontFamily": "$font-jp",
+              "fontSize": 16,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "M21lH8",
+          "name": "Core Insight",
+          "width": "fill_container",
+          "fill": "$panel",
+          "cornerRadius": 16,
+          "stroke": "$border",
+          "strokeWidth": 1,
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            36,
+            40
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "hOEhA",
+              "name": "Insight Label",
+              "fill": "$text-3",
+              "content": "CORE INSIGHT",
+              "fontFamily": "$font-mono",
+              "fontSize": 11,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            },
+            {
+              "type": "text",
+              "id": "qNpXx",
+              "name": "Insight Text",
+              "fill": "$text-1",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "3本に共通するのは「形容詞ではなく、値で語る」こと。雰囲気の説明ではなく、実URL・実クラス・実コピー・実数値(duration / delay / 係数)を渡すことで、AIの解釈余地を最小化している。",
+              "lineHeight": 1.7,
+              "fontFamily": "$font-jp",
+              "fontSize": 20,
+              "fontWeight": "500"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "A3uV5",
+          "name": "Source Prompts",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "children": [
+            {
+              "type": "text",
+              "id": "VbGhk",
+              "name": "Src Label",
+              "fill": "$text-1",
+              "content": "分析元の3プロンプト",
+              "fontFamily": "$font-jp",
+              "fontSize": 22,
+              "fontWeight": "700"
+            },
+            {
+              "type": "frame",
+              "id": "h8Q2E",
+              "name": "Source Cards",
+              "width": "fill_container",
+              "gap": 20,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "bTFGm",
+                  "name": "Foldcraft Card",
+                  "width": "fill_container",
+                  "fill": "$panel",
+                  "cornerRadius": 14,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": 28,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "R7Q08W",
+                      "name": "Card Top",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Y5YF9",
+                          "name": "Dir",
+                          "fill": "$text-3",
+                          "content": "lab/",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "kJNPJ",
+                          "name": "Brand",
+                          "fill": "$text-1",
+                          "content": "Foldcraft",
+                          "fontFamily": "$font-en",
+                          "fontSize": 18,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "igxxr",
+                      "name": "Badge",
+                      "fill": "$panel-2",
+                      "cornerRadius": 100,
+                      "padding": [
+                        5,
+                        10
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "VLmbX",
+                          "name": "Kind",
+                          "fill": "$accent",
+                          "content": "クラス列挙型",
+                          "fontFamily": "$font-jp",
+                          "fontSize": 12,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "UZif7",
+                      "name": "Desc",
+                      "fill": "$text-2",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "ループ背景動画のフルスクリーンヒーロー。全要素のTailwindクラスとアニメのdelayをそのまま列挙。シンプルな単一セクション向け。",
+                      "lineHeight": 1.75,
+                      "fontFamily": "$font-jp",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "T7IMn",
+                  "name": "NovaAI Card",
+                  "width": "fill_container",
+                  "fill": "$panel",
+                  "cornerRadius": 14,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": 28,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "T8xvQ",
+                      "name": "Card Top",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "cvgdd",
+                          "name": "Dir",
+                          "fill": "$text-3",
+                          "content": "lab2/",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "jvp1U",
+                          "name": "Brand",
+                          "fill": "$text-1",
+                          "content": "NovaAI",
+                          "fontFamily": "$font-en",
+                          "fontSize": 18,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "BRijQ",
+                      "name": "Badge",
+                      "fill": "$panel-2",
+                      "cornerRadius": 100,
+                      "padding": [
+                        5,
+                        10
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "tjLaH",
+                          "name": "Kind",
+                          "fill": "$accent",
+                          "content": "完全再現型",
+                          "fontFamily": "$font-jp",
+                          "fontSize": 12,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "uM0wZ",
+                      "name": "Desc",
+                      "fill": "$text-2",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "スクロールスクラブ動画+ガラスUI。トークン表・構造ツリー・Do not・Acceptanceまで備えた最も完成度の高い型。",
+                      "lineHeight": 1.75,
+                      "fontFamily": "$font-jp",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "bGYV9",
+                  "name": "Mainframe Card",
+                  "width": "fill_container",
+                  "fill": "$panel",
+                  "cornerRadius": 14,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": 28,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "k73Ab",
+                      "name": "Card Top",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "XsUtC",
+                          "name": "Dir",
+                          "fill": "$text-3",
+                          "content": "lab3/",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "c9heA",
+                          "name": "Brand",
+                          "fill": "$text-1",
+                          "content": "Mainframe",
+                          "fontFamily": "$font-en",
+                          "fontSize": 18,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Y98Qg",
+                      "name": "Badge",
+                      "fill": "$panel-2",
+                      "cornerRadius": 100,
+                      "padding": [
+                        5,
+                        10
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "I2F3WE",
+                          "name": "Kind",
+                          "fill": "$accent",
+                          "content": "アルゴリズム記述型",
+                          "fontFamily": "$font-jp",
+                          "fontSize": 12,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "mKl3m",
+                      "name": "Desc",
+                      "fill": "$text-2",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "マウススクラブ動画+タイプライター。カスタムフックの仕様とスクラブの数式をコードレベルで指定。独自インタラクション向け。",
+                      "lineHeight": 1.75,
+                      "fontFamily": "$font-jp",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "tQmIt",
+      "x": 910,
+      "y": 1034.0352783203125,
+      "fill": "#000000",
+      "content": "Higgsfield",
+      "fontFamily": "Inter",
+      "fontSize": 12,
+      "fontWeight": "normal"
+    },
+    {
+      "type": "frame",
+      "id": "imssZ",
+      "x": 1360,
+      "y": 0,
+      "name": "02 Anatomy",
+      "clip": true,
+      "width": 1240,
+      "fill": "$bg",
+      "layout": "vertical",
+      "gap": 40,
+      "padding": [
+        64,
+        72
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "o7lUAM",
+          "name": "Header",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 14,
+          "children": [
+            {
+              "type": "text",
+              "id": "Ndya5",
+              "name": "Kicker",
+              "fill": "$accent",
+              "content": "ANATOMY — プロンプトの解剖図",
+              "fontFamily": "$font-mono",
+              "fontSize": 12,
+              "fontWeight": "normal",
+              "letterSpacing": 2.4
+            },
+            {
+              "type": "text",
+              "id": "tcI49",
+              "name": "Title",
+              "fill": "$text-1",
+              "content": "12の構成ブロック",
+              "fontFamily": "$font-jp",
+              "fontSize": 36,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "ReaAN",
+              "name": "Sub",
+              "fill": "$text-2",
+              "textGrowth": "fixed-width",
+              "width": 820,
+              "content": "3本のプロンプトから抽出した共通構造。上から順に書けば、どんなサイトでも同じ精度が出せる。℅0〜3は必須、★は複雑なサイトで効くもの。",
+              "lineHeight": 1.8,
+              "fontFamily": "$font-jp",
+              "fontSize": 14,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "sKpS5",
+          "name": "Blocks Grid",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "children": [
+            {
+              "type": "frame",
+              "id": "c3LFY",
+              "name": "Row 1",
+              "width": "fill_container",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "LsoHU",
+                  "name": "01 概要宣言",
+                  "width": "fill_container",
+                  "fill": "$panel",
+                  "cornerRadius": 12,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": [
+                    24,
+                    26
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "eHDKV",
+                      "name": "Top",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "H2Vfu",
+                          "name": "Num",
+                          "fill": "$accent",
+                          "content": "01",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "g905q",
+                          "name": "BTitle",
+                          "fill": "$text-1",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "概要宣言",
+                          "fontFamily": "$font-jp",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "TzizW",
+                          "name": "Tag",
+                          "fill": "$panel-2",
+                          "cornerRadius": 100,
+                          "padding": [
+                            3,
+                            9
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "FKCF6",
+                              "name": "TagT",
+                              "fill": "$accent",
+                              "content": "必須",
+                              "fontFamily": "$font-jp",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "b3lO8",
+                      "name": "BDesc",
+                      "fill": "$text-2",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "冒頭1文で「対象ディレクトリ + ブランド名 + ページ種別 + 技術スタック」を宣言。例:「labに Foldcraft のヒーローLPを React+Tailwind で」",
+                      "lineHeight": 1.7,
+                      "fontFamily": "$font-jp",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "jWYQo",
+                  "name": "02 ページアイデンティティ",
+                  "width": "fill_container",
+                  "fill": "$panel",
+                  "cornerRadius": 12,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": [
+                    24,
+                    26
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "NaIux",
+                      "name": "Top",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "v4zg2",
+                          "name": "Num",
+                          "fill": "$accent",
+                          "content": "02",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "zxVZV",
+                          "name": "BTitle",
+                          "fill": "$text-1",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "ページアイデンティティ",
+                          "fontFamily": "$font-jp",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Ht6lD",
+                          "name": "Tag",
+                          "fill": "$panel-2",
+                          "cornerRadius": 100,
+                          "padding": [
+                            3,
+                            9
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "x5GOc",
+                              "name": "TagT",
+                              "fill": "$accent",
+                              "content": "必須",
+                              "fontFamily": "$font-jp",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "mO1Lg",
+                      "name": "BDesc",
+                      "fill": "$text-2",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "タイトル・ブランド表記・全体の雰囲気を一言で。「no purple gradients」のようにやらないことも書くとブレない。",
+                      "lineHeight": 1.7,
+                      "fontFamily": "$font-jp",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "wHlL3",
+              "name": "Row 2",
+              "width": "fill_container",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Xvz4x",
+                  "name": "03 アセット指定",
+                  "width": "fill_container",
+                  "fill": "$panel",
+                  "cornerRadius": 12,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": [
+                    24,
+                    26
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "UnECn",
+                      "name": "Top",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "mqS2a",
+                          "name": "Num",
+                          "fill": "$accent",
+                          "content": "03",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Q7gb7y",
+                          "name": "BTitle",
+                          "fill": "$text-1",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "アセット指定",
+                          "fontFamily": "$font-jp",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "moHgU",
+                          "name": "Tag",
+                          "fill": "$panel-2",
+                          "cornerRadius": 100,
+                          "padding": [
+                            3,
+                            9
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "mTk6x",
+                              "name": "TagT",
+                              "fill": "$accent",
+                              "content": "必須",
+                              "fontFamily": "$font-jp",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "TsBmi",
+                      "name": "BDesc",
+                      "fill": "$text-2",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "動画・画像は完全な実URLで指定。「何が映っているか」の言語化と表示仕様(object-fit / position)も添える。",
+                      "lineHeight": 1.7,
+                      "fontFamily": "$font-jp",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "teGIn",
+                  "name": "04 フォント",
+                  "width": "fill_container",
+                  "fill": "$panel",
+                  "cornerRadius": 12,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": [
+                    24,
+                    26
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "c4jHhf",
+                      "name": "Top",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "N2zz8U",
+                          "name": "Num",
+                          "fill": "$accent",
+                          "content": "04",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "CDuif",
+                          "name": "BTitle",
+                          "fill": "$text-1",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "フォント",
+                          "fontFamily": "$font-jp",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "bGsmT",
+                          "name": "Tag",
+                          "fill": "$panel-2",
+                          "cornerRadius": 100,
+                          "padding": [
+                            3,
+                            9
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "XHHdZ",
+                              "name": "TagT",
+                              "fill": "$accent",
+                              "content": "必須",
+                              "fontFamily": "$font-jp",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "zQppr",
+                      "name": "BDesc",
+                      "fill": "$text-2",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "フォント名・weights・読込方法(link/CSS変数)・適用範囲まで指定。デフォルトフォントに逃がさない。",
+                      "lineHeight": 1.7,
+                      "fontFamily": "$font-jp",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "LURMs",
+              "name": "Row 3",
+              "width": "fill_container",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "LchLb",
+                  "name": "05 グローバル構造",
+                  "width": "fill_container",
+                  "fill": "$panel",
+                  "cornerRadius": 12,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": [
+                    24,
+                    26
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "w0snk",
+                      "name": "Top",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "v8Udk",
+                          "name": "Num",
+                          "fill": "$accent",
+                          "content": "05",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "aotCx",
+                          "name": "BTitle",
+                          "fill": "$text-1",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "グローバル構造",
+                          "fontFamily": "$font-jp",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "CAuuH",
+                          "name": "Tag",
+                          "fill": "$panel-2",
+                          "cornerRadius": 100,
+                          "padding": [
+                            3,
+                            9
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "QFmBI",
+                              "name": "TagT",
+                              "fill": "$text-2",
+                              "content": "★",
+                              "fontFamily": "$font-jp",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "M4B7ho",
+                      "name": "BDesc",
+                      "fill": "$text-2",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "z-indexレイヤーとDOMツリーをアスキー図で。固定背景/コンテンツ/ナビの重なり関係を先に確定させる。",
+                      "lineHeight": 1.7,
+                      "fontFamily": "$font-jp",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "vN4vi",
+                  "name": "06 デザイントークン",
+                  "width": "fill_container",
+                  "fill": "$panel",
+                  "cornerRadius": 12,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": [
+                    24,
+                    26
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "VTn6j",
+                      "name": "Top",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "s74uo",
+                          "name": "Num",
+                          "fill": "$accent",
+                          "content": "06",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "RiXhZ",
+                          "name": "BTitle",
+                          "fill": "$text-1",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "デザイントークン",
+                          "fontFamily": "$font-jp",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "bOJkj",
+                          "name": "Tag",
+                          "fill": "$panel-2",
+                          "cornerRadius": 100,
+                          "padding": [
+                            3,
+                            9
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "nR4Mh",
+                              "name": "TagT",
+                              "fill": "$text-2",
+                              "content": "★",
+                              "fontFamily": "$font-jp",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "ALCX0",
+                      "name": "BDesc",
+                      "fill": "$text-2",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "ガラスパネル・CTA・monoラベルなど繰り返すスタイルは表でトークン化。全セクションでの一貫性が出る。",
+                      "lineHeight": 1.7,
+                      "fontFamily": "$font-jp",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "A6aMlN",
+              "name": "Row 4",
+              "width": "fill_container",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "uTvao",
+                  "name": "07 セクション仕様",
+                  "width": "fill_container",
+                  "fill": "$panel",
+                  "cornerRadius": 12,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": [
+                    24,
+                    26
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "kGU85",
+                      "name": "Top",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "R45fvt",
+                          "name": "Num",
+                          "fill": "$accent",
+                          "content": "07",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "R1INrA",
+                          "name": "BTitle",
+                          "fill": "$text-1",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "セクション仕様",
+                          "fontFamily": "$font-jp",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "bTd7F",
+                          "name": "Tag",
+                          "fill": "$panel-2",
+                          "cornerRadius": 100,
+                          "padding": [
+                            3,
+                            9
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "PBQWB",
+                              "name": "TagT",
+                              "fill": "$accent",
+                              "content": "必須",
+                              "fontFamily": "$font-jp",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "e115aE",
+                      "name": "BDesc",
+                      "fill": "$text-2",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "コピー(文言)は確定稿をそのまま。スタイルはTailwindクラス実物を書く。要素ごとのreveal delayもここで。",
+                      "lineHeight": 1.7,
+                      "fontFamily": "$font-jp",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "FqlMF",
+                  "name": "08 モーション仕様",
+                  "width": "fill_container",
+                  "fill": "$panel",
+                  "cornerRadius": 12,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": [
+                    24,
+                    26
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "p86fV",
+                      "name": "Top",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "BcXXw",
+                          "name": "Num",
+                          "fill": "$accent",
+                          "content": "08",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "LWnOV",
+                          "name": "BTitle",
+                          "fill": "$text-1",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "モーション仕様",
+                          "fontFamily": "$font-jp",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "w8x8Ei",
+                          "name": "Tag",
+                          "fill": "$panel-2",
+                          "cornerRadius": 100,
+                          "padding": [
+                            3,
+                            9
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "wFufV",
+                              "name": "TagT",
+                              "fill": "$accent",
+                              "content": "必須",
+                              "fontFamily": "$font-jp",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "Yv5fY",
+                      "name": "BDesc",
+                      "fill": "$text-2",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "trigger / duration / delay / easing / keyframes を数値で。例: fadeSlideUp 0.8s ease 0.4s both。",
+                      "lineHeight": 1.7,
+                      "fontFamily": "$font-jp",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "spbGD",
+              "name": "Row 5",
+              "width": "fill_container",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "JoqQJ",
+                  "name": "09 インタラクションのアルゴリズム",
+                  "width": "fill_container",
+                  "fill": "$panel",
+                  "cornerRadius": 12,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": [
+                    24,
+                    26
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "nQhMx",
+                      "name": "Top",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "DTj0E",
+                          "name": "Num",
+                          "fill": "$accent",
+                          "content": "09",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "V9Zz2y",
+                          "name": "BTitle",
+                          "fill": "$text-1",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "インタラクションのアルゴリズム",
+                          "fontFamily": "$font-jp",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "p4Ji0G",
+                          "name": "Tag",
+                          "fill": "$panel-2",
+                          "cornerRadius": 100,
+                          "padding": [
+                            3,
+                            9
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "HGlHJ",
+                              "name": "TagT",
+                              "fill": "$text-2",
+                              "content": "★",
+                              "fontFamily": "$font-jp",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "QGXMr",
+                      "name": "BDesc",
+                      "fill": "$text-2",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "独自の動きは数式で縛る。例: smoothed += (target-smoothed)*0.12、SENSITIVITY=0.8、clamp 0〜duration。",
+                      "lineHeight": 1.7,
+                      "fontFamily": "$font-jp",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "JFpSl",
+                  "name": "10 レスポンシブ規則",
+                  "width": "fill_container",
+                  "fill": "$panel",
+                  "cornerRadius": 12,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": [
+                    24,
+                    26
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "sjJ1z",
+                      "name": "Top",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "D85ca1",
+                          "name": "Num",
+                          "fill": "$accent",
+                          "content": "10",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "z7YSU",
+                          "name": "BTitle",
+                          "fill": "$text-1",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "レスポンシブ規則",
+                          "fontFamily": "$font-jp",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "t0DC0",
+                          "name": "Tag",
+                          "fill": "$panel-2",
+                          "cornerRadius": 100,
+                          "padding": [
+                            3,
+                            9
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "nEu5a",
+                              "name": "TagT",
+                              "fill": "$text-2",
+                              "content": "推奨",
+                              "fontFamily": "$font-jp",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "d5OHhK",
+                      "name": "BDesc",
+                      "fill": "$text-2",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "ブレークポイントごとの表示切替(ナビ非表示、縦積み化など)を篇条書きで。100svh対応などもここに。",
+                      "lineHeight": 1.7,
+                      "fontFamily": "$font-jp",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Yyi27",
+              "name": "Row 6",
+              "width": "fill_container",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "I2l65",
+                  "name": "11 Do not(禁止事項)",
+                  "width": "fill_container",
+                  "fill": "$panel",
+                  "cornerRadius": 12,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": [
+                    24,
+                    26
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "a6X739",
+                      "name": "Top",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Y02E7",
+                          "name": "Num",
+                          "fill": "$accent",
+                          "content": "11",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "sk5R6",
+                          "name": "BTitle",
+                          "fill": "$text-1",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Do not(禁止事項)",
+                          "fontFamily": "$font-jp",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "x9OpZ",
+                          "name": "Tag",
+                          "fill": "$panel-2",
+                          "cornerRadius": 100,
+                          "padding": [
+                            3,
+                            9
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "K4M3Yk",
+                              "name": "TagT",
+                              "fill": "$text-2",
+                              "content": "★",
+                              "fontFamily": "$font-jp",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "MhqAu",
+                      "name": "BDesc",
+                      "fill": "$text-2",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "「別フォント禁止」「アイコンカード化禁止」など、AIがやりがちな勝手な創作を先回りして封じる。",
+                      "lineHeight": 1.7,
+                      "fontFamily": "$font-jp",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "xCvvF",
+                  "name": "12 Acceptance(受入基準)",
+                  "width": "fill_container",
+                  "fill": "$panel",
+                  "cornerRadius": 12,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": [
+                    24,
+                    26
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ghLO5",
+                      "name": "Top",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "PZYYl",
+                          "name": "Num",
+                          "fill": "$accent",
+                          "content": "12",
+                          "fontFamily": "$font-mono",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "V0cp5",
+                          "name": "BTitle",
+                          "fill": "$text-1",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Acceptance(受入基準)",
+                          "fontFamily": "$font-jp",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "ZK5bC",
+                          "name": "Tag",
+                          "fill": "$panel-2",
+                          "cornerRadius": 100,
+                          "padding": [
+                            3,
+                            9
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "p7pWZi",
+                              "name": "TagT",
+                              "fill": "$text-2",
+                              "content": "★",
+                              "fontFamily": "$font-jp",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "qWyPz",
+                      "name": "BDesc",
+                      "fill": "$text-2",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "「スクロールで動画が滑らかに進む」など、観測可能な完成状態を定義。セルフチェックの基準になる。",
+                      "lineHeight": 1.7,
+                      "fontFamily": "$font-jp",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "prompt",
+      "id": "x1IXp",
+      "x": -281,
+      "y": 623,
+      "width": 250,
+      "height": 219
+    }
+  ],
+  "variables": {
+    "bg": {
+      "type": "color",
+      "value": "#0B0B0E"
+    },
+    "panel": {
+      "type": "color",
+      "value": "#15151B"
+    },
+    "panel-2": {
+      "type": "color",
+      "value": "#1C1C24"
+    },
+    "border": {
+      "type": "color",
+      "value": "#2A2A34"
+    },
+    "text-1": {
+      "type": "color",
+      "value": "#F5F5F7"
+    },
+    "text-2": {
+      "type": "color",
+      "value": "#A0A0AC"
+    },
+    "text-3": {
+      "type": "color",
+      "value": "#6B6B78"
+    },
+    "accent": {
+      "type": "color",
+      "value": "#7DF0C6"
+    },
+    "font-jp": {
+      "type": "string",
+      "value": "Noto Sans JP"
+    },
+    "font-en": {
+      "type": "string",
+      "value": "Inter"
+    },
+    "font-mono": {
+      "type": "string",
+      "value": "JetBrains Mono"
+    }
+  },
+  "fileToken": "3621a2c0-e6d3-4727-b422-42821f19dbcf"
+}

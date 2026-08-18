@@ -40,10 +40,13 @@ describe("semantic HTML", () => {
       "app/unauthorized/page.tsx",
       "app/test/error-tracking/page.tsx",
       "components/error-boundary.tsx",
+      "components/home/MonoDoc.tsx",
     ]
 
     for (const file of files) {
       const source = await read(file)
+      // 文書ページ（terms/privacy/legal）は MonoDoc が main を描画する
+      if (source.includes("<MonoDoc")) continue
       const mainTags = source.match(/<main\b[^>]*>/g) ?? []
 
       expect(mainTags.length, `${file} must render a main landmark`).toBeGreaterThan(0)
@@ -73,7 +76,10 @@ describe("semantic HTML", () => {
     expect(source).toMatch(/return\s*{\s*title: "SEO特設サイト",/)
     expect(source).not.toMatch(/return\s*{\s*title: "SEO特設サイト \| tent space Blog",/)
     expect(source).not.toMatch(/<h5\b/)
-    expect(source).toContain('<h3\n              className="text-base font-bold')
+    // h1 → h2 のみの階層（h3/h4への飛びなし）
+    expect(source).toContain('as="h1"')
+    expect(source).toContain('as="h2"')
+    expect(source).not.toMatch(/<h[34]\b|as="h[34]"/)
   })
 
   it("情報テーブルの各行に行見出しを付ける", async () => {
@@ -82,7 +88,7 @@ describe("semantic HTML", () => {
       const rowCount = source.match(/<tr\b/g)?.length ?? 0
       const rowHeaderCount = source.match(/<th\b[^>]*scope="row"/g)?.length ?? 0
 
-      expect(rowCount, file).toBeGreaterThan(0)
+      // テーブルを使う場合は全行に行見出しを付ける（mono-doc化で表を持たないページは0行）
       expect(rowHeaderCount, file).toBe(rowCount)
     }
   })
@@ -122,20 +128,20 @@ describe("semantic HTML", () => {
   })
 
   it("フッターリンクを名前付きナビゲーションとして公開する", async () => {
-    const source = await read("components/footer.tsx")
+    const source = await read("components/home/MonoFooter.tsx")
 
-    expect(source).toContain('<nav aria-label="フッターナビゲーション"')
+    expect(source).toContain('aria-label="フッターナビゲーション"')
   })
 
-  it("Canvasページに実背景を置き、低コントラスト文字を避ける", async () => {
+  it("トップとアバウトで低コントラスト文字を避ける", async () => {
     const [home, about] = await Promise.all([
       read("app/page.tsx"),
       read("app/about/page.tsx"),
     ])
 
     expect(home).not.toContain("text-primary/80")
-    expect(home).toContain('<Footer copyrightClassName="text-white/70" />')
-    expect(about).toContain("bg-[#020212]")
+    expect(home).toContain("MonoShell")
+    expect(about).toContain("MonoShell")
     expect(about).not.toContain("text-white/40")
     expect(about).not.toContain("text-blue-500/50")
     expect(about).not.toContain("text-blue-500/10")
@@ -174,12 +180,8 @@ describe("semantic HTML", () => {
   })
 
   it("フッターの背景ごとに読める前景色を使う", async () => {
-    const [footer, pageFooter] = await Promise.all([
-      read("components/footer.tsx"),
-      read("components/page-footer.tsx"),
-    ])
+    const pageFooter = await read("components/page-footer.tsx")
 
-    expect(footer).toContain('copyrightClassName = "text-muted-foreground"')
     expect(pageFooter).toContain("text-primary-foreground")
     expect(pageFooter).not.toContain("text-background/60")
     expect(pageFooter).not.toContain("text-primary-foreground/80")
@@ -223,7 +225,8 @@ describe("semantic HTML", () => {
       read("components/error-tracking-demo.tsx"),
     ])
 
-    expect(unauthorized).toContain("<h1>アクセス権限がありません</h1>")
+    expect(unauthorized).toContain('as="h1"')
+    expect(unauthorized).toContain("access denied")
     expect(errorDemo).toContain('<h1 className="text-3xl font-bold mb-2">')
     expect(errorDemo).not.toContain("<h3")
     expect(errorDemo).not.toContain("bg-orange-600 text-white")

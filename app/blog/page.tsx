@@ -1,13 +1,13 @@
 "use client"
 
-import { useEffect, useState, useCallback, Suspense, useRef, useMemo } from "react"
+import { useEffect, useLayoutEffect, useState, useCallback, Suspense, useRef, useMemo } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 // import Masonry from 'react-masonry-css' // Replaced with custom masonry
 import { gsap } from "gsap"
-import { BlogHeader } from "@/components/blog-header"
-import { Footer } from "@/components/footer"
+import { MonoBlogNav } from "@/components/home/MonoBlogNav"
+import { MonoFooterStandalone } from "@/components/home/MonoFooterStandalone"
 import { EyeLoader } from "@/components/eye-loader"
 import { SeoBanner } from "@/components/seo-banner"
 import { N8nBanner } from "@/components/n8n-banner"
@@ -98,18 +98,18 @@ function CategoryFilter({
           >
             <button
               onClick={() => clearSearch()}
-              className={`flex-shrink-0 px-4 py-2 text-xs md:text-sm font-medium transition-all whitespace-nowrap rounded-full ${!searchQuery
-                ? 'bg-foreground text-background'
-                : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+              className={`flex-shrink-0 px-4 py-1.5 text-xs md:text-sm transition-all whitespace-nowrap border ${!searchQuery
+                ? 'bg-black text-white border-black'
+                : 'bg-transparent text-muted-foreground border-transparent hover:border-black hover:text-foreground'
                 }`}
             >
-              All
+              all
             </button>
             {categories.map((category) => (
               <Link
                 key={category.id}
                 href={`/blog/categories/${category.slug}`}
-                className="flex-shrink-0 px-4 py-2 text-xs md:text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors whitespace-nowrap rounded-full"
+                className="flex-shrink-0 px-4 py-1.5 text-xs md:text-sm text-muted-foreground border border-transparent hover:border-black hover:text-foreground transition-colors whitespace-nowrap"
               >
                 {category.name}
               </Link>
@@ -131,52 +131,6 @@ function getCardVariant(index: number, isMobile: boolean = false): 'tall' | 'wid
   // Desktop: tall, wide, and square
   const patterns = ['tall', 'wide', 'square', 'tall', 'square', 'wide', 'square', 'tall', 'wide']
   return patterns[index % patterns.length] as 'tall' | 'wide' | 'square'
-}
-
-// Get estimated height for each variant (in relative units)
-function getVariantHeight(variant: 'tall' | 'wide' | 'square'): number {
-  return {
-    tall: 4,      // aspect-[3/4] = taller
-    wide: 2.25,   // aspect-[16/9] = shorter
-    square: 3     // aspect-square = medium
-  }[variant]
-}
-
-// Reorder posts to balance column heights using "shortest column first" algorithm
-function balanceMasonryPosts<T>(
-  posts: T[],
-  columns: number,
-  getHeight: (post: T, index: number) => number
-): T[] {
-  if (columns <= 1) return posts
-
-  // Track height of each column
-  const colHeights = new Array(columns).fill(0)
-  // Track which posts go to which column
-  const colPosts: T[][] = Array.from({ length: columns }, () => [])
-
-  posts.forEach((post, index) => {
-    const height = getHeight(post, index)
-    // Find the shortest column
-    const shortestCol = colHeights.indexOf(Math.min(...colHeights))
-    // Add post to that column
-    colPosts[shortestCol].push(post)
-    // Update column height
-    colHeights[shortestCol] += height
-  })
-
-  // Flatten posts back into single array, interleaving columns for masonry
-  const result: T[] = []
-  let maxLength = Math.max(...colPosts.map(col => col.length))
-  for (let i = 0; i < maxLength; i++) {
-    for (let col = 0; col < columns; col++) {
-      if (colPosts[col][i]) {
-        result.push(colPosts[col][i])
-      }
-    }
-  }
-
-  return result
 }
 
 // Get random fallback image - no duplicates within 10 posts, consistent for each post
@@ -240,12 +194,6 @@ function MasonryBlogCard({ post, likes = 0, index = 0, isMobile = false }: { pos
     square: 'aspect-[4/5]'
   }
 
-  // Extract a quote from the excerpt for "full" variant
-  const getQuote = (text: string) => {
-    const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 20)
-    return sentences[0]?.trim() || text.substring(0, 100)
-  }
-
   return (
     <article className="group animate-fadeIn break-inside-avoid mb-6 md:mb-8">
       <Link href={`/blog/${post.slug}`} className="block">
@@ -287,15 +235,17 @@ function MasonryBlogCard({ post, likes = 0, index = 0, isMobile = false }: { pos
           {/* Text Area */}
           <div className="p-5 md:p-6 bg-card relative -mt-2">
             {/* Meta - always show */}
-            <div className="flex items-center gap-2 mb-3 text-xs text-muted-foreground">
+            <div
+              className="flex items-baseline justify-between gap-2 pb-2.5 mb-3 text-[11px] tracking-wide text-muted-foreground"
+              style={{ borderBottom: "1px solid rgba(0, 0, 0, 0.55)" }}
+            >
               <time>{formatDate(post.date)}</time>
-              <span>•</span>
               <span>{readingTime} min read</span>
             </div>
 
             {/* Title - always show */}
             <h3
-              className="font-bold text-foreground group-hover:text-accent leading-tight text-lg md:text-xl line-clamp-2 mb-3 transition-colors duration-300"
+              className="font-bold text-foreground group-hover:text-[#0f00b0] leading-tight text-lg md:text-xl line-clamp-2 mb-3 transition-colors duration-300"
               dangerouslySetInnerHTML={{ __html: post.title }}
             />
 
@@ -306,17 +256,25 @@ function MasonryBlogCard({ post, likes = 0, index = 0, isMobile = false }: { pos
               </p>
             )}
 
-            {/* Pattern 3: full - show description + quote */}
+            {/* Pattern 3: full - show description + category tags */}
             {contentVariant === 'full' && (
               <>
                 <p className="text-muted-foreground text-sm line-clamp-2 leading-relaxed mb-3">
                   {excerpt}
                 </p>
-                <blockquote className="border-l-2 border-border pl-3 py-1">
-                  <p className="text-muted-foreground text-xs italic line-clamp-2">
-                    &quot;{getQuote(excerpt)}...&quot;
-                  </p>
-                </blockquote>
+                {categories.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5">
+                    {categories.slice(0, 3).map((category) => (
+                      <span
+                        key={category.id}
+                        className="px-2 py-0.5 text-[10px] text-muted-foreground"
+                        style={{ border: "1px solid rgba(0, 0, 0, 0.55)" }}
+                      >
+                        {category.name}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </>
             )}
           </div>
@@ -529,38 +487,85 @@ function BlogPageContent() {
     return () => window.removeEventListener('resize', updateColumns)
   }, [])
 
-  // Distribute posts into columns using "shortest column first" algorithm
-  const columnPosts = useMemo(() => {
-    if (currentColumns === 1) {
-      return [posts]
+  // ---- masonry assignment ----
+  // Append-only: new batches are placed onto the *measured* shortest column, so
+  // estimation drift from earlier batches self-corrects and cards never move.
+  // Ties break toward the column with fewer items (no systematic left bias).
+  const columnRefs = useRef<(HTMLDivElement | null)[]>([])
+  const assignRef = useRef<{ count: number; cols: number; firstId: number | null; columns: number[][] }>({
+    count: 0,
+    cols: 0,
+    firstId: null,
+    columns: [],
+  })
+  const [columnAssign, setColumnAssign] = useState<number[][]>([])
+
+  // estimated card height in units of column width: image aspect + text block
+  const estimateHeight = useCallback((index: number, isMobileLayout: boolean) => {
+    const variant = getCardVariant(index, isMobileLayout)
+    const aspect = { tall: 4 / 3, wide: 9 / 16, square: 5 / 4 }[variant]
+    const content = getContentVariant(index)
+    const text = { "title-only": 0.42, "with-excerpt": 0.6, full: 0.82 }[content]
+    return aspect + text
+  }, [])
+
+  const pickShortest = (colHeights: number[], columns: number[][], tolerance: number) => {
+    let target = 0
+    for (let c = 1; c < colHeights.length; c++) {
+      const diff = colHeights[c] - colHeights[target]
+      if (diff < -tolerance || (Math.abs(diff) <= tolerance && columns[c].length < columns[target].length)) {
+        target = c
+      }
     }
+    return target
+  }
 
-    // Use currentColumns to determine if mobile (more reliable than isMobile state)
-    const isMobileLayout = currentColumns <= 2
+  useLayoutEffect(() => {
+    const cols = currentColumns
+    if (cols === 1) return
+    const meta = assignRef.current
+    const isMobileLayout = cols <= 2
+    const reset =
+      cols !== meta.cols || posts.length < meta.count || (posts.length > 0 && meta.firstId !== posts[0].id)
+    const colWidth = columnRefs.current[0]?.offsetWidth || 400
 
-    const colHeights = new Array(currentColumns).fill(0)
-    const columns: BlogPost[][] = Array.from({ length: currentColumns }, () => [])
+    let columns: number[][]
+    let colHeights: number[]
+    let start: number
+    if (reset || meta.count === 0) {
+      columns = Array.from({ length: cols }, () => [])
+      colHeights = new Array(cols).fill(0)
+      start = 0
+    } else {
+      columns = meta.columns.map((c) => [...c])
+      // rendered reality replaces the estimates accumulated so far
+      colHeights = columns.map((_, i) => columnRefs.current[i]?.offsetHeight ?? 0)
+      start = meta.count
+    }
+    if (start >= posts.length && !reset) return
 
-    posts.forEach((post, index) => {
-      const variant = getCardVariant(index, isMobileLayout)
-      const height = getVariantHeight(variant)
+    for (let i = start; i < posts.length; i++) {
+      const h = estimateHeight(i, isMobileLayout) * colWidth
+      const target = pickShortest(colHeights, columns, 1)
+      columns[target].push(i)
+      colHeights[target] += h
+    }
+    assignRef.current = { count: posts.length, cols, firstId: posts[0]?.id ?? null, columns }
+    setColumnAssign(columns)
+  }, [posts, currentColumns, estimateHeight])
 
-      // Find the shortest column
-      const shortestCol = colHeights.indexOf(Math.min(...colHeights))
-
-      // Add post to that column
-      columns[shortestCol].push(post)
-
-      // Update column height
-      colHeights[shortestCol] += height
-    })
-
-    return columns
-  }, [posts, currentColumns])
+  // columns of post indices — render only what has been assigned; newly loaded
+  // posts appear one layout-pass later, after their column has been decided
+  // against the *measured* heights of the already-rendered cards
+  const columnPosts = useMemo(() => {
+    if (currentColumns === 1) return [posts.map((_, i) => i)]
+    if (columnAssign.length > 0) return columnAssign
+    return Array.from({ length: currentColumns }, () => [] as number[])
+  }, [posts, columnAssign, currentColumns])
 
   return (
-    <div className="min-h-screen bg-background">
-      <BlogHeader />
+    <div className="min-h-screen bg-[#e5e5e5]">
+      <MonoBlogNav />
 
       {/* Subtle gradient background */}
       <div className="fixed inset-0 pointer-events-none">
@@ -682,9 +687,15 @@ function BlogPageContent() {
               </button>
             </div>
           ) : posts.length === 0 ? (
-            <div className="mt-12 flex flex-col items-center gap-4">
-              <EyeLoader variant="end" />
-              <p className="text-lg md:text-xl text-muted-foreground font-pixel">No articles found</p>
+            <div className="mt-16 mx-auto max-w-md py-14 px-8 text-center" style={{ border: "1px solid #000", background: "#fff" }}>
+              <p className="text-[11px] tracking-widest mb-3" style={{ opacity: 0.45 }}>
+                no articles found
+              </p>
+              <p className="text-sm text-muted-foreground">
+                該当する記事が見つかりませんでした。
+                <br />
+                条件を変えてお試しください。
+              </p>
             </div>
           ) : (
             <>
@@ -704,17 +715,24 @@ function BlogPageContent() {
               {/* Custom Masonry Grid */}
               <div className="flex gap-6 md:gap-8 items-start">
                 {columnPosts.map((columnItems, colIndex) => (
-                  <div key={colIndex} className="flex-1 space-y-6 md:space-y-8">
-                    {/* Posts in this column */}
-                    {columnItems.map((post) => {
-                      const globalIndex = posts.indexOf(post)
+                  <div
+                    key={colIndex}
+                    ref={(el) => {
+                      columnRefs.current[colIndex] = el
+                    }}
+                    className="flex-1 space-y-6 md:space-y-8"
+                  >
+                    {/* Posts in this column (indices into posts) */}
+                    {columnItems.map((postIndex) => {
+                      const post = posts[postIndex]
+                      if (!post) return null
                       const isMobileLayout = currentColumns <= 2
                       return (
                         <MasonryBlogCard
                           key={post.id}
                           post={post}
                           likes={likeCounts[post.slug] || 0}
-                          index={globalIndex}
+                          index={postIndex}
                           isMobile={isMobileLayout}
                         />
                       )
@@ -743,10 +761,10 @@ function BlogPageContent() {
           )}
         </div>
 
-        {/* Footer - 最後の記事が表示された後のみ表示 */}
-        {!hasMore && posts.length > 0 && (
+        {/* Footer - 読み込み完了後に表示（記事ゼロの場合も含む） */}
+        {!loading && (!hasMore || posts.length === 0) && (
           <div className="mt-12 md:mt-16">
-            <Footer />
+            <MonoFooterStandalone />
           </div>
         )}
       </main>
@@ -774,8 +792,8 @@ function BlogPageContent() {
 // Loading component for Suspense fallback
 function BlogPageLoading() {
   return (
-    <div className="min-h-screen bg-background">
-      <BlogHeader />
+    <div className="min-h-screen bg-[#e5e5e5]">
+      <MonoBlogNav />
 
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/30 to-background" />

@@ -84,17 +84,17 @@ export function CategoryTabsClient({
           >
             <Link
               href="/blog"
-              className="flex-shrink-0 px-4 py-2 text-xs md:text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors whitespace-nowrap rounded-full"
+              className="flex-shrink-0 px-4 py-1.5 text-xs md:text-sm text-muted-foreground border border-transparent hover:border-black hover:text-foreground transition-colors whitespace-nowrap"
             >
-              All
+              all
             </Link>
             {categories.filter(c => c.count > 0).map((cat) => (
               <Link
                 key={cat.id}
                 href={`/blog/categories/${cat.slug}`}
-                className={`flex-shrink-0 px-4 py-2 text-xs md:text-sm font-medium transition-all whitespace-nowrap rounded-full ${cat.slug === currentSlug
-                  ? 'bg-foreground text-background'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                className={`flex-shrink-0 px-4 py-1.5 text-xs md:text-sm transition-all whitespace-nowrap border ${cat.slug === currentSlug
+                  ? 'bg-black text-white border-black'
+                  : 'bg-transparent text-muted-foreground border-transparent hover:border-black hover:text-foreground'
                   }`}
               >
                 {cat.name}

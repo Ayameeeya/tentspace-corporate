@@ -1,0 +1,1273 @@
+{
+  "version": "2.14",
+  "children": [
+    {
+      "type": "frame",
+      "id": "umWMt",
+      "x": 920,
+      "y": 0,
+      "name": "Stella Brutalist Style",
+      "clip": true,
+      "width": 1280,
+      "fill": "$brut-page",
+      "layout": "vertical",
+      "gap": 56,
+      "padding": 64,
+      "children": [
+        {
+          "type": "frame",
+          "id": "xeKDA",
+          "name": "Header",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 12,
+          "children": [
+            {
+              "type": "text",
+              "id": "og7Xz",
+              "name": "Kicker",
+              "fill": "$brut-accent",
+              "content": "STELLA UI LAB — DESIGN LANGUAGE 01",
+              "fontFamily": "$brut-font-mono",
+              "fontSize": 11,
+              "fontWeight": "normal",
+              "letterSpacing": 3
+            },
+            {
+              "type": "frame",
+              "id": "Bn2O4",
+              "name": "Title Row",
+              "alignItems": "end",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "h0Ck9",
+                  "name": "Title",
+                  "fill": "$brut-ink",
+                  "content": "BRUTALIST PRESSING",
+                  "fontFamily": "$brut-font-display",
+                  "fontSize": 72,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "bZX7u",
+                  "name": "Period",
+                  "fill": "$brut-accent",
+                  "content": ".",
+                  "fontFamily": "$brut-font-display",
+                  "fontSize": 72,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "PuTha",
+              "name": "Desc",
+              "fill": "$brut-ink-soft",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "紙×黒×ホットオレンジのブルータリスト印刷物。太い罫線、角丸なし、コンデンス見出し(Anton)+等幅ラベル(JetBrains Mono)。ミシン目・半券などのチケット意匠はライブ入場専用の特別な語彙として使う。",
+              "lineHeight": 1.7,
+              "fontFamily": "$brut-font-body",
+              "fontSize": 14,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "ssFOO",
+          "name": "Palette",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "children": [
+            {
+              "type": "text",
+              "id": "l0gUmn",
+              "name": "Palette Label",
+              "fill": "$brut-ink-muted",
+              "content": "01 — PALETTE",
+              "fontFamily": "$brut-font-mono",
+              "fontSize": 10,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            },
+            {
+              "type": "frame",
+              "id": "TN54d",
+              "name": "Swatches",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "QT9Nz",
+                  "name": "Swatch Page",
+                  "width": "fill_container",
+                  "height": 120,
+                  "fill": "#e5e0d5",
+                  "stroke": "#141312",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "padding": 12,
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "fiZqO",
+                      "name": "Name",
+                      "fill": "#141312",
+                      "content": "PAGE",
+                      "fontFamily": "$brut-font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "x858GB",
+                      "name": "Hex",
+                      "fill": "#141312",
+                      "content": "#e5e0d5",
+                      "fontFamily": "$brut-font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "n7HjaB",
+                  "name": "Swatch Surface",
+                  "width": "fill_container",
+                  "height": 120,
+                  "fill": "#f0ece3",
+                  "stroke": "#141312",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "padding": 12,
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "DOFfT",
+                      "name": "Name",
+                      "fill": "#141312",
+                      "content": "SURFACE",
+                      "fontFamily": "$brut-font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "osmF9",
+                      "name": "Hex",
+                      "fill": "#141312",
+                      "content": "#f0ece3",
+                      "fontFamily": "$brut-font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "iV7zD",
+                  "name": "Swatch Ink",
+                  "width": "fill_container",
+                  "height": 120,
+                  "fill": "#141312",
+                  "stroke": "#141312",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "padding": 12,
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ZO41j",
+                      "name": "Name",
+                      "fill": "#e8e3d8",
+                      "content": "INK",
+                      "fontFamily": "$brut-font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "S7kCJ",
+                      "name": "Hex",
+                      "fill": "#e8e3d8",
+                      "content": "#141312",
+                      "fontFamily": "$brut-font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "DTih3",
+                  "name": "Swatch Hot Orange",
+                  "width": "fill_container",
+                  "height": 120,
+                  "fill": "#ff4b1e",
+                  "stroke": "#141312",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "padding": 12,
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "vv3zZ",
+                      "name": "Name",
+                      "fill": "#141312",
+                      "content": "HOT ORANGE",
+                      "fontFamily": "$brut-font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "qabZD",
+                      "name": "Hex",
+                      "fill": "#141312",
+                      "content": "#ff4b1e",
+                      "fontFamily": "$brut-font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "JQ0Q9",
+                  "name": "Swatch Amber",
+                  "width": "fill_container",
+                  "height": 120,
+                  "fill": "#e8a13c",
+                  "stroke": "#141312",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "padding": 12,
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "CiRBb",
+                      "name": "Name",
+                      "fill": "#141312",
+                      "content": "AMBER",
+                      "fontFamily": "$brut-font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "h8x3kG",
+                      "name": "Hex",
+                      "fill": "#141312",
+                      "content": "#e8a13c",
+                      "fontFamily": "$brut-font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "zHnFC",
+                  "name": "Swatch Pink",
+                  "width": "fill_container",
+                  "height": 120,
+                  "fill": "#d84f95",
+                  "stroke": "#141312",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "padding": 12,
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "OqA19",
+                      "name": "Name",
+                      "fill": "#141312",
+                      "content": "PINK",
+                      "fontFamily": "$brut-font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "WaFUB",
+                      "name": "Hex",
+                      "fill": "#141312",
+                      "content": "#d84f95",
+                      "fontFamily": "$brut-font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "cHDv9",
+                  "name": "Swatch Panel",
+                  "width": "fill_container",
+                  "height": 120,
+                  "fill": "#111013",
+                  "stroke": "#141312",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "padding": 12,
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ZxWKL",
+                      "name": "Name",
+                      "fill": "#e8e3d8",
+                      "content": "PANEL",
+                      "fontFamily": "$brut-font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "oyYTe",
+                      "name": "Hex",
+                      "fill": "#e8e3d8",
+                      "content": "#111013",
+                      "fontFamily": "$brut-font-mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "B5AgWl",
+          "name": "Typography",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "children": [
+            {
+              "type": "text",
+              "id": "utTSN",
+              "name": "Typo Label",
+              "fill": "$brut-ink-muted",
+              "content": "02 — TYPOGRAPHY",
+              "fontFamily": "$brut-font-mono",
+              "fontSize": 10,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            },
+            {
+              "type": "frame",
+              "id": "NZ1gk",
+              "name": "Type Rows",
+              "width": "fill_container",
+              "stroke": "$brut-ink",
+              "strokeWidth": {
+                "top": 2
+              },
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "mjbVt",
+                  "name": "Row Display / Anton 56",
+                  "width": "fill_container",
+                  "stroke": "#14131230",
+                  "strokeWidth": {
+                    "bottom": 1
+                  },
+                  "gap": 24,
+                  "padding": [
+                    16,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "UEbij",
+                      "name": "Label Wrap",
+                      "width": 260,
+                      "layout": "vertical",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "pcHJo",
+                          "name": "Label",
+                          "fill": "$brut-ink-muted",
+                          "content": "Display / Anton 56",
+                          "fontFamily": "$brut-font-mono",
+                          "fontSize": 10,
+                          "fontWeight": "normal",
+                          "letterSpacing": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "iYhD4",
+                      "name": "Sample",
+                      "fill": "$brut-ink",
+                      "content": "ライブ.",
+                      "fontFamily": "Anton",
+                      "fontSize": 56,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "T1isHw",
+                  "name": "Row Heading / Anton 28",
+                  "width": "fill_container",
+                  "stroke": "#14131230",
+                  "strokeWidth": {
+                    "bottom": 1
+                  },
+                  "gap": 24,
+                  "padding": [
+                    16,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "xkUD7",
+                      "name": "Label Wrap",
+                      "width": 260,
+                      "layout": "vertical",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "nOIvu",
+                          "name": "Label",
+                          "fill": "$brut-ink-muted",
+                          "content": "Heading / Anton 28",
+                          "fontFamily": "$brut-font-mono",
+                          "fontSize": 10,
+                          "fontWeight": "normal",
+                          "letterSpacing": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "fz7Ek",
+                      "name": "Sample",
+                      "fill": "$brut-ink",
+                      "content": "MIDNIGHT PRESSING",
+                      "fontFamily": "Anton",
+                      "fontSize": 28,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Fjw0C",
+                  "name": "Row Body / Noto Sans JP 14",
+                  "width": "fill_container",
+                  "stroke": "#14131230",
+                  "strokeWidth": {
+                    "bottom": 1
+                  },
+                  "gap": 24,
+                  "padding": [
+                    16,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "gkHUl",
+                      "name": "Label Wrap",
+                      "width": 260,
+                      "layout": "vertical",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "ovgJ3",
+                          "name": "Label",
+                          "fill": "$brut-ink-muted",
+                          "content": "Body / Noto Sans JP 14",
+                          "fontFamily": "$brut-font-mono",
+                          "fontSize": 10,
+                          "fontWeight": "normal",
+                          "letterSpacing": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "AvEP4",
+                      "name": "Sample",
+                      "fill": "$brut-ink",
+                      "content": "同じ曲を同じ瞬間に聴く。弾幕・エモート・花火・ペンライト。",
+                      "fontFamily": "Noto Sans JP",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "EKA9M",
+                  "name": "Row Label / JetBrains Mono 10",
+                  "width": "fill_container",
+                  "stroke": "#14131230",
+                  "strokeWidth": {
+                    "bottom": 1
+                  },
+                  "gap": 24,
+                  "padding": [
+                    16,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "VDbBI",
+                      "name": "Label Wrap",
+                      "width": 260,
+                      "layout": "vertical",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "yJXzL",
+                          "name": "Label",
+                          "fill": "$brut-ink-muted",
+                          "content": "Label / JetBrains Mono 10",
+                          "fontFamily": "$brut-font-mono",
+                          "fontSize": 10,
+                          "fontWeight": "normal",
+                          "letterSpacing": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "nLjBX",
+                      "name": "Sample",
+                      "fill": "$brut-ink",
+                      "content": "RESUME — 前回のつづき / 04 LIVE / ADMIT ONE",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal",
+                      "letterSpacing": 2
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "x64fnY",
+          "name": "Components",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "children": [
+            {
+              "type": "text",
+              "id": "a94Hq",
+              "name": "Comp Label",
+              "fill": "$brut-ink-muted",
+              "content": "03 — COMPONENTS",
+              "fontFamily": "$brut-font-mono",
+              "fontSize": 10,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            },
+            {
+              "type": "frame",
+              "id": "U5WQv",
+              "name": "Comp Row 1",
+              "width": "fill_container",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "RUOG6",
+                  "name": "Badges",
+                  "width": 280,
+                  "fill": "$brut-surface",
+                  "stroke": "#14131230",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": 20,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ktOnV",
+                      "name": "Badges Title",
+                      "fill": "$brut-ink-muted",
+                      "content": "VHS BADGE",
+                      "fontFamily": "$brut-font-mono",
+                      "fontSize": 9,
+                      "fontWeight": "normal",
+                      "letterSpacing": 2
+                    },
+                    {
+                      "type": "frame",
+                      "id": "K5ayFN",
+                      "name": "Badge Pro Artist",
+                      "fill": "#ff4b1e",
+                      "padding": [
+                        4,
+                        8
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "BwhvT",
+                          "name": "Label",
+                          "fill": "#141312",
+                          "content": "PRO ARTIST",
+                          "fontFamily": "$brut-font-mono",
+                          "fontSize": 9,
+                          "fontWeight": "700",
+                          "letterSpacing": 2
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "q8I6v1",
+                      "name": "Badge Pro Critic",
+                      "fill": "#141312",
+                      "padding": [
+                        4,
+                        8
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "D5BAF",
+                          "name": "Label",
+                          "fill": "#e8e3d8",
+                          "content": "PRO CRITIC",
+                          "fontFamily": "$brut-font-mono",
+                          "fontSize": 9,
+                          "fontWeight": "700",
+                          "letterSpacing": 2
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "d03be",
+                  "name": "Chart Row",
+                  "width": "fill_container",
+                  "fill": "$brut-surface",
+                  "stroke": "#14131230",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "padding": 20,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "S5Jqr",
+                      "name": "Chart Title",
+                      "fill": "$brut-ink-muted",
+                      "content": "CHART ROW — ANTON NUMERALS",
+                      "fontFamily": "$brut-font-mono",
+                      "fontSize": 9,
+                      "fontWeight": "normal",
+                      "letterSpacing": 2
+                    },
+                    {
+                      "type": "frame",
+                      "id": "iQaH7",
+                      "name": "Entry 1",
+                      "width": "fill_container",
+                      "stroke": "#14131220",
+                      "strokeWidth": {
+                        "bottom": 1
+                      },
+                      "gap": 16,
+                      "padding": [
+                        10,
+                        0
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "pjRJD",
+                          "name": "Rank",
+                          "fill": "$brut-ink",
+                          "content": "1",
+                          "fontFamily": "Anton",
+                          "fontSize": 34,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "h93ZL",
+                          "name": "Track",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "q5zHxh",
+                              "name": "Title",
+                              "fill": "$brut-ink",
+                              "content": "Trippier",
+                              "fontFamily": "$brut-font-body",
+                              "fontSize": 14,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "Whw9p",
+                              "name": "Artist",
+                              "fill": "$brut-ink-muted",
+                              "content": "PARIS SESSION",
+                              "fontFamily": "$brut-font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "E4cvv",
+                          "name": "Delta",
+                          "fill": "#ff4b1e",
+                          "content": "+2",
+                          "fontFamily": "$brut-font-mono",
+                          "fontSize": 10,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "IuJaS",
+                      "name": "Entry 2",
+                      "width": "fill_container",
+                      "stroke": "#14131220",
+                      "strokeWidth": {
+                        "bottom": 1
+                      },
+                      "gap": 16,
+                      "padding": [
+                        10,
+                        0
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "CjenM",
+                          "name": "Rank",
+                          "fill": "$brut-ink",
+                          "content": "2",
+                          "fontFamily": "Anton",
+                          "fontSize": 34,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "PIJiQ",
+                          "name": "Track",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "NEgiv",
+                              "name": "Title",
+                              "fill": "$brut-ink",
+                              "content": "Grid Bloom",
+                              "fontFamily": "$brut-font-body",
+                              "fontSize": 14,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "oWcEu",
+                              "name": "Artist",
+                              "fill": "$brut-ink-muted",
+                              "content": "PARIS SESSION",
+                              "fontFamily": "$brut-font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "blx7l",
+                          "name": "Delta",
+                          "fill": "#87827a",
+                          "content": "-1",
+                          "fontFamily": "$brut-font-mono",
+                          "fontSize": 10,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "yIOnc",
+                      "name": "Entry 3",
+                      "width": "fill_container",
+                      "stroke": "#14131220",
+                      "strokeWidth": {
+                        "bottom": 1
+                      },
+                      "gap": 16,
+                      "padding": [
+                        10,
+                        0
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "UpMY8",
+                          "name": "Rank",
+                          "fill": "$brut-ink",
+                          "content": "3",
+                          "fontFamily": "Anton",
+                          "fontSize": 34,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "dOkR9",
+                          "name": "Track",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "Njm09",
+                              "name": "Title",
+                              "fill": "$brut-ink",
+                              "content": "百年後の海",
+                              "fontFamily": "$brut-font-body",
+                              "fontSize": 14,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "QNcdQ",
+                              "name": "Artist",
+                              "fill": "$brut-ink-muted",
+                              "content": "SHIO",
+                              "fontFamily": "$brut-font-mono",
+                              "fontSize": 9,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "x646dy",
+                          "name": "Delta",
+                          "fill": "#d84f95",
+                          "content": "NEW",
+                          "fontFamily": "$brut-font-mono",
+                          "fontSize": 10,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "r7Camd",
+          "name": "Ticket",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "children": [
+            {
+              "type": "text",
+              "id": "BuLz2",
+              "name": "Ticket Label",
+              "fill": "$brut-ink-muted",
+              "content": "04 — LIVE TICKET (ライブ入場専用の特別意匠)",
+              "fontFamily": "$brut-font-mono",
+              "fontSize": 10,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            },
+            {
+              "type": "frame",
+              "id": "NCmHb",
+              "name": "Ticket Body",
+              "width": 640,
+              "height": 170,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "YIyfK",
+                  "name": "Face",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "fill": "#f0ece3",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": 28,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "CdPoF",
+                      "name": "Kicker",
+                      "fill": "#ff4b1e",
+                      "content": "STELLA LIVE — ARTIST LIVE",
+                      "fontFamily": "$brut-font-mono",
+                      "fontSize": 9,
+                      "fontWeight": "normal",
+                      "letterSpacing": 3
+                    },
+                    {
+                      "type": "text",
+                      "id": "VI8Vr",
+                      "name": "Event",
+                      "fill": "#141312",
+                      "content": "MIDNIGHT PRESSING",
+                      "fontFamily": "Anton",
+                      "fontSize": 34,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "DasF6",
+                      "name": "Meta",
+                      "gap": 24,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "YFQPI",
+                          "name": "Meta HOST: PARIS SESSION",
+                          "fill": "#4a4741",
+                          "content": "HOST: PARIS SESSION",
+                          "fontFamily": "$brut-font-mono",
+                          "fontSize": 9,
+                          "fontWeight": "normal",
+                          "letterSpacing": 1.5
+                        },
+                        {
+                          "type": "text",
+                          "id": "taWtJ",
+                          "name": "Meta 会場: 宇宙",
+                          "fill": "#4a4741",
+                          "content": "会場: 宇宙",
+                          "fontFamily": "$brut-font-mono",
+                          "fontSize": 9,
+                          "fontWeight": "normal",
+                          "letterSpacing": 1.5
+                        },
+                        {
+                          "type": "text",
+                          "id": "AWFjA",
+                          "name": "Meta 22:00 — JST",
+                          "fill": "#4a4741",
+                          "content": "22:00 — JST",
+                          "fontFamily": "$brut-font-mono",
+                          "fontSize": 9,
+                          "fontWeight": "normal",
+                          "letterSpacing": 1.5
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "KRAg3",
+                      "name": "Barcode",
+                      "width": 180,
+                      "height": 36,
+                      "fill": {
+                        "type": "gradient",
+                        "gradientType": "linear",
+                        "enabled": true,
+                        "rotation": 90,
+                        "size": {
+                          "height": 1
+                        },
+                        "colors": [
+                          {
+                            "color": "#141312",
+                            "position": 0
+                          },
+                          {
+                            "color": "#141312",
+                            "position": 0.5
+                          },
+                          {
+                            "color": "#f0ece3",
+                            "position": 0.5
+                          },
+                          {
+                            "color": "#f0ece3",
+                            "position": 1
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "k5O31N",
+                  "name": "Stub",
+                  "width": 128,
+                  "height": "fill_container",
+                  "fill": "#ff4b1e",
+                  "stroke": "#0c0c0e",
+                  "strokeWidth": {
+                    "left": 3
+                  },
+                  "layout": "vertical",
+                  "gap": 10,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "DYlEb",
+                      "name": "Play",
+                      "width": 22,
+                      "height": 22,
+                      "icon": "play",
+                      "library": "lucide",
+                      "fill": "#141312"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Z0yjM6",
+                      "name": "Admit",
+                      "fill": "#141312",
+                      "content": "ADMIT ONE",
+                      "fontFamily": "$brut-font-mono",
+                      "fontSize": 9,
+                      "fontWeight": "700",
+                      "letterSpacing": 2
+                    },
+                    {
+                      "type": "text",
+                      "id": "gWssh",
+                      "name": "Tear",
+                      "fill": "#14131299",
+                      "content": "ちぎる",
+                      "fontFamily": "$brut-font-mono",
+                      "fontSize": 8,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1.5
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "r7fwl3",
+          "name": "Usage Notes",
+          "width": "fill_container",
+          "fill": "$brut-panel",
+          "layout": "vertical",
+          "gap": 8,
+          "padding": 20,
+          "children": [
+            {
+              "type": "text",
+              "id": "VJXqS",
+              "name": "Notes Title",
+              "fill": "#e8a13c",
+              "content": "USAGE",
+              "fontFamily": "$brut-font-mono",
+              "fontSize": 9,
+              "fontWeight": "normal",
+              "letterSpacing": 2
+            },
+            {
+              "type": "text",
+              "id": "UOpOa",
+              "name": "Notes Body",
+              "fill": "$brut-panel-ink",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "・角丸なし、影はドロップシャドウのみ(チケットなどの浮遊要素)\n・見出しは Anton、ラベルは JetBrains Mono 大文字 + レタースペーシング広め\n・ホットオレンジは主役のアクセント 1 色。amber/pink はプレイヤー系の補助色\n・ダーク面(panel)は常に #111013。ライト/ダーク両テーマで共通",
+              "lineHeight": 1.8,
+              "fontFamily": "$brut-font-body",
+              "fontSize": 12,
+              "fontWeight": "normal"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "themes": {
+    "mode": [
+      "light",
+      "dark"
+    ]
+  },
+  "variables": {
+    "brut-page": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#e5e0d5",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#0c0c0e",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "brut-surface": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#f0ece3",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#151417",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "brut-ink": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#141312",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#e8e3d8",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "brut-ink-soft": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#4a4741",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#b5b0a8",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "brut-ink-muted": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#87827a",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#7a7672",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "brut-accent": {
+      "type": "color",
+      "value": "#ff4b1e"
+    },
+    "brut-amber": {
+      "type": "color",
+      "value": "#e8a13c"
+    },
+    "brut-pink": {
+      "type": "color",
+      "value": "#d84f95"
+    },
+    "brut-panel": {
+      "type": "color",
+      "value": "#111013"
+    },
+    "brut-panel-ink": {
+      "type": "color",
+      "value": "#e8e3d8"
+    },
+    "brut-font-display": {
+      "type": "string",
+      "value": "Anton"
+    },
+    "brut-font-mono": {
+      "type": "string",
+      "value": "JetBrains Mono"
+    },
+    "brut-font-body": {
+      "type": "string",
+      "value": "Noto Sans JP"
+    }
+  },
+  "fileToken": "b2e05739-7a71-4970-baa3-ae9040e5571e"
+}
