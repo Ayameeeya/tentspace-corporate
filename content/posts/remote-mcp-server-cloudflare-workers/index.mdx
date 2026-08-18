@@ -1,0 +1,141 @@
+---
+title: "リモートMCPサーバーを自作してAIエージェントに公開権限を渡す｜Cloudflare Workers実装記録"
+description: "SNS投稿や記事公開をAIエージェントに任せるために、Cloudflare WorkersでリモートMCPサーバーを自作した実装記録です。トークンの分離、回数制限、確認フラグなど、書き込み権限を安全に渡すための設計判断を実例ベースで解説します。"
+date: 2026-08-18
+slug: remote-mcp-server-cloudflare-workers
+categories: ["MCP", "AI活用"]
+tags: ["MCP", "Cloudflare Workers", "AIエージェント", "TypeScript", "自動化"]
+draft: true
+experiment:
+  pillar: build-public
+  hook: story
+  cta: inquiry
+  targetKw: "リモートMCPサーバー 自作"
+  utmCampaign: blog_2026w34_remote-mcp-server
+---
+
+## この記事で書くこと
+
+結論から書きます。AIエージェントにSNS投稿や記事公開のような「外に出る操作」を任せるなら、APIのアクセストークンをエージェントに直接渡すのではなく、間に自作のリモートMCPサーバーを1枚挟むのが、今のところ一番納得できる形でした。
+
+この記事は、私がSNS運用の自動化のためにCloudflare WorkersでリモートMCPサーバーを自作したときの実装記録です。対象読者は次のような方です。
+
+- MCPをClaudeなどのクライアント側から使ったことがあり、次は自分のツールをエージェントに渡したい方
+- エージェントに書き込み権限を渡すのが怖くて、自動化を止めている方
+
+MCPそのものの入門は [n8nとMCPの連携方法の記事](/blog/n8n-mcp-integration-guide) に、エージェントからツールを使う側の話は [Trello MCPの記事](/blog/trello-mcp-ai-automation) に書いたので、この記事では「サーバーを自分で作って、権限の境界を自分で設計する」段階だけを扱います。
+
+## なぜ既製のMCPではなく自作したか
+
+やりたかったことは単純で、SNS運用の「調査→執筆→審査→投稿→計測」というパイプラインのうち、投稿と記事公開の実行部分をAIエージェントに任せることでした。
+
+最初に考えたのは、ThreadsやLinkedInのAPIトークンをエージェントの実行環境に環境変数で渡してしまう方法です。これが一番手っ取り早い。ただ、少し考えて止めました。理由は2つあります。
+
+1つ目はトークンの露出です。エージェントの実行環境にトークンがあると、ログ、会話履歴、生成されたコードのどこに漏れるか追いきれません。外部コンテンツを読むエージェントはプロンプトインジェクションを受ける可能性もあります。
+
+2つ目は回数制限です。「投稿は1日3件まで」とプロンプトに書いても、それはお願いであって制約ではありません。LLMの自制心はガードレールにならない、と考えるほうが設計としては健全です。
+
+つまり、守らせたいルールはプロンプトではなくコードに置きたい。その置き場所として、MCP（Model Context Protocol）がちょうどよかった、という流れです。MCPは[Anthropicが2024年11月に公開した](https://www.anthropic.com/news/model-context-protocol)、AIアプリケーションと外部ツールをつなぐオープンな標準で、ツールの一覧と入力スキーマをサーバー側で宣言できます。仕様やSDKは[公式サイト](https://modelcontextprotocol.io/)にまとまっています。
+
+エージェント側から見えるのは「ツールの名前と引数」だけ。トークンも、レート制限の実装も、サーバーの向こう側に隠せます。この境界線が欲しかったわけです。
+
+## 全体構成
+
+実行環境には[Cloudflare Workers](https://developers.cloudflare.com/workers/)を選びました。構成は次のとおりです。
+
+- **Worker 1つ**: MCP公式のTypeScript SDKと[CloudflareのAgents SDK](https://developers.cloudflare.com/agents/)でリモートMCPサーバーを実装
+- **Workers KV**: SNSのアクセストークンと、投稿回数のカウンタを保存
+- **R2**: 投稿に使う画像などのメディアを保存
+- **Slack Webhook**: 公開の成功・失敗・上限到達を通知
+
+エージェントはHTTP経由でこのWorkerに接続し、Bearerトークンで認証します。エージェントが持つ秘密情報は「MCPサーバーのURLと接続用トークン」の1組だけ。仮に漏れても、失効させる場所は1箇所です。
+
+Workersを選んだ理由は、常時起動のサーバーを持ちたくなかったからです。投稿処理は1日数回しか動かないので、リクエストが来たときだけ動く課金・運用モデルが合っていました。KVとR2が同じプラットフォームに揃っているのも決め手でした。
+
+## 設計判断1: トークンをWorkerの外に出さない
+
+一番大事にした原則です。ThreadsやLinkedInのトークンは、WorkerのSecretとKVにだけ置きます。エージェントの実行環境、リポジトリ、会話ログには一切出しません。
+
+トークンの定期更新の処理もWorker内に持たせました。更新に失敗したらSlackに通知して人間が気づけるようにしています。エージェントはトークンの存在すら知らないまま、`threads_publish_post` のようなツール名だけを呼びます。
+
+## 設計判断2: 公開系ツールに confirm を必須にする
+
+書き込み系のツールには、入力スキーマに `confirm: true` のリテラル値を必須で入れました。zodで書くとこうなります。
+
+```ts
+import { McpServer } from "@modelcontextprotocol/server";
+import { z } from "zod";
+
+const server = new McpServer({ name: "sns-mcp", version: "0.1.0" });
+
+server.registerTool(
+  "threads_publish_post",
+  {
+    title: "Publish one Threads post",
+    description: "Publish one text post to Threads.",
+    inputSchema: {
+      text: z.string().min(1).max(500),
+      confirm: z.literal(true).describe(
+        "Must be true to confirm this external side effect",
+      ),
+    },
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: false,
+      openWorldHint: true,
+    },
+  },
+  async ({ text }) => {
+    // 1. KVの回数カウンタを確認し、超過ならエラーを返す
+    // 2. KVに保存したトークンでThreads APIを呼ぶ
+    // 3. 結果をSlackへ通知する
+    return { content: [{ type: "text", text: "published" }] };
+  },
+);
+```
+
+`confirm` は人間の承認を待つ仕組みではなく、「読み取りのつもりでうっかり書き込む」事故をスキーマの段階で止めるためのものです。エージェントが明示的に `confirm: true` を書かない限り、バリデーションで弾かれます。
+
+あわせて、全ツールに `readOnlyHint` や `destructiveHint` といったannotationsを付けました。クライアント側がツールの性質を判断する材料になります。入力スキーマ自体も、IDは英数字のみの正規表現、URLはホスト名を検証、と厳しめに縛っています。緩いスキーマは、エージェント相手だと想像以上に踏み抜かれます。
+
+## 設計判断3: 回数制限はツール層で強制する
+
+投稿回数の上限は、KVのカウンタで実装しました。私の運用では、全チャネル合算で60分に3件まで、日次では Threads 3件・Instagram 2件・LinkedIn 1件・記事公開1件までに設定しています。
+
+ポイントは、この判定を公開ツールの実行経路に入れてあることです。上限を超えたツール呼び出しは、投稿処理に入る前にエラーとして返ります。エージェントがループに入って投稿を連打しようとしても、被害は上限までで止まります。
+
+「プロンプトに上限を書く」のと「コードで上限を強制する」のは、平常時は同じに見えます。差が出るのは異常時だけです。そして自動運用で本当に困るのは異常時なので、ここはコードに置く一択でした。
+
+## 設計判断4: 結果は人間のいる場所へ通知する
+
+公開の成功・失敗・上限到達は、WorkerからSlackへ自動通知しています。自動運用は「人間が見ていなくても、あとから気づける」ことが前提だからです。
+
+1つだけ迷った設計があります。Slack通知に失敗したとき、投稿処理をどう扱うか。最初は素朴に「通知まで含めて成功」としかけましたが、これだとSlack側の障害で、実際には公開済みの投稿が失敗扱いになり、再試行で二重投稿になりえます。なので、通知は投稿の成否から切り離し、Slackが落ちていても公開結果には影響しないようにしました。外部サービスをまたぐ処理は、どこまでが本体でどこからが付帯かを先に決めておくべきでした。
+
+## ハマりどころ
+
+作ってみて詰まった点、迷った点も残しておきます。
+
+- **ツールの粒度**。最初は「SNSに投稿する」という大きなツールにしかけましたが、プラットフォームごとに分けました。スキーマも制限も通知も、分けたほうが素直に書けます。
+- **べき等性**。公開系ツールは再実行すると二重投稿になります。annotationsで `idempotentHint: false` を明示しつつ、失敗時にエージェントが安易にリトライしない前提の設計（上限カウンタ側で吸収）にしました。
+- **テスト**。Workerのテストは[cloudflare/vitest-pool-workers](https://developers.cloudflare.com/workers/testing/vitest-integration/)でKV込みのユニットテストを書きました。回数制限まわりは境界値のテストを先に書いておくと、後から仕様を思い出せて楽です。
+
+## まとめ
+
+エージェントに権限を渡す不安は、「渡す量を減らす」ことでしか小さくなりませんでした。リモートMCPサーバーは、その減らすための場所として機能しています。
+
+- トークンはサーバーの外に出さない。エージェントに渡すのは接続情報だけ
+- 書き込みは `confirm` リテラルとannotationsで、事故をスキーマ段階で止める
+- 回数制限はプロンプトではなくKVカウンタで強制する
+- 結果は人間のいる場所へ通知し、通知障害と公開の成否を分離する
+
+どれも派手さはないですが、この4つを入れてから、エージェントに公開処理を任せることへの心理的な抵抗はほぼなくなりました。エージェントを信用するのではなく、信用しなくても壊れない箱を作る。その箱の設計として、MCPサーバーの自作はちょうどいい選択肢だと思います。
+
+## 参考リンク
+
+- [Model Context Protocol 公式サイト](https://modelcontextprotocol.io/)
+- [Introducing the Model Context Protocol（Anthropic）](https://www.anthropic.com/news/model-context-protocol)
+- [Cloudflare Agents ドキュメント](https://developers.cloudflare.com/agents/)
+- [Cloudflare Workers KV](https://developers.cloudflare.com/kv/)
+- [Cloudflare R2](https://developers.cloudflare.com/r2/)
