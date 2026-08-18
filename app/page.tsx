@@ -9,7 +9,7 @@ import { ShutterScroll } from "@/components/home/ShutterScroll"
 import { SystemSection } from "@/components/home/SystemSection"
 import { HowSection } from "@/components/home/HowSection"
 import { DifferentSection } from "@/components/home/DifferentSection"
-import { WorksSection } from "@/components/home/WorksSection"
+// import { WorksSection } from "@/components/home/WorksSection"
 import { ServicesSection } from "@/components/home/ServicesSection"
 import { LogoLoop } from "@/components/LogoLoop"
 import { STACK_LOGOS } from "@/components/home/stack-logos"
@@ -71,8 +71,8 @@ export default function Home() {
         {/* ---------- a different studio ---------- */}
         <DifferentSection />
 
-        {/* ---------- selected works ---------- */}
-        <WorksSection />
+        {/* ---------- selected works（一時非表示。復活させるときは下を戻す） ---------- */}
+        {/* <WorksSection /> */}
 
         {/* ---------- chapter: with tent space ---------- */}
         <ChapterTextSection

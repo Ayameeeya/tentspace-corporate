@@ -14,6 +14,12 @@ export const NAV_SECTIONS = [
   { id: "services", label: "services" },
 ]
 
+const MENU_TOP = [{ href: "/about", label: "about" }]
+const MENU_BOTTOM = [
+  { href: "/blog", label: "blog" },
+  { href: "/contact", label: "contact" },
+]
+
 const MENU_ROWS = 6
 const MENU_COLS = 4
 
@@ -192,10 +198,6 @@ export function MonoNav() {
             </Link>
           </div>
           <div className="mono-nav__signin">
-            <Link href="/about" className="paragraph-regular mono-ul" data-mono-hover>
-              <span data-mono-hover-target>about</span>
-            </Link>
-            <span className="paragraph-regular">/</span>
             <Link href="/contact" className="paragraph-regular mono-ul" data-mono-hover>
               <span data-mono-hover-target>contact</span>
             </Link>
@@ -220,10 +222,20 @@ export function MonoNav() {
         </div>
         <div className="mono-menu__content">
           <div ref={linksRef} className="mono-menu__links">
+            {MENU_TOP.map((p) => (
+              <Link key={p.href} href={p.href} className="mono-menu__link" onClick={() => closeMenu()}>
+                <span className="mono-menu__link-inner">{p.label}</span>
+              </Link>
+            ))}
             {NAV_SECTIONS.map((s) => (
               <button key={s.id} type="button" className="mono-menu__link" onClick={() => jumpTo(s.id)}>
                 <span className="mono-menu__link-inner">{s.label}</span>
               </button>
+            ))}
+            {MENU_BOTTOM.map((p) => (
+              <Link key={p.href} href={p.href} className="mono-menu__link" onClick={() => closeMenu()}>
+                <span className="mono-menu__link-inner">{p.label}</span>
+              </Link>
             ))}
           </div>
           <div className="mono-menu__bottom">
