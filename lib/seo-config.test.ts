@@ -14,6 +14,20 @@ async function read(relativePath: string) {
 }
 
 describe("SEO configuration", () => {
+  it("apexのSITE_URL設定もcanonicalなwwwホストへ正規化する", () => {
+    const normalizeSiteUrl = (
+      siteModule as typeof siteModule & {
+        normalizeSiteUrl?: (value: string) => string
+      }
+    ).normalizeSiteUrl
+
+    expect(normalizeSiteUrl).toBeTypeOf("function")
+    if (!normalizeSiteUrl) return
+    expect(normalizeSiteUrl("https://tentspace.net")).toBe(
+      "https://www.tentspace.net",
+    )
+  })
+
   it("公開URLを最終到達先のwwwホストへ統一する", () => {
     expect(SITE_URL).toBe("https://www.tentspace.net")
   })
