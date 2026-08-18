@@ -228,10 +228,10 @@ export function MonoNav() {
           </div>
           <div className="mono-menu__bottom">
             <div style={{ display: "flex", gap: "1.5em" }}>
-              <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer" className="paragraph-regular mono-ul">
+              <a href="https://www.linkedin.com/in/hirokuma/" target="_blank" rel="noreferrer" className="paragraph-regular mono-ul">
                 LinkedIn
               </a>
-              <a href="https://x.com/" target="_blank" rel="noreferrer" className="paragraph-regular mono-ul">
+              <a href="https://x.com/hirokuma_negio" target="_blank" rel="noreferrer" className="paragraph-regular mono-ul">
                 X
               </a>
             </div>

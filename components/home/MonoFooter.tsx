@@ -54,10 +54,10 @@ export function MonoFooter() {
 
         <div className="mono-footer__btm">
           <div className="mono-footer__social">
-            <a href="https://www.linkedin.com/company/tentspace" target="_blank" rel="noreferrer" className="paragraph-m mono-ul" data-mono-hover>
+            <a href="https://www.linkedin.com/in/hirokuma/" target="_blank" rel="noreferrer" className="paragraph-m mono-ul" data-mono-hover>
               <span data-mono-hover-target>LinkedIn</span>
             </a>
-            <a href="https://x.com/" target="_blank" rel="noreferrer" className="paragraph-m mono-ul" data-mono-hover>
+            <a href="https://x.com/hirokuma_negio" target="_blank" rel="noreferrer" className="paragraph-m mono-ul" data-mono-hover>
               <span data-mono-hover-target>X</span>
             </a>
           </div>
