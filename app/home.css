@@ -313,16 +313,16 @@
   display: flex; flex-direction: column; justify-content: space-between;
   padding: 6em var(--m-page-pad) 2em;
 }
-.mono-menu__links { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.2em; flex: 1; }
+.mono-menu__links { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.1em; flex: 1; min-height: 0; overflow-y: auto; }
 .mono-menu__link {
-  font-size: 6.5em; line-height: 1.1;
+  font-size: 4.25em; line-height: 1.1;
   text-transform: lowercase; letter-spacing: -0.01em;
   color: inherit; text-decoration: none;
   overflow: hidden; display: block;
   cursor: crosshair;
   background: none; border: none; font-family: inherit; font-weight: 400;
 }
-@media (max-width: 767px) { .mono-menu__link { font-size: 3.5em; } }
+@media (max-width: 767px) { .mono-menu__link { font-size: 2.4em; } }
 .mono-menu__link-inner { display: block; }
 .mono-menu__bottom { display: flex; justify-content: space-between; align-items: flex-end; }
 
