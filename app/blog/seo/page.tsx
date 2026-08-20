@@ -388,7 +388,7 @@ export default async function SEOPage() {
                   tent space は、SEOを踏まえたサイト設計・構築から、公開後の運用改善まで伴走します。このブログ自体が、私たちの実践の場です。まずは無料相談から、お気軽にどうぞ。
                 </p>
                 <div style={{ marginTop: "3.5em" }}>
-                  <MainBtn label="start a project" href="/contact" variant="inside" />
+                  <MainBtn label="start a project" href="/contact" variant="inside" twoLine />
                 </div>
               </div>
             </section>

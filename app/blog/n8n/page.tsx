@@ -336,7 +336,7 @@ export default async function N8nFeaturedPage() {
                 tent space は n8n の導入・ワークフロー構築・運用サポートを行っています。要件の整理から環境構築、AIエージェント連携、保守まで。まずは無料相談から、お気軽にどうぞ。
               </p>
               <div style={{ marginTop: "3.5em" }}>
-                <MainBtn label="start a project" href="/contact" variant="inside" />
+                <MainBtn label="start a project" href="/contact" variant="inside" twoLine />
               </div>
             </div>
           </section>

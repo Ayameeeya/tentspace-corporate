@@ -708,7 +708,7 @@ export function BlogComments({ postSlug }: BlogCommentsProps) {
     const maxDepth = 5 // Maximum nesting level
 
     return (
-      <div key={comment.id} className={`group ${depth > 0 ? "ml-6 mt-1.5" : ""}`}>
+      <div key={comment.id} className={`group ${depth > 0 ? "ml-3 md:ml-6 mt-1.5" : ""}`}>
         <div className="flex gap-2.5">
           {/* Avatar */}
           <div className="w-8 h-8 rounded-full bg-[#0f00b0] flex items-center justify-center text-white text-sm font-medium overflow-hidden flex-shrink-0">

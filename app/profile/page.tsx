@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
-import { BlogHeader } from "@/components/blog-header"
+import { MonoBlogNav } from "@/components/home/MonoBlogNav"
 import { 
   getCurrentUser, 
   getProfile,
@@ -101,8 +101,8 @@ export default function ProfilePage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <BlogHeader />
-        <main id="main-content" className="pt-24 pb-12">
+        <MonoBlogNav />
+        <main id="main-content" className="pt-[calc(var(--blog-nav-h,128px)+1.5rem)] pb-12">
           <div className="animate-pulse space-y-4 max-w-6xl mx-auto px-4">
             <div className="h-8 bg-muted rounded w-1/4"></div>
             <div className="h-64 bg-muted rounded"></div>
@@ -121,9 +121,9 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <BlogHeader />
+      <MonoBlogNav />
 
-      <main id="main-content" className="pt-24 pb-12 max-w-6xl mx-auto px-4">
+      <main id="main-content" className="pt-[calc(var(--blog-nav-h,128px)+1.5rem)] pb-12 max-w-6xl mx-auto px-4">
         {/* Breadcrumb */}
         <nav className="mb-6" aria-label="パンくずリスト">
           <ol className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -152,8 +152,8 @@ export default function ProfilePage() {
         </nav>
 
         {/* Header */}
-        <div className="mb-8 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex items-center gap-4 min-w-0">
             <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-2xl font-bold overflow-hidden">
               {avatarUrl ? (
                 <Image
@@ -167,9 +167,9 @@ export default function ProfilePage() {
                 displayName.charAt(0).toUpperCase()
               )}
             </div>
-            <div>
-              <h1 className="text-3xl font-bold text-foreground">{displayName}</h1>
-              <p className="text-muted-foreground">{user.email}</p>
+            <div className="min-w-0">
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground truncate">{displayName}</h1>
+              <p className="text-muted-foreground truncate">{user.email}</p>
             </div>
           </div>
           <Link href="/settings/account">
@@ -180,9 +180,9 @@ export default function ProfilePage() {
         </div>
 
         {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="md:col-span-2 space-y-6">
             {/* Activity Card */}
             <div className="bg-card rounded-xl border border-border p-6">
               <h2 className="text-lg font-bold text-foreground mb-4">最近のアクティビティ</h2>

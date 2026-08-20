@@ -1,15 +1,112 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { MainBtn } from "@/components/home/MainBtn"
+
+const INQUIRY_OPTIONS = [
+  { value: "ai-development", label: "AI開発・導入のご相談" },
+  { value: "automation", label: "業務自動化のご相談" },
+  { value: "n8n", label: "n8n導入・構築サポート" },
+  { value: "system-development", label: "システム開発のご相談" },
+  { value: "estimate", label: "お見積もり依頼" },
+  { value: "other", label: "その他" },
+]
+
+/** mono-styled dropdown: the open list matches the design system (the native
+ *  select popup cannot be styled). Submits via a hidden input. */
+function MonoSelect({
+  id,
+  name,
+  options,
+  placeholder,
+  value,
+  onChange,
+  disabled,
+  error,
+}: {
+  id: string
+  name: string
+  options: { value: string; label: string }[]
+  placeholder: string
+  value: string
+  onChange: (v: string) => void
+  disabled?: boolean
+  error?: string | null
+}) {
+  const [open, setOpen] = useState(false)
+  const rootRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    const onDocClick = (e: MouseEvent) => {
+      if (!rootRef.current?.contains(e.target as Node)) setOpen(false)
+    }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false)
+    }
+    document.addEventListener("mousedown", onDocClick)
+    document.addEventListener("keydown", onKey)
+    return () => {
+      document.removeEventListener("mousedown", onDocClick)
+      document.removeEventListener("keydown", onKey)
+    }
+  }, [open])
+
+  const selected = options.find((o) => o.value === value)
+
+  return (
+    <div ref={rootRef} className="mono-select">
+      <input type="hidden" name={name} value={value} />
+      <button
+        type="button"
+        id={id}
+        className="mono-field mono-select__btn"
+        data-placeholder={!selected}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        disabled={disabled}
+        onClick={() => setOpen(!open)}
+      >
+        {selected ? selected.label : placeholder}
+      </button>
+      {open && (
+        <ul className="mono-select__list" role="listbox" aria-labelledby={id}>
+          {options.map((o) => (
+            <li key={o.value} role="option" aria-selected={o.value === value}>
+              <button
+                type="button"
+                className="mono-select__option"
+                data-selected={o.value === value}
+                onClick={() => {
+                  onChange(o.value)
+                  setOpen(false)
+                }}
+              >
+                {o.label}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+      {error && <p className="mono-select__error">{error}</p>}
+    </div>
+  )
+}
 
 export function ContactForm() {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [inquiryType, setInquiryType] = useState("")
+  const [inquiryError, setInquiryError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (!inquiryType) {
+      setInquiryError("お問い合わせ種別を選択してください")
+      document.getElementById("inquiry_type")?.focus()
+      return
+    }
     setIsSubmitting(true)
 
     const form = e.currentTarget
@@ -96,15 +193,19 @@ export function ContactForm() {
 
         <div>
           <label htmlFor="inquiry_type">お問い合わせ種別 *</label>
-          <select id="inquiry_type" name="inquiry_type" required disabled={isSubmitting} className="mono-field">
-            <option value="">選択してください</option>
-            <option value="ai-development">AI開発・導入のご相談</option>
-            <option value="automation">業務自動化のご相談</option>
-            <option value="n8n">n8n導入・構築サポート</option>
-            <option value="system-development">システム開発のご相談</option>
-            <option value="estimate">お見積もり依頼</option>
-            <option value="other">その他</option>
-          </select>
+          <MonoSelect
+            id="inquiry_type"
+            name="inquiry_type"
+            options={INQUIRY_OPTIONS}
+            placeholder="選択してください"
+            value={inquiryType}
+            onChange={(v) => {
+              setInquiryType(v)
+              setInquiryError(null)
+            }}
+            disabled={isSubmitting}
+            error={inquiryError}
+          />
         </div>
 
         <div>
@@ -129,7 +230,7 @@ export function ContactForm() {
         </p>
 
         <button type="submit" disabled={isSubmitting} className="mono-submit" style={{ alignSelf: "flex-end" }}>
-          <MainBtn label={isSubmitting ? "sending..." : "send message"} variant="inside" />
+          <MainBtn label={isSubmitting ? "sending..." : "send message"} variant="inside" twoLine />
         </button>
       </form>
     </div>

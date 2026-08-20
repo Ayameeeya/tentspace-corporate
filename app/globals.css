@@ -443,10 +443,18 @@ html {
 }
 
 .article-content table {
+  display: block;
   width: 100%;
+  overflow-x: auto;
   border-collapse: collapse;
   margin: 1.5rem 0;
   font-size: 0.9375rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.article-content th,
+.article-content td {
+  min-width: 8em;
 }
 
 .article-content th,
@@ -1140,8 +1148,8 @@ pre.ts-code code {
   scrollbar-color: rgba(148, 163, 184, 0.15) transparent;
 }
 
-/* Mobile adjustments */
-@media (max-width: 640px) {
+/* Mobile adjustments (md breakpoint) */
+@media (max-width: 767px) {
   .ts-code-wrapper {
     margin: 1rem -1rem;
     border-radius: 0;

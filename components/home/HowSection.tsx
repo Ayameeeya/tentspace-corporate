@@ -7,9 +7,9 @@ import { ScrambleText } from "./ScrambleText"
 import { prefersReducedMotion } from "./gsap-setup"
 
 const STEPS = [
-  { title: "consult", desc: "課題やアイデアをお聞かせください。ラフなメモ一枚でも、相談だけでも構いません。", num: "01" },
-  { title: "propose", desc: "最適な構成と概算お見積もりをご提案。プロトタイプで認識を合わせます。", num: "02" },
-  { title: "build & operate", desc: "開発からリリース、保守運用まで。継続的に改善を回します。", num: "03" },
+  { title: "consult", desc: "作りたいこと、お困りのこと。メモ一枚でも、雑談からでも大丈夫です。", num: "01" },
+  { title: "propose", desc: "ちょうどいい構成と概算をご提案。プロトタイプで、イメージを合わせます。", num: "02" },
+  { title: "build & operate", desc: "作って、届けて、その後も。改善を重ねていきます。", num: "03" },
 ]
 
 export function HowSection() {
@@ -57,9 +57,8 @@ export function HowSection() {
                     <ScrambleText as="h2" className="paragraph-m">
                       {s.title}
                     </ScrambleText>
-                    <ScrambleText as="p" className="paragraph-m opacity-64">
-                      {s.desc}
-                    </ScrambleText>
+                    {/* 日本語の説明文はスクランブルさせず静的に出す */}
+                    <p className="paragraph-m opacity-64">{s.desc}</p>
                   </div>
                   <div className="mono-how__num">{s.num}</div>
                 </div>
@@ -68,10 +67,10 @@ export function HowSection() {
           </div>
           <div className="mono-how__text">
             <p className="heading-m ti-2">
-              tent space は、Web・スマホアプリの開発を軸に、AIエージェント開発や業務改善・DX・運用自動化まで手がける開発パートナー。
+              tent space は、Web・スマホアプリの開発を軸に、AIエージェント開発や業務改善・DX・運用自動化まで、ともに手がける開発パートナー。
             </p>
             <p className="heading-m">
-              設計も、実装も、インフラも、デザインも。分業で薄まらない、一気通貫のものづくり。
+              設計も、実装も、インフラも、デザインも。はじめから終わりまで、ひとつのチームで。
             </p>
           </div>
         </div>

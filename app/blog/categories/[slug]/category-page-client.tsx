@@ -310,7 +310,7 @@ export function CategoryPageClient({
   useEffect(() => {
     const updateColumns = () => {
       const width = window.innerWidth
-      if (width <= 700) {
+      if (width < 768) {
         setCurrentColumns(1)
       } else if (width <= 1100) {
         setCurrentColumns(2)
@@ -358,7 +358,13 @@ export function CategoryPageClient({
 
   useLayoutEffect(() => {
     const cols = currentColumns
-    if (cols === 1) return
+    if (cols === 1) {
+      // single column: drop any multi-column assignment so columnPosts
+      // falls back to the simple 1-column distribution
+      assignRef.current = { count: 0, cols: 0, firstId: null, columns: [] }
+      setColumnAssign((prev) => (prev.length > 0 ? [] : prev))
+      return
+    }
     const meta = assignRef.current
     const isMobileLayout = cols <= 2
     const reset =
@@ -397,13 +403,13 @@ export function CategoryPageClient({
 
   return (
     <div className="min-h-screen bg-background">
-      <MonoBlogNav />
+      <MonoBlogNav ticker />
 
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/30 to-background" />
       </div>
 
-      <main id="main-content" className="pt-[104px] md:pt-[120px] relative z-10">
+      <main id="main-content" className="pt-[calc(var(--blog-nav-h,128px)+1.5rem)] relative z-10">
         <div className="border-b border-border">
           <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-12 md:py-16">
             <div className="text-center max-w-3xl mx-auto">

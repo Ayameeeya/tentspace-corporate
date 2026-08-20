@@ -42,10 +42,13 @@ export function MainBtn({
   label,
   href,
   variant = "outside",
+  twoLine = false,
 }: {
   label: string
   href?: string
   variant?: "outside" | "inside"
+  /** wrap the label onto two lines like the sticky hero CTA (outside is always two-line) */
+  twoLine?: boolean
 }) {
   const ref = useRef<HTMLElement>(null)
 
@@ -54,10 +57,16 @@ export function MainBtn({
     return attachHoverScramble(ref.current, 3)
   }, [])
 
+  const wrapLabel = variant === "outside" || twoLine
+
   const inner = (
     <>
-      <p className="main-btn__text" data-mono-hover-target>
-        {variant === "outside" ? twoLineLabel(label) : label}
+      <p
+        className="main-btn__text"
+        data-mono-hover-target
+        style={twoLine ? { whiteSpace: "pre-line" } : undefined}
+      >
+        {wrapLabel ? twoLineLabel(label) : label}
       </p>
       <div className="main-btn__wrap">
         <div className="main-btn__line" />

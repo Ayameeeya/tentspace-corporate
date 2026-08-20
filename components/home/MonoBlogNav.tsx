@@ -17,6 +17,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { attachHoverScramble } from "./scramble"
+import { MonoMenu } from "./MonoMenu"
+import { MENU_ENTRIES } from "./MonoNav"
 
 const AuthModal = lazy(() =>
   import("@/components/auth-modal").then((module) => ({ default: module.AuthModal })),
@@ -29,9 +31,27 @@ const ITEMS = [
 ]
 
 /** Blog header in the mono design language — same bar as the top page, blog items. */
-export function MonoBlogNav() {
+export function MonoBlogNav({ ticker = false }: { ticker?: boolean } = {}) {
   const pathname = usePathname()
   const navRef = useRef<HTMLElement>(null)
+  const headerRef = useRef<HTMLDivElement>(null)
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  // the nav is em-scaled so its height varies with viewport width; publish it
+  // as --blog-nav-h so page content can pad itself below the fixed header
+  useEffect(() => {
+    const el = headerRef.current
+    if (!el) return
+    const set = () =>
+      document.documentElement.style.setProperty("--blog-nav-h", `${Math.ceil(el.offsetHeight)}px`)
+    set()
+    const ro = new ResizeObserver(set)
+    ro.observe(el)
+    return () => {
+      ro.disconnect()
+      document.documentElement.style.removeProperty("--blog-nav-h")
+    }
+  }, [])
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [showAuthModal, setShowAuthModal] = useState(false)
@@ -118,7 +138,7 @@ export function MonoBlogNav() {
   return (
     <div className="mono-page" style={{ background: "transparent" }}>
       {/* header stack: mono bar on top, ticker beneath it */}
-      <div style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 900 }}>
+      <div ref={headerRef} style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 900 }}>
       {/* blog content is white-based, so the bar grounds on white (not the top page's off-white) */}
       <nav
         ref={navRef}
@@ -128,6 +148,16 @@ export function MonoBlogNav() {
       >
         <div className="mono-nav__main">
           <div className="mono-nav__left">
+            <button
+              type="button"
+              className="mono-menu-btn"
+              aria-label={menuOpen ? "メニューを閉じる" : "メニューを開く"}
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen(!menuOpen)}
+            >
+              <span />
+              <span />
+            </button>
             <Link href="/" className="mono-logo" aria-label="Home">
               <img src="/logo_black_yoko.png" alt="tent space" className="mono-logo__img mono-logo__img--dark" />
             </Link>
@@ -231,8 +261,10 @@ export function MonoBlogNav() {
         </div>
         <div className="mono-nav__border" />
       </nav>
-      <BlogTicker fixed={false} />
+      {ticker && <BlogTicker fixed={false} />}
       </div>
+
+      <MonoMenu open={menuOpen} entries={MENU_ENTRIES} onClose={() => setMenuOpen(false)} />
 
       {showAuthModal && (
         <Suspense fallback={null}>

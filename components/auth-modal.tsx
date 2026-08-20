@@ -284,7 +284,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent
-        className="sm:max-w-5xl p-0 overflow-hidden rounded-none"
+        className="sm:max-w-5xl p-0 rounded-none max-h-[90dvh] overflow-y-auto"
         style={{ background: "#ffffff", border: "1px solid #000" }}
       >
         <VisuallyHidden>
@@ -295,7 +295,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                   "パスワードリセット"}
           </DialogTitle>
         </VisuallyHidden>
-        <div className="flex flex-col md:flex-row min-h-[600px]">
+        <div className="flex flex-col md:flex-row md:min-h-[600px]">
           {/* Left Side - Form */}
           <div className="flex-1 p-6 md:p-10 flex flex-col justify-center">
             <div className="max-w-md mx-auto w-full">

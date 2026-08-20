@@ -613,7 +613,7 @@ export default function BlogPostClient({
     <div className="mono-page min-h-screen" style={{ background: "#ffffff" }}>
       <MonoBlogNav />
 
-      <main id="main-content" className="pt-[120px]">
+      <main id="main-content" className="pt-[calc(var(--blog-nav-h,128px)+1.5rem)]">
         {/* Breadcrumb Navigation */}
         <nav className="max-w-3xl mx-auto px-4 py-5" aria-label="パンくずリスト">
           <ol className="flex items-center gap-3 text-xs" itemScope itemType="https://schema.org/BreadcrumbList">
@@ -745,7 +745,7 @@ export default function BlogPostClient({
                       </span>
                     )}
                   </div>
-                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                     {relatedPosts.map((relatedPost) => {
                       const relatedImageUrl = getFeaturedImageUrl(relatedPost)
                       const relatedCategories = getPostTerms(relatedPost)
@@ -966,7 +966,7 @@ export default function BlogPostClient({
             </article>
 
             {/* Sidebar - Table of Contents */}
-            <aside className="hidden lg:block w-64 flex-shrink-0" aria-label="サイドバー">
+            <aside className="hidden md:block w-64 flex-shrink-0" aria-label="サイドバー">
               <TableOfContents content={contentHtml} />
             </aside>
           </div>

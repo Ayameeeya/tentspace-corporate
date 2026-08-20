@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { supabaseAuth } from "@/lib/supabase/client"
-import { BlogHeader } from "@/components/blog-header"
+import { MonoBlogNav } from "@/components/home/MonoBlogNav"
 import { Heart, Loader2 } from "lucide-react"
 import { type BlogPost, getPostBySlug, stripHtml, formatDate, getFeaturedImageUrl } from "@/lib/blog-content"
 
@@ -119,8 +119,8 @@ export default function FavoritesClient() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <BlogHeader />
-        <main id="main-content" className="pt-[120px]">
+        <MonoBlogNav />
+        <main id="main-content" className="pt-[calc(var(--blog-nav-h,128px)+1.5rem)]">
           <div className="max-w-5xl mx-auto px-4 py-12 flex items-center justify-center">
             <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
           </div>
@@ -132,8 +132,8 @@ export default function FavoritesClient() {
   if (!user) {
     return (
       <div className="min-h-screen bg-background">
-        <BlogHeader />
-        <main id="main-content" className="pt-[120px]">
+        <MonoBlogNav />
+        <main id="main-content" className="pt-[calc(var(--blog-nav-h,128px)+1.5rem)]">
           <div className="max-w-5xl mx-auto px-4 py-12">
             <div className="bg-card rounded-xl border border-border p-12 text-center">
               <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
@@ -162,8 +162,8 @@ export default function FavoritesClient() {
 
   return (
     <div className="min-h-screen bg-background">
-      <BlogHeader />
-      <main id="main-content" className="pt-20">
+      <MonoBlogNav />
+      <main id="main-content" className="pt-[calc(var(--blog-nav-h,128px)+1.5rem)]">
         <div className="max-w-5xl mx-auto px-4 py-12">
           {/* Header */}
           <div className="mb-8">
