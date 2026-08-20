@@ -9,7 +9,7 @@ import { ShutterScroll } from "@/components/home/ShutterScroll"
 import { SystemSection } from "@/components/home/SystemSection"
 import { HowSection } from "@/components/home/HowSection"
 import { DifferentSection } from "@/components/home/DifferentSection"
-// import { WorksSection } from "@/components/home/WorksSection"
+import { WorksSection } from "@/components/home/WorksSection"
 import { ServicesSection } from "@/components/home/ServicesSection"
 import { LogoLoop } from "@/components/LogoLoop"
 import { STACK_LOGOS } from "@/components/home/stack-logos"
@@ -59,11 +59,11 @@ export default function Home() {
             },
           ]}
         />
-        <ShutterScroll variant="indigo" navTheme="indigo" prevTheme="base" seed={11} />
+        <ShutterScroll variant="indigo" navTheme="indigo" prevTheme="base" seed={11} height="55vh" />
 
         {/* ---------- the system (pinned, indigo) ---------- */}
         <SystemSection />
-        <ShutterScroll variant="off-white" navTheme="base" prevTheme="indigo" bg="indigo" seed={23} height="6em" />
+        <ShutterScroll variant="off-white" navTheme="base" prevTheme="indigo" bg="indigo" seed={23} height="30vh" />
 
         {/* ---------- how it works ---------- */}
         <HowSection />
@@ -71,8 +71,8 @@ export default function Home() {
         {/* ---------- a different studio ---------- */}
         <DifferentSection />
 
-        {/* ---------- selected works（一時非表示。復活させるときは下を戻す） ---------- */}
-        {/* <WorksSection /> */}
+        {/* ---------- selected works ---------- */}
+        <WorksSection />
 
         {/* ---------- chapter: with tent space ---------- */}
         <ChapterTextSection
@@ -90,11 +90,11 @@ export default function Home() {
             },
           ]}
         />
-        <ShutterScroll variant="olive" navTheme="olive" prevTheme="base" seed={37} />
+        <ShutterScroll variant="olive" navTheme="olive" prevTheme="base" seed={37} height="55vh" />
 
         {/* ---------- services ---------- */}
         <ServicesSection />
-        <ShutterScroll variant="off-white" navTheme="base" prevTheme="olive" bg="olive" seed={51} height="6em" />
+        <ShutterScroll variant="off-white" navTheme="base" prevTheme="olive" bg="olive" seed={51} height="30vh" />
 
         {/* ---------- tech stack band (React Bits LogoLoop) ---------- */}
         <div className="mono-stack-band">

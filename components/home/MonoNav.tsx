@@ -93,9 +93,9 @@ export function MonoNav() {
               <span />
             </button>
             <Link href="/" className="mono-logo" aria-label="Home">
-              {/* original brand logo; black/white variants swapped by nav theme */}
-              <img src="/logo_black_yoko.png" alt="tent space" className="mono-logo__img mono-logo__img--dark" />
-              <img src="/logo_white_yoko.png" alt="" aria-hidden="true" className="mono-logo__img mono-logo__img--light" />
+              {/* symbol mark; black/white variants swapped by nav theme */}
+              <img src="/logo_black_symbol.png" alt="tent space" className="mono-logo__img mono-logo__img--dark" />
+              <img src="/logo_white_symbol.png" alt="" aria-hidden="true" className="mono-logo__img mono-logo__img--light" />
             </Link>
           </div>
           <div className="mono-nav__progress">

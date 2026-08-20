@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { prefersReducedMotion, seededRandom } from "./gsap-setup"
 
@@ -13,9 +12,9 @@ const COLORS: Record<string, string> = {
 }
 
 /**
- * Scroll-scrubbed pixel shutter strip (10 rows x 4 cols).
- * mode "cover": cells grow in (origin bottom) as the strip approaches the
- * viewport bottom — a pixel wipe into the next section's color.
+ * Scroll-scrubbed contribution-graph wipe.
+ * ヒーローのピクセルフィールドと同じ小さなセルが、下からノイズ混じりの順で
+ * 埋まっていき、次のセクションの色を「コミット」していく。
  * Also flips the nav theme at 40% progress.
  */
 export function ShutterScroll({
@@ -23,92 +22,140 @@ export function ShutterScroll({
   navTheme,
   prevTheme = "base",
   bg,
-  rows = 10,
-  cols = 4,
   height = "10em",
   seed = 42,
 }: {
   variant: keyof typeof COLORS
-  /** colour the cells wipe in — i.e. the section below */
+  /** colour the cells fill in — i.e. the section below */
   navTheme?: "base" | "indigo" | "olive"
   prevTheme?: "base" | "indigo" | "olive"
   /** ground the strip sits on — set when wiping out of a coloured section */
   bg?: keyof typeof COLORS
-  rows?: number
-  cols?: number
   height?: string
   seed?: number
 }) {
   const rootRef = useRef<HTMLDivElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
   const applied = useRef(false)
 
   useEffect(() => {
     const root = rootRef.current
-    if (!root) return
-    const cells = Array.from(root.children) as HTMLElement[]
-    const rand = seededRandom(seed)
+    const canvas = canvasRef.current
+    if (!root || !canvas) return
+    const ctx = canvas.getContext("2d")
+    if (!ctx) return
 
-    // biased-from-bottom order with seeded randomness
-    const order = cells
-      .map((cell, i) => {
-        const row = Math.floor(i / cols)
-        const col = i % cols
-        return { cell, key: (rows - 1 - row) / rows + rand() * 0.22 + (col / cols) * 0.06 }
-      })
-      .sort((a, b) => a.key - b.key)
+    const CELL = 72
+    const color = COLORS[variant]
+    const hex = color.replace("#", "")
+    const r = parseInt(hex.slice(0, 2), 16)
+    const g = parseInt(hex.slice(2, 4), 16)
+    const b = parseInt(hex.slice(4, 6), 16)
+    // intensity ladder — the leading edge shimmers through lighter steps
+    const LADDER = [
+      `rgba(${r}, ${g}, ${b}, 0.25)`,
+      `rgba(${r}, ${g}, ${b}, 0.5)`,
+      `rgba(${r}, ${g}, ${b}, 0.75)`,
+      color,
+    ]
 
-    if (prefersReducedMotion()) {
-      gsap.set(cells, { scaleY: 1 })
-      return
+    let width = 0
+    let height2 = 0
+    let cols = 0
+    let rows = 0
+    let thresholds: Float32Array = new Float32Array(0)
+    const reduced = prefersReducedMotion()
+    let progress = reduced ? 1.4 : 0
+
+    const build = () => {
+      const rect = canvas.getBoundingClientRect()
+      const dpr = Math.min(1.5, window.devicePixelRatio || 1)
+      width = rect.width
+      height2 = rect.height
+      canvas.width = Math.round(rect.width * dpr)
+      canvas.height = Math.round(rect.height * dpr)
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      cols = Math.ceil(width / CELL)
+      rows = Math.ceil(height2 / CELL)
+      const rand = seededRandom(seed)
+      thresholds = new Float32Array(cols * rows)
+      for (let gy = 0; gy < rows; gy++) {
+        for (let gx = 0; gx < cols; gx++) {
+          // bottom-biased with noise: the next section's colour grows upward
+          thresholds[gy * cols + gx] = ((rows - 1 - gy) / Math.max(1, rows)) * 0.62 + rand() * 0.38
+        }
+      }
+      render()
     }
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: root,
-        start: "top bottom",
-        end: "bottom center",
-        scrub: 0.3,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          if (!navTheme) return
-          const nav = document.querySelector<HTMLElement>("[data-mono-nav]")
-          if (!nav) return
-          const past = self.progress >= 0.4
-          if (past && !applied.current) {
-            applied.current = true
-            nav.dataset.navTheme = navTheme
-          } else if (!past && applied.current) {
-            applied.current = false
-            nav.dataset.navTheme = prevTheme
+    const render = () => {
+      ctx.clearRect(0, 0, width, height2)
+      for (let gy = 0; gy < rows; gy++) {
+        for (let gx = 0; gx < cols; gx++) {
+          const d = progress - thresholds[gy * cols + gx]
+          if (d <= 0) continue
+          if (d > 0.2) {
+            // 成熟したセルは隙間なしのベタになり、下の面と溶け合う
+            ctx.fillStyle = color
+            ctx.fillRect(gx * CELL, gy * CELL, CELL + 0.5, CELL + 0.5)
+            continue
           }
-        },
+          const level = d < 0.05 ? 0 : d < 0.1 ? 1 : d < 0.15 ? 2 : 3
+          ctx.fillStyle = LADDER[level]
+          if (typeof ctx.roundRect === "function") {
+            ctx.beginPath()
+            ctx.roundRect(gx * CELL + 2, gy * CELL + 2, CELL - 5, CELL - 5, 4)
+            ctx.fill()
+          } else {
+            ctx.fillRect(gx * CELL + 2, gy * CELL + 2, CELL - 5, CELL - 5)
+          }
+        }
+      }
+    }
+
+    build()
+    const ro = new ResizeObserver(build)
+    ro.observe(canvas)
+
+    const st = ScrollTrigger.create({
+      trigger: root,
+      start: "top bottom",
+      end: "bottom center",
+      invalidateOnRefresh: true,
+      onUpdate: (self) => {
+        if (!reduced) {
+          // 1.4 で全セル (threshold 最大 1.0) が成熟 (d > 0.2) まで到達する
+          progress = self.progress * 1.4
+          render()
+        }
+        if (!navTheme) return
+        const nav = document.querySelector<HTMLElement>("[data-mono-nav]")
+        if (!nav) return
+        const past = self.progress >= 0.4
+        if (past && !applied.current) {
+          applied.current = true
+          nav.dataset.navTheme = navTheme
+        } else if (!past && applied.current) {
+          applied.current = false
+          nav.dataset.navTheme = prevTheme
+        }
       },
-    })
-    order.forEach(({ cell }, i) => {
-      tl.to(cell, { scaleY: 1, duration: 0.1, ease: "none" }, (i / order.length) * 0.9)
     })
 
     return () => {
-      tl.scrollTrigger?.kill()
-      tl.kill()
+      st.kill()
+      ro.disconnect()
     }
-  }, [cols, rows, seed, navTheme, prevTheme])
+  }, [variant, navTheme, prevTheme, seed])
 
   return (
     <div
       ref={rootRef}
       className="mono-shutter"
-      style={{
-        height,
-        background: bg ? COLORS[bg] : undefined,
-        gridTemplateRows: `repeat(${rows}, 1fr)`,
-        gridTemplateColumns: `repeat(${cols}, 1fr)`,
-      }}
+      style={{ height, background: bg ? COLORS[bg] : undefined }}
       aria-hidden="true"
     >
-      {Array.from({ length: rows * cols }).map((_, i) => (
-        <div key={i} className="mono-shutter__cell" style={{ background: COLORS[variant] }} />
-      ))}
+      <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} />
     </div>
   )
 }

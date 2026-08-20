@@ -49,6 +49,67 @@ export function HeroVisual() {
     const CELL = 14
     const reduced = prefersReducedMotion()
 
+    // GitHub-contributions style: one hue, stepped intensity ladder.
+    // hue はテーマ変数 (--m-indigo) から導出し、配色替えに追従する
+    let LEVELS = [
+      "rgba(0, 0, 0, 0.05)",
+      "rgba(15, 0, 176, 0.14)",
+      "rgba(15, 0, 176, 0.32)",
+      "rgba(15, 0, 176, 0.55)",
+      "rgba(15, 0, 176, 0.78)",
+      "#0f00b0",
+    ]
+    const readPalette = () => {
+      const cs = getComputedStyle(canvas)
+      const accent = cs.getPropertyValue("--m-indigo").trim() || "#0f00b0"
+      const ink = cs.getPropertyValue("--m-ink").trim() || "#000000"
+      const hex = accent.replace("#", "")
+      if (hex.length !== 6) return
+      const r = parseInt(hex.slice(0, 2), 16)
+      const g = parseInt(hex.slice(2, 4), 16)
+      const b = parseInt(hex.slice(4, 6), 16)
+      const inkHex = ink.replace("#", "")
+      const ir = parseInt(inkHex.slice(0, 2), 16) || 0
+      const ig = parseInt(inkHex.slice(2, 4), 16) || 0
+      const ib = parseInt(inkHex.slice(4, 6), 16) || 0
+      LEVELS = [
+        `rgba(${ir}, ${ig}, ${ib}, 0.05)`,
+        `rgba(${r}, ${g}, ${b}, 0.14)`,
+        `rgba(${r}, ${g}, ${b}, 0.32)`,
+        `rgba(${r}, ${g}, ${b}, 0.55)`,
+        `rgba(${r}, ${g}, ${b}, 0.78)`,
+        accent,
+      ]
+    }
+
+    // the symbol logo emerges from the field: sample its alpha per grid cell
+    // and run those cells hotter — the contribution graph draws the mark
+    let mask: Float32Array | null = null
+    let maskCols = 0
+    const logo = new Image()
+    logo.src = "/logo_black_symbol.png"
+    const buildMask = () => {
+      if (!logo.complete || !logo.naturalWidth || width === 0) return
+      const cols = Math.ceil(width / CELL)
+      const rows = Math.ceil(height / CELL)
+      const off = document.createElement("canvas")
+      off.width = cols
+      off.height = rows
+      const octx = off.getContext("2d")
+      if (!octx) return
+      const scale = Math.min((cols * 0.55) / logo.naturalWidth, (rows * 0.74) / logo.naturalHeight)
+      const w = logo.naturalWidth * scale
+      const h = logo.naturalHeight * scale
+      octx.drawImage(logo, (cols - w) / 2, (rows - h) / 2, w, h)
+      const data = octx.getImageData(0, 0, cols, rows).data
+      mask = new Float32Array(cols * rows)
+      for (let i = 0; i < cols * rows; i++) mask[i] = data[i * 4 + 3] / 255
+      maskCols = cols
+      // reduced motion renders a single frame — repaint it once the mask exists
+      if (reduced) raf = requestAnimationFrame((t) => draw(t))
+    }
+    logo.onload = buildMask
+
     const resize = () => {
       const rect = canvas.getBoundingClientRect()
       const dpr = Math.min(1.5, window.devicePixelRatio || 1)
@@ -57,6 +118,8 @@ export function HeroVisual() {
       canvas.width = Math.round(rect.width * dpr)
       canvas.height = Math.round(rect.height * dpr)
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      readPalette()
+      buildMask()
     }
     resize()
     const ro = new ResizeObserver(resize)
@@ -69,15 +132,6 @@ export function HeroVisual() {
     }
     window.addEventListener("pointermove", onMove, { passive: true })
 
-    // GitHub-contributions style: one hue, stepped intensity ladder
-    const LEVELS = [
-      "rgba(0, 0, 0, 0.05)", // empty cell
-      "rgba(15, 0, 176, 0.14)",
-      "rgba(15, 0, 176, 0.32)",
-      "rgba(15, 0, 176, 0.55)",
-      "rgba(15, 0, 176, 0.78)",
-      "#0f00b0",
-    ]
     const THRESHOLDS = [0.4, 0.46, 0.52, 0.58, 0.64]
 
     const cell = (x: number, y: number, style: string) => {
@@ -109,7 +163,8 @@ export function HeroVisual() {
           const n =
             valueNoise(nx * 5 + time * 3 + warp, ny * 5 + warp) * 0.65 +
             valueNoise(nx * 11 - time * 2, ny * 11 + time * 3) * 0.35
-          const v = n - dist * 0.55
+          const m = mask && maskCols === cols ? mask[gy * cols + gx] : 0
+          const v = n - dist * 0.55 + m * 0.42
           let level = 0
           for (let i = 0; i < THRESHOLDS.length; i++) if (v > THRESHOLDS[i]) level = i + 1
           cell(gx * CELL, gy * CELL, LEVELS[level])

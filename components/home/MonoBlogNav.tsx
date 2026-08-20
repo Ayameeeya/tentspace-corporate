@@ -160,10 +160,10 @@ export function MonoBlogNav({ ticker = false }: { ticker?: boolean } = {}) {
             </button>
             <Link href="/" prefetch={false} className="mono-logo" aria-label="Home">
               <img
-                src="/logo_black_yoko.png"
+                src="/logo_black_symbol.png"
                 alt="tent space"
-                width={682}
-                height={125}
+                width={273}
+                height={183}
                 className="mono-logo__img mono-logo__img--dark"
               />
             </Link>

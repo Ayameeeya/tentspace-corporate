@@ -107,32 +107,35 @@ function DifferentItem({ item }: { item: (typeof ITEMS)[number] }) {
     const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)
     const clamp01 = (v: number) => Math.min(1, Math.max(0, v))
 
-    const st = ScrollTrigger.create({
-      trigger: root,
-      start: "top 32%",
-      end: () => "+=" + window.innerHeight * 0.9,
-      scrub: 0.075,
-      invalidateOnRefresh: true,
-      onRefresh: measure,
-      onUpdate: (self) => {
-        const p = self.progress
-        gsap.set(inner, { y: travel * p })
-        gsap.set(bar, { scaleY: Math.min(1, p / 0.7) })
-        morph(easeInOutCubic(clamp01((p - TEXT_START) / (TEXT_END - TEXT_START))))
-        applyFlip(easeInOutCubic(clamp01((p - FLIP_START) / (FLIP_END - FLIP_START))))
-      },
-      onLeave: () => {
-        morph(1)
-        applyFlip(1)
-        gsap.set(inner, { y: travel })
-      },
-      onLeaveBack: () => {
-        morph(0)
-        applyFlip(0)
-        gsap.set(inner, { y: 0 })
+    // 生の onUpdate ではなくプロキシトゥイーンに scrub を効かせる。
+    // タッチ端末は Lenis の補間を通らない（ネイティブスクロール）ため、
+    // scrub の追従補間だけが滑らかさの源になる — 長めに取る
+    const proxy = { p: 0 }
+    const render = () => {
+      const p = proxy.p
+      gsap.set(inner, { y: travel * p })
+      gsap.set(bar, { scaleY: Math.min(1, p / 0.7) })
+      morph(easeInOutCubic(clamp01((p - TEXT_START) / (TEXT_END - TEXT_START))))
+      applyFlip(easeInOutCubic(clamp01((p - FLIP_START) / (FLIP_END - FLIP_START))))
+    }
+    const coarse = window.matchMedia("(hover: none), (pointer: coarse)").matches
+    const tween = gsap.to(proxy, {
+      p: 1,
+      ease: "none",
+      onUpdate: render,
+      scrollTrigger: {
+        trigger: root,
+        start: "top 32%",
+        end: () => "+=" + window.innerHeight * 0.9,
+        scrub: coarse ? 0.45 : 0.075,
+        invalidateOnRefresh: true,
+        onRefresh: measure,
       },
     })
-    return () => st.kill()
+    return () => {
+      tween.scrollTrigger?.kill()
+      tween.kill()
+    }
   }, [item])
 
   return (

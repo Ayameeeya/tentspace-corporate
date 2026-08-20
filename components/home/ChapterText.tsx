@@ -1,9 +1,19 @@
 "use client"
 
+/** deterministic short-hash so each chapter reads like a commit-log line */
+function shortHash(s: string) {
+  let h = 5381
+  for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0
+  return (h >>> 0).toString(16).padStart(7, "0").slice(0, 7)
+}
+
 export function ChapterLabel({ label }: { label: string }) {
   return (
     <div className="mono-chapter">
-      <span>{label}</span>
+      <span className="mono-chapter__commit">
+        <span className="mono-chapter__hash">{shortHash(label)}</span>
+        <span>{label}</span>
+      </span>
       <div className="mono-chapter__wrap">
         <div className="mono-chapter__line" />
         <div className="mono-chapter__box" />
