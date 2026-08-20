@@ -1104,3 +1104,57 @@ select.mono-field:invalid { color: color-mix(in srgb, var(--m-ink), transparent 
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ---------- commit rail (scroll-linked git graph) ---------- */
+.mono-rail {
+  position: fixed;
+  left: 0.9em;
+  top: 16vh;
+  bottom: 12vh;
+  width: 3em;
+  z-index: 850;
+  pointer-events: none;
+  mix-blend-mode: difference;
+  color: #fff;
+}
+.mono-rail__track,
+.mono-rail__fill {
+  position: absolute;
+  left: 0.55em;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+}
+.mono-rail__track { background: rgba(255, 255, 255, 0.28); }
+.mono-rail__fill {
+  background: #fff;
+  transform: scaleY(0);
+  transform-origin: top;
+}
+.mono-rail__node {
+  position: absolute;
+  left: 0.55em;
+  width: 0.6em;
+  height: 0.6em;
+  transform: translate(-50%, -50%);
+  border: 1px solid #fff;
+  background: transparent;
+  transition: background 0.3s var(--m-ease);
+}
+.mono-rail__node[data-on="true"] { background: #fff; }
+.mono-rail__label {
+  position: absolute;
+  left: 1.1em;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.7em;
+  text-transform: lowercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s var(--m-ease);
+}
+.mono-rail__node[data-on="true"] .mono-rail__label { opacity: 0.75; }
+@media (max-width: 991px) {
+  .mono-rail { display: none; }
+}

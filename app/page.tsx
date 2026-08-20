@@ -10,6 +10,7 @@ import { SystemSection } from "@/components/home/SystemSection"
 import { HowSection } from "@/components/home/HowSection"
 import { DifferentSection } from "@/components/home/DifferentSection"
 import { WorksSection } from "@/components/home/WorksSection"
+import { CommitRail } from "@/components/home/CommitRail"
 import { ServicesSection } from "@/components/home/ServicesSection"
 import { LogoLoop } from "@/components/LogoLoop"
 import { STACK_LOGOS } from "@/components/home/stack-logos"
@@ -17,6 +18,7 @@ import { STACK_LOGOS } from "@/components/home/stack-logos"
 export default function Home() {
   return (
     <MonoShell>
+      <CommitRail />
       <main id="main-content">
         {/* ---------- hero ---------- */}
         <section className="mono-hero" id="vision">

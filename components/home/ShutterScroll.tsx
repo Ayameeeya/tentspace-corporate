@@ -12,9 +12,9 @@ const COLORS: Record<string, string> = {
 }
 
 /**
- * Scroll-scrubbed contribution-graph wipe.
- * ヒーローのピクセルフィールドと同じ小さなセルが、下からノイズ混じりの順で
- * 埋まっていき、次のセクションの色を「コミット」していく。
+ * Scroll-scrubbed scanline wipe.
+ * 次のセクションの色が、下の行から左→右に高速タイプされていく
+ * （system ウィンドウのタイプライター演出の面バージョン）。
  * Also flips the nav theme at 40% progress.
  */
 export function ShutterScroll({
@@ -45,27 +45,21 @@ export function ShutterScroll({
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
-    const CELL = 72
+    const ROW = 22
     const color = COLORS[variant]
     const hex = color.replace("#", "")
     const r = parseInt(hex.slice(0, 2), 16)
     const g = parseInt(hex.slice(2, 4), 16)
     const b = parseInt(hex.slice(4, 6), 16)
-    // intensity ladder — the leading edge shimmers through lighter steps
-    const LADDER = [
-      `rgba(${r}, ${g}, ${b}, 0.25)`,
-      `rgba(${r}, ${g}, ${b}, 0.5)`,
-      `rgba(${r}, ${g}, ${b}, 0.75)`,
-      color,
-    ]
+    const caret = `rgba(${r}, ${g}, ${b}, 0.45)`
 
     let width = 0
     let height2 = 0
-    let cols = 0
     let rows = 0
-    let thresholds: Float32Array = new Float32Array(0)
+    let rowStart: Float32Array = new Float32Array(0)
+    let rowDur: Float32Array = new Float32Array(0)
     const reduced = prefersReducedMotion()
-    let progress = reduced ? 1.4 : 0
+    let progress = reduced ? 1.2 : 0
 
     const build = () => {
       const rect = canvas.getBoundingClientRect()
@@ -75,40 +69,31 @@ export function ShutterScroll({
       canvas.width = Math.round(rect.width * dpr)
       canvas.height = Math.round(rect.height * dpr)
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-      cols = Math.ceil(width / CELL)
-      rows = Math.ceil(height2 / CELL)
+      rows = Math.ceil(height2 / ROW)
       const rand = seededRandom(seed)
-      thresholds = new Float32Array(cols * rows)
-      for (let gy = 0; gy < rows; gy++) {
-        for (let gx = 0; gx < cols; gx++) {
-          // bottom-biased with noise: the next section's colour grows upward
-          thresholds[gy * cols + gx] = ((rows - 1 - gy) / Math.max(1, rows)) * 0.62 + rand() * 0.38
-        }
+      rowStart = new Float32Array(rows)
+      rowDur = new Float32Array(rows)
+      for (let i = 0; i < rows; i++) {
+        rowStart[i] = (i / rows) * 0.88
+        rowDur[i] = (1 / rows) * (2.4 + rand() * 0.4)
       }
       render()
     }
 
     const render = () => {
       ctx.clearRect(0, 0, width, height2)
-      for (let gy = 0; gy < rows; gy++) {
-        for (let gx = 0; gx < cols; gx++) {
-          const d = progress - thresholds[gy * cols + gx]
-          if (d <= 0) continue
-          if (d > 0.2) {
-            // 成熟したセルは隙間なしのベタになり、下の面と溶け合う
-            ctx.fillStyle = color
-            ctx.fillRect(gx * CELL, gy * CELL, CELL + 0.5, CELL + 0.5)
-            continue
-          }
-          const level = d < 0.05 ? 0 : d < 0.1 ? 1 : d < 0.15 ? 2 : 3
-          ctx.fillStyle = LADDER[level]
-          if (typeof ctx.roundRect === "function") {
-            ctx.beginPath()
-            ctx.roundRect(gx * CELL + 2, gy * CELL + 2, CELL - 5, CELL - 5, 4)
-            ctx.fill()
-          } else {
-            ctx.fillRect(gx * CELL + 2, gy * CELL + 2, CELL - 5, CELL - 5)
-          }
+      // 下の行から順に、各行が左→右に高速タイプされていく
+      for (let i = 0; i < rows; i++) {
+        const t = Math.min(1, Math.max(0, (progress - rowStart[i]) / rowDur[i]))
+        if (t <= 0) continue
+        const y = height2 - (i + 1) * ROW
+        const filled = t * width
+        ctx.fillStyle = color
+        ctx.fillRect(0, y, filled, ROW + 0.5)
+        if (t < 1) {
+          // タイプ位置のキャレット
+          ctx.fillStyle = caret
+          ctx.fillRect(filled, y, ROW * 0.8, ROW + 0.5)
         }
       }
     }
@@ -124,8 +109,8 @@ export function ShutterScroll({
       invalidateOnRefresh: true,
       onUpdate: (self) => {
         if (!reduced) {
-          // 1.4 で全セル (threshold 最大 1.0) が成熟 (d > 0.2) まで到達する
-          progress = self.progress * 1.4
+          // 1.08 で最上段の行までタイプが完了する
+          progress = self.progress * 1.08
           render()
         }
         if (!navTheme) return
