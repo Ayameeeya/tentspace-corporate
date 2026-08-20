@@ -61,33 +61,33 @@ export function BranchGraph() {
       const mergeX = 0.5 * w
       const mergeY = docY(footer) + vh * 0.2
 
-      // メインレーンの経由地: [x, y, 以降の太さ]
-      const stations: [number, number, number][] = [
-        [ZONE_X.vision * w, vh * 0.52, 1.5],
-        [ZONE_X.vision * w, docY(strips[0]) - vh * 0.15, 1.5],
-        [ZONE_X.system * w, docY(strips[0]) + strips[0].offsetHeight + vh * 0.1, 1],
-        [ZONE_X.system * w, docY(strips[1]) + strips[1].offsetHeight * 0.5, 1],
-        [ZONE_X["how-it-works"] * w, sec["how-it-works"] + vh * 0.35, 3],
-        [ZONE_X["how-it-works"] * w, sec.different - vh * 0.25, 3],
-        [ZONE_X.different * w, sec.different + vh * 0.35, 1.5],
-        [ZONE_X.different * w, sec.works - vh * 0.2, 1.5],
-        [ZONE_X.works * w, sec.works + vh * 0.35, 2],
-        [ZONE_X.works * w, docY(strips[2]) - vh * 0.15, 2],
-        [ZONE_X.services * w, docY(strips[2]) + strips[2].offsetHeight + vh * 0.1, 1],
-        [ZONE_X.services * w, docY(strips[3]) + strips[3].offsetHeight * 0.5, 1],
-        [mergeX, mergeY, 2],
+      // メインレーンの経由地: [x, y]
+      const stations: [number, number][] = [
+        [ZONE_X.vision * w, vh * 0.52],
+        [ZONE_X.vision * w, docY(strips[0]) - vh * 0.15],
+        [ZONE_X.system * w, docY(strips[0]) + strips[0].offsetHeight + vh * 0.1],
+        [ZONE_X.system * w, docY(strips[1]) + strips[1].offsetHeight * 0.5],
+        [ZONE_X["how-it-works"] * w, sec["how-it-works"] + vh * 0.35],
+        [ZONE_X["how-it-works"] * w, sec.different - vh * 0.25],
+        [ZONE_X.different * w, sec.different + vh * 0.35],
+        [ZONE_X.different * w, sec.works - vh * 0.2],
+        [ZONE_X.works * w, sec.works + vh * 0.35],
+        [ZONE_X.works * w, docY(strips[2]) - vh * 0.15],
+        [ZONE_X.services * w, docY(strips[2]) + strips[2].offsetHeight + vh * 0.1],
+        [ZONE_X.services * w, docY(strips[3]) + strips[3].offsetHeight * 0.5],
+        [mergeX, mergeY],
       ]
 
       const segs: Seg[] = []
       for (let i = 0; i < stations.length - 1; i++) {
         const [x1, y1] = stations[i]
-        const [x2, y2, width] = stations[i + 1]
+        const [x2, y2] = stations[i + 1]
         const my = (y1 + y2) / 2
         segs.push({
           d: x1 === x2 ? `M ${x1} ${y1} L ${x2} ${y2}` : `M ${x1} ${y1} C ${x1} ${my}, ${x2} ${my}, ${x2} ${y2}`,
           top: y1,
           bottom: y2,
-          width,
+          width: 1.5,
         })
       }
 
