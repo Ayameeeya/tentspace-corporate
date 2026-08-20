@@ -54,7 +54,7 @@ export default function Home() {
               indent: 5,
             },
             {
-              text: "tent space は、少人数のエンジニアとAIで、そのすべてをひと続きに。フロントからサーバ、AWSまで。窓口もひとつ、責任もひとつ。",
+              text: "tent space は、少人数のエンジニアとAIで、そのすべてをひと続きに。調整のための時間も費用も、乗せない。窓口もひとつ、責任もひとつ。",
               indent: 0,
             },
           ]}
