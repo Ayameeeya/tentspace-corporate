@@ -96,19 +96,42 @@ export function BranchGraph() {
         { d: d2, top: run2Top, bottom: mergeY },
       ]
 
-      // フィナーレ: 各所から降りてきたレーンが、マージ行（横一列）の
-      // エルボーで 1 点に集まる。マージ点より下には何も伸ばさない
-      const tribTop = stackBottom + 24
-      const tribXs = [0.18 * w, 0.36 * w, 0.64 * w, 0.82 * w]
-      for (const bx of tribXs) {
-        const dir = xMerge > bx ? 1 : -1
-        const d =
-          `M ${bx} ${tribTop}` +
-          ` L ${bx} ${mergeY - R}` +
-          ` Q ${bx} ${mergeY}, ${bx + dir * R} ${mergeY}` +
+      // フィナーレ: 支流は「別の場所」から伸びてくる —
+      // 画面外（左右）から水平に入ってくる 2 本と、トランクから fork する
+      // 2 本が、マージ行のエルボーで 1 点に集まる。マージ点より下には伸ばさない
+      const zoneTop = stackBottom + 24
+      const span = Math.max(160, mergeY - R - 40 - zoneTop)
+      const yAt = (f: number) => zoneTop + span * f
+      const inDir = (laneX: number) => (xMerge > laneX ? 1 : -1)
+      // 画面外から: 水平入場 → 角で下向き → マージ行
+      const edge = (fromX: number, laneX: number, y: number) => {
+        const dir = laneX > fromX ? 1 : -1
+        return (
+          `M ${fromX} ${y}` +
+          ` L ${laneX - dir * R} ${y}` +
+          ` Q ${laneX} ${y}, ${laneX} ${y + R}` +
+          ` L ${laneX} ${mergeY - R}` +
+          ` Q ${laneX} ${mergeY}, ${laneX + inDir(laneX) * R} ${mergeY}` +
           ` L ${xMerge} ${mergeY}`
-        segs.push({ d, top: tribTop, bottom: mergeY, dim: true })
+        )
       }
+      // トランクから fork → レーンを降りる → マージ行
+      const fork = (laneX: number, yF: number) => {
+        return (
+          `M ${xMerge} ${yF - R}` +
+          elbow(xMerge, laneX, yF) +
+          ` L ${laneX} ${mergeY - R}` +
+          ` Q ${laneX} ${mergeY}, ${laneX + inDir(laneX) * R} ${mergeY}` +
+          ` L ${xMerge} ${mergeY}`
+        )
+      }
+      const tribDs: [string, number][] = [
+        [edge(-4, 0.18 * w, yAt(0.04)), yAt(0.04)],
+        [edge(w + 4, 0.82 * w, yAt(0.2)), yAt(0.2)],
+        [fork(0.36 * w, yAt(0.44)), yAt(0.44)],
+        [fork(0.64 * w, yAt(0.6)), yAt(0.6)],
+      ]
+      for (const [d, top] of tribDs) segs.push({ d, top, bottom: mergeY, dim: true })
       const ticks: Tick[] = []
 
       // 本文テキストの矩形: 線はこの領域では描かない（マスクで抜く）
@@ -122,6 +145,15 @@ export function BranchGraph() {
           if (r.width < 8 || r.height < 8) return
           textRects.push({ x: r.left, y: r.top + window.scrollY, w: r.width, h: r.height })
         })
+      // system のピン留めシーン（ウィンドウ群）全域では線を描かない。
+      // ピン中は要素が固定表示され座標がずれるため、スペーサーごと覆う
+      const pin = document.querySelector<HTMLElement>(".mono-system__pin")
+      if (pin) {
+        const host =
+          pin.parentElement && pin.parentElement.className.includes("pin-spacer") ? pin.parentElement : pin
+        const r = host.getBoundingClientRect()
+        textRects.push({ x: 0, y: r.top + window.scrollY, w, h: r.height })
+      }
 
       // ノードは必ずレーンの直線区間上に置く。テキストと重なるなら区間内で上下に逃がす
       const isClear = (x: number, y: number) =>
