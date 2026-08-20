@@ -96,8 +96,13 @@ export function BranchGraph() {
       }
       const d2 = `M ${xServices} ${run2Top}` + toMergeRow(xServices)
 
+      // フィナーレ帯: 支流と main はこの帯で同時に現れる
+      const zoneTop = stackBottom + 24
+      const span = Math.max(160, mergeY - R - 40 - zoneTop)
+      const yAt = (f: number) => zoneTop + span * f
+
       // main: 中央を通る本線。他のレーンはここへ合流してマージ点に至る
-      const mainTop = run2Top - vh * 0.22
+      const mainTop = yAt(0.06)
       const dMain = `M ${xMerge} ${mainTop} L ${xMerge} ${mergeY}`
 
       const segs: Seg[] = [
@@ -108,9 +113,6 @@ export function BranchGraph() {
 
       // フィナーレ: 支流は画面外から水平に入り、自分のレーンを降りて
       // マージ行で 1 点に集まる。内側のレーンほど先に入れて交差を避ける
-      const zoneTop = stackBottom + 24
-      const span = Math.max(160, mergeY - R - 40 - zoneTop)
-      const yAt = (f: number) => zoneTop + span * f
       const edge = (fromX: number, laneX: number, y: number) => {
         const dir = laneX > fromX ? 1 : -1
         return (
