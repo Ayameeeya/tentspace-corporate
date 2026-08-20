@@ -36,6 +36,13 @@
 CTA の意味と使い分けは `docs/style-guide.md` を正とする。指定がなければ
 `inquiry` を使う。
 
+### experiment.pillar
+
+記事の発信軸は `experiment.pillar` に記録する。値は次のいずれかを使う。
+
+- `ai-dev`: AI を使った開発・仕事の実践知
+- `build-public`: 事業やプロダクトを作る過程と学び
+
 ## 例
 
 ```yaml
@@ -48,6 +55,7 @@ categories: [AI]
 tags: [自動化, MDX]
 draft: true
 experiment:
+  pillar: ai-dev
   hook: howto
   cta: inquiry
   targetKw: "AI 業務自動化"
