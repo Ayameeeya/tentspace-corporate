@@ -2,34 +2,37 @@
 
 import { useEffect, useRef, useState } from "react"
 
-const STOPS = [
-  { id: "vision", label: "vision" },
-  { id: "system", label: "system" },
-  { id: "how-it-works", label: "how it works" },
-  { id: "different", label: "different" },
-  { id: "works", label: "works" },
-  { id: "services", label: "services" },
+/** ノードを置くセクションとレーン位置（画面幅比） */
+const NODE_STOPS = [
+  { id: "vision", label: "vision", x: 0.8 },
+  { id: "system", label: "system", x: 0.9 },
+  { id: "how-it-works", label: "how it works", x: 0.5 },
+  { id: "services", label: "services", x: 0.88 },
 ]
 
-/** セクションごとのメインレーンの位置（画面幅比）と太さ */
-const ZONE_X: Record<string, number> = {
-  vision: 0.8,
-  system: 0.9,
-  "how-it-works": 0.5,
-  different: 0.66,
-  works: 0.84,
-  services: 0.9,
-}
-
 type Node = { id: string; label: string; x: number; y: number; merge?: boolean }
-type Seg = { d: string; top: number; bottom: number; width: number; dim?: boolean }
+type Seg = { d: string; top: number; bottom: number; dim?: boolean }
 type Rect = { x: number; y: number; w: number; h: number }
 
+const R = 18 // エルボーのアール
+
+/** git graph のエルボー: 縦線 → 小アール → 水平ジョグ → 小アール → 縦線 */
+function elbow(x1: number, x2: number, yJog: number) {
+  const dir = x2 > x1 ? 1 : -1
+  return (
+    ` L ${x1} ${yJog - R}` +
+    ` Q ${x1} ${yJog}, ${x1 + dir * R} ${yJog}` +
+    ` L ${x2 - dir * R} ${yJog}` +
+    ` Q ${x2} ${yJog}, ${x2} ${yJog + R}`
+  )
+}
+
 /**
- * ページ背景を流れる git グラフ。
- * メインレーンは右サイド基調でセクションごとにレーンを乗り換え、
- * how it works では中央へ寄って太くなる（ズーム）。
- * 終盤は各所から生まれた線がフッター中央の 1 点にすべて収束してマージする。
+ * ページ背景を流れる git グラフ（difference 合成でどの地色でも見える）。
+ * run1: vision → system(右端) → how(中央) で途絶える
+ * run2: with tent space 手前で再開 → services → 中央へ降りて
+ *       各所からの支流をエルボーで受けながらフッターの 1 点にマージ。
+ * different / works ゾーンには描かない。
  */
 export function BranchGraph() {
   const rootRef = useRef<HTMLDivElement>(null)
@@ -37,8 +40,6 @@ export function BranchGraph() {
     height: number
     segs: Seg[]
     nodes: Node[]
-    mergeX: number
-    mergeY: number
     textRects: Rect[]
   } | null>(null)
 
@@ -51,71 +52,62 @@ export function BranchGraph() {
       const height = document.documentElement.scrollHeight
       const docY = (el: Element) => el.getBoundingClientRect().top + window.scrollY
 
-      const sec: Record<string, number> = {}
-      for (const s of STOPS) {
-        const el = document.getElementById(s.id)
-        if (el) sec[s.id] = docY(el)
-      }
+      const secEl = (id: string) => document.getElementById(id)
       const strips = Array.from(document.querySelectorAll<HTMLElement>(".mono-shutter"))
       const footer = document.querySelector<HTMLElement>(".mono-footer")
-      if (strips.length < 4 || !footer || Object.keys(sec).length < STOPS.length) return
+      const how = secEl("how-it-works")
+      const different = secEl("different")
+      if (strips.length < 4 || !footer || !how || !different) return
 
-      const mergeX = 0.5 * w
+      const xVision = 0.8 * w
+      const xSystem = 0.9 * w
+      const xHow = 0.5 * w
+      const xServices = 0.88 * w
+      const xMerge = 0.5 * w
       const mergeY = docY(footer) + vh * 0.2
 
-      // メインレーンの経由地: [x, y]
-      const stations: [number, number][] = [
-        [ZONE_X.vision * w, vh * 0.52],
-        [ZONE_X.vision * w, docY(strips[0]) - vh * 0.15],
-        [ZONE_X.system * w, docY(strips[0]) + strips[0].offsetHeight + vh * 0.1],
-        [ZONE_X.system * w, docY(strips[1]) + strips[1].offsetHeight * 0.5],
-        [ZONE_X["how-it-works"] * w, sec["how-it-works"] + vh * 0.35],
-        [ZONE_X["how-it-works"] * w, sec.different - vh * 0.25],
-        [ZONE_X.different * w, sec.different + vh * 0.35],
-        [ZONE_X.different * w, sec.works - vh * 0.2],
-        [ZONE_X.works * w, sec.works + vh * 0.35],
-        [ZONE_X.works * w, docY(strips[2]) - vh * 0.15],
-        [ZONE_X.services * w, docY(strips[2]) + strips[2].offsetHeight + vh * 0.1],
-        [ZONE_X.services * w, docY(strips[3]) + strips[3].offsetHeight * 0.5],
-        [mergeX, mergeY],
+      // run1: vision → system → how、different の手前で途絶える
+      const run1Top = vh * 0.55
+      const run1End = docY(different) - vh * 0.1
+      const d1 =
+        `M ${xVision} ${run1Top}` +
+        elbow(xVision, xSystem, docY(strips[0]) - vh * 0.08) +
+        elbow(xSystem, xHow, docY(strips[1]) + strips[1].offsetHeight + vh * 0.18) +
+        ` L ${xHow} ${run1End}`
+
+      // run2: works の後（with tent space）で再開 → services → 中央 → マージ
+      const run2Top = docY(strips[2]) - vh * 0.5
+      const d2 =
+        `M ${xServices} ${run2Top}` +
+        elbow(xServices, xMerge, docY(strips[3]) + strips[3].offsetHeight + vh * 0.12) +
+        ` L ${xMerge} ${mergeY}`
+
+      const segs: Seg[] = [
+        { d: d1, top: run1Top, bottom: run1End },
+        { d: d2, top: run2Top, bottom: mergeY },
       ]
 
-      const segs: Seg[] = []
-      for (let i = 0; i < stations.length - 1; i++) {
-        const [x1, y1] = stations[i]
-        const [x2, y2] = stations[i + 1]
-        const my = (y1 + y2) / 2
-        segs.push({
-          d: x1 === x2 ? `M ${x1} ${y1} L ${x2} ${y2}` : `M ${x1} ${y1} C ${x1} ${my}, ${x2} ${my}, ${x2} ${y2}`,
-          top: y1,
-          bottom: y2,
-          width: 1.5,
-        })
-      }
-
-      // フィナーレ: 各所から生まれた線が 1 点に収束する
-      const tributaries: [number, number][] = [
-        [0.14 * w, sec["how-it-works"] + vh * 0.6],
-        [0.3 * w, sec.works + vh * 0.2],
-        [0.7 * w, sec.different + vh * 0.5],
-        [0.95 * w, docY(strips[2]) + strips[2].offsetHeight + vh * 0.3],
+      // フィナーレの支流: 段違いの高さでセンターレーンにエルボー合流
+      const tribStart = docY(strips[3]) + strips[3].offsetHeight + vh * 0.05
+      const tribs: [number, number][] = [
+        [0.18 * w, mergeY - vh * 0.42],
+        [0.34 * w, mergeY - vh * 0.3],
+        [0.72 * w, mergeY - vh * 0.36],
+        [0.95 * w, mergeY - vh * 0.24],
       ]
-      for (const [bx, by] of tributaries) {
-        const my = (by + mergeY) / 2
-        segs.push({
-          d: `M ${bx} ${by} C ${bx} ${my}, ${mergeX} ${my}, ${mergeX} ${mergeY}`,
-          top: by,
-          bottom: mergeY,
-          width: 1,
-          dim: true,
-        })
+      for (const [bx, joinY] of tribs) {
+        const d =
+          `M ${bx} ${tribStart}` +
+          elbow(bx, xMerge, joinY) +
+          ` L ${xMerge} ${mergeY}`
+        segs.push({ d, top: tribStart, bottom: mergeY, dim: true })
       }
 
-      // 本文テキストの矩形を収集: 線はこの領域では描かない（マスクで抜く）
+      // 本文テキストの矩形: 線はこの領域では描かない（マスクで抜く）
       const textRects: Rect[] = []
       document
         .querySelectorAll<HTMLElement>(
-          "main h1, main h2, main h3, main p, main .mono-works__tags, main .main-btn, main .mono-win, main .mono-works__shot",
+          "main h1, main h2, main h3, main p, main .mono-works__tags, main .main-btn, main .mono-win, main .mono-works__shot, .mono-footer p, .mono-footer a, .mono-footer nav",
         )
         .forEach((el) => {
           const r = el.getBoundingClientRect()
@@ -123,23 +115,37 @@ export function BranchGraph() {
           textRects.push({ x: r.left, y: r.top + window.scrollY, w: r.width, h: r.height })
         })
 
-      // ノードはテキストに重なる場合、上下の空きへ逃がす
+      // ノードは必ずレーンの直線区間上に置く。テキストと重なるなら区間内で上下に逃がす
       const isClear = (x: number, y: number) =>
         !textRects.some((r) => x > r.x - 16 && x < r.x + r.w + 16 && y > r.y - 16 && y < r.y + r.h + 16)
-      const freeY = (x: number, y0: number) => {
-        for (const dy of [0, 44, -44, 88, -88, 132, -132, 176, 220]) {
-          if (isClear(x, y0 + dy)) return y0 + dy
+      const placeOnLane = (x: number, y0: number, laneTop: number, laneBottom: number) => {
+        const clamp = (v: number) => Math.min(laneBottom - 24, Math.max(laneTop + 24, v))
+        for (const dy of [0, 44, -44, 88, -88, 132, -132, 176]) {
+          const y = clamp(y0 + dy)
+          if (isClear(x, y)) return y
         }
-        return y0
+        return clamp(y0)
       }
 
-      const nodes: Node[] = STOPS.map((s) => {
-        const x = ZONE_X[s.id] * w
-        return { ...s, x, y: freeY(x, sec[s.id] + vh * 0.26) }
-      })
-      nodes.push({ id: "__merge", label: "merged → main", x: mergeX, y: mergeY, merge: true })
+      // 各ノードのレーン直線区間
+      const laneRange: Record<string, [number, number]> = {
+        vision: [run1Top, docY(strips[0]) - vh * 0.08 - R],
+        system: [docY(strips[0]) - vh * 0.08 + R, docY(strips[1]) + strips[1].offsetHeight + vh * 0.18 - R],
+        "how-it-works": [docY(strips[1]) + strips[1].offsetHeight + vh * 0.18 + R, run1End],
+        services: [run2Top, docY(strips[3]) + strips[3].offsetHeight + vh * 0.12 - R],
+      }
 
-      setLayout({ height, segs, nodes, mergeX, mergeY, textRects })
+      const nodes: Node[] = []
+      for (const s of NODE_STOPS) {
+        const el = secEl(s.id)
+        if (!el) continue
+        const x = s.x * w
+        const [lt, lb] = laneRange[s.id]
+        nodes.push({ id: s.id, label: s.label, x, y: placeOnLane(x, docY(el) + vh * 0.3, lt, lb) })
+      }
+      nodes.push({ id: "__merge", label: "merged → main", x: xMerge, y: mergeY, merge: true })
+
+      setLayout({ height, segs, nodes, textRects })
     }
     measure()
     const ro = new ResizeObserver(measure)
@@ -210,20 +216,12 @@ export function BranchGraph() {
           </defs>
           <g mask="url(#mono-branch-mask)">
             {layout.segs.map((s, i) => (
-              <path
-                key={i}
-                d={s.d}
-                data-seg
-                data-top={s.top}
-                data-bottom={s.bottom}
-                strokeWidth={s.width}
-                opacity={s.dim ? 0.45 : 0.9}
-              />
+              <path key={i} d={s.d} data-seg data-top={s.top} data-bottom={s.bottom} opacity={s.dim ? 0.5 : 1} />
             ))}
           </g>
         </svg>
       </div>
-      {/* section nodes = commits（本文より前面の別レイヤー） */}
+      {/* section nodes = commits（前面レイヤー、difference 合成） */}
       <nav className="mono-branch__nodes" style={{ height: layout.height }} aria-label="セクションナビゲーション">
         {layout.nodes.map((n) => (
           <button

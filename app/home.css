@@ -1114,8 +1114,9 @@ select.mono-field:invalid { color: color-mix(in srgb, var(--m-ink), transparent 
   top: 0;
   left: 0;
   right: 0;
-  z-index: 0;
+  z-index: 2;
   pointer-events: none;
+  mix-blend-mode: difference;
 }
 .mono-branch__nodes {
   position: absolute;
@@ -1124,11 +1125,14 @@ select.mono-field:invalid { color: color-mix(in srgb, var(--m-ink), transparent 
   right: 0;
   z-index: 2;
   pointer-events: none;
+  mix-blend-mode: difference;
+  color: #fff;
 }
 .mono-branch__svg { position: absolute; inset: 0; display: block; }
 .mono-branch__svg path {
   fill: none;
-  stroke: var(--m-ink);
+  stroke: #fff;
+  stroke-width: 1.5px;
   stroke-linecap: square;
 }
 .mono-branch__node {
@@ -1136,19 +1140,16 @@ select.mono-field:invalid { color: color-mix(in srgb, var(--m-ink), transparent 
   width: 0.7em;
   height: 0.7em;
   transform: translate(-50%, -50%);
-  border: 1px solid var(--m-ink);
-  background: var(--m-bg);
+  border: 1px solid #fff;
+  background: transparent;
   padding: 0;
   pointer-events: auto;
   cursor: crosshair;
-  color: var(--m-ink);
+  color: #fff;
   font-family: inherit;
-  transition: background 0.3s var(--m-ease), border-color 0.3s var(--m-ease);
+  transition: background 0.3s var(--m-ease);
 }
-.mono-branch__node[data-on="true"] {
-  background: var(--m-indigo);
-  border-color: var(--m-indigo);
-}
+.mono-branch__node[data-on="true"] { background: #fff; }
 .mono-branch__label {
   position: absolute;
   left: 1.3em;
@@ -1158,8 +1159,6 @@ select.mono-field:invalid { color: color-mix(in srgb, var(--m-ink), transparent 
   text-transform: lowercase;
   letter-spacing: 0.04em;
   white-space: nowrap;
-  background: var(--m-bg);
-  padding: 0.1em 0.4em;
   opacity: 0;
   transition: opacity 0.3s var(--m-ease);
 }
@@ -1174,14 +1173,13 @@ select.mono-field:invalid { color: color-mix(in srgb, var(--m-ink), transparent 
   content: "";
   position: absolute;
   inset: 0;
-  border: 1px solid var(--m-ink);
-  background: var(--m-bg);
+  border: 1px solid #fff;
+  background: transparent;
   transform: rotate(45deg);
-  transition: background 0.3s var(--m-ease), border-color 0.3s var(--m-ease);
+  transition: background 0.3s var(--m-ease);
 }
 .mono-branch__node--merge[data-on="true"]::before {
-  background: var(--m-indigo);
-  border-color: var(--m-indigo);
+  background: #fff;
   animation: mono-branch-merge 0.74s var(--m-snap) both;
 }
 .mono-branch__node--merge[data-on="true"] .mono-branch__label { opacity: 1; }
