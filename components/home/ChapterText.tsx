@@ -21,7 +21,7 @@ export function ChapterTextSection({
 }: {
   id?: string
   label: string
-  paragraphs: { text: string; indent?: 0 | 2 | 5 }[]
+  paragraphs: { text: React.ReactNode; indent?: 0 | 2 | 5 }[]
   wrapperClass: string
 }) {
   return (

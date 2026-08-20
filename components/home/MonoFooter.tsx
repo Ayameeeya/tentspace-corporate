@@ -18,20 +18,24 @@ export function MonoFooter() {
     return () => cleanups.forEach((fn) => fn())
   }, [])
 
-  // reaching the footer resets the nav theme to base
+  // reaching the footer resets the nav theme to base; leaving back restores
+  // whatever theme was active before (olive on the top page, base elsewhere)
   useEffect(() => {
     const root = rootRef.current
     if (!root) return
+    let prevTheme = "base"
     const st = ScrollTrigger.create({
       trigger: root,
       start: "top 70%",
       onEnter: () => {
         const nav = document.querySelector<HTMLElement>("[data-mono-nav]")
-        if (nav) nav.dataset.navTheme = "base"
+        if (!nav) return
+        prevTheme = nav.dataset.navTheme || "base"
+        nav.dataset.navTheme = "base"
       },
       onLeaveBack: () => {
         const nav = document.querySelector<HTMLElement>("[data-mono-nav]")
-        if (nav) nav.dataset.navTheme = "olive"
+        if (nav) nav.dataset.navTheme = prevTheme
       },
     })
     return () => st.kill()
@@ -43,7 +47,7 @@ export function MonoFooter() {
         <div className="mono-footer__nav">
           <div className="mono-footer__statement">
             <p className="paragraph-m">
-              “作って終わり、にしない。設計から運用まで、動き続けるソフトウェアを届ける。”
+              “作って終わり、にしない。届けた後も、ともに育てていく。”
             </p>
             <div className="mono-footer__statement-author">
               <div className="mono-footer__statement-line" />
@@ -57,8 +61,11 @@ export function MonoFooter() {
             <a href="https://www.linkedin.com/in/hirokuma/" target="_blank" rel="noreferrer" className="paragraph-m mono-ul" data-mono-hover>
               <span data-mono-hover-target>LinkedIn</span>
             </a>
-            <a href="https://x.com/hirokuma_negio" target="_blank" rel="noreferrer" className="paragraph-m mono-ul" data-mono-hover>
+            <a href="https://x.com/hirokuma_negio/" target="_blank" rel="noreferrer" className="paragraph-m mono-ul" data-mono-hover>
               <span data-mono-hover-target>X</span>
+            </a>
+            <a href="https://www.threads.com/@hirokumaxhiro/" target="_blank" rel="noreferrer" className="paragraph-m mono-ul" data-mono-hover>
+              <span data-mono-hover-target>Threads</span>
             </a>
           </div>
           <div className="mono-footer__legals">

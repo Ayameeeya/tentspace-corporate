@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { BlogHeader } from "@/components/blog-header"
+import { MonoBlogNav } from "@/components/home/MonoBlogNav"
 import { getCurrentUser } from "@/lib/auth"
 
 export default function SettingsClientLayout({
@@ -45,8 +45,8 @@ export default function SettingsClientLayout({
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <BlogHeader />
-        <main id="main-content" className="pt-24 pb-12">
+        <MonoBlogNav />
+        <main id="main-content" className="pt-[calc(var(--blog-nav-h,128px)+1.5rem)] pb-12">
           <div className="animate-pulse space-y-4 max-w-6xl mx-auto px-4">
             <div className="h-8 bg-muted rounded w-1/4"></div>
             <div className="h-64 bg-muted rounded"></div>
@@ -58,12 +58,28 @@ export default function SettingsClientLayout({
 
   return (
     <div className="min-h-screen bg-background">
-      <BlogHeader />
+      <MonoBlogNav />
 
-      <div className="pt-14 md:pt-16">
+      <div className="pt-(--blog-nav-h,128px)">
         <div className="max-w-7xl mx-auto">
+          {/* mobile: settings menu as a horizontal strip */}
+          <nav className="md:hidden flex items-center gap-2 overflow-x-auto whitespace-nowrap px-4 py-3 border-b border-border">
+            {menuItems.map((item) => (
+              <Link
+                key={item.id}
+                href={item.href}
+                className={`px-3 py-1.5 text-sm rounded-md shrink-0 transition-colors ${
+                  pathname === item.href
+                    ? "bg-blue-500/10 text-blue-500 font-medium"
+                    : "text-foreground/80 hover:bg-muted"
+                }`}
+              >
+                {item.icon} {item.label}
+              </Link>
+            ))}
+          </nav>
           <div className="flex">
-            <aside className="w-56 bg-card border-r border-border min-h-screen pt-6 px-4 fixed left-0 top-14 md:top-16">
+            <aside className="hidden md:block w-56 bg-card border-r border-border min-h-screen pt-6 px-4 fixed left-0 top-(--blog-nav-h,128px)">
               <div className="mb-6">
                 <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
                   Settings
@@ -98,7 +114,7 @@ export default function SettingsClientLayout({
               </div>
             </aside>
 
-            <main id="main-content" className="flex-1 ml-56 p-8">{children}</main>
+            <main id="main-content" className="flex-1 ml-0 md:ml-56 p-4 md:p-8">{children}</main>
           </div>
         </div>
       </div>

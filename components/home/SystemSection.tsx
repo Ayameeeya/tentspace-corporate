@@ -7,11 +7,11 @@ import { ScrambleText } from "./ScrambleText"
 import { prefersReducedMotion } from "./gsap-setup"
 
 const CHAPTERS = [
-  { kw: "intent", sub: "hearing + goal", statement: "課題とゴールをヒアリング。\n作るべきものを見極める。" },
-  { kw: "design", sub: "ux + architecture", statement: "画面設計とシステム設計。\nフロントからAWSまで。" },
-  { kw: "build", sub: "code + review", statement: "AIが実装を加速し、\nエンジニアが品質を守る。" },
-  { kw: "launch", sub: "deploy + operate", statement: "リリース。そのまま\n保守・運用まで引き受ける。" },
-  { kw: "evolve", sub: "automate + improve", statement: "運用を自動化し、\nデータを基に改善を続ける。" },
+  { kw: "intent", sub: "hearing + goal", statement: "まずは、じっくり聞く。\n作るべきものを見つける。" },
+  { kw: "design", sub: "ux + architecture", statement: "画面も、仕組みも設計する。\nフロントからAWSまで。" },
+  { kw: "build", sub: "code + review", statement: "AIが速く作り、\n人が丁寧に確かめる。" },
+  { kw: "launch", sub: "deploy + operate", statement: "リリースして、終わりじゃない。\nそのまま運用まで。" },
+  { kw: "evolve", sub: "automate + improve", statement: "運用を自動化して、\nデータをもとに進化し続ける。" },
 ]
 
 const BAR_ACTIVE = { backgroundColor: "#0f00b0", color: "#e5e5e5" }
@@ -35,9 +35,24 @@ export function SystemSection() {
     const bars = Array.from(pin.querySelectorAll<HTMLElement>(".mono-system__win-bar"))
     const reduced = prefersReducedMotion()
 
+    // stack steps: older windows are sent back by this much per depth
+    const STEP_X = 0.5 // em, to the left
+    const STEP_Y = 2.8 // em, upwards (≈ title bar height)
+
+    // all windows share the same centered base position
+    gsap.set(wins, { xPercent: -50, yPercent: -50 })
+
     if (reduced) {
-      // static: all windows open, last one active
-      gsap.set(wins, { autoAlpha: 1, visibility: "visible" })
+      // static: all windows open and stacked, last one active + centered
+      wins.forEach((win, i) => {
+        const depth = wins.length - 1 - i
+        gsap.set(win, {
+          autoAlpha: 1,
+          visibility: "visible",
+          x: `${-depth * STEP_X}em`,
+          y: `${-depth * STEP_Y}em`,
+        })
+      })
       gsap.set(bars.slice(0, -1), BAR_IDLE)
       return
     }
@@ -49,15 +64,25 @@ export function SystemSection() {
 
     wins.forEach((win, i) => {
       tl.set(win, { visibility: "visible" })
+      // 新規ウィンドウは常に中央にポップする
       tl.fromTo(
         win,
         { autoAlpha: 0, scale: 0.88, y: "0.9em" },
-        { autoAlpha: 1, scale: 1, y: 0, duration: REVEAL, ease: "systemChapterPop", transformOrigin: "top left" },
+        { autoAlpha: 1, scale: 1, y: 0, duration: REVEAL, ease: "systemChapterPop", transformOrigin: "50% 50%" },
       )
       const chars = win.querySelectorAll<HTMLElement>(".mono-system__win-ch")
       tl.set(chars, { autoAlpha: 0 }, "<")
       if (i > 0 && bars[i - 1]) {
         tl.to(bars[i - 1], { ...BAR_IDLE, duration: REVEAL * 0.4, ease: "systemEaseOut" }, "<")
+      }
+      // 既存のウィンドウを一段ずつ奥（上・少し左）へ送る
+      for (let j = 0; j < i; j++) {
+        const depth = i - j
+        tl.to(
+          wins[j],
+          { x: `${-depth * STEP_X}em`, y: `${-depth * STEP_Y}em`, duration: REVEAL * 0.6, ease: "systemEaseOut" },
+          "<",
+        )
       }
       // プログレスバーのセグメントがカチカチと埋まる
       const segs = win.querySelectorAll<HTMLElement>('.mono-system__win-seg[data-on="true"]')
@@ -119,8 +144,8 @@ export function SystemSection() {
           the system
         </ScrambleText>
         <div style={{ maxWidth: "62em", margin: "0.5em auto 0" }}>
-          <ScrambleText as="h3" className="heading-l" intensity={2}>
-            要件を受け取り、設計し、作り、運用する。AIが各工程を加速し、人が品質と意思決定を握る。
+          <ScrambleText as="h3" className="heading-l ws-pre-line" intensity={2}>
+            {"聞いて、設計して、\n作って、育てる。\nAIがスピードを、\n人が品質を。"}
           </ScrambleText>
         </div>
       </div>

@@ -66,14 +66,14 @@ export function ServicesSection() {
                   </div>
                 ))}
                 <div className="mono-pricing__row" style={{ justifyContent: "flex-end", minHeight: "6em" }}>
-                  <MainBtn label="start a project" href="/contact" variant="inside" />
+                  <MainBtn label="start a project" href="/contact" variant="inside" twoLine />
                 </div>
               </div>
             ))}
           </div>
           <div className="mono-pricing__note">
             <ScrambleText as="p" className="paragraph-s">
-              まずは無料相談から。課題の整理だけでも歓迎です。費用はお見積もり時に明示します。
+              まずは無料相談から。課題の整理だけでも歓迎です。費用はお見積もりの際に、はっきりお伝えします。
             </ScrambleText>
             <div>
               <div className="mono-pricing__row" style={{ minHeight: "3em" }}>

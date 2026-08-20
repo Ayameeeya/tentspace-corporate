@@ -22,7 +22,7 @@ export default function Home() {
         <section className="mono-hero" id="vision">
           <div className="mono-container mono-hero__content">
             <ScrambleText as="h1" className="heading-l" mode="load" intensity={5}>
-              tent space は、webとスマホアプリの開発スタジオ。フロントからサーバ、AWSまでを一気通貫で設計し、AIと共に速く、確かに作る。
+              tent space は、webとスマホアプリの開発スタジオ。フロントからサーバ、AWSまでをひとつのチームで。AIとともに、速く、確かに作ります。
             </ScrambleText>
             <div className="mono-hero__usps">
               <ScrambleText as="p" className="paragraph-m" mode="load" intensity={5}>
@@ -54,7 +54,7 @@ export default function Home() {
               indent: 5,
             },
             {
-              text: "tent space は、少数のエンジニアとAIで、そのすべてを一気通貫で引き受ける。フロントエンドからサーバサイド、AWSまで。窓口はひとつ、責任もひとつ。",
+              text: "tent space は、少人数のエンジニアとAIで、そのすべてをひと続きに。調整のための時間も費用も、乗せない。窓口もひとつ、責任もひとつ。",
               indent: 0,
             },
           ]}
@@ -80,7 +80,12 @@ export default function Home() {
           wrapperClass="mono-text__wrapper--second"
           paragraphs={[
             {
-              text: "あなたは「何を作るか」に集中すればいい。「どう作るか」は、tent space が引き受ける。",
+              text: (
+                <>
+                  あなたの「作りたい」に、tent space の
+                  <span style={{ whiteSpace: "nowrap" }}>「作れる」を。</span>
+                </>
+              ),
               indent: 5,
             },
           ]}

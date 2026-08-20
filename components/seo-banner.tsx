@@ -14,7 +14,7 @@ export function SeoBanner({ layout = 'vertical' }: SeoBannerProps) {
           <div className="bg-background rounded-3xl border border-border overflow-hidden hover:border-primary/50 transition-all duration-300 hover:shadow-xl h-full">
             <div className="relative h-full">
               {/* グリッドレイアウト：左テキスト、右ビジュアル */}
-              <div className="grid grid-cols-2 h-full">
+              <div className="grid grid-cols-1 md:grid-cols-2 h-full">
                 {/* 左側テキスト（半分） - パディング付き */}
                 <div className="flex flex-col justify-between p-6 md:p-8">
                   <div className="space-y-4">

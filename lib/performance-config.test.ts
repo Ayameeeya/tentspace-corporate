@@ -57,13 +57,20 @@ describe("performance configuration", () => {
   })
 
   it("ブログヘッダーから重量級ページを自動先読みしない", async () => {
-    const [header, article] = await Promise.all([
-      read("components/blog-header.tsx"),
+    const [header, menu, article] = await Promise.all([
+      read("components/home/MonoBlogNav.tsx"),
+      read("components/home/MonoMenu.tsx"),
       read("app/blog/[slug]/blog-post-client.tsx"),
     ])
 
-    expect(header).toMatch(/<Link\s+href="\/"\s+prefetch=\{false\}/)
-    expect(header).toMatch(/<Link\s+href="\/about"\s+prefetch=\{false\}/)
+    // ヘッダー内のトップページへのリンクはすべて prefetch を止める
+    const homeLinks = header.match(/<Link(?=[^>]*href="\/")[^>]*>/g) ?? []
+    expect(homeLinks.length).toBeGreaterThan(0)
+    for (const link of homeLinks) {
+      expect(link).toContain("prefetch={false}")
+    }
+    // フルスクリーンメニューのページリンク（about / blog / contact）も同様
+    expect(menu).toMatch(/<Link(?=[^>]*prefetch=\{false\})[^>]*href=\{e\.href\}/)
     expect(article).toMatch(/<Link\s+href="\/"\s+prefetch=\{false\}/)
 
     const aboutLinks = article.match(/<Link(?=[^>]*href="\/about")[^>]*>/g) ?? []
@@ -73,14 +80,11 @@ describe("performance configuration", () => {
     }
   })
 
-  it("ブログヘッダーのアニメーションと認証モーダルを初期JSから外す", async () => {
-    const header = await read("components/blog-header.tsx")
+  it("ブログヘッダーの認証モーダルを初期JSから外す", async () => {
+    const header = await read("components/home/MonoBlogNav.tsx")
 
     expect(header).not.toContain('from "gsap"')
-    expect(header).toContain("transition-transform duration-300 ease-in-out")
-    expect(header).toContain(
-      'lazy(() => import("@/components/auth-modal")',
-    )
+    expect(header).toMatch(/lazy\(\(\)\s*=>\s*import\("@\/components\/auth-modal"\)/)
     expect(header).toContain("{showAuthModal && (")
   })
 
@@ -106,15 +110,14 @@ describe("performance configuration", () => {
   })
 
   it("ブログロゴのintrinsic比率を実ファイルに合わせる", async () => {
-    const header = await read("components/blog-header.tsx")
-    const logos = header.match(/<Image[\s\S]*?logo_(?:black|white)_yoko\.png[\s\S]*?\/>/g) ?? []
+    const header = await read("components/home/MonoBlogNav.tsx")
+    const logos = header.match(/<img[\s\S]*?logo_(?:black|white)_yoko\.png[\s\S]*?\/>/g) ?? []
 
     expect(logos.length).toBeGreaterThan(0)
     for (const logo of logos) {
       expect(logo).toContain("width={682}")
       expect(logo).toContain("height={125}")
     }
-    expect(header).toContain('sizes="(max-width: 768px) 80px, 110px"')
   })
 
   it("Cookie選択をAnalyticsローダーへ通知する", async () => {

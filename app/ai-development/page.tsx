@@ -33,10 +33,18 @@ export default function AIDevelopmentLP() {
             お問い合わせ
           </a>
         </div>
+        {/* mobile: section anchors as a scrollable strip below the bar */}
+        <nav className="md:hidden flex items-center gap-5 text-sm overflow-x-auto whitespace-nowrap px-4 pb-3">
+          <a href="#problem" className="hover:text-blue-600 transition-colors">課題</a>
+          <a href="#why" className="hover:text-blue-600 transition-colors">選ばれる理由</a>
+          <a href="#case" className="hover:text-blue-600 transition-colors">事例</a>
+          <a href="#service" className="hover:text-blue-600 transition-colors">サービス</a>
+          <a href="#faq" className="hover:text-blue-600 transition-colors">FAQ</a>
+        </nav>
       </header>
 
       {/* Hero */}
-      <section className="pt-24 pb-16 md:pt-32 md:pb-24 bg-gradient-to-b from-slate-900 to-slate-800 text-white">
+      <section className="pt-32 pb-16 md:pb-24 bg-gradient-to-b from-slate-900 to-slate-800 text-white">
         <div className="max-w-5xl mx-auto px-4 text-center">
           <p className="text-blue-400 font-medium mb-4">20年の経験 × AIの網羅性</p>
           <h1 className="text-3xl md:text-5xl font-bold leading-tight mb-6">

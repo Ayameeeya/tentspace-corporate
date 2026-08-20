@@ -72,54 +72,60 @@ export function CookieConsent() {
     return null
   }
 
+  // mono design: Win95-window card, bottom-left so the floating contact CTA
+  // (bottom-right) stays visible while the banner is shown
   return (
     <section
       role="region"
       aria-labelledby="cookie-consent-title"
       aria-describedby="cookie-consent-description"
-      className="fixed bottom-0 left-0 right-0 z-[9999] p-4 md:p-6 bg-white/95 backdrop-blur-md border-t border-gray-200 shadow-lg animate-slide-up"
+      className="fixed bottom-4 left-4 right-18 md:bottom-6 md:left-6 md:right-auto md:w-96 z-9999 animate-slide-up bg-white border border-black cursor-crosshair"
+      style={{ fontFamily: "var(--font-inter), Arial, sans-serif" }}
     >
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-start md:items-center gap-4">
-        {/* Icon */}
-        <div className="hidden md:flex w-12 h-12 rounded-full bg-blue-50 items-center justify-center flex-shrink-0">
-          <svg aria-hidden="true" focusable="false" className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-          </svg>
-        </div>
+      {/* title bar */}
+      <div className="flex items-center justify-between gap-4 bg-[#0f00b0] text-[#e5e5e5] pl-3 pr-1.5 py-1.5">
+        <h2 id="cookie-consent-title" className="m-0 text-xs lowercase tracking-[0.06em] font-normal">
+          cookies
+        </h2>
+        <button
+          type="button"
+          onClick={handleDecline}
+          aria-label="Cookieを拒否して閉じる"
+          className="w-5 h-5 flex items-center justify-center bg-white text-black border border-black text-[0.65rem] leading-none cursor-crosshair"
+        >
+          ×
+        </button>
+      </div>
 
-        {/* Text Content */}
-        <div className="flex-1">
-          <h2 id="cookie-consent-title" className="text-sm font-bold text-gray-900 mb-1">
-            Cookieの使用について
-          </h2>
-          <p id="cookie-consent-description" className="text-sm text-gray-600 leading-relaxed">
-            当サイトでは、サイトの利用状況を分析し、より良いサービスを提供するためにCookieを使用しています。
-            「同意する」をクリックすると、Cookieの使用に同意したことになります。
-            詳細は
-            <Link href="/privacy" className="text-blue-600 hover:underline mx-1">
-              プライバシーポリシー
-            </Link>
-            をご覧ください。
-          </p>
-        </div>
+      {/* body */}
+      <div className="p-4">
+        <p id="cookie-consent-description" className="m-0 text-[0.8125rem] leading-relaxed text-black/70">
+          当サイトでは、サイトの利用状況を分析し、より良いサービスを提供するためにCookieを使用しています。
+          「同意する」をクリックすると、Cookieの使用に同意したことになります。
+          詳細は
+          <Link href="/privacy" className="text-black underline underline-offset-2 mx-1 hover:text-[#0f00b0]">
+            プライバシーポリシー
+          </Link>
+          をご覧ください。
+        </p>
+      </div>
 
-        {/* Buttons */}
-        <div className="flex items-center gap-3 w-full md:w-auto">
-          <button
-            type="button"
-            onClick={handleDecline}
-            className="flex-1 md:flex-none px-4 py-2.5 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-          >
-            拒否する
-          </button>
-          <button
-            type="button"
-            onClick={handleAccept}
-            className="flex-1 md:flex-none px-6 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            同意する
-          </button>
-        </div>
+      {/* buttons */}
+      <div className="flex border-t border-black">
+        <button
+          type="button"
+          onClick={handleDecline}
+          className="flex-1 px-4 py-2.5 text-[0.8125rem] bg-white text-black border-r border-black cursor-crosshair transition-colors hover:bg-black hover:text-white"
+        >
+          拒否する
+        </button>
+        <button
+          type="button"
+          onClick={handleAccept}
+          className="flex-1 px-4 py-2.5 text-[0.8125rem] bg-[#0f00b0] text-[#e5e5e5] cursor-crosshair transition-colors hover:bg-[#2b1add]"
+        >
+          同意する
+        </button>
       </div>
     </section>
   )

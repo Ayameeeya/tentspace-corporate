@@ -12,7 +12,7 @@ const ITEMS = [
   {
     num: "01",
     label: "web",
-    after: "Webアプリ・サイトを、設計からAWS構築、運用まで一気通貫で。",
+    after: "Webアプリもサイトも、設計からAWS、運用まで、ひと続きで。",
     before: "フロントはA社、サーバはB社、インフラはC社。調整だけで日が暮れる。",
   },
   {
@@ -24,13 +24,13 @@ const ITEMS = [
   {
     num: "03",
     label: "ai agents",
-    after: "AIエージェントが定型業務を肩代わり。人は判断に集中できる。",
+    after: "繰り返しの仕事はAIエージェントに。人は、考えることに集中できる。",
     before: "毎日の転記、集計、報告。人手でしか回らない業務が積み上がる。",
   },
   {
     num: "04",
     label: "dx",
-    after: "業務フローを見直し、運用を自動化。改善が続く仕組みを作る。",
+    after: "業務の流れを見直して、自動化。良くなり続ける仕組みを作る。",
     before: "ツールを入れて終わり。現場に定着せず、元のやり方に戻る。",
   },
   {
@@ -166,7 +166,7 @@ export function DifferentSection() {
       <div className="mono-container">
         <div className="mono-diff__head">
           <ShuffleText as="h2" className="heading-s">
-            従来のシステム開発は、tent space でこう変わる
+            いつものシステム開発が、tent space だとこう変わる
           </ShuffleText>
           <ScrambleText as="p" className="paragraph-l">
             a different studio

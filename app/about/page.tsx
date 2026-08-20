@@ -8,9 +8,9 @@ import { LogoLoop } from "@/components/LogoLoop"
 import { STACK_LOGOS } from "@/components/home/stack-logos"
 
 const VALUES = [
-  { num: "01", title: "one team", desc: "設計も実装も運用も、同じチームが最後まで。分業で意図を薄めない。" },
-  { num: "02", title: "ai-augmented", desc: "AIを開発の中心に。定型作業はエージェントに任せ、人は判断と品質に集中する。" },
-  { num: "03", title: "build to last", desc: "作って終わりにしない。公開後も動き続け、育ち続けるソフトウェアを。" },
+  { num: "01", title: "one team", desc: "設計も実装も運用も、同じチームで最後まで。はじめの想いを薄めない。" },
+  { num: "02", title: "ai-augmented", desc: "AIと、ともに作る。繰り返しはエージェントに任せて、人は判断と品質に集中する。" },
+  { num: "03", title: "build to last", desc: "作って終わりにしない。公開の後も、育ち続けるソフトウェアを。" },
 ]
 
 const SERVICES = [
@@ -191,7 +191,7 @@ export default function AboutPage() {
             <ScrambleText as="h2" className="heading-m">
               まずは、作りたいものの話から始めましょう。
             </ScrambleText>
-            <MainBtn label="start a project" href="/contact" variant="inside" />
+            <MainBtn label="start a project" href="/contact" variant="inside" twoLine />
           </div>
         </section>
       </main>

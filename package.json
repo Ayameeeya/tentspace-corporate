@@ -48,7 +48,7 @@
     "@radix-ui/react-tooltip": "^1.1.6",
     "@react-email/components": "^1.0.1",
     "@react-three/drei": "^10.7.7",
-    "@react-three/fiber": "^9.4.2",
+    "@react-three/fiber": "^9.7.0",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.87.1",
     "@types/matter-js": "^0.20.2",
