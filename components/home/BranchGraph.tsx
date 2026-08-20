@@ -23,6 +23,7 @@ const ZONE_X: Record<string, number> = {
 
 type Node = { id: string; label: string; x: number; y: number; merge?: boolean }
 type Seg = { d: string; top: number; bottom: number; width: number; dim?: boolean }
+type Rect = { x: number; y: number; w: number; h: number }
 
 /**
  * ページ背景を流れる git グラフ。
@@ -38,6 +39,7 @@ export function BranchGraph() {
     nodes: Node[]
     mergeX: number
     mergeY: number
+    textRects: Rect[]
   } | null>(null)
 
   useEffect(() => {
@@ -109,14 +111,35 @@ export function BranchGraph() {
         })
       }
 
-      const nodes: Node[] = STOPS.map((s) => ({
-        ...s,
-        x: ZONE_X[s.id] * w,
-        y: sec[s.id] + vh * 0.26,
-      }))
+      // 本文テキストの矩形を収集: 線はこの領域では描かない（マスクで抜く）
+      const textRects: Rect[] = []
+      document
+        .querySelectorAll<HTMLElement>(
+          "main h1, main h2, main h3, main p, main .mono-works__tags, main .main-btn, main .mono-win, main .mono-works__shot",
+        )
+        .forEach((el) => {
+          const r = el.getBoundingClientRect()
+          if (r.width < 8 || r.height < 8) return
+          textRects.push({ x: r.left, y: r.top + window.scrollY, w: r.width, h: r.height })
+        })
+
+      // ノードはテキストに重なる場合、上下の空きへ逃がす
+      const isClear = (x: number, y: number) =>
+        !textRects.some((r) => x > r.x - 16 && x < r.x + r.w + 16 && y > r.y - 16 && y < r.y + r.h + 16)
+      const freeY = (x: number, y0: number) => {
+        for (const dy of [0, 44, -44, 88, -88, 132, -132, 176, 220]) {
+          if (isClear(x, y0 + dy)) return y0 + dy
+        }
+        return y0
+      }
+
+      const nodes: Node[] = STOPS.map((s) => {
+        const x = ZONE_X[s.id] * w
+        return { ...s, x, y: freeY(x, sec[s.id] + vh * 0.26) }
+      })
       nodes.push({ id: "__merge", label: "merged → main", x: mergeX, y: mergeY, merge: true })
 
-      setLayout({ height, segs, nodes, mergeX, mergeY })
+      setLayout({ height, segs, nodes, mergeX, mergeY, textRects })
     }
     measure()
     const ro = new ResizeObserver(measure)
@@ -177,17 +200,27 @@ export function BranchGraph() {
     <div ref={rootRef} style={{ display: "contents" }}>
       <div className="mono-branch" style={{ height: layout.height }}>
         <svg className="mono-branch__svg" width="100%" height={layout.height} aria-hidden="true">
-          {layout.segs.map((s, i) => (
-            <path
-              key={i}
-              d={s.d}
-              data-seg
-              data-top={s.top}
-              data-bottom={s.bottom}
-              strokeWidth={s.width}
-              opacity={s.dim ? 0.45 : 0.9}
-            />
-          ))}
+          <defs>
+            <mask id="mono-branch-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height={layout.height}>
+              <rect width="100%" height={layout.height} fill="#fff" />
+              {layout.textRects.map((r, i) => (
+                <rect key={i} x={r.x - 10} y={r.y - 8} width={r.w + 20} height={r.h + 16} fill="#000" />
+              ))}
+            </mask>
+          </defs>
+          <g mask="url(#mono-branch-mask)">
+            {layout.segs.map((s, i) => (
+              <path
+                key={i}
+                d={s.d}
+                data-seg
+                data-top={s.top}
+                data-bottom={s.bottom}
+                strokeWidth={s.width}
+                opacity={s.dim ? 0.45 : 0.9}
+              />
+            ))}
+          </g>
         </svg>
       </div>
       {/* section nodes = commits（本文より前面の別レイヤー） */}
