@@ -1117,6 +1117,13 @@ select.mono-field:invalid { color: color-mix(in srgb, var(--m-ink), transparent 
   mix-blend-mode: difference;
   color: #fff;
 }
+.mono-rail button {
+  pointer-events: auto;
+  cursor: crosshair;
+  padding: 0;
+  font-family: inherit;
+  color: inherit;
+}
 .mono-rail__track,
 .mono-rail__fill {
   position: absolute;
@@ -1151,10 +1158,35 @@ select.mono-field:invalid { color: color-mix(in srgb, var(--m-ink), transparent 
   text-transform: lowercase;
   letter-spacing: 0.04em;
   white-space: nowrap;
-  opacity: 0;
+  opacity: 0.35;
   transition: opacity 0.3s var(--m-ease);
 }
-.mono-rail__node[data-on="true"] .mono-rail__label { opacity: 0.75; }
+.mono-rail__node[data-on="true"] .mono-rail__label { opacity: 0.8; }
+.mono-rail__node:hover .mono-rail__label { opacity: 1; }
+/* 終端: main へのマージコミット。菱形で、点灯時にプロップする */
+.mono-rail__node--merge,
+.mono-rail__node--merge[data-on="true"] {
+  border: none;
+  background: transparent;
+}
+.mono-rail__node--merge::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid #fff;
+  transform: rotate(45deg);
+  transition: background 0.3s var(--m-ease);
+}
+.mono-rail__node--merge[data-on="true"]::before {
+  background: #fff;
+  animation: mono-rail-merge 0.74s var(--m-snap) both;
+}
+@keyframes mono-rail-merge {
+  0% { transform: rotate(45deg) scale(0.2); }
+  40% { transform: rotate(45deg) scale(1.5); }
+  70% { transform: rotate(45deg) scale(0.9); }
+  100% { transform: rotate(45deg) scale(1); }
+}
 @media (max-width: 991px) {
   .mono-rail { display: none; }
 }

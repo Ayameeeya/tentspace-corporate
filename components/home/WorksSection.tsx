@@ -138,7 +138,8 @@ export function WorksSection() {
               </a>
             </div>
             <div className="mono-works__shot">
-              <img src={w.poster} alt={`${w.name} のサイト画面`} loading="lazy" />
+              {/* 固有寸法でレイアウトを先に確定させる（遅延読込によるずれ防止） */}
+              <img src={w.poster} alt={`${w.name} のサイト画面`} loading="lazy" width={1120} height={700} />
               <video src={w.video} muted loop playsInline preload="none" aria-hidden="true" />
             </div>
           </div>

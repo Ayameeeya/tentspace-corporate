@@ -25,9 +25,8 @@ export function MonoNav() {
   const navRef = useRef<HTMLElement>(null)
   const barRef = useRef<HTMLDivElement>(null)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [activeSection, setActiveSection] = useState("")
 
-  // scroll progress bar + active section tracking
+  // scroll progress bar
   useEffect(() => {
     const bar = barRef.current
     if (!bar) return
@@ -36,20 +35,7 @@ export function MonoNav() {
       end: "bottom bottom",
       onUpdate: (self) => gsap.set(bar, { scaleX: self.progress }),
     })
-    const sectionTriggers = NAV_SECTIONS.map((s) => {
-      const el = document.getElementById(s.id)
-      if (!el) return null
-      return ScrollTrigger.create({
-        trigger: el,
-        start: "top 60px",
-        end: "bottom 60px",
-        onToggle: (self) => self.isActive && setActiveSection(s.id),
-      })
-    })
-    return () => {
-      st.kill()
-      sectionTriggers.forEach((t) => t?.kill())
-    }
+    return () => st.kill()
   }, [])
 
   // hover scramble on nav links
@@ -98,24 +84,9 @@ export function MonoNav() {
               <img src="/logo_white_symbol.png" alt="" aria-hidden="true" className="mono-logo__img mono-logo__img--light" />
             </Link>
           </div>
+          {/* セクションリンクはコミットレールへ移管。バーは進捗ラインのみ */}
           <div className="mono-nav__progress">
             <div ref={barRef} className="mono-nav__progress-bar" />
-            <div className="mono-nav__labels">
-              {NAV_SECTIONS.map((s) => (
-                <button
-                  key={s.id}
-                  type="button"
-                  className="mono-nav__label"
-                  data-active={activeSection === s.id}
-                  data-mono-hover
-                  onClick={() => jumpTo(s.id)}
-                >
-                  <span className="paragraph-regular" data-mono-hover-target>
-                    {s.label}
-                  </span>
-                </button>
-              ))}
-            </div>
           </div>
           <div className="mono-nav__docs">
             <Link href="/blog" className="paragraph-regular" data-mono-hover style={{ textDecoration: "none", color: "inherit" }}>
