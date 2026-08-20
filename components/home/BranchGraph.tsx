@@ -30,9 +30,8 @@ function elbow(x1: number, x2: number, yJog: number) {
 /**
  * ページ背景を流れる git グラフ（difference 合成でどの地色でも見える）。
  * run1: vision → system(右端) → how(中央) で途絶える
- * run2: with tent space 手前で再開 → services のレーンを降りる。
- *       終盤は画面外から入る 3 本の支流とともにマージ行で 1 点に集まる
- *       （中央トランクは持たない）。
+ * 終盤: 中央を通る main のレーンに、services のレーンと画面外から入る
+ *       3 本の支流がマージ行で合流し、フッターの 1 点にマージする。
  * different / works ゾーンには描かない。
  */
 export function BranchGraph() {
@@ -97,8 +96,13 @@ export function BranchGraph() {
       }
       const d2 = `M ${xServices} ${run2Top}` + toMergeRow(xServices)
 
+      // main: 中央を通る本線。他のレーンはここへ合流してマージ点に至る
+      const mainTop = run2Top - vh * 0.22
+      const dMain = `M ${xMerge} ${mainTop} L ${xMerge} ${mergeY}`
+
       const segs: Seg[] = [
         { d: d1, top: run1Top, bottom: run1End },
+        { d: dMain, top: mainTop, bottom: mergeY },
         { d: d2, top: run2Top, bottom: mergeY },
       ]
 
