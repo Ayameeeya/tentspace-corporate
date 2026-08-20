@@ -108,7 +108,8 @@ export function BranchGraph() {
       const segs: Seg[] = [
         { d: d1, top: run1Top, bottom: run1End },
         { d: dMain, top: mainTop, bottom: mergeY },
-        { d: d2, top: run2Top, bottom: mergeY },
+        // 描画窓にマージ行の水平走りぶんを足し、スクロール量と 1:1 の速さにする
+        { d: d2, top: run2Top, bottom: mergeY + (xServices - xMerge) },
       ]
 
       // フィナーレ: 支流は画面外から水平に入り、自分のレーンを降りて
