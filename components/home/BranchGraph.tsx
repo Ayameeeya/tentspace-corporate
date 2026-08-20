@@ -125,11 +125,14 @@ export function BranchGraph() {
           ` L ${xMerge} ${mergeY}`
         )
       }
+      // 画面外からの入場は 3 本。内側のレーンほど先（高い位置）に入れて
+      // 後続の水平線が既存の縦レーンを横切らないようにする
       const tribDs: [string, number][] = [
-        [edge(-4, 0.18 * w, yAt(0.04)), yAt(0.04)],
-        [edge(w + 4, 0.82 * w, yAt(0.2)), yAt(0.2)],
-        [fork(0.36 * w, yAt(0.44)), yAt(0.44)],
-        [fork(0.64 * w, yAt(0.6)), yAt(0.6)],
+        [edge(-4, 0.3 * w, yAt(0.04)), yAt(0.04)],
+        [edge(w + 4, 0.84 * w, yAt(0.18)), yAt(0.18)],
+        [edge(-4, 0.16 * w, yAt(0.32)), yAt(0.32)],
+        [fork(0.4 * w, yAt(0.5)), yAt(0.5)],
+        [fork(0.62 * w, yAt(0.66)), yAt(0.66)],
       ]
       for (const [d, top] of tribDs) segs.push({ d, top, bottom: mergeY, dim: true })
       const ticks: Tick[] = []
