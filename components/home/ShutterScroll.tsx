@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { prefersReducedMotion, seededRandom } from "./gsap-setup"
 
@@ -13,9 +12,9 @@ const COLORS: Record<string, string> = {
 }
 
 /**
- * Scroll-scrubbed pixel shutter strip (10 rows x 4 cols).
- * mode "cover": cells grow in (origin bottom) as the strip approaches the
- * viewport bottom — a pixel wipe into the next section's color.
+ * Scroll-scrubbed scanline wipe.
+ * 次のセクションの色が、下の行から左→右に高速タイプされていく
+ * （system ウィンドウのタイプライター演出の面バージョン）。
  * Also flips the nav theme at 40% progress.
  */
 export function ShutterScroll({
@@ -23,92 +22,125 @@ export function ShutterScroll({
   navTheme,
   prevTheme = "base",
   bg,
-  rows = 10,
-  cols = 4,
   height = "10em",
   seed = 42,
 }: {
   variant: keyof typeof COLORS
-  /** colour the cells wipe in — i.e. the section below */
+  /** colour the cells fill in — i.e. the section below */
   navTheme?: "base" | "indigo" | "olive"
   prevTheme?: "base" | "indigo" | "olive"
   /** ground the strip sits on — set when wiping out of a coloured section */
   bg?: keyof typeof COLORS
-  rows?: number
-  cols?: number
   height?: string
   seed?: number
 }) {
   const rootRef = useRef<HTMLDivElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
   const applied = useRef(false)
 
   useEffect(() => {
     const root = rootRef.current
-    if (!root) return
-    const cells = Array.from(root.children) as HTMLElement[]
-    const rand = seededRandom(seed)
+    const canvas = canvasRef.current
+    if (!root || !canvas) return
+    const ctx = canvas.getContext("2d")
+    if (!ctx) return
 
-    // biased-from-bottom order with seeded randomness
-    const order = cells
-      .map((cell, i) => {
-        const row = Math.floor(i / cols)
-        const col = i % cols
-        return { cell, key: (rows - 1 - row) / rows + rand() * 0.22 + (col / cols) * 0.06 }
-      })
-      .sort((a, b) => a.key - b.key)
+    const ROW = 22
+    const color = COLORS[variant]
+    const hex = color.replace("#", "")
+    const r = parseInt(hex.slice(0, 2), 16)
+    const g = parseInt(hex.slice(2, 4), 16)
+    const b = parseInt(hex.slice(4, 6), 16)
+    const caret = `rgba(${r}, ${g}, ${b}, 0.45)`
 
-    if (prefersReducedMotion()) {
-      gsap.set(cells, { scaleY: 1 })
-      return
+    let width = 0
+    let height2 = 0
+    let rows = 0
+    let rowStart: Float32Array = new Float32Array(0)
+    let rowDur: Float32Array = new Float32Array(0)
+    const reduced = prefersReducedMotion()
+    let progress = reduced ? 1.2 : 0
+
+    const build = () => {
+      const rect = canvas.getBoundingClientRect()
+      const dpr = Math.min(1.5, window.devicePixelRatio || 1)
+      width = rect.width
+      height2 = rect.height
+      canvas.width = Math.round(rect.width * dpr)
+      canvas.height = Math.round(rect.height * dpr)
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      rows = Math.ceil(height2 / ROW)
+      const rand = seededRandom(seed)
+      rowStart = new Float32Array(rows)
+      rowDur = new Float32Array(rows)
+      for (let i = 0; i < rows; i++) {
+        rowStart[i] = (i / rows) * 0.88
+        rowDur[i] = (1 / rows) * (2.4 + rand() * 0.4)
+      }
+      render()
     }
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: root,
-        start: "top bottom",
-        end: "bottom center",
-        scrub: 0.3,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          if (!navTheme) return
-          const nav = document.querySelector<HTMLElement>("[data-mono-nav]")
-          if (!nav) return
-          const past = self.progress >= 0.4
-          if (past && !applied.current) {
-            applied.current = true
-            nav.dataset.navTheme = navTheme
-          } else if (!past && applied.current) {
-            applied.current = false
-            nav.dataset.navTheme = prevTheme
-          }
-        },
+    const render = () => {
+      ctx.clearRect(0, 0, width, height2)
+      // 下の行から順に、各行が左→右に高速タイプされていく
+      for (let i = 0; i < rows; i++) {
+        const t = Math.min(1, Math.max(0, (progress - rowStart[i]) / rowDur[i]))
+        if (t <= 0) continue
+        const y = height2 - (i + 1) * ROW
+        const filled = t * width
+        ctx.fillStyle = color
+        ctx.fillRect(0, y, filled, ROW + 0.5)
+        if (t < 1) {
+          // タイプ位置のキャレット
+          ctx.fillStyle = caret
+          ctx.fillRect(filled, y, ROW * 0.8, ROW + 0.5)
+        }
+      }
+    }
+
+    build()
+    const ro = new ResizeObserver(build)
+    ro.observe(canvas)
+
+    const st = ScrollTrigger.create({
+      trigger: root,
+      start: "top bottom",
+      end: "bottom center",
+      invalidateOnRefresh: true,
+      onUpdate: (self) => {
+        if (!reduced) {
+          // 1.08 で最上段の行までタイプが完了する
+          progress = self.progress * 1.08
+          render()
+        }
+        if (!navTheme) return
+        const nav = document.querySelector<HTMLElement>("[data-mono-nav]")
+        if (!nav) return
+        const past = self.progress >= 0.4
+        if (past && !applied.current) {
+          applied.current = true
+          nav.dataset.navTheme = navTheme
+        } else if (!past && applied.current) {
+          applied.current = false
+          nav.dataset.navTheme = prevTheme
+        }
       },
-    })
-    order.forEach(({ cell }, i) => {
-      tl.to(cell, { scaleY: 1, duration: 0.1, ease: "none" }, (i / order.length) * 0.9)
     })
 
     return () => {
-      tl.scrollTrigger?.kill()
-      tl.kill()
+      st.kill()
+      ro.disconnect()
     }
-  }, [cols, rows, seed, navTheme, prevTheme])
+  }, [variant, navTheme, prevTheme, seed])
 
   return (
     <div
       ref={rootRef}
       className="mono-shutter"
-      style={{
-        height,
-        background: bg ? COLORS[bg] : undefined,
-        gridTemplateRows: `repeat(${rows}, 1fr)`,
-        gridTemplateColumns: `repeat(${cols}, 1fr)`,
-      }}
+      style={{ height, background: bg ? COLORS[bg] : undefined }}
       aria-hidden="true"
     >
-      {Array.from({ length: rows * cols }).map((_, i) => (
-        <div key={i} className="mono-shutter__cell" style={{ background: COLORS[variant] }} />
-      ))}
+      <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} />
     </div>
   )
 }

@@ -5,24 +5,46 @@ import { ScrambleText } from "./ScrambleText"
 import { attachHoverScramble } from "./scramble"
 import { prefersReducedMotion } from "./gsap-setup"
 
-const WORKS = [
+type Work = {
+  num: string
+  name: string
+  url: string
+  video: string
+  poster: string
+  desc: string
+  tags: string[]
+  /** タイトルのスクランブル演出を使わない */
+  plainTitle?: boolean
+}
+
+const WORKS: Work[] = [
   {
     num: "01",
     name: "3Dasset",
     url: "https://3dasset.io/",
     video: "/works/3dasset.mp4",
-    poster: "/works/3dasset.jpg",
-    desc: "3Dアセットのマーケットプレイス。デザインから開発、保守までを一貫して担当。",
-    tags: ["design", "build", "maintenance"],
+    poster: "/works/3dasset.jpg?v=6",
+    desc: "3Dアセットマーケットプレイス『3Dasset』のデザインおよび開発・保守運用を、tent space が担当しています。",
+    tags: ["design", "build", "maintenance", "three.js"],
   },
   {
     num: "02",
     name: "TOKYO EPIC",
     url: "https://www.tokyo-epic.com/",
     video: "/works/tokyo-epic.mp4",
-    poster: "/works/tokyo-epic.jpg",
-    desc: "アニメーションIPスタジオのコーポレートサイト。デザインから開発、保守までを一貫して担当。",
+    poster: "/works/tokyo-epic.jpg?v=2",
+    desc: "アニメーションIPスタジオ『TOKYO EPIC』のコーポレートサイトの制作を、tent space が行いました。",
     tags: ["design", "build", "maintenance"],
+  },
+  {
+    num: "03",
+    name: "MATCHA SELECT SHOP",
+    url: "https://matcha-select.com/",
+    video: "/works/matcha-select.mp4?v=2",
+    poster: "/works/matcha-select.jpg",
+    desc: "抹茶と茶道具のオンラインストア『抹茶セレクトショップ』のデザインと Shopify スクラッチ構築を、tent space が担当しました。",
+    tags: ["design", "build", "shopify"],
+    plainTitle: true,
   },
 ]
 
@@ -36,24 +58,50 @@ export function WorksSection() {
       attachHoverScramble(el, 3),
     )
 
-    // play the site videos only while on screen (and never with reduced motion)
-    const videos = Array.from(root.querySelectorAll<HTMLVideoElement>("video"))
+    // hover devices: screenshot by default, the video fades in and plays on
+    // hover. touch devices: play while on screen (as before). never animate
+    // with reduced motion
     const reduced = prefersReducedMotion()
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const video = entry.target as HTMLVideoElement
-          if (entry.isIntersecting && !reduced) video.play().catch(() => {})
-          else video.pause()
+    const hoverable = window.matchMedia("(hover: hover) and (pointer: fine)").matches
+    const extra: (() => void)[] = []
+
+    if (hoverable) {
+      root.querySelectorAll<HTMLElement>(".mono-works__shot").forEach((shot) => {
+        const video = shot.querySelector("video")
+        if (!video) return
+        const enter = () => {
+          if (!reduced) video.play().catch(() => {})
+        }
+        const leave = () => {
+          video.pause()
+          video.currentTime = 0
+        }
+        shot.addEventListener("mouseenter", enter)
+        shot.addEventListener("mouseleave", leave)
+        extra.push(() => {
+          shot.removeEventListener("mouseenter", enter)
+          shot.removeEventListener("mouseleave", leave)
         })
-      },
-      { rootMargin: "100px" },
-    )
-    videos.forEach((v) => io.observe(v))
+      })
+    } else {
+      const videos = Array.from(root.querySelectorAll<HTMLVideoElement>("video"))
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const video = entry.target as HTMLVideoElement
+            if (entry.isIntersecting && !reduced) video.play().catch(() => {})
+            else video.pause()
+          })
+        },
+        { rootMargin: "100px" },
+      )
+      videos.forEach((v) => io.observe(v))
+      extra.push(() => io.disconnect())
+    }
 
     return () => {
       cleanups.forEach((fn) => fn())
-      io.disconnect()
+      extra.forEach((fn) => fn())
     }
   }, [])
 
@@ -70,9 +118,13 @@ export function WorksSection() {
           <div key={w.num} className="mono-works__item">
             <div className="mono-works__info">
               <p className="paragraph-regular opacity-64">{w.num}</p>
-              <ScrambleText as="h3" className="heading-s">
-                {w.name}
-              </ScrambleText>
+              {w.plainTitle ? (
+                <h3 className="heading-s">{w.name}</h3>
+              ) : (
+                <ScrambleText as="h3" className="heading-s">
+                  {w.name}
+                </ScrambleText>
+              )}
               <div className="mono-works__tags">
                 {w.tags.map((t) => (
                   <span key={t} className="mono-works__tag">
@@ -85,9 +137,11 @@ export function WorksSection() {
                 <span data-mono-hover-target>visit site ↗</span>
               </a>
             </div>
-            <a href={w.url} target="_blank" rel="noreferrer" className="mono-works__shot" aria-label={`${w.name} を開く`}>
-              <video src={w.video} poster={w.poster} muted loop playsInline preload="none" aria-label={`${w.name} のサイト画面`} />
-            </a>
+            <div className="mono-works__shot">
+              {/* 固有寸法でレイアウトを先に確定させる（遅延読込によるずれ防止） */}
+              <img src={w.poster} alt={`${w.name} のサイト画面`} loading="lazy" width={1120} height={700} />
+              <video src={w.video} muted loop playsInline preload="none" aria-hidden="true" />
+            </div>
           </div>
         ))}
       </div>

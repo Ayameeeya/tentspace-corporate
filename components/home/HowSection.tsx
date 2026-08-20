@@ -1,10 +1,6 @@
 "use client"
 
-import { useEffect, useRef } from "react"
-import gsap from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { ScrambleText } from "./ScrambleText"
-import { prefersReducedMotion } from "./gsap-setup"
 
 const STEPS = [
   { title: "consult", desc: "作りたいこと、お困りのこと。メモ一枚でも、雑談からでも大丈夫です。", num: "01" },
@@ -13,59 +9,26 @@ const STEPS = [
 ]
 
 export function HowSection() {
-  const wrapRef = useRef<HTMLDivElement>(null)
-  const listRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const wrap = wrapRef.current
-    const list = listRef.current
-    if (!wrap || !list || prefersReducedMotion()) return
-
-    const tween = gsap.fromTo(
-      list,
-      { y: 0 },
-      {
-        y: () => -(list.scrollHeight - wrap.clientHeight),
-        ease: "none",
-        scrollTrigger: {
-          trigger: wrap,
-          // ナビからのジャンプはセクション上端に着地する（track 上端 ≈ 画面の
-          // 8〜18%）。開始をそれより下に置き、着地時は必ず 01 から始める
-          start: "top 8%",
-          end: "bottom 30%",
-          scrub: 0.075,
-          invalidateOnRefresh: true,
-        },
-      },
-    )
-    const ro = new ResizeObserver(() => ScrollTrigger.refresh())
-    ro.observe(list)
-    return () => {
-      tween.scrollTrigger?.kill()
-      tween.kill()
-      ro.disconnect()
-    }
-  }, [])
-
   return (
     <section className="mono-how" id="how-it-works">
       <div className="mono-container">
         <div className="mono-how__wrapper">
-          <div ref={wrapRef} className="mono-how__track-wrap">
-            <div ref={listRef}>
-              {STEPS.map((s) => (
-                <div key={s.num} className="mono-how__item">
-                  <div className="mono-how__info">
-                    <ScrambleText as="h2" className="paragraph-m">
-                      {s.title}
-                    </ScrambleText>
-                    {/* 日本語の説明文はスクランブルさせず静的に出す */}
-                    <p className="paragraph-m opacity-64">{s.desc}</p>
-                  </div>
-                  <div className="mono-how__num">{s.num}</div>
+          {/* git log --graph: プロセスをコミットグラフとして見せる */}
+          <div className="mono-how__graph">
+            {STEPS.map((s) => (
+              <div key={s.num} className="mono-how__node">
+                <div className="mono-how__rail" aria-hidden="true">
+                  <span className="mono-how__dot" />
                 </div>
-              ))}
-            </div>
+                <div className="mono-how__node-body">
+                  <p className="paragraph-regular opacity-64">{s.num}</p>
+                  <ScrambleText as="h2" className="heading-s">
+                    {s.title}
+                  </ScrambleText>
+                  <p className="paragraph-m opacity-64">{s.desc}</p>
+                </div>
+              </div>
+            ))}
           </div>
           <div className="mono-how__text">
             <p className="heading-m ti-2">

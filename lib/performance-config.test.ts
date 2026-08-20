@@ -111,12 +111,12 @@ describe("performance configuration", () => {
 
   it("ブログロゴのintrinsic比率を実ファイルに合わせる", async () => {
     const header = await read("components/home/MonoBlogNav.tsx")
-    const logos = header.match(/<img[\s\S]*?logo_(?:black|white)_yoko\.png[\s\S]*?\/>/g) ?? []
+    const logos = header.match(/<img[\s\S]*?logo_(?:black|white)_symbol\.png[\s\S]*?\/>/g) ?? []
 
     expect(logos.length).toBeGreaterThan(0)
     for (const logo of logos) {
-      expect(logo).toContain("width={682}")
-      expect(logo).toContain("height={125}")
+      expect(logo).toContain("width={273}")
+      expect(logo).toContain("height={183}")
     }
   })
 

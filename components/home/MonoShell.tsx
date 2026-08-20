@@ -6,11 +6,19 @@ import { useEffect, type ReactNode } from "react"
 import Lenis from "lenis"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { setupGsap } from "./gsap-setup"
+import { prefersReducedMotion, setupGsap } from "./gsap-setup"
 import { MonoNav } from "./MonoNav"
 import { MonoFooter } from "./MonoFooter"
 
 setupGsap()
+
+/** 到達時にチカチカさせるセクション名（本文中のラベル） */
+const FLICKER_TARGETS = [
+  ".mono-chapter",
+  ".mono-system__intro h2",
+  ".mono-diff__head p",
+  ".mono-pricing__head p",
+].join(", ")
 
 /**
  * Shared page shell for the monolayer-style design:
@@ -34,6 +42,26 @@ export function MonoShell({ children, footer = true }: { children: ReactNode; fo
       lenis.destroy()
       delete (window as any).__monoLenis
     }
+  }, [])
+
+  // セクション名は到達した瞬間にチカチカと灯る（CRT 風の点灯）
+  useEffect(() => {
+    if (prefersReducedMotion()) return
+    const targets = Array.from(document.querySelectorAll<HTMLElement>(FLICKER_TARGETS))
+    if (targets.length === 0) return
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+          const el = entry.target as HTMLElement
+          el.classList.add("mono-flicker")
+          io.unobserve(el)
+        })
+      },
+      { rootMargin: "-22% 0px -28% 0px" },
+    )
+    targets.forEach((el) => io.observe(el))
+    return () => io.disconnect()
   }, [])
 
   return (
