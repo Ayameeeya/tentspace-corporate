@@ -112,7 +112,7 @@ export function MonoMenu({
         <div ref={linksRef} className="mono-menu__links">
           {entries.map((e) =>
             e.type === "link" ? (
-              <Link key={e.label} href={e.href} className="mono-menu__link" onClick={onClose}>
+              <Link key={e.label} href={e.href} prefetch={false} className="mono-menu__link" onClick={onClose}>
                 <span className="mono-menu__link-inner">{e.label}</span>
               </Link>
             ) : (

@@ -158,8 +158,14 @@ export function MonoBlogNav({ ticker = false }: { ticker?: boolean } = {}) {
               <span />
               <span />
             </button>
-            <Link href="/" className="mono-logo" aria-label="Home">
-              <img src="/logo_black_yoko.png" alt="tent space" className="mono-logo__img mono-logo__img--dark" />
+            <Link href="/" prefetch={false} className="mono-logo" aria-label="Home">
+              <img
+                src="/logo_black_yoko.png"
+                alt="tent space"
+                width={682}
+                height={125}
+                className="mono-logo__img mono-logo__img--dark"
+              />
             </Link>
           </div>
           <div className="mono-nav__progress">
@@ -181,7 +187,7 @@ export function MonoBlogNav({ ticker = false }: { ticker?: boolean } = {}) {
             </div>
           </div>
           <div className="mono-nav__docs">
-            <Link href="/" className="paragraph-regular" data-mono-hover style={{ textDecoration: "none", color: "inherit" }}>
+            <Link href="/" prefetch={false} className="paragraph-regular" data-mono-hover style={{ textDecoration: "none", color: "inherit" }}>
               <span data-mono-hover-target>[ top ]</span>
             </Link>
           </div>
