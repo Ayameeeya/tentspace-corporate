@@ -12,6 +12,7 @@ const NODE_STOPS = [
 
 type Node = { id: string; label: string; x: number; y: number; merge?: boolean }
 type Seg = { d: string; top: number; bottom: number; dim?: boolean }
+type Tick = { x: number; y: number }
 type Rect = { x: number; y: number; w: number; h: number }
 
 const R = 18 // エルボーのアール
@@ -41,6 +42,7 @@ export function BranchGraph() {
     segs: Seg[]
     nodes: Node[]
     textRects: Rect[]
+    ticks: Tick[]
   } | null>(null)
 
   useEffect(() => {
@@ -64,7 +66,9 @@ export function BranchGraph() {
       const xHow = 0.5 * w
       const xServices = 0.88 * w
       const xMerge = 0.5 * w
-      const mergeY = docY(footer) + vh * 0.2
+      // マージ点はフッター内の空白帯（ソーシャル行とピクセルフィールドの間）
+      const footerVisual = footer.querySelector<HTMLElement>(".mono-footer__visual")
+      const mergeY = footerVisual ? docY(footerVisual) - 40 : docY(footer) + vh * 0.35
 
       // run1: vision → system → how、different の手前で途絶える
       const run1Top = vh * 0.55
@@ -76,10 +80,15 @@ export function BranchGraph() {
         ` L ${xHow} ${run1End}`
 
       // run2: works の後（with tent space）で再開 → services → 中央 → マージ
+      // 中央へのエルボーはロゴ帯の下で曲げる（帯はマスクで線が消えるため）
+      const stackEl = document.querySelector<HTMLElement>(".mono-stack-band")
+      const stackBottom = stackEl
+        ? docY(stackEl) + stackEl.offsetHeight
+        : docY(strips[3]) + strips[3].offsetHeight
       const run2Top = docY(strips[2]) - vh * 0.5
       const d2 =
         `M ${xServices} ${run2Top}` +
-        elbow(xServices, xMerge, docY(strips[3]) + strips[3].offsetHeight + vh * 0.12) +
+        elbow(xServices, xMerge, stackBottom + 34) +
         ` L ${xMerge} ${mergeY}`
 
       const segs: Seg[] = [
@@ -87,27 +96,26 @@ export function BranchGraph() {
         { d: d2, top: run2Top, bottom: mergeY },
       ]
 
-      // フィナーレの支流: 段違いの高さでセンターレーンにエルボー合流
-      const tribStart = docY(strips[3]) + strips[3].offsetHeight + vh * 0.05
-      const tribs: [number, number][] = [
-        [0.18 * w, mergeY - vh * 0.42],
-        [0.34 * w, mergeY - vh * 0.3],
-        [0.72 * w, mergeY - vh * 0.36],
-        [0.95 * w, mergeY - vh * 0.24],
-      ]
-      for (const [bx, joinY] of tribs) {
+      // フィナーレ: 各所から降りてきたレーンが、マージ行（横一列）の
+      // エルボーで 1 点に集まる。マージ点より下には何も伸ばさない
+      const tribTop = stackBottom + 24
+      const tribXs = [0.18 * w, 0.36 * w, 0.64 * w, 0.82 * w]
+      for (const bx of tribXs) {
+        const dir = xMerge > bx ? 1 : -1
         const d =
-          `M ${bx} ${tribStart}` +
-          elbow(bx, xMerge, joinY) +
+          `M ${bx} ${tribTop}` +
+          ` L ${bx} ${mergeY - R}` +
+          ` Q ${bx} ${mergeY}, ${bx + dir * R} ${mergeY}` +
           ` L ${xMerge} ${mergeY}`
-        segs.push({ d, top: tribStart, bottom: mergeY, dim: true })
+        segs.push({ d, top: tribTop, bottom: mergeY, dim: true })
       }
+      const ticks: Tick[] = []
 
       // 本文テキストの矩形: 線はこの領域では描かない（マスクで抜く）
       const textRects: Rect[] = []
       document
         .querySelectorAll<HTMLElement>(
-          "main h1, main h2, main h3, main p, main .mono-works__tags, main .main-btn, main .mono-win, main .mono-works__shot, .mono-footer p, .mono-footer a, .mono-footer nav",
+          "main h1, main h2, main h3, main p, main .mono-works__tags, main .main-btn, main .mono-win, main .mono-works__shot, main .mono-stack-band, .mono-footer p, .mono-footer a, .mono-footer nav",
         )
         .forEach((el) => {
           const r = el.getBoundingClientRect()
@@ -132,7 +140,7 @@ export function BranchGraph() {
         vision: [run1Top, docY(strips[0]) - vh * 0.08 - R],
         system: [docY(strips[0]) - vh * 0.08 + R, docY(strips[1]) + strips[1].offsetHeight + vh * 0.18 - R],
         "how-it-works": [docY(strips[1]) + strips[1].offsetHeight + vh * 0.18 + R, run1End],
-        services: [run2Top, docY(strips[3]) + strips[3].offsetHeight + vh * 0.12 - R],
+        services: [run2Top, stackBottom + 34 - R],
       }
 
       const nodes: Node[] = []
@@ -145,7 +153,7 @@ export function BranchGraph() {
       }
       nodes.push({ id: "__merge", label: "merged → main", x: xMerge, y: mergeY, merge: true })
 
-      setLayout({ height, segs, nodes, textRects })
+      setLayout({ height, segs, nodes, textRects, ticks })
     }
     measure()
     const ro = new ResizeObserver(measure)
@@ -217,6 +225,10 @@ export function BranchGraph() {
           <g mask="url(#mono-branch-mask)">
             {layout.segs.map((s, i) => (
               <path key={i} d={s.d} data-seg data-top={s.top} data-bottom={s.bottom} opacity={s.dim ? 0.5 : 1} />
+            ))}
+            {/* merge commit ticks on the trunk */}
+            {layout.ticks.map((t, i) => (
+              <rect key={`t${i}`} x={t.x - 3.5} y={t.y - 3.5} width={7} height={7} fill="#fff" stroke="none" />
             ))}
           </g>
         </svg>
