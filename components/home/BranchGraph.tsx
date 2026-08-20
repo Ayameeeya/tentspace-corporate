@@ -79,30 +79,34 @@ export function BranchGraph() {
         elbow(xSystem, xHow, docY(strips[1]) + strips[1].offsetHeight + vh * 0.18) +
         ` L ${xHow} ${run1End}`
 
-      // run2: works の後（with tent space）で再開 → services → 中央 → マージ
-      // 中央へのエルボーはロゴ帯の下で曲げる（帯はマスクで線が消えるため）
+      // run2: works の後（with tent space）で再開 → services レーンを
+      // そのままフッターまで降ろす（中央トランクは持たない）
       const stackEl = document.querySelector<HTMLElement>(".mono-stack-band")
       const stackBottom = stackEl
         ? docY(stackEl) + stackEl.offsetHeight
         : docY(strips[3]) + strips[3].offsetHeight
       const run2Top = docY(strips[2]) - vh * 0.5
-      const d2 =
-        `M ${xServices} ${run2Top}` +
-        elbow(xServices, xMerge, stackBottom + 34) +
-        ` L ${xMerge} ${mergeY}`
+      // レーンを降りきってマージ行のエルボーで中央へ入る
+      const toMergeRow = (laneX: number) => {
+        const dir = xMerge > laneX ? 1 : -1
+        return (
+          ` L ${laneX} ${mergeY - R}` +
+          ` Q ${laneX} ${mergeY}, ${laneX + dir * R} ${mergeY}` +
+          ` L ${xMerge} ${mergeY}`
+        )
+      }
+      const d2 = `M ${xServices} ${run2Top}` + toMergeRow(xServices)
 
       const segs: Seg[] = [
         { d: d1, top: run1Top, bottom: run1End },
         { d: d2, top: run2Top, bottom: mergeY },
       ]
 
-      // フィナーレ: 支流は「別の場所」から伸びてくる —
-      // 画面外（左右）から水平に入ってくる 2 本と、トランクから fork する
-      // 2 本が、マージ行のエルボーで 1 点に集まる。マージ点より下には伸ばさない
+      // フィナーレ: 画面外から入る 3 本と services レーンからの fork 1 本が、
+      // マージ行で 1 点に集まる。中央に縦のトランクは通さない
       const zoneTop = stackBottom + 24
       const span = Math.max(160, mergeY - R - 40 - zoneTop)
       const yAt = (f: number) => zoneTop + span * f
-      const inDir = (laneX: number) => (xMerge > laneX ? 1 : -1)
       // 画面外から: 水平入場 → 角で下向き → マージ行
       const edge = (fromX: number, laneX: number, y: number) => {
         const dir = laneX > fromX ? 1 : -1
@@ -110,28 +114,19 @@ export function BranchGraph() {
           `M ${fromX} ${y}` +
           ` L ${laneX - dir * R} ${y}` +
           ` Q ${laneX} ${y}, ${laneX} ${y + R}` +
-          ` L ${laneX} ${mergeY - R}` +
-          ` Q ${laneX} ${mergeY}, ${laneX + inDir(laneX) * R} ${mergeY}` +
-          ` L ${xMerge} ${mergeY}`
+          toMergeRow(laneX)
         )
       }
-      // トランクから fork → レーンを降りる → マージ行
-      const fork = (laneX: number, yF: number) => {
-        return (
-          `M ${xMerge} ${yF - R}` +
-          elbow(xMerge, laneX, yF) +
-          ` L ${laneX} ${mergeY - R}` +
-          ` Q ${laneX} ${mergeY}, ${laneX + inDir(laneX) * R} ${mergeY}` +
-          ` L ${xMerge} ${mergeY}`
-        )
-      }
-      // 画面外からの入場は 3 本。内側のレーンほど先（高い位置）に入れて
-      // 後続の水平線が既存の縦レーンを横切らないようにする
+      // 親レーンから fork → 自分のレーンを降りる → マージ行
+      const forkFrom = (parentX: number, laneX: number, yF: number) =>
+        `M ${parentX} ${yF - R}` + elbow(parentX, laneX, yF) + toMergeRow(laneX)
+      // 内側のレーンほど先（高い位置）に入れて、後続の水平線が既存の
+      // 縦レーンを横切らないようにする
       const tribDs: [string, number][] = [
-        [edge(-4, 0.3 * w, yAt(0.04)), yAt(0.04)],
-        [edge(w + 4, 0.84 * w, yAt(0.18)), yAt(0.18)],
-        [edge(-4, 0.16 * w, yAt(0.32)), yAt(0.32)],
-        [fork(0.64 * w, yAt(0.56)), yAt(0.56)],
+        [edge(-4, 0.38 * w, yAt(0.05)), yAt(0.05)],
+        [edge(w + 4, 0.96 * w, yAt(0.22)), yAt(0.22)],
+        [edge(-4, 0.16 * w, yAt(0.4)), yAt(0.4)],
+        [forkFrom(xServices, 0.64 * w, yAt(0.58)), yAt(0.58)],
       ]
       for (const [d, top] of tribDs) segs.push({ d, top, bottom: mergeY, dim: true })
       const ticks: Tick[] = []
@@ -174,7 +169,7 @@ export function BranchGraph() {
         vision: [run1Top, docY(strips[0]) - vh * 0.08 - R],
         system: [docY(strips[0]) - vh * 0.08 + R, docY(strips[1]) + strips[1].offsetHeight + vh * 0.18 - R],
         "how-it-works": [docY(strips[1]) + strips[1].offsetHeight + vh * 0.18 + R, run1End],
-        services: [run2Top, stackBottom + 34 - R],
+        services: [run2Top, mergeY - R],
       }
 
       const nodes: Node[] = []
