@@ -94,7 +94,16 @@ export function BranchGraph() {
           ` L ${xMerge} ${mergeY}`
         )
       }
-      const d2 = `M ${xServices} ${run2Top}` + toMergeRow(xServices)
+      // services: 縦の走りは 1:1、最後の合流だけ帳尻を合わせて
+      // 他のレーンと同時にマージ点へ届かせる
+      const svcJoinY = mergeY - R
+      const svcDir = inDir(xServices)
+      const dSvcRun = `M ${xServices} ${run2Top} L ${xServices} ${svcJoinY}`
+      const dSvcJoin =
+        `M ${xServices} ${svcJoinY}` +
+        ` Q ${xServices} ${mergeY}, ${xServices + svcDir * R} ${mergeY}` +
+        ` L ${xMerge} ${mergeY}`
+      const svcJoinLead = 80
 
       // フィナーレ帯: 支流と main はこの帯で同時に現れる
       const zoneTop = stackBottom + 24
@@ -108,8 +117,8 @@ export function BranchGraph() {
       const segs: Seg[] = [
         { d: d1, top: run1Top, bottom: run1End },
         { d: dMain, top: mainTop, bottom: mergeY },
-        // 描画窓にマージ行の水平走りぶんを足し、スクロール量と 1:1 の速さにする
-        { d: d2, top: run2Top, bottom: mergeY + (xServices - xMerge) },
+        { d: dSvcRun, top: run2Top, bottom: mergeY - svcJoinLead },
+        { d: dSvcJoin, top: mergeY - svcJoinLead, bottom: mergeY },
       ]
 
       // フィナーレ: 支流は画面外から水平に入り、自分のレーンを降りて
