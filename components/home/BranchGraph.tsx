@@ -131,8 +131,7 @@ export function BranchGraph() {
         [edge(-4, 0.3 * w, yAt(0.04)), yAt(0.04)],
         [edge(w + 4, 0.84 * w, yAt(0.18)), yAt(0.18)],
         [edge(-4, 0.16 * w, yAt(0.32)), yAt(0.32)],
-        [fork(0.4 * w, yAt(0.5)), yAt(0.5)],
-        [fork(0.62 * w, yAt(0.66)), yAt(0.66)],
+        [fork(0.64 * w, yAt(0.56)), yAt(0.56)],
       ]
       for (const [d, top] of tribDs) segs.push({ d, top, bottom: mergeY, dim: true })
       const ticks: Tick[] = []

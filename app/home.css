@@ -238,7 +238,58 @@
   transition: background 0.5s var(--m-ease);
 }
 .mono-nav__left { display: flex; align-items: center; gap: 1em; }
-.mono-nav__progress { margin-left: auto; }
+.mono-nav__progress { display: none; }
+.mono-nav__docs { margin-left: auto; }
+/* シーケンスバー: 進捗ライン上に乗るステップ（ラインを貫くコミットノード） */
+.mono-nav__seq {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+.mono-nav__step {
+  position: absolute;
+  bottom: 0;
+  width: 0.55em;
+  height: 0.55em;
+  transform: translate(-50%, 50%);
+  padding: 0;
+  border: 1px solid currentColor;
+  background: var(--nav-bg);
+  color: inherit;
+  cursor: crosshair;
+  font-family: inherit;
+  pointer-events: auto;
+  transition: background 0.3s var(--m-ease), transform 0.3s var(--m-snap);
+}
+.mono-nav__step[data-on="true"] { background: currentColor; }
+@media (hover: hover) and (pointer: fine) {
+  .mono-nav__step:hover { background: currentColor; }
+}
+/* 名前は常時表示（小さく）。近接ステップは 2 段目へ */
+.mono-nav__step-label {
+  position: absolute;
+  top: calc(100% + 0.55em);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.1em 0.4em;
+  background: var(--nav-bg);
+  color: var(--nav-body);
+  font-size: 0.62em;
+  text-transform: lowercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s var(--m-ease);
+}
+.mono-nav__step[data-row="1"] .mono-nav__step-label { top: calc(100% + 1.7em); }
+/* 進捗ラインが到達したステップから名前が出る */
+.mono-nav__step[data-on="true"] .mono-nav__step-label { opacity: 0.55; }
+.mono-nav__step[data-active="true"] .mono-nav__step-label,
+.mono-nav__step:hover .mono-nav__step-label,
+.mono-nav__step:focus-visible .mono-nav__step-label { opacity: 1; }
 /* スクロール進捗はバー下辺を走るライン */
 .mono-nav__progress-bar {
   position: absolute;
@@ -267,9 +318,22 @@
 .mono-nav__docs { display: flex; align-items: center; }
 .mono-nav__signin { display: flex; align-items: center; gap: 0.5em; }
 @media (max-width: 767px) {
-  .mono-nav__progress, .mono-nav__docs { display: none; }
+  .mono-nav__progress, .mono-nav__docs, .mono-nav__seq { display: none; }
   .mono-nav__signin { margin-left: auto; }
 }
+
+/* セクション名の到達時フリッカー（CRT 風の点灯） */
+@keyframes mono-flicker {
+  0% { opacity: 0.12; }
+  8% { opacity: 1; }
+  14% { opacity: 0.18; }
+  22% { opacity: 1; }
+  31% { opacity: 0.3; }
+  39% { opacity: 1; }
+  47% { opacity: 0.55; }
+  55%, 100% { opacity: 1; }
+}
+.mono-flicker { animation: mono-flicker 0.62s steps(1, end) both; }
 
 /* menu button */
 .mono-menu-btn {
