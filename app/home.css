@@ -1226,6 +1226,11 @@ select.mono-field:invalid { color: color-mix(in srgb, var(--m-ink), transparent 
   opacity: 0;
   transition: opacity 0.3s var(--m-ease);
 }
+/* 到達したノードは名前が灯る（その瞬間だけチカチカ） */
+.mono-branch__node[data-on="true"] .mono-branch__label {
+  opacity: 0.72;
+  animation: mono-flicker 0.62s steps(1, end);
+}
 .mono-branch__node:hover .mono-branch__label { opacity: 1; }
 /* 終端: main へのマージコミット（菱形）。点灯でプロップ、ラベル常時表示 */
 .mono-branch__node--merge,
@@ -1246,7 +1251,10 @@ select.mono-field:invalid { color: color-mix(in srgb, var(--m-ink), transparent 
   background: #fff;
   animation: mono-branch-merge 0.74s var(--m-snap) both;
 }
-.mono-branch__node--merge[data-on="true"] .mono-branch__label { opacity: 1; }
+.mono-branch__node--merge[data-on="true"] .mono-branch__label {
+  opacity: 1;
+  animation: mono-flicker 0.62s steps(1, end);
+}
 /* マージラベルはフィールドに重ならないよう菱形の上へ */
 .mono-branch__node--merge .mono-branch__label {
   left: 50%;
