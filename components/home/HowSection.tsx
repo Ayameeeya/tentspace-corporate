@@ -29,8 +29,10 @@ export function HowSection() {
         ease: "none",
         scrollTrigger: {
           trigger: wrap,
-          start: "top 30%",
-          end: "bottom 60%",
+          // ナビからのジャンプはセクション上端に着地する（track 上端 ≈ 画面の
+          // 8〜18%）。開始をそれより下に置き、着地時は必ず 01 から始める
+          start: "top 8%",
+          end: "bottom 30%",
           scrub: 0.075,
           invalidateOnRefresh: true,
         },
