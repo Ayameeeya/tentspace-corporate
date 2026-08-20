@@ -1105,88 +1105,108 @@ select.mono-field:invalid { color: color-mix(in srgb, var(--m-ink), transparent 
   }
 }
 
-/* ---------- commit rail (scroll-linked git graph) ---------- */
-.mono-rail {
-  position: fixed;
-  left: 0.9em;
-  top: 16vh;
-  bottom: 12vh;
-  width: 3em;
-  z-index: 850;
-  pointer-events: none;
-  mix-blend-mode: difference;
-  color: #fff;
-}
-.mono-rail button {
-  pointer-events: auto;
-  cursor: crosshair;
-  padding: 0;
-  font-family: inherit;
-  color: inherit;
-}
-.mono-rail__track,
-.mono-rail__fill {
+/* ---------- branch graph background (git log --graph) ---------- */
+.mono-page { position: relative; }
+.mono-page main { position: relative; z-index: 1; }
+.mono-footer { position: relative; z-index: 1; }
+.mono-branch {
   position: absolute;
-  left: 0.55em;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.mono-branch__nodes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+.mono-branch__track,
+.mono-branch__fill {
+  position: absolute;
+  width: 1px;
+  transform: translateX(-0.5px);
+}
+.mono-branch__track {
   top: 0;
   bottom: 0;
-  width: 1px;
+  background: color-mix(in srgb, var(--m-ink), transparent 78%);
 }
-.mono-rail__track { background: rgba(255, 255, 255, 0.28); }
-.mono-rail__fill {
-  background: #fff;
-  transform: scaleY(0);
-  transform-origin: top;
+.mono-branch__fill {
+  top: 0;
+  height: 0;
+  background: var(--m-ink);
 }
-.mono-rail__node {
+.mono-branch__svg { position: absolute; inset: 0; display: block; }
+.mono-branch__svg path {
+  fill: none;
+  stroke: var(--m-ink);
+  stroke-width: 1px;
+}
+.mono-branch__node {
   position: absolute;
-  left: 0.55em;
-  width: 0.6em;
-  height: 0.6em;
+  width: 0.7em;
+  height: 0.7em;
   transform: translate(-50%, -50%);
-  border: 1px solid #fff;
-  background: transparent;
-  transition: background 0.3s var(--m-ease);
+  border: 1px solid var(--m-ink);
+  background: var(--m-bg);
+  padding: 0;
+  pointer-events: auto;
+  cursor: crosshair;
+  color: var(--m-ink);
+  font-family: inherit;
+  transition: background 0.3s var(--m-ease), border-color 0.3s var(--m-ease);
 }
-.mono-rail__node[data-on="true"] { background: #fff; }
-.mono-rail__label {
+.mono-branch__node[data-on="true"] {
+  background: var(--m-indigo);
+  border-color: var(--m-indigo);
+}
+.mono-branch__label {
   position: absolute;
-  left: 1.1em;
+  left: 1.3em;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 0.7em;
+  font-size: 0.75em;
   text-transform: lowercase;
   letter-spacing: 0.04em;
   white-space: nowrap;
-  opacity: 0.35;
+  background: var(--m-bg);
+  padding: 0.1em 0.4em;
+  opacity: 0;
   transition: opacity 0.3s var(--m-ease);
 }
-.mono-rail__node[data-on="true"] .mono-rail__label { opacity: 0.8; }
-.mono-rail__node:hover .mono-rail__label { opacity: 1; }
-/* 終端: main へのマージコミット。菱形で、点灯時にプロップする */
-.mono-rail__node--merge,
-.mono-rail__node--merge[data-on="true"] {
+.mono-branch__node:hover .mono-branch__label { opacity: 1; }
+/* 終端: main へのマージコミット（菱形）。点灯でプロップ、ラベル常時表示 */
+.mono-branch__node--merge,
+.mono-branch__node--merge[data-on="true"] {
   border: none;
   background: transparent;
 }
-.mono-rail__node--merge::before {
+.mono-branch__node--merge::before {
   content: "";
   position: absolute;
   inset: 0;
-  border: 1px solid #fff;
+  border: 1px solid var(--m-ink);
+  background: var(--m-bg);
   transform: rotate(45deg);
-  transition: background 0.3s var(--m-ease);
+  transition: background 0.3s var(--m-ease), border-color 0.3s var(--m-ease);
 }
-.mono-rail__node--merge[data-on="true"]::before {
-  background: #fff;
-  animation: mono-rail-merge 0.74s var(--m-snap) both;
+.mono-branch__node--merge[data-on="true"]::before {
+  background: var(--m-indigo);
+  border-color: var(--m-indigo);
+  animation: mono-branch-merge 0.74s var(--m-snap) both;
 }
-@keyframes mono-rail-merge {
+.mono-branch__node--merge[data-on="true"] .mono-branch__label { opacity: 1; }
+@keyframes mono-branch-merge {
   0% { transform: rotate(45deg) scale(0.2); }
   40% { transform: rotate(45deg) scale(1.5); }
   70% { transform: rotate(45deg) scale(0.9); }
   100% { transform: rotate(45deg) scale(1); }
 }
 @media (max-width: 991px) {
-  .mono-rail { display: none; }
+  .mono-branch { display: none; }
 }
