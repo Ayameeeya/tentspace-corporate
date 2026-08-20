@@ -12,7 +12,6 @@ const NODE_STOPS = [
 
 type Node = { id: string; label: string; x: number; y: number; merge?: boolean }
 type Seg = { d: string; top: number; bottom: number; dim?: boolean }
-type Tick = { x: number; y: number }
 type Rect = { x: number; y: number; w: number; h: number }
 
 const R = 18 // エルボーのアール
@@ -31,8 +30,9 @@ function elbow(x1: number, x2: number, yJog: number) {
 /**
  * ページ背景を流れる git グラフ（difference 合成でどの地色でも見える）。
  * run1: vision → system(右端) → how(中央) で途絶える
- * run2: with tent space 手前で再開 → services → 中央へ降りて
- *       各所からの支流をエルボーで受けながらフッターの 1 点にマージ。
+ * run2: with tent space 手前で再開 → services のレーンを降りる。
+ *       終盤は画面外から入る 3 本の支流とともにマージ行で 1 点に集まる
+ *       （中央トランクは持たない）。
  * different / works ゾーンには描かない。
  */
 export function BranchGraph() {
@@ -42,7 +42,6 @@ export function BranchGraph() {
     segs: Seg[]
     nodes: Node[]
     textRects: Rect[]
-    ticks: Tick[]
   } | null>(null)
 
   useEffect(() => {
@@ -79,16 +78,17 @@ export function BranchGraph() {
         elbow(xSystem, xHow, docY(strips[1]) + strips[1].offsetHeight + vh * 0.18) +
         ` L ${xHow} ${run1End}`
 
-      // run2: works の後（with tent space）で再開 → services レーンを
-      // そのままフッターまで降ろす（中央トランクは持たない）
+      // run2: works の後（with tent space）で再開 → services のレーンを
+      // そのまま降りてマージ行で合流する（中央トランクは持たない）
       const stackEl = document.querySelector<HTMLElement>(".mono-stack-band")
       const stackBottom = stackEl
         ? docY(stackEl) + stackEl.offsetHeight
         : docY(strips[3]) + strips[3].offsetHeight
       const run2Top = docY(strips[2]) - vh * 0.5
-      // レーンを降りきってマージ行のエルボーで中央へ入る
+      const inDir = (laneX: number) => (xMerge > laneX ? 1 : -1)
+      /** レーンを降りてマージ行に乗り、マージ点へ向かう */
       const toMergeRow = (laneX: number) => {
-        const dir = xMerge > laneX ? 1 : -1
+        const dir = inDir(laneX)
         return (
           ` L ${laneX} ${mergeY - R}` +
           ` Q ${laneX} ${mergeY}, ${laneX + dir * R} ${mergeY}` +
@@ -102,12 +102,11 @@ export function BranchGraph() {
         { d: d2, top: run2Top, bottom: mergeY },
       ]
 
-      // フィナーレ: 画面外から入る 3 本と services レーンからの fork 1 本が、
-      // マージ行で 1 点に集まる。中央に縦のトランクは通さない
+      // フィナーレ: 支流は画面外から水平に入り、自分のレーンを降りて
+      // マージ行で 1 点に集まる。内側のレーンほど先に入れて交差を避ける
       const zoneTop = stackBottom + 24
       const span = Math.max(160, mergeY - R - 40 - zoneTop)
       const yAt = (f: number) => zoneTop + span * f
-      // 画面外から: 水平入場 → 角で下向き → マージ行
       const edge = (fromX: number, laneX: number, y: number) => {
         const dir = laneX > fromX ? 1 : -1
         return (
@@ -117,19 +116,12 @@ export function BranchGraph() {
           toMergeRow(laneX)
         )
       }
-      // 親レーンから fork → 自分のレーンを降りる → マージ行
-      const forkFrom = (parentX: number, laneX: number, yF: number) =>
-        `M ${parentX} ${yF - R}` + elbow(parentX, laneX, yF) + toMergeRow(laneX)
-      // 内側のレーンほど先（高い位置）に入れて、後続の水平線が既存の
-      // 縦レーンを横切らないようにする
       const tribDs: [string, number][] = [
-        [edge(-4, 0.38 * w, yAt(0.05)), yAt(0.05)],
+        [edge(-4, 0.38 * w, yAt(0.06)), yAt(0.06)],
         [edge(w + 4, 0.96 * w, yAt(0.22)), yAt(0.22)],
         [edge(-4, 0.16 * w, yAt(0.4)), yAt(0.4)],
-        [forkFrom(xServices, 0.64 * w, yAt(0.58)), yAt(0.58)],
       ]
       for (const [d, top] of tribDs) segs.push({ d, top, bottom: mergeY, dim: true })
-      const ticks: Tick[] = []
 
       // 本文テキストの矩形: 線はこの領域では描かない（マスクで抜く）
       const textRects: Rect[] = []
@@ -182,7 +174,7 @@ export function BranchGraph() {
       }
       nodes.push({ id: "__merge", label: "merged → main", x: xMerge, y: mergeY, merge: true })
 
-      setLayout({ height, segs, nodes, textRects, ticks })
+      setLayout({ height, segs, nodes, textRects })
     }
     measure()
     const ro = new ResizeObserver(measure)
@@ -268,10 +260,6 @@ export function BranchGraph() {
           <g mask="url(#mono-branch-mask)">
             {layout.segs.map((s, i) => (
               <path key={i} d={s.d} data-seg data-top={s.top} data-bottom={s.bottom} opacity={s.dim ? 0.5 : 1} />
-            ))}
-            {/* merge commit ticks on the trunk */}
-            {layout.ticks.map((t, i) => (
-              <rect key={`t${i}`} x={t.x - 3.5} y={t.y - 3.5} width={7} height={7} fill="#fff" stroke="none" />
             ))}
           </g>
         </svg>
