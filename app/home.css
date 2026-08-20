@@ -1183,11 +1183,11 @@ select.mono-field:invalid { color: color-mix(in srgb, var(--m-ink), transparent 
   animation: mono-branch-merge 0.74s var(--m-snap) both;
 }
 .mono-branch__node--merge[data-on="true"] .mono-branch__label { opacity: 1; }
-/* マージラベルは合流行の線に重ならないよう菱形の下へ */
+/* マージラベルはフィールドに重ならないよう菱形の上へ */
 .mono-branch__node--merge .mono-branch__label {
   left: 50%;
   top: auto;
-  bottom: -1.9em;
+  bottom: 1.6em;
   transform: translateX(-50%);
 }
 @keyframes mono-branch-merge {

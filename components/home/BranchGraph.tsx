@@ -66,9 +66,9 @@ export function BranchGraph() {
       const xHow = 0.5 * w
       const xServices = 0.88 * w
       const xMerge = 0.5 * w
-      // マージ点はフッター内の空白帯（ソーシャル行とピクセルフィールドの間）
+      // マージ点はコントリビューションフィールドの上端 — main の実体に着地する
       const footerVisual = footer.querySelector<HTMLElement>(".mono-footer__visual")
-      const mergeY = footerVisual ? docY(footerVisual) - 40 : docY(footer) + vh * 0.35
+      const mergeY = footerVisual ? docY(footerVisual) : docY(footer) + vh * 0.35
 
       // run1: vision → system → how、different の手前で途絶える
       const run1Top = vh * 0.55
@@ -203,6 +203,7 @@ export function BranchGraph() {
     paths.forEach((p, i) => {
       p.style.strokeDasharray = `${lengths[i]}`
     })
+    let mergeWasOn = false
     const update = () => {
       const revealY = window.scrollY + window.innerHeight * 0.72
       paths.forEach((p, i) => {
@@ -212,7 +213,20 @@ export function BranchGraph() {
         p.style.strokeDashoffset = `${lengths[i] * (1 - f)}`
       })
       root.querySelectorAll<HTMLElement>("[data-node-y]").forEach((n) => {
-        n.dataset.on = String(revealY >= parseFloat(n.dataset.nodeY || "0"))
+        const on = revealY >= parseFloat(n.dataset.nodeY || "0")
+        n.dataset.on = String(on)
+        // マージ成立の瞬間、着弾点からフィールドへ波紋を放つ
+        if (n.classList.contains("mono-branch__node--merge")) {
+          if (on && !mergeWasOn) {
+            const r = n.getBoundingClientRect()
+            window.dispatchEvent(
+              new CustomEvent("mono-merge", {
+                detail: { clientX: r.left + r.width / 2, clientY: r.top + r.height / 2 },
+              }),
+            )
+          }
+          mergeWasOn = on
+        }
       })
     }
     update()

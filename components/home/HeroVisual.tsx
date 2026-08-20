@@ -132,6 +132,20 @@ export function HeroVisual() {
     }
     window.addEventListener("pointermove", onMove, { passive: true })
 
+    // ブランチグラフのマージ着弾: 着弾点から波紋がフィールドを走る
+    let ripple: { x: number; y: number; start: number } | null = null
+    const RIPPLE_LIFE = 1.8 // s
+    const onMerge = (e: Event) => {
+      if (reduced) return
+      const det = (e as CustomEvent<{ clientX: number; clientY: number }>).detail
+      if (!det) return
+      const rect = canvas.getBoundingClientRect()
+      // このキャンバスの近傍（上端 ±120px）に着弾した場合のみ反応する
+      if (det.clientY < rect.top - 120 || det.clientY > rect.bottom + 120) return
+      ripple = { x: det.clientX - rect.left, y: det.clientY - rect.top, start: performance.now() }
+    }
+    window.addEventListener("mono-merge", onMerge)
+
     const THRESHOLDS = [0.4, 0.46, 0.52, 0.58, 0.64]
 
     const cell = (x: number, y: number, style: string) => {
@@ -152,6 +166,21 @@ export function HeroVisual() {
       ctx.clearRect(0, 0, width, height)
       const cols = Math.ceil(width / CELL)
       const rows = Math.ceil(height / CELL)
+
+      // 波紋の現在半径（着弾点から広がり、減衰しながら消える）
+      let rippleAge = -1
+      let rippleRadius = 0
+      let rippleAmp = 0
+      if (ripple) {
+        rippleAge = (t - ripple.start) / 1000
+        if (rippleAge > RIPPLE_LIFE) {
+          ripple = null
+        } else {
+          rippleRadius = rippleAge * 950
+          rippleAmp = (1 - rippleAge / RIPPLE_LIFE) * 0.55
+        }
+      }
+
       for (let gy = 0; gy < rows; gy++) {
         for (let gx = 0; gx < cols; gx++) {
           const nx = gx / cols
@@ -164,7 +193,14 @@ export function HeroVisual() {
             valueNoise(nx * 5 + time * 3 + warp, ny * 5 + warp) * 0.65 +
             valueNoise(nx * 11 - time * 2, ny * 11 + time * 3) * 0.35
           const m = mask && maskCols === cols ? mask[gy * cols + gx] : 0
-          const v = n - dist * 0.55 + m * 0.42
+          let boost = 0
+          if (ripple) {
+            const rx = gx * CELL + CELL / 2 - ripple.x
+            const ry = gy * CELL + CELL / 2 - ripple.y
+            const dr = Math.sqrt(rx * rx + ry * ry) - rippleRadius
+            boost = Math.exp(-(dr * dr) / (2 * 90 * 90)) * rippleAmp
+          }
+          const v = n - dist * 0.55 + m * 0.42 + boost
           let level = 0
           for (let i = 0; i < THRESHOLDS.length; i++) if (v > THRESHOLDS[i]) level = i + 1
           cell(gx * CELL, gy * CELL, LEVELS[level])
@@ -192,6 +228,7 @@ export function HeroVisual() {
       ro.disconnect()
       io.disconnect()
       window.removeEventListener("pointermove", onMove)
+      window.removeEventListener("mono-merge", onMerge)
     }
   }, [])
 
