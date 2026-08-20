@@ -1125,27 +1125,11 @@ select.mono-field:invalid { color: color-mix(in srgb, var(--m-ink), transparent 
   z-index: 2;
   pointer-events: none;
 }
-.mono-branch__track,
-.mono-branch__fill {
-  position: absolute;
-  width: 1px;
-  transform: translateX(-0.5px);
-}
-.mono-branch__track {
-  top: 0;
-  bottom: 0;
-  background: color-mix(in srgb, var(--m-ink), transparent 78%);
-}
-.mono-branch__fill {
-  top: 0;
-  height: 0;
-  background: var(--m-ink);
-}
 .mono-branch__svg { position: absolute; inset: 0; display: block; }
 .mono-branch__svg path {
   fill: none;
   stroke: var(--m-ink);
-  stroke-width: 1px;
+  stroke-linecap: square;
 }
 .mono-branch__node {
   position: absolute;
