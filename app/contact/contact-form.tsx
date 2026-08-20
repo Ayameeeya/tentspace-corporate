@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation"
 import { MainBtn } from "@/components/home/MainBtn"
 
 const INQUIRY_OPTIONS = [
-  { value: "ai-development", label: "AI開発・導入のご相談" },
-  { value: "automation", label: "業務自動化のご相談" },
-  { value: "n8n", label: "n8n導入・構築サポート" },
-  { value: "system-development", label: "システム開発のご相談" },
+  { value: "web-mobile", label: "Web・スマホアプリ開発のご相談" },
+  { value: "ai-automation", label: "AIエージェント開発・業務自動化・DXのご相談" },
+  { value: "design", label: "サイトデザインのご相談" },
+  { value: "iot-devices", label: "IoT・BLEデバイス連携のご相談" },
   { value: "estimate", label: "お見積もり依頼" },
   { value: "other", label: "その他" },
 ]
