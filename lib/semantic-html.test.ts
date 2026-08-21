@@ -182,6 +182,14 @@ describe("semantic HTML", () => {
     expect(comments).not.toContain("text-gray-400 dark:text-gray-500")
   })
 
+  it("記事の共有導線にX・Threads・LinkedIn・Instagramを表示する", async () => {
+    const article = await read("app/blog/[slug]/blog-post-client.tsx")
+
+    for (const service of ["X", "Threads", "LinkedIn", "Instagram"]) {
+      expect(article).toContain(`aria-label="${service}でシェア"`)
+    }
+  })
+
   it("フッターの背景ごとに読める前景色を使う", async () => {
     const pageFooter = await read("components/page-footer.tsx")
 
