@@ -1,5 +1,31 @@
 [
   {
+    "id": 255909303,
+    "slug": "claude-code-custom-skills-guide",
+    "title": "Claude Codeのカスタムスキル作成ガイド｜SNS運用自動化の実例で学ぶ設計の勘所",
+    "description": "Claude Codeのカスタムスキル（SKILL.md）の作り方を、SNS運用を自動化している実際の構成を例に解説。最小構成の作成手順から、1スキル1責務・審査の分離・バージョン管理まで、運用で効いた設計の勘所をまとめます。",
+    "date": "2026-08-21T00:00:00.000Z",
+    "updated": "2026-08-21T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "AIエージェント",
+      "自動化",
+      "スキル"
+    ],
+    "draft": false,
+    "readingTime": 8,
+    "wordCount": 2876,
+    "experiment": {
+      "hook": "howto",
+      "cta": "inquiry",
+      "targetKw": "Claude Code スキル",
+      "utmCampaign": "claude-code-skills-202608"
+    }
+  },
+  {
     "id": 1423033222,
     "slug": "n8n-local-installation-guide-2",
     "title": "【5分で完了】n8nローカルインストール方法｜Windows・Mac対応の初心者向け手順ガイド",
