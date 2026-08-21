@@ -109,7 +109,7 @@ function TableOfContents({ content }: { content: string }) {
 
   return (
     <nav
-      className="sticky top-24 pl-4 py-1 max-h-[calc(100vh-120px)] overflow-y-auto"
+      className="sticky top-[calc(var(--blog-nav-h,128px)+1rem)] max-h-[calc(100dvh-var(--blog-nav-h,128px)-2rem)] overflow-y-auto pl-4 py-1"
       style={{ borderLeft: "1px solid var(--m-ink, #000)" }}
       aria-label="目次"
     >
