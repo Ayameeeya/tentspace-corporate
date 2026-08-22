@@ -1,5 +1,32 @@
 [
   {
+    "id": 3898351823,
+    "slug": "claude-code-subagent-critic-review",
+    "title": "Claude Codeのサブエージェントで公開前レビューを分離する｜critic実装記録",
+    "description": "Claude Codeのサブエージェントで、公開前レビューを執筆エージェントから分離した実装記録。読み取り専用のcritic定義、判定基準のファイル固定、PASS/FAILの機械判定、修正2回上限と隔離まで、実際に運用している構成を解説します。",
+    "date": "2026-08-22T00:00:00.000Z",
+    "updated": "2026-08-22T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "AIエージェント",
+      "自動化",
+      "サブエージェント"
+    ],
+    "draft": false,
+    "readingTime": 8,
+    "wordCount": 2998,
+    "ogImage": "/blog-assets/claude-code-subagent-critic-review/featured.jpg",
+    "experiment": {
+      "hook": "story",
+      "cta": "inquiry",
+      "targetKw": "Claude Code サブエージェント",
+      "utmCampaign": "claude-code-critic-202608"
+    }
+  },
+  {
     "id": 255909303,
     "slug": "claude-code-custom-skills-guide",
     "title": "Claude Codeのカスタムスキル作成ガイド｜SNS運用自動化の実例で学ぶ設計の勘所",
