@@ -315,6 +315,11 @@ html {
   border-bottom: 2px solid #e5e7eb;
 }
 
+.article-content h2[id],
+.article-content h3[id] {
+  scroll-margin-top: calc(var(--blog-nav-h, 128px) + 1.5rem);
+}
+
 .article-content h3 {
   font-size: 1.25rem;
   font-weight: 600;

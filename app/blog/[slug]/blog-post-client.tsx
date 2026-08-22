@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState, useRef, type MouseEvent } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { FaInstagram, FaLinkedinIn, FaThreads, FaXTwitter } from "react-icons/fa6"
@@ -10,6 +10,7 @@ import { MainBtn } from "@/components/home/MainBtn"
 import { BlogComments } from "@/components/blog-comments"
 import { BlogFavorite } from "@/components/blog-favorite"
 import { formatDate, getPostTerms, stripHtml, getFeaturedImageUrl, type BlogPost, type BlogAuthor, type BlogTerm } from "@/lib/blog-content"
+import { getActiveHeadingId, getTocScrollTop } from "@/lib/blog-toc"
 import { addLike, fetchHasLiked, fetchLikeCounts, getClientId } from "@/lib/blog-likes"
 import { createBlogShareUrls, createInstagramShareText } from "@/lib/blog-share"
 
@@ -28,7 +29,7 @@ interface HeadingSection {
 function TableOfContents({ content }: { content: string }) {
   const [sections, setSections] = useState<HeadingSection[]>([])
   const [activeId, setActiveId] = useState<string>('')
-  const [activeSection, setActiveSection] = useState<string>('')
+  const tocRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     // Extract headings from content and group by h2
@@ -54,7 +55,6 @@ function TableOfContents({ content }: { content: string }) {
     
     setSections(grouped)
     if (grouped.length > 0) {
-      setActiveSection(grouped[0].id)
       setActiveId(grouped[0].id)
     }
   }, [content])
@@ -62,60 +62,100 @@ function TableOfContents({ content }: { content: string }) {
   useEffect(() => {
     if (sections.length === 0) return
 
-    const timeoutId = setTimeout(() => {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              const id = entry.target.id
-              setActiveId(id)
-              
-              for (const section of sections) {
-                if (section.id === id) {
-                  setActiveSection(section.id)
-                  break
-                }
-                for (const child of section.children) {
-                  if (child.id === id) {
-                    setActiveSection(section.id)
-                    break
-                  }
-                }
-              }
-            }
-          })
-        },
-        { rootMargin: '-100px 0px -80% 0px' }
-      )
+    const headingIds = sections.flatMap((section) => [
+      section.id,
+      ...section.children.map((child) => child.id),
+    ])
+    let frameId: number | null = null
 
-      sections.forEach((section) => {
-        const element = document.getElementById(section.id)
-        if (element) observer.observe(element)
-        section.children.forEach((child) => {
-          const childElement = document.getElementById(child.id)
-          if (childElement) observer.observe(childElement)
-        })
+    const updateActiveHeading = () => {
+      frameId = null
+      const headerHeight = Number.parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue('--blog-nav-h'),
+      ) || 128
+      const headings = headingIds.flatMap((id) => {
+        const element = document.getElementById(id)
+        return element ? [{ id, top: element.getBoundingClientRect().top }] : []
       })
+      const nextActiveId = getActiveHeadingId(headings, headerHeight + 48)
+      if (nextActiveId) {
+        setActiveId((currentId) => currentId === nextActiveId ? currentId : nextActiveId)
+      }
+    }
 
-        ; (window as unknown as { __tocObserver?: IntersectionObserver }).__tocObserver = observer
-    }, 100)
+    const scheduleUpdate = () => {
+      if (frameId === null) frameId = requestAnimationFrame(updateActiveHeading)
+    }
+
+    scheduleUpdate()
+    window.addEventListener('scroll', scheduleUpdate, { passive: true })
+    window.addEventListener('resize', scheduleUpdate)
 
     return () => {
-      clearTimeout(timeoutId)
-      const observer = (window as unknown as { __tocObserver?: IntersectionObserver }).__tocObserver
-      if (observer) observer.disconnect()
+      window.removeEventListener('scroll', scheduleUpdate)
+      window.removeEventListener('resize', scheduleUpdate)
+      if (frameId !== null) cancelAnimationFrame(frameId)
     }
   }, [sections])
+
+  useEffect(() => {
+    const toc = tocRef.current
+    if (!toc || !activeId) return
+
+    const activeLink = Array.from(toc.querySelectorAll<HTMLElement>('[data-toc-id]'))
+      .find((link) => link.dataset.tocId === activeId)
+    if (!activeLink) return
+
+    const linkTop = activeLink.offsetTop
+    const linkBottom = linkTop + activeLink.offsetHeight
+    const visibleTop = toc.scrollTop + 48
+    const visibleBottom = toc.scrollTop + toc.clientHeight - 24
+
+    if (linkTop < visibleTop || linkBottom > visibleBottom) {
+      toc.scrollTo({
+        top: Math.max(0, linkTop - toc.clientHeight / 2 + activeLink.offsetHeight / 2),
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      })
+    }
+  }, [activeId])
+
+  const activeSection = sections.find((section) =>
+    section.id === activeId || section.children.some((child) => child.id === activeId)
+  )?.id ?? sections[0]?.id ?? ''
+
+  const handleTocClick = (event: MouseEvent<HTMLAnchorElement>, id: string) => {
+    const heading = document.getElementById(id)
+    if (!heading) return
+
+    event.preventDefault()
+    const headerHeight = Number.parseFloat(
+      getComputedStyle(document.documentElement).getPropertyValue('--blog-nav-h'),
+    ) || 128
+    const top = getTocScrollTop({
+      headingViewportTop: heading.getBoundingClientRect().top,
+      scrollY: window.scrollY,
+      headerHeight,
+      gap: 24,
+    })
+
+    setActiveId(id)
+    window.history.pushState(null, '', `#${id}`)
+    window.scrollTo({
+      top,
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+    })
+  }
 
   if (sections.length === 0) return null
 
   return (
     <nav
-      className="sticky top-[calc(var(--blog-nav-h,128px)+1rem)] max-h-[calc(100dvh-var(--blog-nav-h,128px)-2rem)] overflow-y-auto pl-4 py-1"
+      ref={tocRef}
+      className="sticky top-[calc(var(--blog-nav-h,128px)+1rem)] max-h-[calc(100dvh-var(--blog-nav-h,128px)-2rem)] overflow-y-auto overscroll-contain scroll-smooth pl-4 py-1 motion-reduce:scroll-auto"
       style={{ borderLeft: "1px solid var(--m-ink, #000)" }}
       aria-label="目次"
     >
-      <h3 className="text-sm font-bold text-foreground mb-3 flex items-baseline gap-2">
+      <h3 className="sticky top-0 z-10 -mt-1 mb-2 flex items-baseline gap-2 bg-background py-2 text-sm font-bold text-foreground">
         目次
         <span className="text-xs font-normal" style={{ opacity: 0.45 }}>
           contents
@@ -130,7 +170,10 @@ function TableOfContents({ content }: { content: string }) {
             <li key={section.id}>
               <a
                 href={`#${section.id}`}
-                className={`flex items-center gap-1 py-1.5 text-sm transition-colors ${isActive ? 'text-[#0f00b0] font-medium' : 'text-muted-foreground hover:text-foreground'
+                data-toc-id={section.id}
+                aria-current={isActive ? 'location' : undefined}
+                onClick={(event) => handleTocClick(event, section.id)}
+                className={`relative flex items-center gap-1 rounded-sm px-2 py-1.5 text-sm transition-[color,background-color,transform] duration-300 ease-out ${isActive ? 'translate-x-1 bg-[#0f00b0]/[0.06] font-medium text-[#0f00b0]' : 'text-muted-foreground hover:translate-x-0.5 hover:bg-foreground/[0.04] hover:text-foreground'
                 }`}
               >
                 {section.children.length > 0 && (
@@ -153,7 +196,10 @@ function TableOfContents({ content }: { content: string }) {
                     <li key={child.id}>
                       <a
                         href={`#${child.id}`}
-                        className={`block py-1 pl-7 text-xs transition-colors ${activeId === child.id ? 'text-[#0f00b0] font-medium' : 'text-muted-foreground hover:text-foreground'
+                        data-toc-id={child.id}
+                        aria-current={activeId === child.id ? 'location' : undefined}
+                        onClick={(event) => handleTocClick(event, child.id)}
+                        className={`relative block rounded-sm py-1 pl-7 pr-2 text-xs transition-[color,background-color,transform] duration-300 ease-out ${activeId === child.id ? 'translate-x-1 bg-[#0f00b0]/[0.06] font-medium text-[#0f00b0]' : 'text-muted-foreground hover:translate-x-0.5 hover:bg-foreground/[0.04] hover:text-foreground'
                         }`}
                       >
                         {child.text}
