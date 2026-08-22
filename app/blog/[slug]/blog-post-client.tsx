@@ -151,11 +151,11 @@ function TableOfContents({ content }: { content: string }) {
   return (
     <nav
       ref={tocRef}
-      className="sticky top-[calc(var(--blog-nav-h,128px)+1rem)] max-h-[calc(100dvh-var(--blog-nav-h,128px)-2rem)] overflow-y-auto overscroll-contain scroll-smooth pl-4 py-1 motion-reduce:scroll-auto"
+      className="sticky top-[calc(var(--blog-nav-h,128px)+1rem)] max-h-[calc(100dvh-var(--blog-nav-h,128px)-2rem)] overflow-x-hidden overflow-y-auto overscroll-contain scroll-smooth pl-4 py-1 motion-reduce:scroll-auto"
       style={{ borderLeft: "1px solid var(--m-ink, #000)" }}
       aria-label="目次"
     >
-      <h3 className="sticky top-0 z-10 -mt-1 mb-2 flex items-baseline gap-2 bg-background py-2 text-sm font-bold text-foreground">
+      <h3 className="mb-3 flex items-baseline gap-2 text-sm font-bold text-foreground">
         目次
         <span className="text-xs font-normal" style={{ opacity: 0.45 }}>
           contents
@@ -173,7 +173,7 @@ function TableOfContents({ content }: { content: string }) {
                 data-toc-id={section.id}
                 aria-current={isActive ? 'location' : undefined}
                 onClick={(event) => handleTocClick(event, section.id)}
-                className={`relative flex items-center gap-1 rounded-sm px-2 py-1.5 text-sm transition-[color,background-color,transform] duration-300 ease-out ${isActive ? 'translate-x-1 bg-[#0f00b0]/[0.06] font-medium text-[#0f00b0]' : 'text-muted-foreground hover:translate-x-0.5 hover:bg-foreground/[0.04] hover:text-foreground'
+                className={`flex items-center gap-1 py-1.5 text-sm transition-colors duration-200 ${isActive ? 'font-bold text-[#0f00b0]' : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 {section.children.length > 0 && (
@@ -199,7 +199,7 @@ function TableOfContents({ content }: { content: string }) {
                         data-toc-id={child.id}
                         aria-current={activeId === child.id ? 'location' : undefined}
                         onClick={(event) => handleTocClick(event, child.id)}
-                        className={`relative block rounded-sm py-1 pl-7 pr-2 text-xs transition-[color,background-color,transform] duration-300 ease-out ${activeId === child.id ? 'translate-x-1 bg-[#0f00b0]/[0.06] font-medium text-[#0f00b0]' : 'text-muted-foreground hover:translate-x-0.5 hover:bg-foreground/[0.04] hover:text-foreground'
+                        className={`block py-1 pl-7 text-xs transition-colors duration-200 ${activeId === child.id ? 'font-bold text-[#0f00b0]' : 'text-muted-foreground hover:text-foreground'
                         }`}
                       >
                         {child.text}
