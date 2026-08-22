@@ -29,6 +29,7 @@ dist-ssr
 .playwright-mcp
 .playwright-cli/
 output/playwright/
+.gstack/
 .vercel
 .env*.local
 *.tsbuildinfo
