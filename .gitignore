@@ -33,3 +33,6 @@ output/playwright/
 .vercel
 .env*.local
 *.tsbuildinfo
+
+# Local React Bits Pro skill
+/SKILL.md
