@@ -1,0 +1,158 @@
+---
+title: "Claude Codeのhooksで自動運用に禁止ラインを引く｜Bashガード実装記録"
+description: "Claude Codeのhooksで、エージェントに破らせたくない操作をコードとして強制する実装記録。PreToolUseフックの設定、Bashコマンドを検査するガードスクリプト、exit code 2でブロックする仕組み、正規表現ルールの設計と限界まで、実運用中の構成をそのまま解説します。"
+date: 2026-08-23
+slug: claude-code-hooks-bash-guard
+categories: ["AI活用"]
+tags: ["Claude Code", "AIエージェント", "自動化", "hooks"]
+draft: false
+ogImage: "/blog-assets/claude-code-hooks-bash-guard/featured.jpg"
+experiment:
+  pillar: "ai-dev"
+  hook: "contrarian"
+  cta: "inquiry"
+  targetKw: "Claude Code hooks"
+  utmCampaign: "claude-code-hooks-202608"
+---
+
+プロンプトに「禁止」と書くだけでは、エージェントは止まりません。指示への従属は確率的で、一定の割合で読み飛ばしや解釈違いが起きる前提で設計する必要があります。人間が横で見ている使い方ならそれで困りませんが、私の環境ではSNSとブログの運用パイプラインをエージェントが無人で回しています。「mainに直接pushしない」「自分のPRを自分でマージしない」のような一線は、破ってから気づいても遅い。
+
+この記事は、Claude Codeのhooksを使って、その一線をプロンプトではなくコードで強制している実装記録です。[カスタムスキル作成ガイド](/blog/claude-code-custom-skills-guide)では手順を、[criticサブエージェントの実装記録](/blog/claude-code-subagent-critic-review)では審査の分離を書きました。今回はその下にある3層目、「そもそも実行させない」という強制の層です。実際に動かしているBashガードの全文と、ローカルでの動作確認、運用して見えた限界までまとめます。
+
+## hooksとは
+
+hooksは、Claude Codeのライフサイクルの決まったタイミングで、ユーザー定義のシェルコマンドを実行する仕組みです（[公式ドキュメント](https://code.claude.com/docs/en/hooks)）。ツール実行の直前（PreToolUse）、直後（PostToolUse）、応答の終了時（Stop）など複数のイベントに割り当てられます。
+
+プロンプトとの決定的な違いは、確実に実行されることです。スキルやAGENTS.mdに書いた指示は、モデルが「読んで、従う」ことで初めて効きます。hooksはモデルの判断を経由しません。設定した以上、必ず走ります。ここが「お願い」と「強制」の分かれ目です。
+
+今回使うのはPreToolUseです。このフックは、ツール呼び出しの内容をJSONで標準入力から受け取り、終了コードで実行可否を返せます。exit code 2で終了すると、そのツール呼び出し自体がブロックされ、標準エラー出力に書いた内容がClaudeへフィードバックされます。
+
+## プロンプトで頼む領域と、hooksで止める領域
+
+すべてのルールをhooksにすると、正規表現だらけで保守できなくなります。分担の基準はシンプルにしました。**破ったら戻れない操作だけをhooksで止める**。文体や手順のような「品質」はスキルとcriticの守備範囲で、hooksが守るのは「安全」だけです。
+
+うちの運用でhooks行きにしたのは、次の5つです。
+
+- mainブランチへの直接push
+- 自分のPRの自己マージ・自己承認（`gh pr merge` / `gh pr review --approve`）
+- force push
+- Cloudflare Workerのデプロイ・Secrets変更（`wrangler deploy` など）
+- 環境変数ファイル（`.env` / `.dev.vars`）の表示
+
+どれも共通点は「事故が起きてから直せない、または信頼を失う」ことです。デプロイとSecretsは人間が手で行う運用にしているので、エージェントの経路からは塞ぎます。環境変数ファイルの表示を入れているのは、内容がコンテキストに載った時点で、その後の出力へ漏れる可能性をゼロにできなくなるためです。
+
+## 実装
+
+設定はプロジェクトの `.claude/settings.json` に書きます。実物がこれです。
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/hooks/guard-bash.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          { "type": "command", "command": "cd $CLAUDE_PROJECT_DIR && npm run check" }
+        ]
+      }
+    ]
+  }
+}
+```
+
+`matcher: "Bash"` で、Bashツールの呼び出しだけにガードを差し込んでいます。呼ばれるのは `hooks/guard-bash.sh` という3行のラッパーで、実体は同じディレクトリのNodeスクリプトです。
+
+```javascript
+// hooks/guard-bash.mjs（抜粋）
+let input = "";
+for await (const chunk of process.stdin) {
+  input += chunk;
+}
+
+let command = "";
+try {
+  const payload = JSON.parse(input);
+  command = payload?.tool_input?.command ?? "";
+} catch {
+  process.stderr.write("blocked by sns-operation guard: invalid hook input\n");
+  process.exit(2);
+}
+
+const rules = [
+  {
+    pattern: /(?:^|[\s;&|])git\s+push\b[^;&|\n]*(?:\s|:)(?:refs\/heads\/)?main(?:\s|$)/,
+    reason: "direct pushes to main are not allowed",
+  },
+  {
+    pattern: /(?:^|[\s;&|])git\s+push\b[^;&|\n]*(?:--force(?:-with-lease)?|-f)(?:[=\s]|$)/,
+    reason: "force pushes are not allowed",
+  },
+  // ほか、自己マージ・wrangler・環境変数ファイルの計5ルール
+];
+
+for (const rule of rules) {
+  if (rule.pattern.test(command)) {
+    process.stderr.write(`blocked by sns-operation guard: ${rule.reason}\n`);
+    process.exit(2);
+  }
+}
+```
+
+流れは3段だけです。標準入力のJSONから `tool_input.command`（実行されようとしているコマンド文字列）を取り出し、ルール配列の正規表現に順に当て、ヒットしたら理由をstderrへ書いてexit 2。どのルールにも当たらなければ何もせず正常終了し、コマンドは普通に実行されます。
+
+細かい設計判断が2つあります。1つ目、パースに失敗した入力も**ブロック側に倒す**こと。判定できないものを通すガードは、ガードではありません。criticの「迷ったらFAIL」と同じ発想です。2つ目、正規表現の先頭を `(?:^|[\s;&|])` にしていること。コマンドは `cd x && git push ...` のように連結されて届くので、行頭だけ見ていると素通りします。区切り文字の直後も対象にして、チェーンの途中に埋め込まれたケースを拾います。
+
+## 動作確認
+
+ガードはただのスクリプトなので、Claude Codeを起動しなくても手元で試せます。フックが受け取るのと同じ形のJSONを流すだけです。
+
+```bash
+echo '{"tool_input":{"command":"git push origin main"}}' | ./hooks/guard-bash.sh
+# => blocked by sns-operation guard: direct pushes to main are not allowed（exit 2）
+```
+
+主要なパターンを流した結果がこれです（2026-08-23確認）。
+
+| コマンド | 結果 |
+| --- | --- |
+| `git push origin main` | ブロック（main直push） |
+| `git push --force origin claude/x` | ブロック（force push） |
+| `gh pr merge 12 --squash` | ブロック（自己マージ） |
+| `cat .dev.vars` | ブロック（環境変数ファイル） |
+| `npx wrangler deploy` | ブロック（デプロイ） |
+| `git push -u origin claude/my-branch` | 通過 |
+| `npm run check` | 通過 |
+
+このテストのしやすさが、ラッパーをシェルではなくNodeにした理由でもあります。ロジックが1ファイルの純粋な「文字列イン・終了コードアウト」なので、ルールを足すたびに通過・ブロック両方の確認をワンライナーで回せます。
+
+stderrのメッセージは、人間向けのログではなくエージェント向けのフィードバックとして書いています。ブロックされた理由が返れば、エージェントは同じコマンドを言い換えて粘るのではなく、「この操作は権限外」と理解して代替手段（PRを作って人間に渡す、など）へ進めます。実際、ブロック後の挙動は理由文の書き方でかなり変わりました。
+
+## Stopフックは品質側の保険
+
+PreToolUseが安全の層だとすると、Stopに入れた `npm run check` は品質側の最低ラインです。エージェントが作業を終えるタイミングで型チェック・lint・コンテンツ検証が必ず走るので、「検証を実行し忘れたまま終了」がなくなります。禁止ではなく強制実行という向きの違いはありますが、「モデルの記憶力に頼らない」という点は同じです。
+
+## hooksだけでは守れないもの
+
+限界も運用してわかった通りに書いておきます。
+
+まず、このガードが見ているのは**Bashツールの経路だけ**です。ファイル編集ツールやMCPツール経由の操作には別の防御が要ります。うちでは、外部への公開操作をすべて自前のWorker API側に集約し、そこで回数制限と通知をかけています。エージェントのサンドボックス内で完結する防御と、サンドボックスの外に置く防御の2段構えです。
+
+次に、正規表現は完全ではありません。シェルは同じ操作を無数の書き方で表現できるので、すり抜けるパターンは原理的に残ります。だからGitHub側のブランチ保護は別途有効にしていて、hooksは「最初に止まる壁」という位置づけです。壁が1枚で済むとは考えていません。
+
+最後に、これが一番大事なのですが、**hooksの設定ファイル自体を検査対象の外に置く**必要があります。エージェントが `.claude/settings.json` や `hooks/` を書き換えられるなら、強制は形だけです。うちではこの2つを、改善提案の自動化が触ってよい「可変層」から外し、変更のマージは人間だけが行う憲法層として扱っています。criticの回で書いた「検査系は検査対象に書き換えさせない」と同じ原則が、hooksにはより強く効きます。
+
+## まとめと次の一歩
+
+エージェントの自動運用は、スキル（手順を教える）、critic（結果を審査する）、hooks（越えてはいけない線で止める）の3層で考えると整理できます。プロンプトは1層目と2層目までしか担えません。戻れない操作の手前には、モデルの判断を経由しない壁が1枚要ります。
+
+導入は今日からできます。自分のプロジェクトで「エージェントに絶対やられたくない操作」を3つ書き出し、`.claude/settings.json` にPreToolUseフックを1本、コマンド文字列を正規表現で見るスクリプトを1枚。まずはブロックせずstderrへ警告を書くだけの運用で数日走らせて、誤検知を潰してからexit 2に切り替えると安全です。ガードは、エージェントを信用しないための仕組みではなく、安心して仕事を任せる範囲を広げるための仕組みでした。
