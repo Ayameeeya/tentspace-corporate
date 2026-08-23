@@ -48,6 +48,7 @@ export default function Home() {
 
         {/* ---------- chapter: the shift ---------- */}
         <ChapterTextSection
+          id="shift"
           label="the shift"
           wrapperClass="mono-text__wrapper--first"
           paragraphs={[
