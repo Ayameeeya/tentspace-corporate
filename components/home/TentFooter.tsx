@@ -6,13 +6,13 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { attachHoverScramble } from "./scramble"
 import { HeroVisual } from "./HeroVisual"
 
-export function MonoFooter() {
+export function TentFooter() {
   const rootRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     const root = rootRef.current
     if (!root) return
-    const cleanups = Array.from(root.querySelectorAll<HTMLElement>("[data-mono-hover]")).map((el) =>
+    const cleanups = Array.from(root.querySelectorAll<HTMLElement>("[data-tent-hover]")).map((el) =>
       attachHoverScramble(el, 3),
     )
     return () => cleanups.forEach((fn) => fn())
@@ -28,13 +28,13 @@ export function MonoFooter() {
       trigger: root,
       start: "top 70%",
       onEnter: () => {
-        const nav = document.querySelector<HTMLElement>("[data-mono-nav]")
+        const nav = document.querySelector<HTMLElement>("[data-tent-nav]")
         if (!nav) return
         prevTheme = nav.dataset.navTheme || "base"
         nav.dataset.navTheme = "base"
       },
       onLeaveBack: () => {
-        const nav = document.querySelector<HTMLElement>("[data-mono-nav]")
+        const nav = document.querySelector<HTMLElement>("[data-tent-nav]")
         if (nav) nav.dataset.navTheme = prevTheme
       },
     })
@@ -42,57 +42,57 @@ export function MonoFooter() {
   }, [])
 
   return (
-    <footer ref={rootRef} className="mono-footer">
-      <div className="mono-container">
-        <div className="mono-footer__nav">
-          <div className="mono-footer__statement">
+    <footer ref={rootRef} className="tent-footer">
+      <div className="tent-container">
+        <div className="tent-footer__nav">
+          <div className="tent-footer__statement">
             <p className="paragraph-m">
               “作って終わり、にしない。届けた後も、ともに育てていく。”
             </p>
-            <div className="mono-footer__statement-author">
-              <div className="mono-footer__statement-line" />
+            <div className="tent-footer__statement-author">
+              <div className="tent-footer__statement-line" />
               <p className="paragraph-regular">tent space</p>
             </div>
           </div>
         </div>
 
-        <div className="mono-footer__btm">
-          <div className="mono-footer__social">
-            <a href="https://www.linkedin.com/in/hirokuma/" target="_blank" rel="noreferrer" className="paragraph-m mono-ul" data-mono-hover>
-              <span data-mono-hover-target>LinkedIn</span>
+        <div className="tent-footer__btm">
+          <div className="tent-footer__social">
+            <a href="https://www.linkedin.com/in/hirokuma/" target="_blank" rel="noreferrer" className="paragraph-m tent-ul" data-tent-hover>
+              <span data-tent-hover-target>LinkedIn</span>
             </a>
-            <a href="https://x.com/hirokuma_negio/" target="_blank" rel="noreferrer" className="paragraph-m mono-ul" data-mono-hover>
-              <span data-mono-hover-target>X</span>
+            <a href="https://x.com/hirokuma_negio/" target="_blank" rel="noreferrer" className="paragraph-m tent-ul" data-tent-hover>
+              <span data-tent-hover-target>X</span>
             </a>
-            <a href="https://www.threads.com/@hirokumaxhiro/" target="_blank" rel="noreferrer" className="paragraph-m mono-ul" data-mono-hover>
-              <span data-mono-hover-target>Threads</span>
+            <a href="https://www.threads.com/@hirokumaxhiro/" target="_blank" rel="noreferrer" className="paragraph-m tent-ul" data-tent-hover>
+              <span data-tent-hover-target>Threads</span>
             </a>
           </div>
-          <div className="mono-footer__legals">
+          <div className="tent-footer__legals">
             <nav aria-label="フッターナビゲーション">
-              <Link href="/terms" className="paragraph-regular mono-ul" data-mono-hover>
-                <span data-mono-hover-target>Terms</span>
+              <Link href="/terms" className="paragraph-regular tent-ul" data-tent-hover>
+                <span data-tent-hover-target>Terms</span>
               </Link>
-              <Link href="/privacy" className="paragraph-regular mono-ul" data-mono-hover>
-                <span data-mono-hover-target>Privacy</span>
+              <Link href="/privacy" className="paragraph-regular tent-ul" data-tent-hover>
+                <span data-tent-hover-target>Privacy</span>
               </Link>
             </nav>
             <p className="paragraph-regular" style={{ opacity: 0.64 }}>
               © 2026, tent space Inc.
             </p>
           </div>
-          <div className="mono-footer__made">
+          <div className="tent-footer__made">
             <p className="paragraph-regular" style={{ opacity: 0.64 }}>
               Made in Izu, Japan
             </p>
           </div>
         </div>
       </div>
-      <div className="mono-footer__visual" aria-hidden="true">
+      <div className="tent-footer__visual" aria-hidden="true">
         <HeroVisual />
       </div>
-      <div className="mono-footer__logo-wrap">
-        <Link href="/" className="mono-footer__logo" aria-label="Home">
+      <div className="tent-footer__logo-wrap">
+        <Link href="/" className="tent-footer__logo" aria-label="Home">
           tent␣
         </Link>
       </div>

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
-import { MonoBlogNav } from "@/components/home/MonoBlogNav"
+import { TentBlogNav } from "@/components/home/TentBlogNav"
 import { 
   getCurrentUser, 
   getProfile,
@@ -101,7 +101,7 @@ export default function ProfilePage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <MonoBlogNav />
+        <TentBlogNav />
         <main id="main-content" className="pt-[calc(var(--blog-nav-h,128px)+1.5rem)] pb-12">
           <div className="animate-pulse space-y-4 max-w-6xl mx-auto px-4">
             <div className="h-8 bg-muted rounded w-1/4"></div>
@@ -121,7 +121,7 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <MonoBlogNav />
+      <TentBlogNav />
 
       <main id="main-content" className="pt-[calc(var(--blog-nav-h,128px)+1.5rem)] pb-12 max-w-6xl mx-auto px-4">
         {/* Breadcrumb */}

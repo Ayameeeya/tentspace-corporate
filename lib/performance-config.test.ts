@@ -58,8 +58,8 @@ describe("performance configuration", () => {
 
   it("ブログヘッダーから重量級ページを自動先読みしない", async () => {
     const [header, menu, article] = await Promise.all([
-      read("components/home/MonoBlogNav.tsx"),
-      read("components/home/MonoMenu.tsx"),
+      read("components/home/TentBlogNav.tsx"),
+      read("components/home/TentMenu.tsx"),
       read("app/blog/[slug]/blog-post-client.tsx"),
     ])
 
@@ -81,7 +81,7 @@ describe("performance configuration", () => {
   })
 
   it("ブログヘッダーの認証モーダルを初期JSから外す", async () => {
-    const header = await read("components/home/MonoBlogNav.tsx")
+    const header = await read("components/home/TentBlogNav.tsx")
 
     expect(header).not.toContain('from "gsap"')
     expect(header).toMatch(/lazy\(\(\)\s*=>\s*import\("@\/components\/auth-modal"\)/)
@@ -110,7 +110,7 @@ describe("performance configuration", () => {
   })
 
   it("ブログロゴのintrinsic比率を実ファイルに合わせる", async () => {
-    const header = await read("components/home/MonoBlogNav.tsx")
+    const header = await read("components/home/TentBlogNav.tsx")
     const logos = header.match(/<img[\s\S]*?logo_(?:black|white)_symbol\.png[\s\S]*?\/>/g) ?? []
 
     expect(logos.length).toBeGreaterThan(0)

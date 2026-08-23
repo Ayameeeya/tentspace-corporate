@@ -70,7 +70,7 @@ function DifferentItem({ item }: { item: (typeof ITEMS)[number] }) {
     const content = contentRef.current
     if (!root || !inner || !bar || !text || !prog || !label || !content) return
 
-    const lines = content.querySelectorAll<HTMLElement>(".mono-diff__line-top, .mono-diff__line-left")
+    const lines = content.querySelectorAll<HTMLElement>(".tent-diff__line-top, .tent-diff__line-left")
     const bgAt = gsap.utils.interpolate("rgba(15, 0, 176, 0)", "rgba(15, 0, 176, 1)")
     const inkAt = gsap.utils.interpolate("#000000", "#e5e5e5")
 
@@ -139,21 +139,21 @@ function DifferentItem({ item }: { item: (typeof ITEMS)[number] }) {
   }, [item])
 
   return (
-    <div ref={rootRef} className="mono-diff__slot">
-      <div ref={innerRef} className="mono-diff__item">
-        <div ref={progRef} className="mono-diff__progress">
-          <div className="mono-diff__counter">
+    <div ref={rootRef} className="tent-diff__slot">
+      <div ref={innerRef} className="tent-diff__item">
+        <div ref={progRef} className="tent-diff__progress">
+          <div className="tent-diff__counter">
             <p className="paragraph-m">{item.num}</p>
-            <div className="mono-diff__counter-line" />
+            <div className="tent-diff__counter-line" />
           </div>
-          <div ref={barRef} className="mono-diff__bar" />
+          <div ref={barRef} className="tent-diff__bar" />
         </div>
-        <div ref={labelRef} className="mono-diff__label">
+        <div ref={labelRef} className="tent-diff__label">
           <h3 className="paragraph-m">{item.label}</h3>
         </div>
-        <div ref={contentRef} className="mono-diff__content">
-          <div className="mono-diff__line-top" />
-          <div className="mono-diff__line-left" />
+        <div ref={contentRef} className="tent-diff__content">
+          <div className="tent-diff__line-top" />
+          <div className="tent-diff__line-left" />
           <p ref={textRef} className="heading-m" style={{ minHeight: "3.9em" }}>
             {item.before}
           </p>
@@ -166,8 +166,8 @@ function DifferentItem({ item }: { item: (typeof ITEMS)[number] }) {
 export function DifferentSection() {
   return (
     <section id="different">
-      <div className="mono-container">
-        <div className="mono-diff__head">
+      <div className="tent-container">
+        <div className="tent-diff__head">
           <ShuffleText as="h2" className="heading-s">
             いつものシステム開発が、tent space だとこう変わる
           </ShuffleText>

@@ -1,24 +1,24 @@
 "use client"
 
-import { MonoShell } from "@/components/home/MonoShell"
+import { TentShell } from "@/components/home/TentShell"
 import { ChapterLabel } from "@/components/home/ChapterText"
 import { ScrambleText } from "@/components/home/ScrambleText"
 import { MainBtn } from "@/components/home/MainBtn"
 
 export default function NotFound() {
   return (
-    <MonoShell footer={false}>
+    <TentShell footer={false}>
       <main
         id="main-content"
-        className="mono-doc"
+        className="tent-doc"
         style={{ minHeight: "100dvh", display: "flex", flexDirection: "column", justifyContent: "center", paddingBottom: "10vh" }}
       >
-        <div className="mono-container">
+        <div className="tent-container">
           <ChapterLabel label="404" />
           <ScrambleText as="h1" className="heading-xl" mode="load" intensity={5}>
             page not found
           </ScrambleText>
-          <div className="mono-doc__meta" style={{ marginBottom: "4em" }}>
+          <div className="tent-doc__meta" style={{ marginBottom: "4em" }}>
             <ScrambleText as="p" className="paragraph-m opacity-64" mode="load" intensity={5}>
               お探しのページは存在しないか、移動した可能性があります。
             </ScrambleText>
@@ -26,6 +26,6 @@ export default function NotFound() {
           <MainBtn label="back to home" href="/" variant="inside" />
         </div>
       </main>
-    </MonoShell>
+    </TentShell>
   )
 }

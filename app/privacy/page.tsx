@@ -1,6 +1,6 @@
 "use client"
 
-import { MonoDoc } from "@/components/home/MonoDoc"
+import { TentDoc } from "@/components/home/TentDoc"
 
 const COMPANY_ROWS: [string, React.ReactNode][] = [
   ["法人名", "株式会社tent space"],
@@ -8,7 +8,7 @@ const COMPANY_ROWS: [string, React.ReactNode][] = [
   ["代表者", "代表取締役 石井 絢子"],
   [
     "個人情報に関する窓口",
-    <a key="mail" href="mailto:back-office@tentspace.net" className="mono-ul">
+    <a key="mail" href="mailto:back-office@tentspace.net" className="tent-ul">
       back-office@tentspace.net
     </a>,
   ],
@@ -26,7 +26,7 @@ const COOKIE_ROWS: [string, React.ReactNode][] = [
 
 export default function PrivacyPage() {
   return (
-    <MonoDoc
+    <TentDoc
       label="privacy"
       title="プライバシーポリシー"
       meta={["最終改定: 2026年8月18日", "株式会社tent space"]}

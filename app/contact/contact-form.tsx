@@ -13,9 +13,9 @@ const INQUIRY_OPTIONS = [
   { value: "other", label: "その他" },
 ]
 
-/** mono-styled dropdown: the open list matches the design system (the native
+/** tent-styled dropdown: the open list matches the design system (the native
  *  select popup cannot be styled). Submits via a hidden input. */
-function MonoSelect({
+function TentSelect({
   id,
   name,
   options,
@@ -56,12 +56,12 @@ function MonoSelect({
   const selected = options.find((o) => o.value === value)
 
   return (
-    <div ref={rootRef} className="mono-select">
+    <div ref={rootRef} className="tent-select">
       <input type="hidden" name={name} value={value} />
       <button
         type="button"
         id={id}
-        className="mono-field mono-select__btn"
+        className="tent-field tent-select__btn"
         data-placeholder={!selected}
         aria-haspopup="listbox"
         aria-expanded={open}
@@ -71,12 +71,12 @@ function MonoSelect({
         {selected ? selected.label : placeholder}
       </button>
       {open && (
-        <ul className="mono-select__list" role="listbox" aria-labelledby={id}>
+        <ul className="tent-select__list" role="listbox" aria-labelledby={id}>
           {options.map((o) => (
             <li key={o.value} role="option" aria-selected={o.value === value}>
               <button
                 type="button"
-                className="mono-select__option"
+                className="tent-select__option"
                 data-selected={o.value === value}
                 onClick={() => {
                   onChange(o.value)
@@ -89,7 +89,7 @@ function MonoSelect({
           ))}
         </ul>
       )}
-      {error && <p className="mono-select__error">{error}</p>}
+      {error && <p className="tent-select__error">{error}</p>}
     </div>
   )
 }
@@ -132,7 +132,7 @@ export function ContactForm() {
   }
 
   return (
-    <div className="mono-form">
+    <div className="tent-form">
       <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "2em" }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(16em, 1fr))", gap: "2em" }}>
           <div>
@@ -144,7 +144,7 @@ export function ContactForm() {
               autoComplete="name"
               required
               disabled={isSubmitting}
-              className="mono-field"
+              className="tent-field"
               placeholder="山田 太郎"
             />
           </div>
@@ -158,7 +158,7 @@ export function ContactForm() {
               spellCheck={false}
               required
               disabled={isSubmitting}
-              className="mono-field"
+              className="tent-field"
               placeholder="taro@example.com"
             />
           </div>
@@ -173,7 +173,7 @@ export function ContactForm() {
               name="company"
               autoComplete="organization"
               disabled={isSubmitting}
-              className="mono-field"
+              className="tent-field"
               placeholder="株式会社Example"
             />
           </div>
@@ -185,7 +185,7 @@ export function ContactForm() {
               name="phone"
               autoComplete="tel"
               disabled={isSubmitting}
-              className="mono-field"
+              className="tent-field"
               placeholder="03-1234-5678"
             />
           </div>
@@ -193,7 +193,7 @@ export function ContactForm() {
 
         <div>
           <label htmlFor="inquiry_type">お問い合わせ種別 *</label>
-          <MonoSelect
+          <TentSelect
             id="inquiry_type"
             name="inquiry_type"
             options={INQUIRY_OPTIONS}
@@ -216,20 +216,20 @@ export function ContactForm() {
             rows={6}
             required
             disabled={isSubmitting}
-            className="mono-field"
+            className="tent-field"
             placeholder="新規サービスの開発について相談したい..."
           />
         </div>
 
         <p className="paragraph-s opacity-64">
           お問い合わせいただいた内容は、
-          <a href="/privacy" className="mono-ul mono-ul--static" target="_blank" rel="noopener noreferrer">
+          <a href="/privacy" className="tent-ul tent-ul--static" target="_blank" rel="noopener noreferrer">
             プライバシーポリシー
           </a>
           に基づき適切に管理いたします。
         </p>
 
-        <button type="submit" disabled={isSubmitting} className="mono-submit" style={{ alignSelf: "flex-end" }}>
+        <button type="submit" disabled={isSubmitting} className="tent-submit" style={{ alignSelf: "flex-end" }}>
           <MainBtn label={isSubmitting ? "sending..." : "send message"} variant="inside" twoLine />
         </button>
       </form>

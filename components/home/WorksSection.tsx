@@ -54,7 +54,7 @@ export function WorksSection() {
   useEffect(() => {
     const root = rootRef.current
     if (!root) return
-    const cleanups = Array.from(root.querySelectorAll<HTMLElement>("[data-mono-hover]")).map((el) =>
+    const cleanups = Array.from(root.querySelectorAll<HTMLElement>("[data-tent-hover]")).map((el) =>
       attachHoverScramble(el, 3),
     )
 
@@ -66,7 +66,7 @@ export function WorksSection() {
     const extra: (() => void)[] = []
 
     if (hoverable) {
-      root.querySelectorAll<HTMLElement>(".mono-works__shot").forEach((shot) => {
+      root.querySelectorAll<HTMLElement>(".tent-works__shot").forEach((shot) => {
         const video = shot.querySelector("video")
         if (!video) return
         const enter = () => {
@@ -106,17 +106,17 @@ export function WorksSection() {
   }, [])
 
   return (
-    <section ref={rootRef} className="mono-works" id="works">
-      <div className="mono-container">
-        <div className="mono-diff__head" style={{ padding: "0 0 8em" }}>
+    <section ref={rootRef} className="tent-works" id="works">
+      <div className="tent-container">
+        <div className="tent-diff__head" style={{ padding: "0 0 8em" }}>
           <h2 className="heading-s">デザインも、開発も、運用も。手がけたサイトの一部</h2>
           <ScrambleText as="p" className="paragraph-l">
             selected works
           </ScrambleText>
         </div>
         {WORKS.map((w) => (
-          <div key={w.num} className="mono-works__item">
-            <div className="mono-works__info">
+          <div key={w.num} className="tent-works__item">
+            <div className="tent-works__info">
               <p className="paragraph-regular opacity-64">{w.num}</p>
               {w.plainTitle ? (
                 <h3 className="heading-s">{w.name}</h3>
@@ -125,19 +125,19 @@ export function WorksSection() {
                   {w.name}
                 </ScrambleText>
               )}
-              <div className="mono-works__tags">
+              <div className="tent-works__tags">
                 {w.tags.map((t) => (
-                  <span key={t} className="mono-works__tag">
+                  <span key={t} className="tent-works__tag">
                     {t}
                   </span>
                 ))}
               </div>
               <p className="paragraph-m opacity-64">{w.desc}</p>
-              <a href={w.url} target="_blank" rel="noreferrer" className="paragraph-m mono-ul" data-mono-hover>
-                <span data-mono-hover-target>visit site ↗</span>
+              <a href={w.url} target="_blank" rel="noreferrer" className="paragraph-m tent-ul" data-tent-hover>
+                <span data-tent-hover-target>visit site ↗</span>
               </a>
             </div>
-            <div className="mono-works__shot">
+            <div className="tent-works__shot">
               {/* 固有寸法でレイアウトを先に確定させる（遅延読込によるずれ防止） */}
               <img src={w.poster} alt={`${w.name} のサイト画面`} loading="lazy" width={1120} height={700} />
               <video src={w.video} muted loop playsInline preload="none" aria-hidden="true" />

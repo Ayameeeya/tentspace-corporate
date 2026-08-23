@@ -63,7 +63,7 @@ export function MainBtn({
     <>
       <p
         className="main-btn__text"
-        data-mono-hover-target
+        data-tent-hover-target
         style={twoLine ? { whiteSpace: "pre-line" } : undefined}
       >
         {wrapLabel ? twoLineLabel(label) : label}

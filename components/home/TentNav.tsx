@@ -5,7 +5,7 @@ import Link from "next/link"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { attachHoverScramble } from "./scramble"
-import { MonoMenu, type MonoMenuEntry } from "./MonoMenu"
+import { TentMenu, type TentMenuEntry } from "./TentMenu"
 
 export const NAV_SECTIONS = [
   { id: "vision", label: "vision" },
@@ -24,14 +24,14 @@ const SEQ_SECTIONS = [
   { id: "services", label: "services" },
 ]
 
-export const MENU_ENTRIES: MonoMenuEntry[] = [
+export const MENU_ENTRIES: TentMenuEntry[] = [
   { type: "link", href: "/about", label: "about" },
-  ...NAV_SECTIONS.map((s): MonoMenuEntry => ({ type: "jump", id: s.id, label: s.label })),
+  ...NAV_SECTIONS.map((s): TentMenuEntry => ({ type: "jump", id: s.id, label: s.label })),
   { type: "link", href: "/blog", label: "blog" },
   { type: "link", href: "/contact", label: "contact" },
 ]
 
-export function MonoNav() {
+export function TentNav() {
   const navRef = useRef<HTMLElement>(null)
   const barRef = useRef<HTMLDivElement>(null)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -51,7 +51,7 @@ export function MonoNav() {
         return [{ ...s, frac }]
       })
       // ラベルが近すぎるステップは 2 段目に落として重なりを避ける
-      const nav = document.querySelector<HTMLElement>(".mono-nav")
+      const nav = document.querySelector<HTMLElement>(".tent-nav")
       const em = nav ? parseFloat(getComputedStyle(nav).fontSize) : 12
       let lastRight = -Infinity
       setSteps(
@@ -99,7 +99,7 @@ export function MonoNav() {
   useEffect(() => {
     const nav = navRef.current
     if (!nav) return
-    const cleanups = Array.from(nav.querySelectorAll<HTMLElement>("[data-mono-hover]")).map((el) =>
+    const cleanups = Array.from(nav.querySelectorAll<HTMLElement>("[data-tent-hover]")).map((el) =>
       attachHoverScramble(el, 3),
     )
     return () => cleanups.forEach((fn) => fn())
@@ -113,7 +113,7 @@ export function MonoNav() {
       window.location.href = `/#${id}`
       return
     }
-    const lenis = (window as any).__monoLenis
+    const lenis = (window as any).__tentLenis
     const distance = Math.abs(el.getBoundingClientRect().top)
     const duration = Math.min(2.35, 0.72 + Math.pow(distance / window.innerHeight, 0.72) * 0.34)
     if (lenis) lenis.scrollTo(el, { duration, easing: (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2) })
@@ -122,28 +122,28 @@ export function MonoNav() {
 
   return (
     <>
-      <nav ref={navRef} className="mono-nav" data-nav-theme="base" data-mono-nav>
-        <div className="mono-nav__main">
-          <div className="mono-nav__left">
-            <Link href="/" className="mono-logo" aria-label="Home">
+      <nav ref={navRef} className="tent-nav" data-nav-theme="base" data-tent-nav>
+        <div className="tent-nav__main">
+          <div className="tent-nav__left">
+            <Link href="/" className="tent-logo" aria-label="Home">
               {/* symbol mark; black/white variants swapped by nav theme */}
-              <img src="/logo_black_symbol.png" alt="tent space" className="mono-logo__img mono-logo__img--dark" />
-              <img src="/logo_white_symbol.png" alt="" aria-hidden="true" className="mono-logo__img mono-logo__img--light" />
+              <img src="/logo_black_symbol.png" alt="tent space" className="tent-logo__img tent-logo__img--dark" />
+              <img src="/logo_white_symbol.png" alt="" aria-hidden="true" className="tent-logo__img tent-logo__img--light" />
             </Link>
           </div>
-          <div className="mono-nav__docs">
-            <Link href="/blog" className="paragraph-regular" data-mono-hover style={{ textDecoration: "none", color: "inherit" }}>
-              <span data-mono-hover-target>[ blog ]</span>
+          <div className="tent-nav__docs">
+            <Link href="/blog" className="paragraph-regular" data-tent-hover style={{ textDecoration: "none", color: "inherit" }}>
+              <span data-tent-hover-target>[ blog ]</span>
             </Link>
           </div>
-          <div className="mono-nav__signin">
-            <Link href="/contact" className="paragraph-regular mono-ul" data-mono-hover>
-              <span data-mono-hover-target>contact</span>
+          <div className="tent-nav__signin">
+            <Link href="/contact" className="paragraph-regular tent-ul" data-tent-hover>
+              <span data-tent-hover-target>contact</span>
             </Link>
           </div>
           <button
             type="button"
-            className="mono-menu-btn"
+            className="tent-menu-btn"
             aria-label={menuOpen ? "メニューを閉じる" : "メニューを開く"}
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen(!menuOpen)}
@@ -152,28 +152,28 @@ export function MonoNav() {
             <span />
           </button>
         </div>
-        <div ref={barRef} className="mono-nav__progress-bar" />
+        <div ref={barRef} className="tent-nav__progress-bar" />
         {/* シーケンスバー: 進捗ライン上に乗るセクションのステップ */}
-        <div ref={seqRef} className="mono-nav__seq" role="navigation" aria-label="セクションナビゲーション">
+        <div ref={seqRef} className="tent-nav__seq" role="navigation" aria-label="セクションナビゲーション">
           {steps.map((s) => (
             <button
               key={s.id}
               type="button"
-              className="mono-nav__step"
+              className="tent-nav__step"
               data-frac={s.frac}
               data-row={s.row}
               style={{ left: `${s.frac * 100}%` }}
               onClick={() => jumpTo(s.id)}
               aria-label={`${s.label} セクションへ`}
             >
-              <span className="mono-nav__step-label">{s.label}</span>
+              <span className="tent-nav__step-label">{s.label}</span>
             </button>
           ))}
         </div>
-        <div className="mono-nav__border" />
+        <div className="tent-nav__border" />
       </nav>
 
-      <MonoMenu
+      <TentMenu
         open={menuOpen}
         entries={MENU_ENTRIES}
         onClose={() => setMenuOpen(false)}

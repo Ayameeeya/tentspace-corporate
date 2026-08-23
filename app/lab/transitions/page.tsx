@@ -297,7 +297,7 @@ function DemoBlock({
   return (
     <>
       <section style={{ padding: "18vh 0 10vh" }}>
-        <div className="mono-container">
+        <div className="tent-container">
           <p className="paragraph-regular opacity-64">{num}</p>
           <h2 className="heading-s">{title}</h2>
           <p className="paragraph-m opacity-64" style={{ marginTop: "0.75em", maxWidth: "44ch" }}>
@@ -310,7 +310,7 @@ function DemoBlock({
       </section>
       {children}
       <section style={{ background: INDIGO, color: "#e5e5e5", padding: "22vh 0" }}>
-        <div className="mono-container">
+        <div className="tent-container">
           <p className="heading-m">セクションに入りました。</p>
         </div>
       </section>
@@ -320,9 +320,9 @@ function DemoBlock({
 
 export default function TransitionLab() {
   return (
-    <div className="mono-page" style={{ background: BG }}>
+    <div className="tent-page" style={{ background: BG }}>
       <main style={{ paddingTop: "14vh" }}>
-        <div className="mono-container">
+        <div className="tent-container">
           <h1 className="heading-m">transition lab</h1>
           <p className="paragraph-m opacity-64" style={{ marginTop: "1em" }}>
             セクション入場の 4 案。スクロールで比較する。
@@ -351,7 +351,7 @@ export default function TransitionLab() {
 
 
         <section style={{ padding: "16vh 0" }}>
-          <div className="mono-container">
+          <div className="tent-container">
             <p className="paragraph-m opacity-64">おわり。気に入った番号をどうぞ。</p>
           </div>
         </section>

@@ -8,7 +8,7 @@ import { PixelArrow } from "@/components/home/MainBtn"
 import { attachHoverScramble } from "@/components/home/scramble"
 
 /**
- * フローティングCTA（mono様式）:
+ * フローティングCTA（tent様式）:
  * 白地ヘアライン枠のラベル + インディゴ正方形のピクセル矢印。
  * ホバーでラベルがスクランブル、矢印は plop。最小化すると矢印箱のみ残る。
  */
@@ -28,23 +28,23 @@ export function FloatingContactButton({ label = "お問い合わせ" }: { label?
   }, [isExpanded])
 
   return (
-    <div className="mono-float" data-visible={visible}>
+    <div className="tent-float" data-visible={visible}>
       {isExpanded ? (
         <>
-          <Link ref={linkRef} href="/contact" className="mono-float__link" aria-label={`${label} - お問い合わせページへ`} data-mono-hover>
-            <span className="mono-float__label" data-mono-hover-target>
+          <Link ref={linkRef} href="/contact" className="tent-float__link" aria-label={`${label} - お問い合わせページへ`} data-tent-hover>
+            <span className="tent-float__label" data-tent-hover-target>
               {label}
             </span>
-            <span className="mono-float__box">
+            <span className="tent-float__box">
               <PixelArrow />
             </span>
           </Link>
-          <button type="button" className="mono-float__close" onClick={() => setIsExpanded(false)} aria-label="最小化">
+          <button type="button" className="tent-float__close" onClick={() => setIsExpanded(false)} aria-label="最小化">
             ×
           </button>
         </>
       ) : (
-        <Link href="/contact" className="mono-float__box" aria-label="お問い合わせページへ" style={{ textDecoration: "none" }}>
+        <Link href="/contact" className="tent-float__box" aria-label="お問い合わせページへ" style={{ textDecoration: "none" }}>
           <PixelArrow />
         </Link>
       )}

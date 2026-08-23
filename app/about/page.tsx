@@ -1,6 +1,6 @@
 "use client"
 
-import { MonoShell } from "@/components/home/MonoShell"
+import { TentShell } from "@/components/home/TentShell"
 import { ChapterLabel, ChapterTextSection } from "@/components/home/ChapterText"
 import { ScrambleText } from "@/components/home/ScrambleText"
 import { MainBtn } from "@/components/home/MainBtn"
@@ -40,16 +40,16 @@ const COMPANY = [
 
 export default function AboutPage() {
   return (
-    <MonoShell>
+    <TentShell>
       <main id="main-content">
         {/* hero */}
-        <section className="mono-doc" style={{ paddingBottom: "10vh" }}>
-          <div className="mono-container">
+        <section className="tent-doc" style={{ paddingBottom: "10vh" }}>
+          <div className="tent-container">
             <ChapterLabel label="about" />
             <ScrambleText as="h1" className="heading-l" mode="load" intensity={5}>
               小さなテントから、無限の可能性を。
             </ScrambleText>
-            <div className="mono-doc__meta">
+            <div className="tent-doc__meta">
               <ScrambleText as="p" className="paragraph-m" mode="load" intensity={5}>
                 est. 2023 — izu, japan
               </ScrambleText>
@@ -60,7 +60,7 @@ export default function AboutPage() {
         {/* story */}
         <ChapterTextSection
           label="our story"
-          wrapperClass="mono-text__wrapper--second"
+          wrapperClass="tent-text__wrapper--second"
           paragraphs={[
             {
               text: "テントは、私たち。大きなビルより速く建ち、必要な場所に張り、役目を終えれば次の場所へ。スペースは、これから何かが建つ空白であり、どこまでも広がる宇宙でもあります。",
@@ -79,10 +79,10 @@ export default function AboutPage() {
 
         {/* coverage */}
         <section>
-          <div className="mono-container">
-            <div className="mono-stat-rows">
+          <div className="tent-container">
+            <div className="tent-stat-rows">
               {COVERAGE.map(([value, label], i) => (
-                <div key={i} className="mono-stat-row">
+                <div key={i} className="tent-stat-row">
                   <p className="paragraph-regular opacity-64">{String(i + 1).padStart(2, "0")}</p>
                   <ScrambleText as="p" className="heading-m">
                     {value}
@@ -96,8 +96,8 @@ export default function AboutPage() {
 
         {/* values */}
         <section style={{ paddingTop: "20vh" }}>
-          <div className="mono-container">
-            <div className="mono-diff__head" style={{ padding: "0 0 8em" }}>
+          <div className="tent-container">
+            <div className="tent-diff__head" style={{ padding: "0 0 8em" }}>
               <ScrambleText as="h2" className="heading-s">
                 私たちの働き方
               </ScrambleText>
@@ -105,9 +105,9 @@ export default function AboutPage() {
                 how we work
               </ScrambleText>
             </div>
-            <div className="mono-stat-rows">
+            <div className="tent-stat-rows">
               {VALUES.map((v) => (
-                <div key={v.num} className="mono-stat-row">
+                <div key={v.num} className="tent-stat-row">
                   <p className="paragraph-regular opacity-64">{v.num}</p>
                   <ScrambleText as="h3" className="heading-s">
                     {v.title}
@@ -121,8 +121,8 @@ export default function AboutPage() {
 
         {/* services */}
         <section style={{ paddingTop: "20vh" }}>
-          <div className="mono-container">
-            <div className="mono-diff__head" style={{ padding: "0 0 8em" }}>
+          <div className="tent-container">
+            <div className="tent-diff__head" style={{ padding: "0 0 8em" }}>
               <ScrambleText as="h2" className="heading-s">
                 事業内容
               </ScrambleText>
@@ -130,9 +130,9 @@ export default function AboutPage() {
                 what we do
               </ScrambleText>
             </div>
-            <div className="mono-stat-rows">
+            <div className="tent-stat-rows">
               {SERVICES.map((s) => (
-                <div key={s.num} className="mono-stat-row">
+                <div key={s.num} className="tent-stat-row">
                   <p className="paragraph-regular opacity-64">{s.num}</p>
                   <ScrambleText as="h3" className="heading-s">
                     {s.title}
@@ -146,10 +146,10 @@ export default function AboutPage() {
 
         {/* tech stack */}
         <section style={{ padding: "20vh 0 0" }}>
-          <div className="mono-container">
+          <div className="tent-container">
             <ChapterLabel label="tech stack" />
           </div>
-          <div className="mono-stack-band" style={{ borderTop: "none", paddingTop: "1em" }}>
+          <div className="tent-stack-band" style={{ borderTop: "none", paddingTop: "1em" }}>
             <LogoLoop
               logos={STACK_LOGOS}
               speed={60}
@@ -165,8 +165,8 @@ export default function AboutPage() {
 
         {/* company info */}
         <section style={{ paddingTop: "15vh" }}>
-          <div className="mono-container">
-            <div className="mono-diff__head" style={{ padding: "0 0 8em" }}>
+          <div className="tent-container">
+            <div className="tent-diff__head" style={{ padding: "0 0 8em" }}>
               <ScrambleText as="h2" className="heading-s">
                 会社概要
               </ScrambleText>
@@ -174,9 +174,9 @@ export default function AboutPage() {
                 company
               </ScrambleText>
             </div>
-            <div className="mono-doc__rows" style={{ maxWidth: "62em" }}>
+            <div className="tent-doc__rows" style={{ maxWidth: "62em" }}>
               {COMPANY.map(([k, v], i) => (
-                <div key={i} className="mono-doc__row">
+                <div key={i} className="tent-doc__row">
                   <p className="paragraph-regular opacity-64">{k}</p>
                   <p className="paragraph-regular">{v}</p>
                 </div>
@@ -187,7 +187,7 @@ export default function AboutPage() {
 
         {/* cta */}
         <section style={{ padding: "20vh 0 10vh" }}>
-          <div className="mono-container" style={{ display: "flex", flexDirection: "column", gap: "3em", alignItems: "flex-start" }}>
+          <div className="tent-container" style={{ display: "flex", flexDirection: "column", gap: "3em", alignItems: "flex-start" }}>
             <ScrambleText as="h2" className="heading-m">
               まずは、作りたいものの話から始めましょう。
             </ScrambleText>
@@ -195,6 +195,6 @@ export default function AboutPage() {
           </div>
         </section>
       </main>
-    </MonoShell>
+    </TentShell>
   )
 }
