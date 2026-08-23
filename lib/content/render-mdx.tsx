@@ -6,6 +6,14 @@ import React from "react"
 import { renderToStaticMarkup } from "react-dom/server"
 import * as runtime from "react/jsx-runtime"
 import remarkGfm from "remark-gfm"
+import {
+  createLinkCardComponent,
+  getLinkCardKey,
+  resolveLinkCard,
+  type LinkCardLogger,
+  type LinkCardProps,
+  type ResolvedLinkCard,
+} from "./link-card"
 
 function YouTube({ id, title = "YouTube video" }: { id: string; title?: string }) {
   if (!/^[a-zA-Z0-9_-]{6,20}$/.test(id)) {
@@ -35,6 +43,50 @@ function XEmbed({ url }: { url: string }) {
 
 export interface RenderMdxOptions {
   publicDirectory?: string
+  postsDirectory?: string
+  cachePath?: string
+  fetcher?: typeof fetch
+  logger?: LinkCardLogger
+}
+
+interface MdxNode {
+  type?: string
+  name?: string
+  attributes?: Array<{
+    type?: string
+    name?: string
+    value?: string | { type?: string; value?: string } | null
+  }>
+  children?: MdxNode[]
+}
+
+function getStaticLinkCardProps(node: MdxNode): LinkCardProps {
+  const props: LinkCardProps = {}
+  for (const attribute of node.attributes ?? []) {
+    if (attribute.name !== "slug" && attribute.name !== "url") continue
+    if (typeof attribute.value !== "string") {
+      throw new Error(
+        `LinkCard ${attribute.name} must be a static string literal`,
+      )
+    }
+    props[attribute.name] = attribute.value
+  }
+  return props
+}
+
+function findLinkCardProps(tree: MdxNode): LinkCardProps[] {
+  const cards: LinkCardProps[] = []
+  const visit = (node: MdxNode) => {
+    if (
+      (node.type === "mdxJsxFlowElement" || node.type === "mdxJsxTextElement") &&
+      node.name === "LinkCard"
+    ) {
+      cards.push(getStaticLinkCardProps(node))
+    }
+    for (const child of node.children ?? []) visit(child)
+  }
+  visit(tree)
+  return cards
 }
 
 async function addLocalImageDimensions(
@@ -45,6 +97,7 @@ async function addLocalImageDimensions(
   let rendered = html
 
   for (const imageTag of imageTags) {
+    if (/\sdata-link-card-image(?:=|\s|\/?>)/.test(imageTag)) continue
     const hasWidth = /\swidth=/.test(imageTag)
     const hasHeight = /\sheight=/.test(imageTag)
     if (hasWidth && hasHeight) continue
@@ -93,14 +146,35 @@ export async function renderMdxToHtml(
   source: string,
   options: RenderMdxOptions = {},
 ): Promise<string> {
+  const cards = new Map<string, ResolvedLinkCard>()
+  const resolverOptions = {
+    postsDirectory:
+      options.postsDirectory ?? path.join(process.cwd(), "content", "posts"),
+    cachePath:
+      options.cachePath ?? path.join(process.cwd(), "content", "link-card-cache.json"),
+    fetcher: options.fetcher ?? fetch,
+    logger: options.logger ?? console,
+  }
+  const resolveLinkCards = () => async (tree: MdxNode) => {
+    for (const props of findLinkCardProps(tree)) {
+      const key = getLinkCardKey(props)
+      if (!cards.has(key)) {
+        cards.set(key, await resolveLinkCard(props, resolverOptions))
+      }
+    }
+  }
   const evaluated = await evaluate(source, {
     ...runtime,
-    remarkPlugins: [remarkGfm],
+    remarkPlugins: [remarkGfm, resolveLinkCards],
   })
 
   let html = renderToStaticMarkup(
     React.createElement(evaluated.default, {
-      components: { YouTube, XEmbed },
+      components: {
+        YouTube,
+        XEmbed,
+        LinkCard: createLinkCardComponent(cards),
+      },
     }),
   )
 

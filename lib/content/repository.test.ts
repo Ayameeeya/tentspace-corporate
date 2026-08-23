@@ -1,7 +1,7 @@
 import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises"
 import os from "node:os"
 import path from "node:path"
-import { afterEach, describe, expect, it } from "vitest"
+import { afterEach, describe, expect, it, vi } from "vitest"
 import * as repository from "./repository"
 import { loadPostMarkdownBySlug } from "./markdown"
 
@@ -215,5 +215,49 @@ describe("content repository", () => {
     await expect(
       validateContentRepository(postsDirectory, { publicDirectory }),
     ).rejects.toThrow(/missing.*post|post.*missing/i)
+  })
+
+  it("LinkCardの存在しない内部slugを記事ファイル付きで報告する", async () => {
+    const postsDirectory = await createRepository()
+    const publicDirectory = path.join(path.dirname(postsDirectory), "public")
+    await mkdir(publicDirectory)
+    await createPost(
+      postsDirectory,
+      "broken-link-card",
+      '<LinkCard slug="missing-card-post" />',
+    )
+
+    await expect(
+      validateContentRepository(postsDirectory, { publicDirectory }),
+    ).rejects.toThrow(
+      /broken-link-card\/index\.mdx[\s\S]*missing-card-post/,
+    )
+  })
+
+  it("外部LinkCard内のOGP画像は通常の外部画像禁止に含めない", async () => {
+    const postsDirectory = await createRepository()
+    const root = path.dirname(postsDirectory)
+    const publicDirectory = path.join(root, "public")
+    await mkdir(publicDirectory)
+    await createPost(
+      postsDirectory,
+      "external-link-card",
+      '<LinkCard url="https://example.com/reference" />',
+    )
+    const fetcher = vi.fn(async () =>
+      new Response(
+        '<meta property="og:title" content="Reference"><meta property="og:image" content="https://cdn.example.com/og.png">',
+        { status: 200, headers: { "content-type": "text/html" } },
+      ),
+    )
+
+    const manifest = await validateContentRepository(postsDirectory, {
+      publicDirectory,
+      cachePath: path.join(root, "link-card-cache.json"),
+      fetcher,
+    })
+
+    expect(manifest).toHaveLength(1)
+    expect(fetcher).toHaveBeenCalledTimes(1)
   })
 })

@@ -31,6 +31,7 @@ generated-content drift / test / typecheck / build）→ 作成エージェン�
   `camp-reservation` / `note-paid`。
 - 記事ディレクトリに `social.md`（Threads 告知文ドラフト）を同梱する。
 - 文体は `docs/style-guide.md` に従う。
+- MDX コンポーネントの記法と使い所は `docs/writing-guide.md` に従う。
 - 画像は `public/` 配下に置き、本文からルート相対パスで参照する。
 - 埋め込みは `<YouTube id="..." />` または `<XEmbed url="..." />` を使う。
 
