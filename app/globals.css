@@ -505,11 +505,7 @@ html {
   display: grid;
   gap: 1.25rem;
   margin: 2rem 0 2.5rem;
-  padding: 1.5rem;
-  background:
-    linear-gradient(135deg, rgb(15 0 176 / 3%), transparent 42%),
-    #fafafa;
-  border-block: 1px solid #dbe1ea;
+  padding: 0.5rem 0;
 }
 
 .dialogue__turn {
@@ -614,7 +610,7 @@ html {
   .article-content .dialogue {
     gap: 1rem;
     margin: 1.5rem 0 2rem;
-    padding: 1rem 0.75rem;
+    padding: 0.25rem 0;
   }
 
   .dialogue__turn {
@@ -829,13 +825,6 @@ html {
 .dark .link-card__thumbnail {
   background: #0f172a;
   border-left-color: #475569;
-}
-
-.dark .article-content .dialogue {
-  background:
-    linear-gradient(135deg, rgb(96 165 250 / 8%), transparent 42%),
-    #111827;
-  border-block-color: #334155;
 }
 
 .dark .article-content .dialogue__avatar {
