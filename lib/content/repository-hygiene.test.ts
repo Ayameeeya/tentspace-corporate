@@ -102,7 +102,21 @@ describe("repository hygiene", () => {
     )
     expect(writingGuide).toContain('<LinkCard slug="')
     expect(writingGuide).toContain('<LinkCard url="https://')
+    expect(writingGuide).toContain('<Dialogue>')
+    expect(writingGuide).toContain('<Say by="hiro">')
+    expect(writingGuide).toContain("記事冒頭の導入フック専用")
+    expect(writingGuide).toContain("3〜6 往復")
+    expect(writingGuide).toContain("実在した会話の再構成のみ")
+    expect(writingGuide).toContain('mood="troubled"')
+    expect(writingGuide).toContain('mood="angry"')
+    expect(writingGuide).toContain('mood="crying"')
     expect(writingGuide).toContain("コンポーネントを追加したら")
+
+    const dialogueAssetGuide = await readFile(
+      path.join(process.cwd(), "public/assets/dialogue/README.md"),
+      "utf8",
+    )
+    expect(dialogueAssetGuide).toContain("差し替え")
   })
 
   it("公開URLは一つのSITE_URL定義を使う", async () => {
