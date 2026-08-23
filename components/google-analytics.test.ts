@@ -6,7 +6,10 @@ type AnalyticsTarget = {
   gtag?: (...args: unknown[]) => void
 }
 
-type InitializeGoogleAnalytics = (target: AnalyticsTarget) => void
+type InitializeGoogleAnalytics = (
+  target: AnalyticsTarget,
+  analyticsConsentGranted: boolean,
+) => void
 
 function getInitializer() {
   return (
@@ -17,13 +20,13 @@ function getInitializer() {
 }
 
 describe("initializeGoogleAnalytics", () => {
-  it("標準のArguments形式で同意・初期化・設定を順番に積む", () => {
+  it("同意前はdeniedのまま標準のArguments形式で初期化する", () => {
     const initializeGoogleAnalytics = getInitializer()
     expect(initializeGoogleAnalytics).toBeTypeOf("function")
     if (!initializeGoogleAnalytics) return
 
     const target: AnalyticsTarget = {}
-    initializeGoogleAnalytics(target)
+    initializeGoogleAnalytics(target, false)
 
     expect(target.dataLayer).toHaveLength(3)
     expect(target.dataLayer?.map((command) => Array.isArray(command))).toEqual([
@@ -42,7 +45,7 @@ describe("initializeGoogleAnalytics", () => {
       "consent",
       "update",
       {
-        analytics_storage: "granted",
+        analytics_storage: "denied",
         ad_storage: "denied",
         ad_user_data: "denied",
         ad_personalization: "denied",
@@ -55,6 +58,26 @@ describe("initializeGoogleAnalytics", () => {
     ])
   })
 
+  it("同意済みならanalytics_storageをgrantedへ更新する", () => {
+    const initializeGoogleAnalytics = getInitializer()
+    expect(initializeGoogleAnalytics).toBeTypeOf("function")
+    if (!initializeGoogleAnalytics) return
+
+    const target: AnalyticsTarget = {}
+    initializeGoogleAnalytics(target, true)
+
+    expect(Array.from(target.dataLayer?.[0] as IArguments)).toEqual([
+      "consent",
+      "update",
+      {
+        analytics_storage: "granted",
+        ad_storage: "denied",
+        ad_user_data: "denied",
+        ad_personalization: "denied",
+      },
+    ])
+  })
+
   it("既存のdataLayerを置き換えずに命令を追加する", () => {
     const initializeGoogleAnalytics = getInitializer()
     expect(initializeGoogleAnalytics).toBeTypeOf("function")
@@ -64,7 +87,7 @@ describe("initializeGoogleAnalytics", () => {
     const dataLayer = [existingCommand]
     const target: AnalyticsTarget = { dataLayer }
 
-    initializeGoogleAnalytics(target)
+    initializeGoogleAnalytics(target, false)
 
     expect(target.dataLayer).toBe(dataLayer)
     expect(target.dataLayer?.[0]).toBe(existingCommand)
