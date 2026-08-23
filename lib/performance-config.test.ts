@@ -34,6 +34,13 @@ describe("performance configuration", () => {
     expect(analytics).toContain('strategy="lazyOnload"')
   })
 
+  it("gtag命令をGoogle標準のarguments形式でキューへ積む", async () => {
+    const analytics = await read("components/google-analytics.tsx")
+
+    expect(analytics).toContain("dataLayer.push(arguments)")
+    expect(analytics).not.toContain("dataLayer.push(args)")
+  })
+
   it("無効なVercel Analyticsのスクリプトを配信しない", async () => {
     const [layout, packageJson] = await Promise.all([
       read("app/layout.tsx"),
