@@ -4,8 +4,8 @@ import { useEffect, useLayoutEffect, useState, useCallback, useRef, useMemo } fr
 import Link from "next/link"
 import Image from "next/image"
 // import Masonry from 'react-masonry-css' // Replaced with custom masonry
-import { MonoBlogNav } from "@/components/home/MonoBlogNav"
-import { MonoFooterStandalone } from "@/components/home/MonoFooterStandalone"
+import { TentBlogNav } from "@/components/home/TentBlogNav"
+import { TentFooterStandalone } from "@/components/home/TentFooterStandalone"
 import { CategoryTabsClient } from "@/components/category-tabs-client"
 import { EyeLoader } from "@/components/eye-loader"
 import { SeoBanner } from "@/components/seo-banner"
@@ -403,7 +403,7 @@ export function CategoryPageClient({
 
   return (
     <div className="min-h-screen bg-background">
-      <MonoBlogNav ticker />
+      <TentBlogNav ticker />
 
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/30 to-background" />
@@ -531,7 +531,7 @@ export function CategoryPageClient({
         {/* Footer - 読み込み完了後に表示（記事ゼロの場合も含む） */}
         {!loading && (!hasMore || posts.length === 0) && (
           <div className="mt-12 md:mt-16">
-            <MonoFooterStandalone />
+            <TentFooterStandalone />
           </div>
         )}
       </main>

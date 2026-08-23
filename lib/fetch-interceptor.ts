@@ -56,7 +56,7 @@ export function installFetchInterceptor(options: FetchInterceptorOptions = {}) {
     }
 
     // リクエストボディをキャプチャ（オプション）
-    let requestBody: any = undefined;
+    let requestBody: unknown = undefined;
     if (captureRequestBody && init?.body) {
       try {
         if (typeof init.body === 'string') {
@@ -73,7 +73,7 @@ export function installFetchInterceptor(options: FetchInterceptorOptions = {}) {
       const duration = Date.now() - startTime;
 
       // レスポンスボディをキャプチャ（オプション）
-      let responseBody: any = undefined;
+      let responseBody: unknown = undefined;
       if (captureResponseBody && response.ok) {
         try {
           const clone = response.clone();
@@ -93,8 +93,8 @@ export function installFetchInterceptor(options: FetchInterceptorOptions = {}) {
           method,
           statusCode: response.status,
           duration,
-          ...(requestBody && { requestBody }),
-          ...(responseBody && { responseBody }),
+          ...(requestBody !== undefined ? { requestBody } : {}),
+          ...(responseBody !== undefined ? { responseBody } : {}),
         },
       });
 
@@ -112,7 +112,7 @@ export function installFetchInterceptor(options: FetchInterceptorOptions = {}) {
           method,
           duration,
           error: error instanceof Error ? error.message : String(error),
-          ...(requestBody && { requestBody }),
+          ...(requestBody !== undefined ? { requestBody } : {}),
         },
       });
 
@@ -122,7 +122,6 @@ export function installFetchInterceptor(options: FetchInterceptorOptions = {}) {
   };
 
   isInterceptorInstalled = true;
-  console.log('✅ Fetch interceptor installed');
 }
 
 export function uninstallFetchInterceptor() {
@@ -132,7 +131,6 @@ export function uninstallFetchInterceptor() {
 
   window.fetch = originalFetch;
   isInterceptorInstalled = false;
-  console.log('✅ Fetch interceptor uninstalled');
 }
 
 export function isInterceptorActive(): boolean {

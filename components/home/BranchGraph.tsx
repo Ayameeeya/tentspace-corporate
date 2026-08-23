@@ -57,7 +57,7 @@ export function BranchGraph() {
 
   useEffect(() => {
     const measure = () => {
-      const page = document.querySelector<HTMLElement>(".mono-page")
+      const page = document.querySelector<HTMLElement>(".tent-page")
       if (!page) return
       const w = window.innerWidth
       const vh = window.innerHeight
@@ -65,8 +65,8 @@ export function BranchGraph() {
       const docY = (el: Element) => el.getBoundingClientRect().top + window.scrollY
 
       const secEl = (id: string) => document.getElementById(id)
-      const strips = Array.from(document.querySelectorAll<HTMLElement>(".mono-shutter"))
-      const footer = document.querySelector<HTMLElement>(".mono-footer")
+      const strips = Array.from(document.querySelectorAll<HTMLElement>(".tent-shutter"))
+      const footer = document.querySelector<HTMLElement>(".tent-footer")
       const how = secEl("how-it-works")
       const different = secEl("different")
       if (strips.length < 4 || !footer || !how || !different) return
@@ -77,12 +77,12 @@ export function BranchGraph() {
       const xServices = 0.88 * w
       const xMerge = 0.5 * w
       // マージ点はコントリビューションフィールドの上端 — main の実体に着地する
-      const footerVisual = footer.querySelector<HTMLElement>(".mono-footer__visual")
+      const footerVisual = footer.querySelector<HTMLElement>(".tent-footer__visual")
       const mergeY = footerVisual ? docY(footerVisual) : docY(footer) + vh * 0.35
 
       // system のピン留めシーンは全域で線を伏せる。ピン中は要素が固定表示され
       // 座標がずれるため、スペーサーごと 1 つの矩形として扱う
-      const pin = document.querySelector<HTMLElement>(".mono-system__pin")
+      const pin = document.querySelector<HTMLElement>(".tent-system__pin")
       const pinHost =
         pin && pin.parentElement && pin.parentElement.className.includes("pin-spacer")
           ? pin.parentElement
@@ -92,8 +92,8 @@ export function BranchGraph() {
 
       // main: ヒーローのフィールド直下（中央）から生えて、the shift の
       // コミット罫線で途切れる。以降は描かないが、幹はそこにある扱い
-      const heroVisual = document.querySelector<HTMLElement>(".mono-hero__visual")
-      const shiftLine = document.querySelector<HTMLElement>(".mono-text__wrapper--first .mono-chapter")
+      const heroVisual = document.querySelector<HTMLElement>(".tent-hero__visual")
+      const shiftLine = document.querySelector<HTMLElement>(".tent-text__wrapper--first .tent-chapter")
       const trunkTop = heroVisual ? docY(heroVisual) + heroVisual.offsetHeight : vh * 0.95
       const trunkEnd = shiftLine ? docY(shiftLine) : trunkTop + vh * 0.3
       const dTrunk = `M ${xHow} ${trunkTop} L ${xHow} ${trunkEnd}`
@@ -109,7 +109,7 @@ export function BranchGraph() {
       const run1End = docY(different) - vh * 0.1
       // how へ渡るジョグは how の本文（tent space は、Web・スマホアプリ…）の
       // 手前で曲げる。テキストとの間隔を確保するため実測から逆算する
-      const howText = how.querySelector<HTMLElement>(".mono-how__text")
+      const howText = how.querySelector<HTMLElement>(".tent-how__text")
       const strip1Bottom = docY(strips[1]) + strips[1].offsetHeight
       const howJogY = howText
         ? Math.max(strip1Bottom + 40, docY(howText) - vh * 0.12)
@@ -148,7 +148,7 @@ export function BranchGraph() {
 
       // run2: works の後（with tent space）で再開 → services のレーンを
       // そのまま降りてマージ行で合流する（中央トランクは持たない）
-      const stackEl = document.querySelector<HTMLElement>(".mono-stack-band")
+      const stackEl = document.querySelector<HTMLElement>(".tent-stack-band")
       const stackBottom = stackEl
         ? docY(stackEl) + stackEl.offsetHeight
         : docY(strips[3]) + strips[3].offsetHeight
@@ -177,7 +177,7 @@ export function BranchGraph() {
       //（"作って終わり、にしない。…" と tent space）を収める
       const stackTopLine = stackEl ? docY(stackEl) : zoneTop - 24
       let yLeftInner: number
-      const statement = document.querySelector<HTMLElement>(".mono-footer__statement")
+      const statement = document.querySelector<HTMLElement>(".tent-footer__statement")
       const lineGap = 28
       let yLeftOuter = yAt(0.4)
       if (statement) {
@@ -227,7 +227,7 @@ export function BranchGraph() {
       const textRects: Rect[] = []
       document
         .querySelectorAll<HTMLElement>(
-          "main h1, main h2, main h3, main p, main .mono-works__tags, main .main-btn, main .mono-win, main .mono-works__shot, main .mono-stack-band, .mono-footer p, .mono-footer a, .mono-footer nav, .mono-footer__legals",
+          "main h1, main h2, main h3, main p, main .tent-works__tags, main .main-btn, main .tent-win, main .tent-works__shot, main .tent-stack-band, .tent-footer p, .tent-footer a, .tent-footer nav, .tent-footer__legals",
         )
         .forEach((el) => {
           const r = el.getBoundingClientRect()
@@ -241,9 +241,9 @@ export function BranchGraph() {
 
       // チャプターテキスト帯: コミットラインから最後の段落末尾までは
       // 線を通さない（段落と段落のすき間にも出さない）
-      document.querySelectorAll<HTMLElement>("main .mono-text").forEach((sec) => {
-        const chapter = sec.querySelector<HTMLElement>(".mono-chapter")
-        const comps = sec.querySelectorAll<HTMLElement>(".mono-text__component")
+      document.querySelectorAll<HTMLElement>("main .tent-text").forEach((sec) => {
+        const chapter = sec.querySelector<HTMLElement>(".tent-chapter")
+        const comps = sec.querySelectorAll<HTMLElement>(".tent-text__component")
         const last = comps[comps.length - 1]
         if (!chapter || !last) return
         const bandTop = docY(chapter)
@@ -252,7 +252,7 @@ export function BranchGraph() {
       })
 
       // 料金セクションの注記: 無料相談の一文から「対応可」の行末までは線を通さない
-      const note = document.querySelector<HTMLElement>(".mono-pricing__note")
+      const note = document.querySelector<HTMLElement>(".tent-pricing__note")
       if (note) textRects.push({ x: 0, y: docY(note), w, h: note.offsetHeight })
 
       // ノードは必ずレーンの直線区間上に置く。テキストと重なるなら区間内で上下に逃がす
@@ -319,11 +319,11 @@ export function BranchGraph() {
         const on = revealY >= parseFloat(n.dataset.nodeY || "0")
         n.dataset.on = String(on)
         // マージ成立の瞬間、着弾点からフィールドへ波紋を放つ
-        if (n.classList.contains("mono-branch__node--merge")) {
+        if (n.classList.contains("tent-branch__node--merge")) {
           if (on && !mergeWasOn) {
             const r = n.getBoundingClientRect()
             window.dispatchEvent(
-              new CustomEvent("mono-merge", {
+              new CustomEvent("tent-merge", {
                 detail: { clientX: r.left + r.width / 2, clientY: r.top + r.height / 2 },
               }),
             )
@@ -342,9 +342,9 @@ export function BranchGraph() {
   }, [layout])
 
   const jumpTo = (id: string) => {
-    const el = id === "__merge" ? document.querySelector<HTMLElement>(".mono-footer") : document.getElementById(id)
+    const el = id === "__merge" ? document.querySelector<HTMLElement>(".tent-footer") : document.getElementById(id)
     if (!el) return
-    const lenis = (window as any).__monoLenis
+    const lenis = (window as any).__tentLenis
     const distance = Math.abs(el.getBoundingClientRect().top)
     const duration = Math.min(2.35, 0.72 + Math.pow(distance / window.innerHeight, 0.72) * 0.34)
     if (lenis) {
@@ -357,21 +357,21 @@ export function BranchGraph() {
     }
   }
 
-  if (!layout) return <div ref={rootRef} className="mono-branch" />
+  if (!layout) return <div ref={rootRef} className="tent-branch" />
 
   return (
     <div ref={rootRef} style={{ display: "contents" }}>
-      <div className="mono-branch" style={{ height: layout.height }}>
-        <svg className="mono-branch__svg" width="100%" height={layout.height} aria-hidden="true">
+      <div className="tent-branch" style={{ height: layout.height }}>
+        <svg className="tent-branch__svg" width="100%" height={layout.height} aria-hidden="true">
           <defs>
-            <mask id="mono-branch-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height={layout.height}>
+            <mask id="tent-branch-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height={layout.height}>
               <rect width="100%" height={layout.height} fill="#fff" />
               {layout.textRects.map((r, i) => (
                 <rect key={i} x={r.x - 10} y={r.y - 8} width={r.w + 20} height={r.h + 16} fill="#000" />
               ))}
             </mask>
           </defs>
-          <g mask="url(#mono-branch-mask)">
+          <g mask="url(#tent-branch-mask)">
             {layout.segs.map((s, i) => (
               <path key={i} d={s.d} data-seg data-top={s.top} data-bottom={s.bottom} opacity={s.dim ? 0.5 : 1} />
             ))}
@@ -379,18 +379,18 @@ export function BranchGraph() {
         </svg>
       </div>
       {/* section nodes = commits（前面レイヤー、difference 合成） */}
-      <nav className="mono-branch__nodes" style={{ height: layout.height }} aria-label="セクションナビゲーション">
+      <nav className="tent-branch__nodes" style={{ height: layout.height }} aria-label="セクションナビゲーション">
         {layout.nodes.map((n) => (
           <button
             key={n.id}
             type="button"
-            className={n.merge ? "mono-branch__node mono-branch__node--merge" : "mono-branch__node"}
+            className={n.merge ? "tent-branch__node tent-branch__node--merge" : "tent-branch__node"}
             style={{ left: n.x, top: n.y }}
             data-node-y={n.y}
             onClick={() => jumpTo(n.id)}
             aria-label={n.merge ? "フッターへ" : `${n.label} セクションへ`}
           >
-            <span className="mono-branch__label">{n.label}</span>
+            <span className="tent-branch__label">{n.label}</span>
           </button>
         ))}
       </nav>

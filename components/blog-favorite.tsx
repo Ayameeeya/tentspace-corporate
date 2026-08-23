@@ -133,7 +133,7 @@ export function BlogFavorite({ postSlug }: BlogFavoriteProps) {
 
   if (loading) {
     return (
-      <div className="mono-action-btn" style={{ opacity: 0.4 }}>
+      <div className="tent-action-btn" style={{ opacity: 0.4 }}>
         <Heart className="w-4 h-4" />
         <span className="text-xs">お気に入り</span>
       </div>
@@ -144,7 +144,7 @@ export function BlogFavorite({ postSlug }: BlogFavoriteProps) {
     <>
       <button
         onClick={handleToggleFavorite}
-        className="mono-action-btn"
+        className="tent-action-btn"
         data-active={isFavorited}
         aria-label={isFavorited ? "お気に入りから削除" : "お気に入りに追加"}
       >

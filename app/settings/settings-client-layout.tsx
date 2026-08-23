@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { MonoBlogNav } from "@/components/home/MonoBlogNav"
+import { TentBlogNav } from "@/components/home/TentBlogNav"
 import { getCurrentUser } from "@/lib/auth"
 
 export default function SettingsClientLayout({
@@ -45,7 +45,7 @@ export default function SettingsClientLayout({
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <MonoBlogNav />
+        <TentBlogNav />
         <main id="main-content" className="pt-[calc(var(--blog-nav-h,128px)+1.5rem)] pb-12">
           <div className="animate-pulse space-y-4 max-w-6xl mx-auto px-4">
             <div className="h-8 bg-muted rounded w-1/4"></div>
@@ -58,7 +58,7 @@ export default function SettingsClientLayout({
 
   return (
     <div className="min-h-screen bg-background">
-      <MonoBlogNav />
+      <TentBlogNav />
 
       <div className="pt-(--blog-nav-h,128px)">
         <div className="max-w-7xl mx-auto">

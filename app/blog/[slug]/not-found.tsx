@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
-import { MonoBlogNav } from "@/components/home/MonoBlogNav"
+import { TentBlogNav } from "@/components/home/TentBlogNav"
 
 export default function NotFound() {
   const router = useRouter()
@@ -37,7 +37,7 @@ export default function NotFound() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      <MonoBlogNav />
+      <TentBlogNav />
 
       {/* Main Content */}
       <main id="main-content" className="pt-[136px] pb-16 px-4">

@@ -17,11 +17,11 @@ export function HowSection() {
   useEffect(() => {
     const root = rootRef.current
     if (!root) return
-    const nodes = Array.from(root.querySelectorAll<HTMLElement>(".mono-how__node"))
+    const nodes = Array.from(root.querySelectorAll<HTMLElement>(".tent-how__node"))
     const update = () => {
       const revealY = window.scrollY + window.innerHeight * 0.72
       const dotY = (node: HTMLElement) => {
-        const dot = node.querySelector<HTMLElement>(".mono-how__dot")
+        const dot = node.querySelector<HTMLElement>(".tent-how__dot")
         if (!dot) return Infinity
         const r = dot.getBoundingClientRect()
         return r.top + window.scrollY + r.height / 2
@@ -45,17 +45,17 @@ export function HowSection() {
   }, [])
 
   return (
-    <section ref={rootRef} className="mono-how" id="how-it-works">
-      <div className="mono-container">
-        <div className="mono-how__wrapper">
+    <section ref={rootRef} className="tent-how" id="how-it-works">
+      <div className="tent-container">
+        <div className="tent-how__wrapper">
           {/* git log --graph: プロセスをコミットグラフとして見せる */}
-          <div className="mono-how__graph">
+          <div className="tent-how__graph">
             {STEPS.map((s) => (
-              <div key={s.num} className="mono-how__node">
-                <div className="mono-how__rail" aria-hidden="true">
-                  <span className="mono-how__dot" />
+              <div key={s.num} className="tent-how__node">
+                <div className="tent-how__rail" aria-hidden="true">
+                  <span className="tent-how__dot" />
                 </div>
-                <div className="mono-how__node-body">
+                <div className="tent-how__node-body">
                   <p className="paragraph-regular opacity-64">{s.num}</p>
                   <ScrambleText as="h2" className="heading-s">
                     {s.title}
@@ -65,7 +65,7 @@ export function HowSection() {
               </div>
             ))}
           </div>
-          <div className="mono-how__text">
+          <div className="tent-how__text">
             <p className="heading-m ti-2">
               tent space は、Web・スマホアプリの開発を軸に、AIエージェント開発や業務改善・DX・運用自動化まで、ともに手がける開発パートナー。
             </p>

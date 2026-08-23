@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { MonoBlogNav } from "@/components/home/MonoBlogNav"
+import { TentBlogNav } from "@/components/home/TentBlogNav"
 import { AuthModal } from "@/components/auth-modal"
 import { getCurrentUser } from "@/lib/auth"
 import type { User } from "@supabase/supabase-js"
@@ -76,7 +76,7 @@ export default function PricingPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <MonoBlogNav />
+      <TentBlogNav />
       
       <main id="main-content" className="pt-[calc(var(--blog-nav-h,128px)+1.5rem)] pb-16">
         {/* Hero Section */}

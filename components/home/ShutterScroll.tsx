@@ -114,7 +114,7 @@ export function ShutterScroll({
           render()
         }
         if (!navTheme) return
-        const nav = document.querySelector<HTMLElement>("[data-mono-nav]")
+        const nav = document.querySelector<HTMLElement>("[data-tent-nav]")
         if (!nav) return
         const past = self.progress >= 0.4
         if (past && !applied.current) {
@@ -136,7 +136,7 @@ export function ShutterScroll({
   return (
     <div
       ref={rootRef}
-      className="mono-shutter"
+      className="tent-shutter"
       style={{ height, background: bg ? COLORS[bg] : undefined }}
       aria-hidden="true"
     >

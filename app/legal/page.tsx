@@ -1,10 +1,10 @@
 "use client"
 
-import { MonoDoc } from "@/components/home/MonoDoc"
+import { TentDoc } from "@/components/home/TentDoc"
 
 export default function LegalPage() {
   return (
-    <MonoDoc
+    <TentDoc
       label="legal"
       title="特定商取引法に基づく表記"
       meta={["最終更新: 2025年12月1日", "株式会社tent space"]}
@@ -19,13 +19,13 @@ export default function LegalPage() {
             ["電話番号", "070-8522-9335"],
             [
               "メールアドレス",
-              <a key="mail" href="mailto:back-office@tentspace.net" className="mono-ul">
+              <a key="mail" href="mailto:back-office@tentspace.net" className="tent-ul">
                 back-office@tentspace.net
               </a>,
             ],
             [
               "ウェブサイト",
-              <a key="site" href="https://tentspace.net" className="mono-ul">
+              <a key="site" href="https://tentspace.net" className="tent-ul">
                 https://tentspace.net
               </a>,
             ],

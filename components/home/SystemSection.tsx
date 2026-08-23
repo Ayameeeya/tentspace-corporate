@@ -31,8 +31,8 @@ export function SystemSection() {
     const pin = pinRef.current
     const section = sectionRef.current
     if (!pin || !section) return
-    const wins = Array.from(pin.querySelectorAll<HTMLElement>(".mono-system__win"))
-    const bars = Array.from(pin.querySelectorAll<HTMLElement>(".mono-system__win-bar"))
+    const wins = Array.from(pin.querySelectorAll<HTMLElement>(".tent-system__win"))
+    const bars = Array.from(pin.querySelectorAll<HTMLElement>(".tent-system__win-bar"))
     const reduced = prefersReducedMotion()
 
     // stack steps: older windows are sent back by this much per depth
@@ -70,7 +70,7 @@ export function SystemSection() {
         { autoAlpha: 0, scale: 0.88, y: "0.9em" },
         { autoAlpha: 1, scale: 1, y: 0, duration: REVEAL, ease: "systemChapterPop", transformOrigin: "50% 50%" },
       )
-      const chars = win.querySelectorAll<HTMLElement>(".mono-system__win-ch")
+      const chars = win.querySelectorAll<HTMLElement>(".tent-system__win-ch")
       tl.set(chars, { autoAlpha: 0 }, "<")
       if (i > 0 && bars[i - 1]) {
         tl.to(bars[i - 1], { ...BAR_IDLE, duration: REVEAL * 0.4, ease: "systemEaseOut" }, "<")
@@ -85,13 +85,13 @@ export function SystemSection() {
         )
       }
       // プログレスバーのセグメントがカチカチと埋まる
-      const segs = win.querySelectorAll<HTMLElement>('.mono-system__win-seg[data-on="true"]')
+      const segs = win.querySelectorAll<HTMLElement>('.tent-system__win-seg[data-on="true"]')
       if (segs.length > 0) {
         tl.fromTo(segs, { opacity: 0 }, { opacity: 1, duration: 0.03, stagger: 0.016, ease: "none" }, "<0.2")
       }
       // ステートメントを1文字ずつタイプ（Text Type）。カーソルがタイプ位置に追従する
       if (chars.length > 0) {
-        const caret = win.querySelector<HTMLElement>(".mono-system__win-caret")
+        const caret = win.querySelector<HTMLElement>(".tent-system__win-caret")
         const proxy = { n: 0 }
         if (caret) tl.set(caret, { autoAlpha: 1 }, "<0.1")
         tl.fromTo(
@@ -138,8 +138,8 @@ export function SystemSection() {
   }, [])
 
   return (
-    <section ref={sectionRef} className="mono-system" id="system">
-      <div className="mono-container mono-system__intro">
+    <section ref={sectionRef} className="tent-system" id="system">
+      <div className="tent-container tent-system__intro">
         <ScrambleText as="h2" className="paragraph-m" intensity={2}>
           the system
         </ScrambleText>
@@ -149,43 +149,43 @@ export function SystemSection() {
           </ScrambleText>
         </div>
       </div>
-      <div ref={pinRef} className="mono-system__pin">
-        <div className="mono-system__desktop">
+      <div ref={pinRef} className="tent-system__pin">
+        <div className="tent-system__desktop">
           {CHAPTERS.map((c, i) => (
-            <div key={c.kw} className="mono-system__win" style={{ "--wi": i } as CSSProperties}>
-              <div className="mono-system__win-bar">
-                <p className="mono-system__win-title">
+            <div key={c.kw} className="tent-system__win" style={{ "--wi": i } as CSSProperties}>
+              <div className="tent-system__win-bar">
+                <p className="tent-system__win-title">
                   {c.kw} — {c.sub}
                 </p>
-                <div className="mono-system__win-btns" aria-hidden="true">
+                <div className="tent-system__win-btns" aria-hidden="true">
                   <span>–</span>
                   <span>□</span>
                   <span>✕</span>
                 </div>
               </div>
-              <div className="mono-system__win-body">
-                <div className="mono-system__win-progress">
-                  <p className="mono-system__win-meta">
+              <div className="tent-system__win-body">
+                <div className="tent-system__win-progress">
+                  <p className="tent-system__win-meta">
                     process {String(i + 1).padStart(2, "0")} / {String(CHAPTERS.length).padStart(2, "0")}
                   </p>
-                  <div className="mono-system__win-track-row" aria-hidden="true">
-                    <div className="mono-system__win-track">
+                  <div className="tent-system__win-track-row" aria-hidden="true">
+                    <div className="tent-system__win-track">
                       {Array.from({ length: 20 }).map((_, k) => (
-                        <span key={k} className="mono-system__win-seg" data-on={k < (i + 1) * 4} />
+                        <span key={k} className="tent-system__win-seg" data-on={k < (i + 1) * 4} />
                       ))}
                     </div>
-                    <p className="mono-system__win-pct">{(i + 1) * 20}%</p>
+                    <p className="tent-system__win-pct">{(i + 1) * 20}%</p>
                   </div>
                 </div>
-                <p className="mono-system__win-statement">
+                <p className="tent-system__win-statement">
                   {c.statement.split("").map((ch, k) =>
                     ch === "\n" ? <br key={k} /> : (
-                      <span key={k} className="mono-system__win-ch">
+                      <span key={k} className="tent-system__win-ch">
                         {ch}
                       </span>
                     ),
                   )}
-                  <span className="mono-system__win-caret" aria-hidden="true">
+                  <span className="tent-system__win-caret" aria-hidden="true">
                     |
                   </span>
                 </p>

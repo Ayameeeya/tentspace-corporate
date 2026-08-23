@@ -9,24 +9,24 @@ import { prefersReducedMotion, seededRandom } from "./gsap-setup"
 const MENU_ROWS = 6
 const MENU_COLS = 4
 
-export type MonoMenuEntry =
+export type TentMenuEntry =
   | { type: "link"; href: string; label: string }
   | { type: "jump"; id: string; label: string }
 
 /**
- * Fullscreen mono menu (cell shutter + link scramble), shared by the top nav
+ * Fullscreen tent menu (cell shutter + link scramble), shared by the top nav
  * and the blog nav. The parent owns the `open` state; this component runs the
  * open/close animations and unmounts itself after the close animation ends.
- * Render it inside a `.mono-page` scope so the em scale applies.
+ * Render it inside a `.tent-page` scope so the em scale applies.
  */
-export function MonoMenu({
+export function TentMenu({
   open,
   entries,
   onClose,
   onJump,
 }: {
   open: boolean
-  entries: MonoMenuEntry[]
+  entries: TentMenuEntry[]
   onClose: () => void
   onJump?: (id: string) => void
 }) {
@@ -41,7 +41,7 @@ export function MonoMenu({
       setMounted(true)
       requestAnimationFrame(() => {
         const cells = cellsRef.current?.children
-        const links = linksRef.current?.querySelectorAll(".mono-menu__link-inner")
+        const links = linksRef.current?.querySelectorAll(".tent-menu__link-inner")
         if (!cells || !links) return
         const rand = seededRandom(1729)
         tlRef.current?.kill()
@@ -65,14 +65,14 @@ export function MonoMenu({
           0.12,
         )
         linksRef.current
-          ?.querySelectorAll<HTMLElement>(".mono-menu__link-inner")
+          ?.querySelectorAll<HTMLElement>(".tent-menu__link-inner")
           .forEach((el, i) => {
             gsap.delayedCall(0.14 + i * 0.035, () => scrambleIn(el, "hover", 6))
           })
       })
     } else if (mounted) {
       const cells = cellsRef.current?.children
-      const links = linksRef.current?.querySelectorAll(".mono-menu__link-inner")
+      const links = linksRef.current?.querySelectorAll(".tent-menu__link-inner")
       tlRef.current?.kill()
       if (!cells || !links || prefersReducedMotion()) {
         setMounted(false)
@@ -94,32 +94,32 @@ export function MonoMenu({
   }, [])
 
   return (
-    <div className="mono-menu" data-open={mounted} aria-hidden={!mounted}>
-      <div ref={overlayRef} className="mono-menu__overlay" />
+    <div className="tent-menu" data-open={mounted} aria-hidden={!mounted}>
+      <div ref={overlayRef} className="tent-menu__overlay" />
       <div
         ref={cellsRef}
-        className="mono-menu__grid"
+        className="tent-menu__grid"
         style={{
           gridTemplateRows: `repeat(${MENU_ROWS}, 1fr)`,
           gridTemplateColumns: `repeat(${MENU_COLS}, 1fr)`,
         }}
       >
         {Array.from({ length: MENU_ROWS * MENU_COLS }).map((_, i) => (
-          <div key={i} className="mono-menu__cell" />
+          <div key={i} className="tent-menu__cell" />
         ))}
       </div>
-      <div className="mono-menu__content">
-        <div ref={linksRef} className="mono-menu__links">
+      <div className="tent-menu__content">
+        <div ref={linksRef} className="tent-menu__links">
           {entries.map((e) =>
             e.type === "link" ? (
-              <Link key={e.label} href={e.href} prefetch={false} className="mono-menu__link" onClick={onClose}>
-                <span className="mono-menu__link-inner">{e.label}</span>
+              <Link key={e.label} href={e.href} prefetch={false} className="tent-menu__link" onClick={onClose}>
+                <span className="tent-menu__link-inner">{e.label}</span>
               </Link>
             ) : (
               <button
                 key={e.label}
                 type="button"
-                className="mono-menu__link"
+                className="tent-menu__link"
                 onClick={() => {
                   if (onJump) onJump(e.id)
                   else {
@@ -128,20 +128,20 @@ export function MonoMenu({
                   }
                 }}
               >
-                <span className="mono-menu__link-inner">{e.label}</span>
+                <span className="tent-menu__link-inner">{e.label}</span>
               </button>
             ),
           )}
         </div>
-        <div className="mono-menu__bottom">
+        <div className="tent-menu__bottom">
           <div style={{ display: "flex", gap: "1.5em" }}>
-            <a href="https://www.linkedin.com/in/hirokuma/" target="_blank" rel="noreferrer" className="paragraph-regular mono-ul">
+            <a href="https://www.linkedin.com/in/hirokuma/" target="_blank" rel="noreferrer" className="paragraph-regular tent-ul">
               LinkedIn
             </a>
-            <a href="https://x.com/hirokuma_negio/" target="_blank" rel="noreferrer" className="paragraph-regular mono-ul">
+            <a href="https://x.com/hirokuma_negio/" target="_blank" rel="noreferrer" className="paragraph-regular tent-ul">
               X
             </a>
-            <a href="https://www.threads.com/@hirokumaxhiro/" target="_blank" rel="noreferrer" className="paragraph-regular mono-ul">
+            <a href="https://www.threads.com/@hirokumaxhiro/" target="_blank" rel="noreferrer" className="paragraph-regular tent-ul">
               Threads
             </a>
           </div>
@@ -149,7 +149,7 @@ export function MonoMenu({
             <Link
               href="/contact"
               prefetch={false}
-              className="paragraph-regular mono-ul"
+              className="paragraph-regular tent-ul"
               style={{ textDecoration: "none", color: "inherit" }}
               onClick={onClose}
             >

@@ -17,8 +17,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { attachHoverScramble } from "./scramble"
-import { MonoMenu } from "./MonoMenu"
-import { MENU_ENTRIES } from "./MonoNav"
+import { TentMenu } from "./TentMenu"
+import { MENU_ENTRIES } from "./TentNav"
 
 const AuthModal = lazy(() =>
   import("@/components/auth-modal").then((module) => ({ default: module.AuthModal })),
@@ -30,8 +30,8 @@ const ITEMS = [
   { href: "/blog/seo", label: "seo" },
 ]
 
-/** Blog header in the mono design language — same bar as the top page, blog items. */
-export function MonoBlogNav({ ticker = false }: { ticker?: boolean } = {}) {
+/** Blog header in the tent design language — same bar as the top page, blog items. */
+export function TentBlogNav({ ticker = false }: { ticker?: boolean } = {}) {
   const pathname = usePathname()
   const navRef = useRef<HTMLElement>(null)
   const headerRef = useRef<HTMLDivElement>(null)
@@ -62,7 +62,7 @@ export function MonoBlogNav({ ticker = false }: { ticker?: boolean } = {}) {
   useEffect(() => {
     const nav = navRef.current
     if (!nav) return
-    const cleanups = Array.from(nav.querySelectorAll<HTMLElement>("[data-mono-hover]")).map((el) =>
+    const cleanups = Array.from(nav.querySelectorAll<HTMLElement>("[data-tent-hover]")).map((el) =>
       attachHoverScramble(el, 3),
     )
     return () => cleanups.forEach((fn) => fn())
@@ -136,52 +136,52 @@ export function MonoBlogNav({ ticker = false }: { ticker?: boolean } = {}) {
   const avatarUrl = profile?.avatar_url
 
   return (
-    <div className="mono-page" style={{ background: "transparent" }}>
-      {/* header stack: mono bar on top, ticker beneath it */}
+    <div className="tent-page" style={{ background: "transparent" }}>
+      {/* header stack: tent bar on top, ticker beneath it */}
       <div ref={headerRef} style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 900 }}>
       {/* blog content is white-based, so the bar grounds on white (not the top page's off-white) */}
       <nav
         ref={navRef}
-        className="mono-nav"
+        className="tent-nav"
         data-nav-theme="base"
         style={{ position: "relative", ["--nav-bg" as string]: "#ffffff" }}
       >
-        <div className="mono-nav__main">
-          <div className="mono-nav__left">
-            <Link href="/" prefetch={false} className="mono-logo" aria-label="Home">
+        <div className="tent-nav__main">
+          <div className="tent-nav__left">
+            <Link href="/" prefetch={false} className="tent-logo" aria-label="Home">
               <img
                 src="/logo_black_symbol.png"
                 alt="tent space"
                 width={273}
                 height={183}
-                className="mono-logo__img mono-logo__img--dark"
+                className="tent-logo__img tent-logo__img--dark"
               />
             </Link>
           </div>
-          <div className="mono-nav__progress">
-            <div className="mono-nav__labels">
+          <div className="tent-nav__progress">
+            <div className="tent-nav__labels">
               {ITEMS.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="mono-nav__label"
+                  className="tent-nav__label"
                   style={{ textDecoration: "none" }}
                   data-active={pathname === item.href}
-                  data-mono-hover
+                  data-tent-hover
                 >
-                  <span className="paragraph-regular" data-mono-hover-target>
+                  <span className="paragraph-regular" data-tent-hover-target>
                     {item.label}
                   </span>
                 </Link>
               ))}
             </div>
           </div>
-          <div className="mono-nav__docs">
-            <Link href="/" prefetch={false} className="paragraph-regular" data-mono-hover style={{ textDecoration: "none", color: "inherit" }}>
-              <span data-mono-hover-target>[ top ]</span>
+          <div className="tent-nav__docs">
+            <Link href="/" prefetch={false} className="paragraph-regular" data-tent-hover style={{ textDecoration: "none", color: "inherit" }}>
+              <span data-tent-hover-target>[ top ]</span>
             </Link>
           </div>
-          <div className="mono-nav__signin" style={{ alignItems: "center" }}>
+          <div className="tent-nav__signin" style={{ alignItems: "center" }}>
             {loading ? (
               <span className="paragraph-regular" style={{ opacity: 0.4 }}>
                 …
@@ -246,17 +246,17 @@ export function MonoBlogNav({ ticker = false }: { ticker?: boolean } = {}) {
               <button
                 type="button"
                 onClick={() => setShowAuthModal(true)}
-                className="paragraph-regular mono-ul"
-                data-mono-hover
+                className="paragraph-regular tent-ul"
+                data-tent-hover
                 style={{ background: "none", border: "none", padding: 0, fontFamily: "inherit", color: "inherit" }}
               >
-                <span data-mono-hover-target>sign in</span>
+                <span data-tent-hover-target>sign in</span>
               </button>
             )}
           </div>
           <button
             type="button"
-            className="mono-menu-btn"
+            className="tent-menu-btn"
             aria-label={menuOpen ? "メニューを閉じる" : "メニューを開く"}
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen(!menuOpen)}
@@ -265,12 +265,12 @@ export function MonoBlogNav({ ticker = false }: { ticker?: boolean } = {}) {
             <span />
           </button>
         </div>
-        <div className="mono-nav__border" />
+        <div className="tent-nav__border" />
       </nav>
       {ticker && <BlogTicker fixed={false} />}
       </div>
 
-      <MonoMenu open={menuOpen} entries={MENU_ENTRIES} onClose={() => setMenuOpen(false)} />
+      <TentMenu open={menuOpen} entries={MENU_ENTRIES} onClose={() => setMenuOpen(false)} />
 
       {showAuthModal && (
         <Suspense fallback={null}>

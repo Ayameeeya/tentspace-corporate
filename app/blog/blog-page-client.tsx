@@ -6,8 +6,8 @@ import Link from "next/link"
 import Image from "next/image"
 // import Masonry from 'react-masonry-css' // Replaced with custom masonry
 import { gsap } from "gsap"
-import { MonoBlogNav } from "@/components/home/MonoBlogNav"
-import { MonoFooterStandalone } from "@/components/home/MonoFooterStandalone"
+import { TentBlogNav } from "@/components/home/TentBlogNav"
+import { TentFooterStandalone } from "@/components/home/TentFooterStandalone"
 import { EyeLoader } from "@/components/eye-loader"
 import { SeoBanner } from "@/components/seo-banner"
 import { N8nBanner } from "@/components/n8n-banner"
@@ -567,7 +567,7 @@ export function BlogPageClient({
 
   return (
     <div className="min-h-screen bg-[#e5e5e5]">
-      <MonoBlogNav ticker />
+      <TentBlogNav ticker />
 
       {/* Subtle gradient background */}
       <div className="fixed inset-0 pointer-events-none">
@@ -773,7 +773,7 @@ export function BlogPageClient({
         {/* Footer - 読み込み完了後に表示（記事ゼロの場合も含む） */}
         {!loading && (!hasMore || posts.length === 0) && (
           <div className="mt-12 md:mt-16">
-            <MonoFooterStandalone />
+            <TentFooterStandalone />
           </div>
         )}
       </main>

@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { MonoBlogNav } from "@/components/home/MonoBlogNav"
-import { MonoFooterStandalone } from "@/components/home/MonoFooterStandalone"
+import { TentBlogNav } from "@/components/home/TentBlogNav"
+import { TentFooterStandalone } from "@/components/home/TentFooterStandalone"
 import { FloatingContactButton } from "@/components/floating-contact-button"
 import { ChapterLabel } from "@/components/home/ChapterText"
 import { ScrambleText } from "@/components/home/ScrambleText"
@@ -191,17 +191,17 @@ export default async function N8nFeaturedPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="mono-page" style={{ background: "#ffffff" }}>
-        <MonoBlogNav />
+      <div className="tent-page" style={{ background: "#ffffff" }}>
+        <TentBlogNav />
 
         <main id="main-content" style={{ paddingTop: "9em" }}>
           {/* ---------- hero ---------- */}
-          <section className="mono-container">
+          <section className="tent-container">
             <ChapterLabel label="n8n guide" />
             <ScrambleText as="h1" className="heading-l" mode="load" intensity={4}>
               n8n完全ガイド
             </ScrambleText>
-            <div className="mono-doc__meta">
+            <div className="tent-doc__meta">
               <ScrambleText as="p" className="paragraph-m" mode="load" intensity={4}>
                 全7章・{total}記事
               </ScrambleText>
@@ -220,14 +220,14 @@ export default async function N8nFeaturedPage() {
           </div>
 
           {/* ---------- 目次 ---------- */}
-          <section className="mono-container" style={{ paddingTop: "6em" }}>
+          <section className="tent-container" style={{ paddingTop: "6em" }}>
             <ChapterLabel label="contents" />
-            <div className="mono-stat-rows">
+            <div className="tent-stat-rows">
               {chapters.map((chapter) => (
                 <a
                   key={chapter.id}
                   href={`#chapter-${chapter.id}`}
-                  className="mono-stat-row"
+                  className="tent-stat-row"
                   style={{ textDecoration: "none", color: "inherit", cursor: "crosshair" }}
                 >
                   <p className="paragraph-regular opacity-64">{String(chapter.id).padStart(2, "0")}</p>
@@ -241,8 +241,8 @@ export default async function N8nFeaturedPage() {
           </section>
 
           {/* ---------- 学習ルート ---------- */}
-          <section className="mono-container" style={{ paddingTop: "8em" }}>
-            <div className="mono-diff__head" style={{ padding: "0 0 4em" }}>
+          <section className="tent-container" style={{ paddingTop: "8em" }}>
+            <div className="tent-diff__head" style={{ padding: "0 0 4em" }}>
               <ScrambleText as="h2" className="heading-s">
                 読む順番は、目的で選ぶ
               </ScrambleText>
@@ -250,9 +250,9 @@ export default async function N8nFeaturedPage() {
                 how to read
               </ScrambleText>
             </div>
-            <div className="mono-doc__rows" style={{ maxWidth: "62em" }}>
+            <div className="tent-doc__rows" style={{ maxWidth: "62em" }}>
               {ROUTES.map(([who, route]) => (
-                <div key={who} className="mono-doc__row">
+                <div key={who} className="tent-doc__row">
                   <p className="paragraph-regular opacity-64">{who}</p>
                   <p className="paragraph-regular">{route}</p>
                 </div>
@@ -261,7 +261,7 @@ export default async function N8nFeaturedPage() {
           </section>
 
           {/* ---------- chapters ---------- */}
-          <div className="mono-container" style={{ paddingTop: "8em" }}>
+          <div className="tent-container" style={{ paddingTop: "8em" }}>
             {posts.length === 0 ? (
               <div style={{ textAlign: "center", padding: "8em 0" }}>
                 <p className="paragraph-m opacity-64">記事がまだありません</p>
@@ -275,7 +275,7 @@ export default async function N8nFeaturedPage() {
 
                   return (
                     <section key={chapter.id} id={`chapter-${chapter.id}`} className="scroll-mt-24">
-                      {/* chapter header — mono */}
+                      {/* chapter header — tent */}
                       <div
                         style={{
                           display: "flex",
@@ -286,7 +286,7 @@ export default async function N8nFeaturedPage() {
                           marginBottom: "3em",
                         }}
                       >
-                        <span className="mono-guide__chapter-num" aria-hidden="true">
+                        <span className="tent-guide__chapter-num" aria-hidden="true">
                           {String(chapter.id).padStart(2, "0")}
                         </span>
                         <div style={{ flex: 1, minWidth: 0 }}>
@@ -296,13 +296,13 @@ export default async function N8nFeaturedPage() {
                           <p className="paragraph-regular opacity-64" style={{ maxWidth: "52em", marginTop: "1em", lineHeight: 1.7 }}>
                             {chapter.description}
                           </p>
-                          <div className="mono-works__tags" style={{ marginTop: "1.25em" }}>
+                          <div className="tent-works__tags" style={{ marginTop: "1.25em" }}>
                             {chapter.keywords.slice(0, 5).map((k) => (
-                              <span key={k} className="mono-works__tag">
+                              <span key={k} className="tent-works__tag">
                                 {k}
                               </span>
                             ))}
-                            <span className="mono-works__tag" style={{ borderColor: "var(--m-border)", opacity: 0.7 }}>
+                            <span className="tent-works__tag" style={{ borderColor: "var(--m-border)", opacity: 0.7 }}>
                               {chapterPosts.length}記事
                             </span>
                           </div>
@@ -326,8 +326,8 @@ export default async function N8nFeaturedPage() {
           <div style={{ marginTop: "12em" }}>
             <ShutterScroll variant="indigo" seed={71} />
           </div>
-          <section className="mono-cta-band">
-            <div className="mono-container">
+          <section className="tent-cta-band">
+            <div className="tent-container">
               <ChapterLabel label="with tent space" />
               <ScrambleText as="h2" className="heading-m">
                 n8nの導入、お手伝いできます。
@@ -342,7 +342,7 @@ export default async function N8nFeaturedPage() {
           </section>
           <ShutterScroll variant="off-white" bg="indigo" seed={72} height="6em" />
 
-          <MonoFooterStandalone />
+          <TentFooterStandalone />
         </main>
 
         <FloatingContactButton label="n8n導入のご相談" />

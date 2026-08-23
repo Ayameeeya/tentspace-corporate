@@ -4,8 +4,8 @@ import { useEffect, useState, useRef, type MouseEvent } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { FaInstagram, FaLinkedinIn, FaThreads, FaXTwitter } from "react-icons/fa6"
-import { MonoBlogNav } from "@/components/home/MonoBlogNav"
-import { MonoFooterStandalone } from "@/components/home/MonoFooterStandalone"
+import { TentBlogNav } from "@/components/home/TentBlogNav"
+import { TentFooterStandalone } from "@/components/home/TentFooterStandalone"
 import { MainBtn } from "@/components/home/MainBtn"
 import { BlogComments } from "@/components/blog-comments"
 import { BlogFavorite } from "@/components/blog-favorite"
@@ -230,7 +230,7 @@ function ShareButtons({ url, title }: { url: string; title: string }) {
         href={shareUrls.x}
         target="_blank"
         rel="noopener noreferrer"
-        className="mono-icon-btn"
+        className="tent-icon-btn"
         title="Xでシェア"
         aria-label="Xでシェア"
       >
@@ -240,7 +240,7 @@ function ShareButtons({ url, title }: { url: string; title: string }) {
         href={shareUrls.threads}
         target="_blank"
         rel="noopener noreferrer"
-        className="mono-icon-btn"
+        className="tent-icon-btn"
         title="Threadsでシェア"
         aria-label="Threadsでシェア"
       >
@@ -250,7 +250,7 @@ function ShareButtons({ url, title }: { url: string; title: string }) {
         href={shareUrls.linkedin}
         target="_blank"
         rel="noopener noreferrer"
-        className="mono-icon-btn"
+        className="tent-icon-btn"
         title="LinkedInでシェア"
         aria-label="LinkedInでシェア"
       >
@@ -260,7 +260,7 @@ function ShareButtons({ url, title }: { url: string; title: string }) {
         href={shareUrls.instagram}
         target="_blank"
         rel="noopener noreferrer"
-        className="mono-icon-btn"
+        className="tent-icon-btn"
         title="投稿用テキストをコピーしてInstagramを開く"
         aria-label="Instagramでシェア"
         onClick={() => {
@@ -272,7 +272,7 @@ function ShareButtons({ url, title }: { url: string; title: string }) {
       </a>
       <button
         onClick={handleCopy}
-        className="mono-icon-btn"
+        className="tent-icon-btn"
         title="リンクをコピー"
         aria-label="リンクをコピー"
       >
@@ -337,7 +337,7 @@ function BlogLikeButton({ slug }: { slug: string }) {
         type="button"
         onClick={handleLike}
         disabled={pending || hasLiked}
-        className="mono-action-btn"
+        className="tent-action-btn"
         data-active={hasLiked}
         aria-pressed={hasLiked}
       >
@@ -693,15 +693,15 @@ export default function BlogPostClient({
   useCodeBlockEnhancement(articleRef)
 
   return (
-    <div className="mono-page min-h-screen" style={{ background: "#ffffff" }}>
-      <MonoBlogNav />
+    <div className="tent-page min-h-screen" style={{ background: "#ffffff" }}>
+      <TentBlogNav />
 
       <main id="main-content" className="pt-[calc(var(--blog-nav-h,128px)+1.5rem)]">
         {/* Breadcrumb Navigation */}
         <nav className="max-w-3xl mx-auto px-4 py-5" aria-label="パンくずリスト">
           <ol className="flex items-center gap-3 text-xs" itemScope itemType="https://schema.org/BreadcrumbList">
             <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
-              <Link href="/" prefetch={false} className="mono-ul" style={{ opacity: 0.55 }} itemProp="item">
+              <Link href="/" prefetch={false} className="tent-ul" style={{ opacity: 0.55 }} itemProp="item">
                 <span itemProp="name">home</span>
               </Link>
               <meta itemProp="position" content="1" />
@@ -710,7 +710,7 @@ export default function BlogPostClient({
               /
             </li>
             <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
-              <Link href="/blog" className="mono-ul" style={{ opacity: 0.55 }} itemProp="item">
+              <Link href="/blog" className="tent-ul" style={{ opacity: 0.55 }} itemProp="item">
                 <span itemProp="name">blog</span>
               </Link>
               <meta itemProp="position" content="2" />
@@ -730,9 +730,9 @@ export default function BlogPostClient({
           <div className="max-w-3xl mx-auto px-4 py-8 md:py-12">
             {/* Categories */}
             {categories.length > 0 && (
-              <div className="mono-works__tags mb-5">
+              <div className="tent-works__tags mb-5">
                 {categories.map((cat) => (
-                  <span key={cat.id} className="mono-works__tag">
+                  <span key={cat.id} className="tent-works__tag">
                     {cat.name}
                   </span>
                 ))}
@@ -823,7 +823,7 @@ export default function BlogPostClient({
                     <h3 className="font-bold text-foreground">他の記事もどうぞ</h3>
                     <span className="text-xs text-muted-foreground">related</span>
                     {categories[0] && (
-                      <span className="mono-works__tag" style={{ fontSize: "0.7rem" }}>
+                      <span className="tent-works__tag" style={{ fontSize: "0.7rem" }}>
                         {categories[0].name}
                       </span>
                     )}
@@ -914,7 +914,7 @@ export default function BlogPostClient({
                     href={shareUrls.x}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mono-share-btn"
+                    className="tent-share-btn"
                     aria-label="Xでシェア"
                   >
                     <FaXTwitter aria-hidden="true" />
@@ -926,7 +926,7 @@ export default function BlogPostClient({
                     href={shareUrls.threads}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mono-share-btn"
+                    className="tent-share-btn"
                     aria-label="Threadsでシェア"
                   >
                     <FaThreads aria-hidden="true" />
@@ -938,7 +938,7 @@ export default function BlogPostClient({
                     href={shareUrls.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mono-share-btn"
+                    className="tent-share-btn"
                     aria-label="LinkedInでシェア"
                   >
                     <FaLinkedinIn aria-hidden="true" />
@@ -950,7 +950,7 @@ export default function BlogPostClient({
                     href={shareUrls.instagram}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mono-share-btn"
+                    className="tent-share-btn"
                     aria-label="Instagramでシェア"
                     title="投稿用テキストをコピーしてInstagramを開く"
                     onClick={() => {
@@ -967,7 +967,7 @@ export default function BlogPostClient({
                     href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(canonicalUrl)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mono-share-btn"
+                    className="tent-share-btn"
                     aria-label="Facebookでシェア"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
@@ -981,7 +981,7 @@ export default function BlogPostClient({
                     href={`https://b.hatena.ne.jp/add?mode=confirm&url=${encodeURIComponent(canonicalUrl)}&title=${encodeURIComponent(plainTitle)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mono-share-btn"
+                    className="tent-share-btn"
                     aria-label="はてなブックマークに追加"
                   >
                     <span className="font-bold text-sm">B!</span>
@@ -993,7 +993,7 @@ export default function BlogPostClient({
                     href={`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(canonicalUrl)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mono-share-btn"
+                    className="tent-share-btn"
                     aria-label="LINEでシェア"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
@@ -1008,7 +1008,7 @@ export default function BlogPostClient({
                       navigator.clipboard.writeText(canonicalUrl)
                       alert('URLをコピーしました！')
                     }}
-                    className="mono-share-btn"
+                    className="tent-share-btn"
                     aria-label="URLをコピー"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1082,7 +1082,7 @@ export default function BlogPostClient({
 
         {/* Footer */}
         <div className="mt-16">
-          <MonoFooterStandalone />
+          <TentFooterStandalone />
         </div>
       </main>
     </div>

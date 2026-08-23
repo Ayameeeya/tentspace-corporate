@@ -72,7 +72,7 @@ export function CookieConsent() {
     return null
   }
 
-  // mono design: Win95-window card, bottom-left so the floating contact CTA
+  // tent design: Win95-window card, bottom-left so the floating contact CTA
   // (bottom-right) stays visible while the banner is shown
   return (
     <section

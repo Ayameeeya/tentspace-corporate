@@ -165,18 +165,18 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 }
 
-// デフォルトエラーフォールバック（mono様式・アニメーション等の依存なしの静的マークアップ）
+// デフォルトエラーフォールバック（tent様式・アニメーション等の依存なしの静的マークアップ）
 function DefaultErrorFallback({ error }: { error?: Error }) {
   return (
-    <div className="mono-page" style={{ minHeight: '100dvh', display: 'flex', alignItems: 'center' }}>
+    <div className="tent-page" style={{ minHeight: '100dvh', display: 'flex', alignItems: 'center' }}>
       <main id="main-content" style={{ width: '100%' }}>
-        <div className="mono-container">
-          <div className="mono-chapter">
+        <div className="tent-container">
+          <div className="tent-chapter">
             <span>error</span>
-            <div className="mono-chapter__wrap">
-              <div className="mono-chapter__line" />
-              <div className="mono-chapter__box" />
-              <div className="mono-chapter__line" />
+            <div className="tent-chapter__wrap">
+              <div className="tent-chapter__line" />
+              <div className="tent-chapter__box" />
+              <div className="tent-chapter__line" />
             </div>
           </div>
           <h1 className="heading-xl">something went wrong</h1>
@@ -186,7 +186,7 @@ function DefaultErrorFallback({ error }: { error?: Error }) {
           <button
             type="button"
             onClick={() => window.location.reload()}
-            className="paragraph-m mono-ul mono-ul--static mono-submit"
+            className="paragraph-m tent-ul tent-ul--static tent-submit"
             style={{ cursor: 'crosshair' }}
           >
             reload page

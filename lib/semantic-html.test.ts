@@ -40,13 +40,13 @@ describe("semantic HTML", () => {
       "app/unauthorized/page.tsx",
       "app/test/error-tracking/page.tsx",
       "components/error-boundary.tsx",
-      "components/home/MonoDoc.tsx",
+      "components/home/TentDoc.tsx",
     ]
 
     for (const file of files) {
       const source = await read(file)
-      // 文書ページ（terms/privacy/legal）は MonoDoc が main を描画する
-      if (source.includes("<MonoDoc")) continue
+      // 文書ページ（terms/privacy/legal）は TentDoc が main を描画する
+      if (source.includes("<TentDoc")) continue
       const mainTags = source.match(/<main\b[^>]*>/g) ?? []
 
       expect(mainTags.length, `${file} must render a main landmark`).toBeGreaterThan(0)
@@ -91,7 +91,7 @@ describe("semantic HTML", () => {
       const rowCount = source.match(/<tr\b/g)?.length ?? 0
       const rowHeaderCount = source.match(/<th\b[^>]*scope="row"/g)?.length ?? 0
 
-      // テーブルを使う場合は全行に行見出しを付ける（mono-doc化で表を持たないページは0行）
+      // テーブルを使う場合は全行に行見出しを付ける（tent-doc化で表を持たないページは0行）
       expect(rowHeaderCount, file).toBe(rowCount)
     }
   })
@@ -131,7 +131,7 @@ describe("semantic HTML", () => {
   })
 
   it("フッターリンクを名前付きナビゲーションとして公開する", async () => {
-    const source = await read("components/home/MonoFooter.tsx")
+    const source = await read("components/home/TentFooter.tsx")
 
     expect(source).toContain('aria-label="フッターナビゲーション"')
   })
@@ -143,8 +143,8 @@ describe("semantic HTML", () => {
     ])
 
     expect(home).not.toContain("text-primary/80")
-    expect(home).toContain("MonoShell")
-    expect(about).toContain("MonoShell")
+    expect(home).toContain("TentShell")
+    expect(about).toContain("TentShell")
     expect(about).not.toContain("text-white/40")
     expect(about).not.toContain("text-blue-500/50")
     expect(about).not.toContain("text-blue-500/10")

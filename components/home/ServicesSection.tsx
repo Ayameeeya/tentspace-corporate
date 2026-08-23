@@ -30,35 +30,35 @@ const PLANS = [
 
 export function ServicesSection() {
   return (
-    <section className="mono-pricing" id="services">
-      <div className="mono-container">
-        <div className="mono-pricing__head">
+    <section className="tent-pricing" id="services">
+      <div className="tent-container">
+        <div className="tent-pricing__head">
           <h2 className="heading-m ti-2">作りたいものに合わせて、ふたつの関わり方</h2>
           <ScrambleText as="p" className="paragraph-l">
             project-based, or ongoing. your choice.
           </ScrambleText>
         </div>
-        <div className="mono-pricing__grid">
-          <div className="mono-pricing__cards">
+        <div className="tent-pricing__grid">
+          <div className="tent-pricing__cards">
             {PLANS.map((plan) => (
-              <div key={plan.name} className="mono-win">
+              <div key={plan.name} className="tent-win">
                 {/* system セクションと同じレトロ OS ウィンドウでプランを見せる */}
-                <div className="mono-win__bar">
-                  <p className="mono-win__title">plan — {plan.name.toLowerCase()}</p>
-                  <div className="mono-win__btns" aria-hidden="true">
+                <div className="tent-win__bar">
+                  <p className="tent-win__title">plan — {plan.name.toLowerCase()}</p>
+                  <div className="tent-win__btns" aria-hidden="true">
                     <span>–</span>
                     <span>□</span>
                     <span>✕</span>
                   </div>
                 </div>
-                <div className="mono-win__body">
-                  <div className="mono-pricing__row mono-pricing__row--top">
+                <div className="tent-win__body">
+                  <div className="tent-pricing__row tent-pricing__row--top">
                     <h3 className="paragraph-l">plan</h3>
                     <div style={{ textAlign: "right" }}>
                       <ScrambleText as="p" className="heading-s">
                         {plan.name}
                       </ScrambleText>
-                      <div className="mono-pricing__cost">
+                      <div className="tent-pricing__cost">
                         <p className="heading-s">¥</p>
                         <ScrambleText as="p" className="heading-s">
                           {plan.price}
@@ -68,35 +68,35 @@ export function ServicesSection() {
                     </div>
                   </div>
                   {plan.rows.map(([k, v]) => (
-                    <div key={k} className="mono-pricing__row">
+                    <div key={k} className="tent-pricing__row">
                       <h3 className="paragraph-l">{k}</h3>
                       <ScrambleText as="p" className="heading-s">
                         {v}
                       </ScrambleText>
                     </div>
                   ))}
-                  <div className="mono-pricing__row" style={{ justifyContent: "flex-end", minHeight: "6em" }}>
+                  <div className="tent-pricing__row" style={{ justifyContent: "flex-end", minHeight: "6em" }}>
                     <MainBtn label="start a project" href="/contact" variant="inside" twoLine />
                   </div>
                 </div>
               </div>
             ))}
           </div>
-          <div className="mono-pricing__note">
+          <div className="tent-pricing__note">
             <ScrambleText as="p" className="paragraph-s">
               まずは無料相談から。課題の整理だけでも歓迎です。費用はお見積もりの際に、はっきりお伝えします。
             </ScrambleText>
             <div>
-              <div className="mono-pricing__row" style={{ minHeight: "3em" }}>
+              <div className="tent-pricing__row" style={{ minHeight: "3em" }}>
                 <p className="paragraph-m">契約形態: 請負 / 準委任</p>
               </div>
-              <div className="mono-pricing__row" style={{ minHeight: "3em" }}>
+              <div className="tent-pricing__row" style={{ minHeight: "3em" }}>
                 <p className="paragraph-m">AI導入・DXの相談: 歓迎</p>
               </div>
-              <div className="mono-pricing__row" style={{ minHeight: "3em" }}>
+              <div className="tent-pricing__row" style={{ minHeight: "3em" }}>
                 <p className="paragraph-m">サイトデザインのみ: 対応可</p>
               </div>
-              <div className="mono-pricing__row" style={{ minHeight: "3em" }}>
+              <div className="tent-pricing__row" style={{ minHeight: "3em" }}>
                 <p className="paragraph-m">IoT・BLEデバイス連携: 対応可</p>
               </div>
             </div>

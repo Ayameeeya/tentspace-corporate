@@ -1,4 +1,4 @@
-import { MonoShell } from "@/components/home/MonoShell"
+import { TentShell } from "@/components/home/TentShell"
 import { ChapterLabel } from "@/components/home/ChapterText"
 import { ScrambleText } from "@/components/home/ScrambleText"
 import { MainBtn } from "@/components/home/MainBtn"
@@ -17,18 +17,18 @@ export const metadata = {
 
 export default function UnauthorizedPage() {
   return (
-    <MonoShell footer={false}>
+    <TentShell footer={false}>
       <main
         id="main-content"
-        className="mono-doc"
+        className="tent-doc"
         style={{ minHeight: "100dvh", display: "flex", flexDirection: "column", justifyContent: "center", paddingBottom: "10vh" }}
       >
-        <div className="mono-container">
+        <div className="tent-container">
           <ChapterLabel label="403" />
           <ScrambleText as="h1" className="heading-xl" mode="load" intensity={5}>
             access denied
           </ScrambleText>
-          <div className="mono-doc__meta" style={{ marginBottom: "2em" }}>
+          <div className="tent-doc__meta" style={{ marginBottom: "2em" }}>
             <ScrambleText as="p" className="paragraph-m opacity-64" mode="load" intensity={5}>
               このページにアクセスする権限がありません。管理者権限が必要です。
             </ScrambleText>
@@ -39,6 +39,6 @@ export default function UnauthorizedPage() {
           <MainBtn label="back to home" href="/" variant="inside" />
         </div>
       </main>
-    </MonoShell>
+    </TentShell>
   )
 }

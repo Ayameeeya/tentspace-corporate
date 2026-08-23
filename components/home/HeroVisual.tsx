@@ -144,7 +144,7 @@ export function HeroVisual() {
       if (det.clientY < rect.top - 120 || det.clientY > rect.bottom + 120) return
       ripple = { x: det.clientX - rect.left, y: det.clientY - rect.top, start: performance.now() }
     }
-    window.addEventListener("mono-merge", onMerge)
+    window.addEventListener("tent-merge", onMerge)
 
     const THRESHOLDS = [0.4, 0.46, 0.52, 0.58, 0.64]
 
@@ -228,7 +228,7 @@ export function HeroVisual() {
       ro.disconnect()
       io.disconnect()
       window.removeEventListener("pointermove", onMove)
-      window.removeEventListener("mono-merge", onMerge)
+      window.removeEventListener("tent-merge", onMerge)
     }
   }, [])
 

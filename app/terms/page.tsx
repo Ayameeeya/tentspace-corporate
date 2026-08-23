@@ -1,13 +1,13 @@
 "use client"
 
-import { MonoDoc } from "@/components/home/MonoDoc"
+import { TentDoc } from "@/components/home/TentDoc"
 
 const CONTACT_ROWS: [string, React.ReactNode][] = [
   ["事業者名", "株式会社tent space"],
   ["所在地", "〒355-0316 埼玉県比企郡小川町大字角山323"],
   [
     "Email",
-    <a key="mail" href="mailto:back-office@tentspace.net" className="mono-ul">
+    <a key="mail" href="mailto:back-office@tentspace.net" className="tent-ul">
       back-office@tentspace.net
     </a>,
   ],
@@ -15,7 +15,7 @@ const CONTACT_ROWS: [string, React.ReactNode][] = [
 
 export default function TermsPage() {
   return (
-    <MonoDoc
+    <TentDoc
       label="terms"
       title="利用規約"
       meta={["最終改定: 2026年8月18日", "株式会社tent space"]}

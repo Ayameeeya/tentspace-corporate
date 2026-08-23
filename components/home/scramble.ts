@@ -3,7 +3,7 @@
 import gsap from "gsap"
 
 /**
- * Word-level text scramble engine (monolayer-style).
+ * Word-level text scramble engine (layered-style).
  * Splits text into word spans; a chosen subset of characters in each word
  * shuffles among the word's own letters while unrevealed, then reveals
  * left-to-right as a gsap tween drives progress 0 -> 1.
@@ -55,8 +55,8 @@ interface WordPlan {
 }
 
 function buildPlans(root: HTMLElement, intensity: number): WordPlan[] {
-  const text = root.dataset.monoOriginal ?? root.textContent ?? ""
-  root.dataset.monoOriginal = text
+  const text = root.dataset.tentOriginal ?? root.textContent ?? ""
+  root.dataset.tentOriginal = text
   const segments = segmentText(text)
   root.textContent = ""
   const plans: WordPlan[] = []
@@ -141,7 +141,7 @@ export function scrambleIn(root: HTMLElement, mode: Exclude<Mode, "hover"> | "ho
   return tl
 }
 
-/** Attach hover scramble to a link wrapper; the [data-mono-hover-target] inside scrambles. */
+/** Attach hover scramble to a link wrapper; the [data-tent-hover-target] inside scrambles. */
 export function attachHoverScramble(link: HTMLElement, intensity = 3) {
   let active: gsap.core.Timeline | null = null
   const onEnter = (e: Event) => {
@@ -149,16 +149,16 @@ export function attachHoverScramble(link: HTMLElement, intensity = 3) {
     // mouseupの間に押下ノードが切り離されclickが失われるため、
     // キーボード由来のフォーカスに限って再生する。
     if (e.type === "focusin" && !link.matches(":focus-visible")) return
-    const target = link.querySelector<HTMLElement>("[data-mono-hover-target]") ?? link
+    const target = link.querySelector<HTMLElement>("[data-tent-hover-target]") ?? link
     active?.kill()
-    if (target.dataset.monoOriginal) target.textContent = target.dataset.monoOriginal
+    if (target.dataset.tentOriginal) target.textContent = target.dataset.tentOriginal
     active = scrambleIn(target, "hover", intensity)
   }
   const onLeave = () => {
-    const target = link.querySelector<HTMLElement>("[data-mono-hover-target]") ?? link
+    const target = link.querySelector<HTMLElement>("[data-tent-hover-target]") ?? link
     active?.kill()
     active = null
-    if (target.dataset.monoOriginal) target.textContent = target.dataset.monoOriginal
+    if (target.dataset.tentOriginal) target.textContent = target.dataset.tentOriginal
   }
   link.addEventListener("mouseenter", onEnter)
   link.addEventListener("focusin", onEnter)
