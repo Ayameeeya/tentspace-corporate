@@ -539,6 +539,7 @@ html {
 .dialogue__turn--hiro .dialogue__avatar {
   background: #fff7ed;
   border-color: #fdba74;
+  transform: scaleX(-1);
 }
 
 .dialogue__message {
