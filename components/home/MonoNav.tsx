@@ -125,16 +125,6 @@ export function MonoNav() {
       <nav ref={navRef} className="mono-nav" data-nav-theme="base" data-mono-nav>
         <div className="mono-nav__main">
           <div className="mono-nav__left">
-            <button
-              type="button"
-              className="mono-menu-btn"
-              aria-label={menuOpen ? "メニューを閉じる" : "メニューを開く"}
-              aria-expanded={menuOpen}
-              onClick={() => setMenuOpen(!menuOpen)}
-            >
-              <span />
-              <span />
-            </button>
             <Link href="/" className="mono-logo" aria-label="Home">
               {/* symbol mark; black/white variants swapped by nav theme */}
               <img src="/logo_black_symbol.png" alt="tent space" className="mono-logo__img mono-logo__img--dark" />
@@ -151,6 +141,16 @@ export function MonoNav() {
               <span data-mono-hover-target>contact</span>
             </Link>
           </div>
+          <button
+            type="button"
+            className="mono-menu-btn"
+            aria-label={menuOpen ? "メニューを閉じる" : "メニューを開く"}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <span />
+            <span />
+          </button>
         </div>
         <div ref={barRef} className="mono-nav__progress-bar" />
         {/* シーケンスバー: 進捗ライン上に乗るセクションのステップ */}
