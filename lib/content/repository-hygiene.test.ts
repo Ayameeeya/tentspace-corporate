@@ -71,6 +71,8 @@ describe("repository hygiene", () => {
       "app/content-manifest.json/route.ts",
       "app/llms.txt/route.ts",
       "app/blog/[slug]/index.md/route.ts",
+      "content/link-card-cache.json",
+      "docs/writing-guide.md",
       "docs/migration/findings.md",
       "docs/migration/runbook.md",
     ]
@@ -93,6 +95,14 @@ describe("repository hygiene", () => {
     expect(sharedInstructions).toContain("## コンテンツ規約")
     expect(sharedInstructions).toContain("## ブランチ・PR 規約")
     expect(sharedInstructions).toContain("## 禁止事項")
+
+    const writingGuide = await readFile(
+      path.join(process.cwd(), "docs/writing-guide.md"),
+      "utf8",
+    )
+    expect(writingGuide).toContain('<LinkCard slug="')
+    expect(writingGuide).toContain('<LinkCard url="https://')
+    expect(writingGuide).toContain("コンポーネントを追加したら")
   })
 
   it("公開URLは一つのSITE_URL定義を使う", async () => {

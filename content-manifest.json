@@ -1,5 +1,32 @@
 [
   {
+    "id": 2979247671,
+    "slug": "claude-code-hooks-bash-guard",
+    "title": "Claude Codeのhooksで自動運用に禁止ラインを引く｜Bashガード実装記録",
+    "description": "Claude Codeのhooksで、エージェントに破らせたくない操作をコードとして強制する実装記録。PreToolUseフックの設定、Bashコマンドを検査するガードスクリプト、exit code 2でブロックする仕組み、正規表現ルールの設計と限界まで、実運用中の構成をそのまま解説します。",
+    "date": "2026-08-23T00:00:00.000Z",
+    "updated": "2026-08-23T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "AIエージェント",
+      "自動化",
+      "hooks"
+    ],
+    "draft": false,
+    "readingTime": 9,
+    "wordCount": 3553,
+    "ogImage": "/blog-assets/claude-code-hooks-bash-guard/featured.jpg",
+    "experiment": {
+      "hook": "contrarian",
+      "cta": "inquiry",
+      "targetKw": "Claude Code hooks",
+      "utmCampaign": "claude-code-hooks-202608"
+    }
+  },
+  {
     "id": 3898351823,
     "slug": "claude-code-subagent-critic-review",
     "title": "Claude Codeのサブエージェントで公開前レビューを分離する｜critic実装記録",

@@ -1,7 +1,7 @@
 import { readFile, readdir } from "node:fs/promises"
 import path from "node:path"
 import { createContentManifest, parsePostSource } from "./post-schema"
-import { renderMdxToHtml } from "./render-mdx"
+import { renderMdxToHtml, type RenderMdxOptions } from "./render-mdx"
 
 export const POSTS_DIRECTORY = path.join(process.cwd(), "content", "posts")
 
@@ -10,9 +10,7 @@ export interface PostFile {
   sourcePath: string
 }
 
-export interface ContentValidationOptions {
-  publicDirectory?: string
-}
+export type ContentValidationOptions = RenderMdxOptions
 
 const NON_ARTICLE_BLOG_ROUTES = new Set(["favorites", "n8n", "seo"])
 
@@ -25,9 +23,10 @@ function extractHtmlAttributeValues(
 }
 
 function extractHtmlImageSources(html: string) {
-  return (html.match(/<img\b[^>]*>/g) ?? []).flatMap((imageTag) =>
-    extractHtmlAttributeValues(imageTag, "src"),
-  )
+  return (html.match(/<img\b[^>]*>/g) ?? []).flatMap((imageTag) => {
+    if (/\sdata-link-card-image(?:=|\s|\/?>)/.test(imageTag)) return []
+    return extractHtmlAttributeValues(imageTag, "src")
+  })
 }
 
 function getBlogPostSlug(reference: string): string | null {
@@ -68,6 +67,7 @@ export async function getContentManifest(postsDirectory = POSTS_DIRECTORY) {
 export async function loadPostBySlug(
   slug: string,
   postsDirectory = POSTS_DIRECTORY,
+  options: RenderMdxOptions = {},
 ) {
   if (!/^[a-z0-9-]+$/.test(slug)) return null
 
@@ -85,17 +85,26 @@ export async function loadPostBySlug(
 
   return {
     ...parsed,
-    contentHtml: await renderMdxToHtml(parsed.body),
+    contentHtml: await renderMdxToHtml(parsed.body, {
+      ...options,
+      postsDirectory,
+    }),
   }
 }
 
 async function validateParsedPost(
   parsed: ReturnType<typeof parsePostSource>,
   postSlugs: Set<string>,
-  publicDirectory: string,
+  postsDirectory: string,
+  options: ContentValidationOptions,
 ) {
   try {
-    const contentHtml = await renderMdxToHtml(parsed.body, { publicDirectory })
+    const contentHtml = await renderMdxToHtml(parsed.body, {
+      ...options,
+      publicDirectory:
+        options.publicDirectory ?? path.join(process.cwd(), "public"),
+      postsDirectory,
+    })
 
     for (const source of extractHtmlImageSources(contentHtml)) {
       if (/^(?:https?:)?\/\//.test(source)) {
@@ -145,9 +154,12 @@ export async function validatePostFile(
   const postSlugs = new Set(
     files.map((file) => path.basename(path.dirname(file.sourcePath))),
   )
-  const publicDirectory =
-    options.publicDirectory ?? path.join(process.cwd(), "public")
-  await validateParsedPost(parsed, postSlugs, publicDirectory)
+  await validateParsedPost(
+    parsed,
+    postSlugs,
+    absolutePostsDirectory,
+    options,
+  )
 }
 
 export async function validateContentRepository(
@@ -157,11 +169,8 @@ export async function validateContentRepository(
   const files = await readPostFiles(postsDirectory)
   const parsedPosts = files.map((file) => parsePostSource(file.source, file.sourcePath))
   const postSlugs = new Set(parsedPosts.map((post) => post.metadata.slug))
-  const publicDirectory =
-    options.publicDirectory ?? path.join(process.cwd(), "public")
-
   for (const parsed of parsedPosts) {
-    await validateParsedPost(parsed, postSlugs, publicDirectory)
+    await validateParsedPost(parsed, postSlugs, postsDirectory, options)
   }
 
   return createContentManifest(files)
