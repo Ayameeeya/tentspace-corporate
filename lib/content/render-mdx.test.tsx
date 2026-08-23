@@ -67,6 +67,71 @@ const source = "mdx"
     expect(html).toContain('title="動画サンプル"')
   })
 
+  it("Dialogueを話者ごとの左右・表示名・アバター付きで描画する", async () => {
+    const html = await renderMdxToHtml(`<Dialogue>
+  <Say by="hiro">別スレッドの内容を記事化したいです。</Say>
+  <Say by="ai">導入の会話として再構成しましょう。</Say>
+</Dialogue>`)
+
+    expect(html).toContain('class="dialogue"')
+    expect(html).toContain('aria-label="記事導入の会話"')
+    expect(html).toContain(
+      'class="dialogue__turn dialogue__turn--right dialogue__turn--hiro"',
+    )
+    expect(html).toContain(
+      'class="dialogue__turn dialogue__turn--left dialogue__turn--ai"',
+    )
+    expect(html).toContain('class="dialogue__speaker-name">Hiro</span>')
+    expect(html).toContain('class="dialogue__speaker-name">AI</span>')
+    expect(html).toContain('src="/assets/dialogue/hiro.webp"')
+    expect(html).toContain('src="/assets/dialogue/ai.webp"')
+    expect(html).toContain("別スレッドの内容を記事化したいです。")
+    expect(html).toContain("導入の会話として再構成しましょう。")
+  })
+
+  it("Dialogueの未定義話者をビルド時に報告する", async () => {
+    await expect(
+      renderMdxToHtml(
+        '<Dialogue><Say by="unknown">誰でしょう</Say></Dialogue>',
+      ),
+    ).rejects.toThrow(/unknown.*hiro.*ai/i)
+  })
+
+  it("Dialogueのbyは静的な文字列として必須にする", async () => {
+    await expect(
+      renderMdxToHtml('<Dialogue><Say>話者なし</Say></Dialogue>'),
+    ).rejects.toThrow(/Say.*by.*required/i)
+
+    await expect(
+      renderMdxToHtml(
+        '<Dialogue><Say by={"hiro"}>動的指定</Say></Dialogue>',
+      ),
+    ).rejects.toThrow(/Say.*by.*static string literal/i)
+  })
+
+  it("Dialogueの表情moodに対応するアバターを描画する", async () => {
+    const html = await renderMdxToHtml(`<Dialogue>
+  <Say by="hiro" mood="troubled">困りました。</Say>
+  <Say by="ai" mood="angry">それは困ります。</Say>
+  <Say by="hiro" mood="crying">悲しいです。</Say>
+</Dialogue>`)
+
+    expect(html).toContain('src="/assets/dialogue/hiro-troubled.webp"')
+    expect(html).toContain('src="/assets/dialogue/ai-angry.webp"')
+    expect(html).toContain('src="/assets/dialogue/hiro-crying.webp"')
+    expect(html).toContain('data-dialogue-mood="troubled"')
+    expect(html).toContain('data-dialogue-mood="angry"')
+    expect(html).toContain('data-dialogue-mood="crying"')
+  })
+
+  it("Dialogueの未定義moodをビルド時に報告する", async () => {
+    await expect(
+      renderMdxToHtml(
+        '<Dialogue><Say by="hiro" mood="surprised">びっくり</Say></Dialogue>',
+      ),
+    ).rejects.toThrow(/unknown.*mood.*surprised.*normal.*troubled.*angry.*crying/i)
+  })
+
   it("ローカル画像の寸法をビルド時にHTMLへ付与する", async () => {
     const publicDirectory = await mkdtemp(path.join(os.tmpdir(), "mdx-images-"))
     const imageDirectory = path.join(publicDirectory, "blog-assets")

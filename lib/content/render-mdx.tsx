@@ -7,6 +7,14 @@ import { renderToStaticMarkup } from "react-dom/server"
 import * as runtime from "react/jsx-runtime"
 import remarkGfm from "remark-gfm"
 import {
+  DIALOGUE_MOODS,
+  DIALOGUE_SPEAKER_IDS,
+  Dialogue,
+  Say,
+  isDialogueMood,
+  isDialogueSpeakerId,
+} from "./dialogue"
+import {
   createLinkCardComponent,
   getLinkCardKey,
   resolveLinkCard,
@@ -89,6 +97,41 @@ function findLinkCardProps(tree: MdxNode): LinkCardProps[] {
   return cards
 }
 
+function validateDialogueSpeakers(tree: MdxNode) {
+  const visit = (node: MdxNode) => {
+    if (
+      (node.type === "mdxJsxFlowElement" || node.type === "mdxJsxTextElement") &&
+      node.name === "Say"
+    ) {
+      const by = (node.attributes ?? []).find(
+        (attribute) => attribute.name === "by",
+      )
+      if (!by) throw new Error("Say by is required")
+      if (typeof by.value !== "string") {
+        throw new Error("Say by must be a static string literal")
+      }
+      if (!isDialogueSpeakerId(by.value)) {
+        throw new Error(
+          `Unknown Dialogue speaker "${by.value}". Available speakers: ${DIALOGUE_SPEAKER_IDS.join(", ")}`,
+        )
+      }
+      const mood = (node.attributes ?? []).find(
+        (attribute) => attribute.name === "mood",
+      )
+      if (mood && typeof mood.value !== "string") {
+        throw new Error("Say mood must be a static string literal")
+      }
+      if (typeof mood?.value === "string" && !isDialogueMood(mood.value)) {
+        throw new Error(
+          `Unknown Dialogue mood "${mood.value}". Available moods: ${DIALOGUE_MOODS.join(", ")}`,
+        )
+      }
+    }
+    for (const child of node.children ?? []) visit(child)
+  }
+  visit(tree)
+}
+
 async function addLocalImageDimensions(
   html: string,
   publicDirectory: string,
@@ -156,6 +199,7 @@ export async function renderMdxToHtml(
     logger: options.logger ?? console,
   }
   const resolveLinkCards = () => async (tree: MdxNode) => {
+    validateDialogueSpeakers(tree)
     for (const props of findLinkCardProps(tree)) {
       const key = getLinkCardKey(props)
       if (!cards.has(key)) {
@@ -173,6 +217,8 @@ export async function renderMdxToHtml(
       components: {
         YouTube,
         XEmbed,
+        Dialogue,
+        Say,
         LinkCard: createLinkCardComponent(cards),
       },
     }),
