@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useRef } from "react"
 import { ScrambleText } from "./ScrambleText"
 
 const STEPS = [
@@ -9,8 +10,42 @@ const STEPS = [
 ]
 
 export function HowSection() {
+  const rootRef = useRef<HTMLElement>(null)
+
+  // 背景の BranchGraph と同じ規則（画面の 72% 地点が描画前線）で、
+  // レールの線が引かれ、届いたコミットが点灯する
+  useEffect(() => {
+    const root = rootRef.current
+    if (!root) return
+    const nodes = Array.from(root.querySelectorAll<HTMLElement>(".mono-how__node"))
+    const update = () => {
+      const revealY = window.scrollY + window.innerHeight * 0.72
+      const dotY = (node: HTMLElement) => {
+        const dot = node.querySelector<HTMLElement>(".mono-how__dot")
+        if (!dot) return Infinity
+        const r = dot.getBoundingClientRect()
+        return r.top + window.scrollY + r.height / 2
+      }
+      nodes.forEach((node, i) => {
+        const y = dotY(node)
+        node.dataset.on = String(revealY >= y)
+        if (nodes[i + 1]) {
+          const p = Math.min(1, Math.max(0, (revealY - y) / Math.max(1, dotY(nodes[i + 1]) - y)))
+          node.style.setProperty("--rail-p", p.toFixed(4))
+        }
+      })
+    }
+    update()
+    window.addEventListener("scroll", update, { passive: true })
+    window.addEventListener("resize", update)
+    return () => {
+      window.removeEventListener("scroll", update)
+      window.removeEventListener("resize", update)
+    }
+  }, [])
+
   return (
-    <section className="mono-how" id="how-it-works">
+    <section ref={rootRef} className="mono-how" id="how-it-works">
       <div className="mono-container">
         <div className="mono-how__wrapper">
           {/* git log --graph: プロセスをコミットグラフとして見せる */}

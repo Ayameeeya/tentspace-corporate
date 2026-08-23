@@ -627,7 +627,8 @@
   gap: 2em;
 }
 .mono-how__rail { position: relative; display: flex; justify-content: center; }
-/* ノード間だけ線を引く（最後のノードで止まる） */
+/* ノード間だけ線を引く（最後のノードで止まる）。
+   スクロールに合わせて --rail-p (0..1) で上から引かれる */
 .mono-how__rail::before {
   content: "";
   position: absolute;
@@ -636,20 +637,35 @@
   width: 1px;
   height: calc(100% + 6em);
   background: var(--m-ink);
+  transform: scaleY(var(--rail-p, 0));
+  transform-origin: top;
 }
 .mono-how__node:last-child .mono-how__rail::before { display: none; }
+/* コミットは線が届くまで枠だけ。届いた瞬間にインディゴで点灯する */
 .mono-how__dot {
   width: 1.1em;
   height: 1.1em;
-  background: var(--m-indigo);
+  border: 1px solid var(--m-ink);
+  background: transparent;
   margin-top: 0.55em;
   outline: 0.35em solid var(--m-bg);
+  transition: background 0.3s var(--m-ease), border-color 0.3s var(--m-ease);
+}
+.mono-how__node[data-on="true"] .mono-how__dot {
+  background: var(--m-indigo);
+  border-color: var(--m-indigo);
 }
 .mono-how__node-body {
   max-width: 34ch;
   display: flex;
   flex-direction: column;
   gap: 0.75em;
+  opacity: 0.28;
+  transition: opacity 0.45s var(--m-ease);
+}
+.mono-how__node[data-on="true"] .mono-how__node-body { opacity: 1; }
+.mono-how__node[data-on="true"] .mono-how__node-body h2 {
+  animation: mono-flicker 0.62s steps(1, end);
 }
 .mono-how__text {
   grid-column: 8 / -1;
@@ -1197,7 +1213,9 @@ select.mono-field:invalid { color: color-mix(in srgb, var(--m-ink), transparent 
   fill: none;
   stroke: #fff;
   stroke-width: 1.5px;
-  stroke-linecap: square;
+  /* S 字の途中で途切れても線端が丸く収まる（git graph の描線に寄せる） */
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 .mono-branch__node {
   position: absolute;
@@ -1255,12 +1273,11 @@ select.mono-field:invalid { color: color-mix(in srgb, var(--m-ink), transparent 
   opacity: 1;
   animation: mono-flicker 0.62s steps(1, end);
 }
-/* マージラベルはフィールドに重ならないよう菱形の上へ */
+/* マージラベルは git log --decorate と同じく、コミットの右横に置く。
+   真上だと main の縦線と合流の S 字が文字を貫いて読めない */
 .mono-branch__node--merge .mono-branch__label {
-  left: 50%;
-  top: auto;
-  bottom: 1.6em;
-  transform: translateX(-50%);
+  left: 1.9em;
+  text-transform: none; /* HEAD は大文字のまま */
 }
 @keyframes mono-branch-merge {
   0% { transform: rotate(45deg) scale(0.2); }
