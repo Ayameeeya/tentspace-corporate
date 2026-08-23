@@ -1,10 +1,9 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback } from "react"
 import Script from "next/script"
 
 const GA_MEASUREMENT_ID = "G-1XCFVFP5DX"
-const CONSENT_EVENT_NAME = "cookie-consent-changed"
 
 type AnalyticsTarget = {
   dataLayer?: unknown[]
@@ -17,7 +16,10 @@ function hasAnalyticsConsent() {
     .some((cookie) => cookie === "cookie_consent=granted")
 }
 
-export function initializeGoogleAnalytics(target: AnalyticsTarget) {
+export function initializeGoogleAnalytics(
+  target: AnalyticsTarget,
+  analyticsConsentGranted: boolean,
+) {
   const dataLayer = target.dataLayer || []
   target.dataLayer = dataLayer
   target.gtag = function gtag() {
@@ -27,7 +29,7 @@ export function initializeGoogleAnalytics(target: AnalyticsTarget) {
   }
   // This site serves no ads: only analytics storage is ever granted.
   target.gtag("consent", "update", {
-    analytics_storage: "granted",
+    analytics_storage: analyticsConsentGranted ? "granted" : "denied",
     ad_storage: "denied",
     ad_user_data: "denied",
     ad_personalization: "denied",
@@ -37,31 +39,15 @@ export function initializeGoogleAnalytics(target: AnalyticsTarget) {
 }
 
 export function GoogleAnalytics() {
-  const [enabled, setEnabled] = useState(false)
-
-  useEffect(() => {
-    setEnabled(hasAnalyticsConsent())
-
-    const handleConsentChange = (event: Event) => {
-      const detail = (event as CustomEvent<string>).detail
-      setEnabled(detail === "granted")
-    }
-
-    window.addEventListener(CONSENT_EVENT_NAME, handleConsentChange)
-    return () => window.removeEventListener(CONSENT_EVENT_NAME, handleConsentChange)
-  }, [])
-
   const initializeAnalytics = useCallback(() => {
-    initializeGoogleAnalytics(window)
+    initializeGoogleAnalytics(window, hasAnalyticsConsent())
   }, [])
-
-  if (!enabled) return null
 
   return (
     <Script
       id="google-analytics-loader"
       src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-      strategy="lazyOnload"
+      strategy="afterInteractive"
       onLoad={initializeAnalytics}
     />
   )

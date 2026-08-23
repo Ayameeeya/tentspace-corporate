@@ -29,7 +29,7 @@ export default function PrivacyPage() {
     <TentDoc
       label="privacy"
       title="プライバシーポリシー"
-      meta={["最終改定: 2026年8月18日", "株式会社tent space"]}
+      meta={["最終改定: 2026年8月24日", "株式会社tent space"]}
       sections={[
         {
           id: "00",
@@ -84,7 +84,7 @@ export default function PrivacyPage() {
           id: "06",
           title: "アクセス解析ツールの利用",
           content:
-            "本サイトでは、利用状況を把握するためにGoogle LLCが提供するGoogle Analyticsを利用しています。初回アクセス時に表示されるバナーで同意いただいた場合にのみ、Google Analyticsの計測が有効になり、Cookieによる識別子および閲覧履歴がGoogleへ送信されます。同意されない場合、計測は行われません。同意はブラウザのCookieを削除することで撤回できます。Googleにおけるデータの取扱いについては、Googleのプライバシーポリシーおよび「Googleのサービスを使用するサイトやアプリから収集した情報のGoogleによる使用」をご確認ください。",
+            "本サイトでは、利用状況を把握するためにGoogle LLCが提供するGoogle Analyticsを利用しています。Googleタグは初回アクセス時から読み込まれますが、バナーで同意いただく前または拒否された場合は、Analytics Cookieを設定せず、Cookieを使用しない測定信号のみがGoogleへ送信されます。Cookieによる識別子を利用する計測は同意後にのみ有効になり、同意はブラウザのCookieを削除することで撤回できます。Googleにおけるデータの取扱いについては、Googleのプライバシーポリシーおよび「Googleのサービスを使用するサイトやアプリから収集した情報のGoogleによる使用」をご確認ください。",
         },
         {
           id: "07",
@@ -100,7 +100,7 @@ export default function PrivacyPage() {
           list: [
             "Supabase, Inc.（米国）— アカウント情報、コメント等のデータベースおよびファイルの保管",
             "Amazon Web Services, Inc.（東京リージョン）— 不具合情報の保存、メールの送信",
-            "Google LLC（米国）— アクセス解析（同意いただいた場合のみ）",
+            "Google LLC（米国）— アクセス解析（同意前または拒否時はCookieを使用しない測定信号に限定し、Cookieによる識別子を利用する計測は同意後のみ）",
             "Stripe, Inc.（米国）— アカウント登録時の顧客情報（メールアドレス、表示名）の管理。カード情報の取扱いはありません。",
             "お問い合わせフォームの送信先として、当社が管理するサーバー（n8n.tentspace.net）",
           ],

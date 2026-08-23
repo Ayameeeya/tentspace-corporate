@@ -21,17 +21,25 @@ describe("performance configuration", () => {
     expect(config).toContain('pathname: "/storage/v1/object/public/avatars/**"')
   })
 
-  it("同意前にGoogle Analyticsをダウンロードしない", async () => {
+  it("同意前もGoogleタグを読み込みdenied状態で計測を開始する", async () => {
     const [layout, analytics] = await Promise.all([
       read("app/layout.tsx"),
       readOptional("components/google-analytics.tsx"),
     ])
 
-    expect(layout).not.toContain("googletagmanager.com")
+    expect(layout).toContain("'analytics_storage': 'denied'")
     expect(layout).toContain("<GoogleAnalytics />")
+    expect(analytics).toContain("googletagmanager.com/gtag/js")
     expect(analytics).toContain('cookie_consent=')
-    expect(analytics).toContain('detail === "granted"')
-    expect(analytics).toContain('strategy="lazyOnload"')
+    expect(analytics).not.toContain("if (!enabled) return null")
+    expect(analytics).toContain('strategy="afterInteractive"')
+  })
+
+  it("同意前のcookieless pingをプライバシーポリシーで説明する", async () => {
+    const privacy = await read("app/privacy/page.tsx")
+
+    expect(privacy).toContain("Cookieを使用しない測定信号")
+    expect(privacy).toContain("同意後にのみ")
   })
 
   it("gtag命令をGoogle標準のarguments形式でキューへ積む", async () => {
