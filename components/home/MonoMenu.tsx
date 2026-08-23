@@ -146,9 +146,15 @@ export function MonoMenu({
             </a>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "1em" }}>
-            <p className="paragraph-regular" style={{ margin: 0 }}>
+            <Link
+              href="/contact"
+              prefetch={false}
+              className="paragraph-regular mono-ul"
+              style={{ textDecoration: "none", color: "inherit" }}
+              onClick={onClose}
+            >
               start a project
-            </p>
+            </Link>
           </div>
         </div>
       </div>

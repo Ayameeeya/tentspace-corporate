@@ -148,16 +148,6 @@ export function MonoBlogNav({ ticker = false }: { ticker?: boolean } = {}) {
       >
         <div className="mono-nav__main">
           <div className="mono-nav__left">
-            <button
-              type="button"
-              className="mono-menu-btn"
-              aria-label={menuOpen ? "メニューを閉じる" : "メニューを開く"}
-              aria-expanded={menuOpen}
-              onClick={() => setMenuOpen(!menuOpen)}
-            >
-              <span />
-              <span />
-            </button>
             <Link href="/" prefetch={false} className="mono-logo" aria-label="Home">
               <img
                 src="/logo_black_symbol.png"
@@ -264,6 +254,16 @@ export function MonoBlogNav({ ticker = false }: { ticker?: boolean } = {}) {
               </button>
             )}
           </div>
+          <button
+            type="button"
+            className="mono-menu-btn"
+            aria-label={menuOpen ? "メニューを閉じる" : "メニューを開く"}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <span />
+            <span />
+          </button>
         </div>
         <div className="mono-nav__border" />
       </nav>

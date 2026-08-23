@@ -355,7 +355,7 @@
   display: flex;
   align-items: center;
 }
-.mono-logo__img { height: 2em; width: auto; display: block; }
+.mono-logo__img { height: 1.65em; width: auto; display: block; }
 .mono-logo__img--light { display: none; }
 .mono-nav[data-nav-theme="indigo"] .mono-logo__img--dark { display: none; }
 .mono-nav[data-nav-theme="indigo"] .mono-logo__img--light { display: block; }
@@ -1287,4 +1287,7 @@ select.mono-field:invalid { color: color-mix(in srgb, var(--m-ink), transparent 
 }
 @media (max-width: 991px) {
   .mono-branch { display: none; }
+}
+@media (max-width: 767px) {
+  .mono-branch__nodes { display: none; }
 }
