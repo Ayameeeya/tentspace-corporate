@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, type MouseEvent } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { FaInstagram, FaLinkedinIn, FaThreads, FaXTwitter } from "react-icons/fa6"
-import { Share } from "lucide-react"
+import { MoreHorizontal, Share } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -260,12 +260,45 @@ interface ShareTarget {
   icon: React.ReactNode
 }
 
-function buildShareTargets(url: string, title: string): ShareTarget[] {
+// 需要が高い順に並べる。X とURLコピー（Slack等への貼り付け）が主流、
+// はてブは技術記事の流入装置、Threads は自社の運用チャネル
+function buildShareTargets(url: string, title: string, includeNative = false): ShareTarget[] {
   const shareUrls = createBlogShareUrls({ url, title })
-  return [
+  const targets: ShareTarget[] = [
     { key: "x", label: "Xでシェア", text: "X", href: shareUrls.x, icon: <FaXTwitter aria-hidden="true" /> },
+    {
+      key: "copy",
+      label: "URLをコピー",
+      text: "URLをコピー",
+      onClick: () => {
+        navigator.clipboard.writeText(url)
+        alert("URLをコピーしました！")
+      },
+      icon: <CopyLinkIcon />,
+    },
+    {
+      key: "hatena",
+      label: "はてなブックマークに追加",
+      text: "はてブ",
+      href: `https://b.hatena.ne.jp/add?mode=confirm&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`,
+      icon: <span className="text-xs font-bold" aria-hidden="true">B!</span>,
+    },
     { key: "threads", label: "Threadsでシェア", text: "Threads", href: shareUrls.threads, icon: <FaThreads aria-hidden="true" /> },
+    {
+      key: "line",
+      label: "LINEでシェア",
+      text: "LINE",
+      href: `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(url)}`,
+      icon: <LineIcon />,
+    },
     { key: "linkedin", label: "LinkedInでシェア", text: "LinkedIn", href: shareUrls.linkedin, icon: <FaLinkedinIn aria-hidden="true" /> },
+    {
+      key: "facebook",
+      label: "Facebookでシェア",
+      text: "Facebook",
+      href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+      icon: <FacebookIcon />,
+    },
     {
       key: "instagram",
       label: "Instagramでシェア",
@@ -277,38 +310,24 @@ function buildShareTargets(url: string, title: string): ShareTarget[] {
       },
       icon: <FaInstagram aria-hidden="true" />,
     },
-    {
-      key: "facebook",
-      label: "Facebookでシェア",
-      text: "Facebook",
-      href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
-      icon: <FacebookIcon />,
-    },
-    {
-      key: "hatena",
-      label: "はてなブックマークに追加",
-      text: "はてブ",
-      href: `https://b.hatena.ne.jp/add?mode=confirm&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`,
-      icon: <span className="text-xs font-bold" aria-hidden="true">B!</span>,
-    },
-    {
-      key: "line",
-      label: "LINEでシェア",
-      text: "LINE",
-      href: `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(url)}`,
-      icon: <LineIcon />,
-    },
-    {
-      key: "copy",
-      label: "URLをコピー",
-      text: "URLをコピー",
-      onClick: () => {
-        navigator.clipboard.writeText(url)
-        alert("URLをコピーしました！")
-      },
-      icon: <CopyLinkIcon />,
-    },
   ]
+
+  // OS の共有シート。対応環境（主にモバイル）でだけ末尾に出す
+  if (includeNative) {
+    targets.push({
+      key: "native",
+      label: "端末の共有メニューで共有",
+      text: "その他",
+      onClick: () => {
+        navigator.share({ title, url }).catch(() => {
+          // キャンセル時は何もしない
+        })
+      },
+      icon: <MoreHorizontal strokeWidth={1.5} aria-hidden="true" />,
+    })
+  }
+
+  return targets
 }
 
 // note 風のシェアメニュー: アイコン 1 個からドロップダウンを開く
@@ -751,7 +770,12 @@ export default function BlogPostClient({
 }: BlogPostClientProps) {
   const processedContent = processContent(contentHtml)
   const plainTitle = stripHtml(post.title)
-  const shareTargets = buildShareTargets(canonicalUrl, plainTitle)
+  // navigator.share は SSR に存在しないため、マウント後に判定する
+  const [canNativeShare, setCanNativeShare] = useState(false)
+  useEffect(() => {
+    setCanNativeShare(typeof navigator !== "undefined" && typeof navigator.share === "function")
+  }, [])
+  const shareTargets = buildShareTargets(canonicalUrl, plainTitle, canNativeShare)
   const articleRef = useRef<HTMLDivElement>(null)
   
   // Enhance code blocks after content is rendered
