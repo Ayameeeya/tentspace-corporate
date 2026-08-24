@@ -45,6 +45,7 @@
     "draft": false,
     "readingTime": 13,
     "wordCount": 5027,
+    "ogImage": "/blog-assets/mcp-server-publish-rate-limit/featured.jpg",
     "experiment": {
       "hook": "contrarian",
       "cta": "inquiry",
