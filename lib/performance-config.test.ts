@@ -49,6 +49,19 @@ describe("performance configuration", () => {
     expect(analytics).not.toContain("dataLayer.push(args)")
   })
 
+  it("全ページのheadでAdSenseのサイト所有権確認コードを読み込む", async () => {
+    const layout = await read("app/layout.tsx")
+    const head = layout.match(/<head>([\s\S]*?)<\/head>/)?.[1] ?? ""
+    const adsenseScripts = head.match(/<script[\s\S]*?adsbygoogle\.js[\s\S]*?\/>/g) ?? []
+
+    expect(adsenseScripts).toHaveLength(1)
+    expect(adsenseScripts[0]).toContain("async")
+    expect(adsenseScripts[0]).toContain(
+      "client=ca-pub-1533933816704006",
+    )
+    expect(adsenseScripts[0]).toContain('crossOrigin="anonymous"')
+  })
+
   it("無効なVercel Analyticsのスクリプトを配信しない", async () => {
     const [layout, packageJson] = await Promise.all([
       read("app/layout.tsx"),

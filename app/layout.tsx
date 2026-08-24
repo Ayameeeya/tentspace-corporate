@@ -102,6 +102,11 @@ export default function RootLayout({
           `}
         </Script>
 
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1533933816704006"
+          crossOrigin="anonymous"
+        />
       </head>
       <body className="font-sans antialiased">
         <a
