@@ -9,11 +9,12 @@ const NODE_STOPS = [
   { id: "system", label: "system", x: 0.9 },
   { id: "how-it-works", label: "how it works", x: 0.5 },
   { id: "different", label: "different", x: 0.5 },
+  { id: "works", label: "works", x: 0.5 },
   { id: "services", label: "services", x: 0.88 },
 ]
 
 type Node = { id: string; label: string; x: number; y: number; merge?: boolean }
-type Dot = { x: number; y: number }
+type Dot = { x: number; y: number; label?: string }
 type Seg = { d: string; top: number; bottom: number; dim?: boolean }
 type Rect = { x: number; y: number; w: number; h: number }
 
@@ -42,8 +43,10 @@ function sway(x1: number, x2: number, y: number, span = swaySpan(x1, x2)) {
  * run1: ヒーローのフィールド直下から main が生え、the shift を切り、
  *       そこから system を切る。shift はインディゴの手前で一旦消え、明けたら
  *       再開して、system → shift → main の二段で合流し how へ向かう。
+ * works 手前: main から 3 本のブランチが拡散し、画面外へ出て行く。
  * 終盤: 中央を通る main のレーンに、services のレーンと画面外から入る
- *       3 本の支流が合流し、フッターの 1 点にマージする。
+ *       3 本の支流（works 手前で出て行った枝が同じ側・同じレーンで帰って
+ *       くる）が合流し、フッターの 1 点にマージする。
  * 分岐も合流も同じ S 字（sway）で、レーンの出入りは常に縦の接線を保つ。
  * different / works ゾーンには描かない。
  */
@@ -148,22 +151,37 @@ export function BranchGraph() {
       const dShiftRunB = `M ${xVision} ${indigoEnd} L ${xVision} ${shiftRunEnd}`
       const dShiftJoin = `M ${xVision} ${shiftRunEnd}` + sway(xVision, xHow, shiftRunEnd)
 
-      // run2: works の後（with tent space）で再開 → services のレーンを
-      // そのまま降りてマージ行で合流する（中央トランクは持たない）
+      // run2: works の後（with tent space）で再開。works の裏を続いてきた
+      // main が実体として現れて services のレーンを切り、そのまま
+      // ライラックの帯の手前まで走って一旦消える。
+      // 分岐はチャプターのテキスト帯（マスクで線を伏せる領域）の直下 —
+      // 帯の中に置くと S 字が抜かれて見えなくなる
       const stackEl = document.querySelector<HTMLElement>(".tent-stack-band")
       const stackBottom = stackEl
         ? docY(stackEl) + stackEl.offsetHeight
         : docY(strips[3]) + strips[3].offsetHeight
-      const run2Top = docY(strips[2]) - vh * 0.5
+      const chapter2 = document.querySelector<HTMLElement>(".tent-text__wrapper--second")
+      const chapter2Comps = chapter2?.querySelectorAll<HTMLElement>(".tent-text__component")
+      const chapter2Last = chapter2Comps?.[chapter2Comps.length - 1]
+      const svcBranchY = chapter2Last
+        ? docY(chapter2Last) + chapter2Last.offsetHeight + 72
+        : docY(strips[2]) - vh * 0.5
       /** レーンを降りて、S 字でマージ点に寄りつく。マージ点に近いレーンが
           最後の瞬間に急に曲がって見えないよう、下限を高めに取る */
       const mergeSpan = (laneX: number) => Math.max(170, swaySpan(laneX, xMerge))
       const toMergeRow = (laneX: number) =>
         ` L ${laneX} ${mergeY - mergeSpan(laneX)}` +
         sway(laneX, xMerge, mergeY - mergeSpan(laneX), mergeSpan(laneX))
-      // services: 縦の走りと合流の S 字を分けて、同じ速さで引く
+      // services: main の短い幹 → 分岐 S 字 → 縦の走り → 合流 S 字を
+      // セグメントに分けて、同じ速さで引く
+      const svcInSway = swaySpan(xHow, xServices)
       const svcSway = swaySpan(xServices, xMerge)
-      const dSvcRun = `M ${xServices} ${run2Top} L ${xServices} ${mergeY - svcSway}`
+      // main の実体は services を切ったあとも続き、ライラックの帯の手前で
+      // 一旦消える（インディゴ手前で消えるのと同じ扱い）
+      const mainEnd2 = docY(strips[2]) - 24
+      const dMainRun2 = `M ${xHow} ${svcBranchY - 64} L ${xHow} ${mainEnd2}`
+      const dSvcBranch = `M ${xHow} ${svcBranchY}` + sway(xHow, xServices, svcBranchY)
+      const dSvcRun = `M ${xServices} ${svcBranchY + svcInSway} L ${xServices} ${mergeY - svcSway}`
       const dSvcJoin = `M ${xServices} ${mergeY - svcSway}` + sway(xServices, xMerge, mergeY - svcSway)
 
       // フィナーレ帯: 支流と main はこの帯で同時に現れる
@@ -208,7 +226,9 @@ export function BranchGraph() {
         { d: dShiftJoin, top: shiftRunEnd, bottom: howJogY },
         { d: dMainRun, top: mainResumeY, bottom: run1End },
         { d: dMain, top: mainTop, bottom: mergeY },
-        { d: dSvcRun, top: run2Top, bottom: mergeY - svcSway },
+        { d: dMainRun2, top: svcBranchY - 64, bottom: mainEnd2 },
+        { d: dSvcBranch, top: svcBranchY, bottom: svcBranchY + svcInSway },
+        { d: dSvcRun, top: svcBranchY + svcInSway, bottom: mergeY - svcSway },
         { d: dSvcJoin, top: mergeY - svcSway, bottom: mergeY },
       ]
 
@@ -224,6 +244,66 @@ export function BranchGraph() {
         [edge(-24, 0.16 * w, yLeftOuter), yLeftOuter],
       ]
       for (const [d, top] of tribDs) segs.push({ d, top, bottom: mergeY, dim: true })
+
+      // 分岐・合流点のコミット。git graph では枝が分かれる・戻る点も
+      // 必ずコミットなので四角を置き、何が起きたかのフレーバーテキスト
+      // （checkout -b … / merge …）を添える。リンクは持たない
+      const dots: Dot[] = [
+        { x: xHow, y: branchY, label: "checkout -b the-shift" },
+        { x: xVision, y: sysSplitY, label: "checkout -b system" },
+        { x: xVision, y: sysMergeY, label: "merge system" },
+        { x: xHow, y: howJogY, label: "merge the-shift" },
+        { x: xHow, y: svcBranchY, label: "checkout -b services" },
+      ]
+
+      // works の手前: main から 3 本のブランチが拡散して画面外へ出て行く。
+      // フィナーレで画面外から戻ってくる 3 本の支流と同じ側・同じレーン —
+      // ここで世に出た枝（手がけたサイト）が、終盤に main へ帰ってきて
+      // マージされる往復の物語。交差を避けるため外側のレーンほど先に
+      // 出て行く（フィナーレの「内側ほど先に入る」の逆再生）
+      const worksSec = secEl("works")
+      const worksHead = worksSec?.querySelector<HTMLElement>(".tent-diff__head")
+      // works ノードの居場所 = 幹の直線区間（最初の分岐より上）
+      let worksNodeRange: [number, number] | null = null
+      if (worksSec && worksHead) {
+        const bandBottom = docY(worksHead) - 24
+        const bandTop = Math.max(docY(worksSec) + 24, bandBottom - 520)
+        const splitTop = bandTop + 48
+        const splitGap = Math.max(36, Math.min(56, (bandBottom - splitTop) * 0.12))
+        // ブランチ名は実績を匿名化した work-a/b/c（実名は出さない）
+        const fan: { lane: number; to: number; early?: boolean; name: string }[] = [
+          { lane: 0.16 * w, to: -24, early: true, name: "work-a" },
+          { lane: 0.96 * w, to: w + 24, name: "work-b" },
+          { lane: 0.38 * w, to: -24, name: "work-c" },
+        ]
+        let lastSplit = splitTop
+        fan.forEach((b, i) => {
+          const ySplit = splitTop + splitGap * i
+          lastSplit = ySplit
+          const arrive = ySplit + swaySpan(xHow, b.lane)
+          const exitSpan = swaySpan(b.lane, b.to)
+          // early な枝はレーンに乗ってすぐ出て行き、残りは帯の下端まで
+          // 走ってから出る — 出て行く高さが揃わないほうが拡散に見える
+          const runEnd = b.early ? arrive + 28 : Math.max(arrive, bandBottom - exitSpan)
+          const d =
+            `M ${xHow} ${ySplit}` +
+            sway(xHow, b.lane, ySplit) +
+            ` L ${b.lane} ${runEnd}` +
+            sway(b.lane, b.to, runEnd)
+          segs.push({ d, top: ySplit, bottom: runEnd + exitSpan, dim: true })
+          dots.push({ x: xHow, y: ySplit, label: `checkout -b ${b.name}` })
+        })
+        // 幹は拡散帯のあいだだけ実体として描く。分岐をすべて見送った先の
+        // 端で途切れ、以降は works の裏を実体だけが続く扱い（フィナーレで
+        // 再開）。works ノードはこの先端 = セクションに入る直前に置く
+        const trunkTail = lastSplit + 96
+        worksNodeRange = [trunkTail - 48, trunkTail]
+        segs.push({
+          d: `M ${xHow} ${bandTop} L ${xHow} ${trunkTail}`,
+          top: bandTop,
+          bottom: trunkTail,
+        })
+      }
 
       // 本文テキストの矩形: 線はこの領域では描かない（マスクで抜く）
       const textRects: Rect[] = []
@@ -277,7 +357,11 @@ export function BranchGraph() {
         "how-it-works": [howJogY, run1End],
         // main の末端 = different の入口。線が途切れる直前にノードを置く
         different: [run1End - vh * 0.4, run1End],
-        services: [run2Top, mergeY - svcSway],
+        // works は拡散帯の幹の先端（分岐が終わって線が途切れる直前）。
+        // ヘッダーのシーケンスバーと同じ節点セットになる
+        works: worksNodeRange ?? [0, 0],
+        // services のレーンは分岐 S 字が終わってからが直線区間
+        services: [svcBranchY + svcInSway, mergeY - svcSway],
       }
 
       const nodes: Node[] = []
@@ -286,18 +370,11 @@ export function BranchGraph() {
         if (!el) continue
         const x = s.x * w
         const [lt, lb] = laneRange[s.id]
+        // 居場所となる直線区間が確保できなかったノードは出さない
+        if (lb - lt < 48) continue
         nodes.push({ id: s.id, label: s.label, x, y: placeOnLane(x, docY(el) + vh * 0.3, lt, lb) })
       }
       nodes.push({ id: "__merge", label: "(HEAD -> main)", x: xMerge, y: mergeY, merge: true })
-
-      // 分岐・合流点のコミット。git graph では枝が分かれる・戻る点も
-      // 必ずコミットなので、装飾として四角を置く（リンクは持たない）
-      const dots: Dot[] = [
-        { x: xHow, y: branchY }, // main → shift 分岐
-        { x: xVision, y: sysSplitY }, // shift → system 分岐
-        { x: xVision, y: sysMergeY }, // system → shift 合流
-        { x: xHow, y: howJogY }, // shift → main 合流
-      ]
 
       setLayout({ height, segs, nodes, dots, textRects })
     }
@@ -398,7 +475,9 @@ export function BranchGraph() {
             style={{ left: d.x, top: d.y }}
             data-node-y={d.y}
             aria-hidden="true"
-          />
+          >
+            {d.label && <span className="tent-branch__label">{d.label}</span>}
+          </span>
         ))}
         {layout.nodes.map((n) => (
           <button

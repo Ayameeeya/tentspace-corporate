@@ -6,7 +6,7 @@ import { prefersReducedMotion, seededRandom } from "./gsap-setup"
 
 const COLORS: Record<string, string> = {
   indigo: "#0f00b0",
-  olive: "#cbcadf",
+  lilac: "#cbcadf",
   "off-white": "#e5e5e5",
   black: "#000000",
 }
@@ -27,8 +27,8 @@ export function ShutterScroll({
 }: {
   variant: keyof typeof COLORS
   /** colour the cells fill in — i.e. the section below */
-  navTheme?: "base" | "indigo" | "olive"
-  prevTheme?: "base" | "indigo" | "olive"
+  navTheme?: "base" | "indigo" | "lilac"
+  prevTheme?: "base" | "indigo" | "lilac"
   /** ground the strip sits on — set when wiping out of a coloured section */
   bg?: keyof typeof COLORS
   height?: string

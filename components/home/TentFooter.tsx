@@ -19,7 +19,7 @@ export function TentFooter() {
   }, [])
 
   // reaching the footer resets the nav theme to base; leaving back restores
-  // whatever theme was active before (olive on the top page, base elsewhere)
+  // whatever theme was active before (lilac on the top page, base elsewhere)
   useEffect(() => {
     const root = rootRef.current
     if (!root) return

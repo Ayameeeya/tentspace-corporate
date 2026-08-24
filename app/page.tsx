@@ -95,11 +95,11 @@ export default function Home() {
             },
           ]}
         />
-        <ShutterScroll variant="olive" navTheme="olive" prevTheme="base" seed={37} height="55vh" />
+        <ShutterScroll variant="lilac" navTheme="lilac" prevTheme="base" seed={37} height="55vh" />
 
         {/* ---------- services ---------- */}
         <ServicesSection />
-        <ShutterScroll variant="off-white" navTheme="base" prevTheme="olive" bg="olive" seed={51} height="30vh" />
+        <ShutterScroll variant="off-white" navTheme="base" prevTheme="lilac" bg="lilac" seed={51} height="30vh" />
 
         {/* ---------- tech stack band (React Bits LogoLoop) ---------- */}
         <div className="tent-stack-band">
