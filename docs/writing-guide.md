@@ -16,13 +16,13 @@
 <LinkCard slug="claude-code-custom-skills-guide" />
 ```
 
-外部ページは完全な `https://` URL を指定します。OGP と favicon はビルド時に取得され、キャッシュされます。取得できない場合は通常のテキストリンクとして表示され、記事のビルドは継続します。
+外部ページは完全な `https://` URL を指定します。OGP と favicon はビルド時に取得され、キャッシュされます。記事に合わせて表示名を固定したい場合は `title` も指定できます。OGP を取得できなくても `title` があればカード外観を維持し、記事のビルドは継続します。
 
 ```mdx
-<LinkCard url="https://blog.cloudflare.com/example/" />
+<LinkCard url="https://blog.cloudflare.com/example/" title="Cloudflare公式：参考資料" />
 ```
 
-`slug` と `url` はどちらか一方だけを、文字列として指定してください。
+`slug` と `url` はどちらか一方だけを、文字列として指定してください。`title` は外部ページの `url` と組み合わせる場合だけ使用できます。
 
 ## LinkCard の使い所
 
