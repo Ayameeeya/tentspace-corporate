@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { type BlogPost, getFeaturedImageUrl, getPostTerms, stripHtml, formatDate } from "@/lib/blog-content"
+import { getPlaceholderImage } from "@/lib/blog-placeholder"
 
 interface BlogCarouselProps {
   posts: BlogPost[]
@@ -143,17 +144,15 @@ export function BlogCarousel({ posts, likeCounts }: BlogCarouselProps) {
               draggable={false}
             >
               <div className="bg-white dark:bg-background rounded-xl border border-gray-200 dark:border-border overflow-hidden hover:shadow-md hover:border-gray-300 dark:hover:border-gray-600 transition-all">
-                {imageUrl && (
-                  <div className="relative aspect-[16/9] bg-gray-100 dark:bg-gray-700">
-                    <Image
-                      src={imageUrl}
-                      alt={stripHtml(post.title)}
-                      fill
-                      className="object-cover"
-                      draggable={false}
-                    />
-                  </div>
-                )}
+                <div className="relative aspect-[16/9] bg-gray-100 dark:bg-gray-700">
+                  <Image
+                    src={imageUrl ?? getPlaceholderImage(post.id)}
+                    alt={stripHtml(post.title)}
+                    fill
+                    className="object-cover"
+                    draggable={false}
+                  />
+                </div>
                 <div className="p-3">
                   {postCategories[0] && (
                     <span className="inline-block px-2 py-0.5 text-[10px] font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded mb-1.5">

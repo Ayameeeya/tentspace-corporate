@@ -7,6 +7,7 @@ import { supabaseAuth } from "@/lib/supabase/client"
 import { TentBlogNav } from "@/components/home/TentBlogNav"
 import { Heart, Loader2 } from "lucide-react"
 import { type BlogPost, getPostBySlug, stripHtml, formatDate, getFeaturedImageUrl } from "@/lib/blog-content"
+import { getPlaceholderImage } from "@/lib/blog-placeholder"
 
 interface Favorite {
   id: string
@@ -220,19 +221,17 @@ export default function FavoritesClient() {
                     className="bg-card rounded-xl border border-border overflow-hidden hover:shadow-lg transition-shadow group"
                   >
                     {/* Featured Image */}
-                    {imageUrl && (
-                      <Link href={`/blog/${post.slug}`}>
-                        <div className="relative aspect-[16/9] overflow-hidden">
-                          <Image
-                            src={imageUrl}
-                            alt={plainTitle}
-                            fill
-                            className="object-cover group-hover:scale-105 transition-transform duration-300"
-                            sizes="(max-width: 768px) 100vw, 50vw"
-                          />
-                        </div>
-                      </Link>
-                    )}
+                    <Link href={`/blog/${post.slug}`}>
+                      <div className="relative aspect-[16/9] overflow-hidden">
+                        <Image
+                          src={imageUrl ?? getPlaceholderImage(post.id)}
+                          alt={plainTitle}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                        />
+                      </div>
+                    </Link>
 
                     <div className="p-5">
                       {/* Title */}

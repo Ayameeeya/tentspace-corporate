@@ -185,9 +185,11 @@ describe("semantic HTML", () => {
   it("記事の共有導線にX・Threads・LinkedIn・Instagramを表示する", async () => {
     const article = await read("app/blog/[slug]/blog-post-client.tsx")
 
+    // 共有先は buildShareTargets に一元化されており、label が aria-label になる
     for (const service of ["X", "Threads", "LinkedIn", "Instagram"]) {
-      expect(article).toContain(`aria-label="${service}でシェア"`)
+      expect(article).toContain(`"${service}でシェア"`)
     }
+    expect(article).toContain("aria-label={target.label}")
   })
 
   it("フッターの背景ごとに読める前景色を使う", async () => {

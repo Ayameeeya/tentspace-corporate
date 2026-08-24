@@ -9,6 +9,7 @@ import {
   stripHtml,
   type BlogPost,
 } from "@/lib/blog-content"
+import { getPlaceholderImage } from "@/lib/blog-placeholder"
 import { getRenderedPostBySlug } from "@/lib/blog-content-server"
 import { selectRelatedPosts } from "@/lib/content/manifest-query"
 import { SITE_URL } from "@/lib/site"
@@ -159,7 +160,8 @@ export default async function BlogPostPage({
 
   if (!post || !contentHtml) notFound()
 
-  const imageUrl = getFeaturedImageUrl(post)
+  // アイキャッチ未設定の記事はダミー画像で紙面の頭を埋める
+  const imageUrl = getFeaturedImageUrl(post) ?? getPlaceholderImage(post.id)
   const categories = getPostTerms(post)
   const { posts: categoryPosts } = await getPosts({
     categories: post.categories.slice(0, 1),

@@ -4,6 +4,13 @@ import { useEffect, useState, useRef, type MouseEvent } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { FaInstagram, FaLinkedinIn, FaThreads, FaXTwitter } from "react-icons/fa6"
+import { MoreHorizontal, Share } from "lucide-react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { TentBlogNav } from "@/components/home/TentBlogNav"
 import { TentFooterStandalone } from "@/components/home/TentFooterStandalone"
 import { MainBtn } from "@/components/home/MainBtn"
@@ -13,6 +20,7 @@ import { formatDate, getPostTerms, stripHtml, getFeaturedImageUrl, type BlogPost
 import { getActiveHeadingId, getTocScrollTop } from "@/lib/blog-toc"
 import { addLike, fetchHasLiked, fetchLikeCounts, getClientId } from "@/lib/blog-likes"
 import { createBlogShareUrls, createInstagramShareText } from "@/lib/blog-share"
+import { getPlaceholderImage } from "@/lib/blog-placeholder"
 
 import 'highlight.js/styles/github-dark.css'
 
@@ -216,71 +224,147 @@ function TableOfContents({ content }: { content: string }) {
   )
 }
 
-// Share Button Component
-function ShareButtons({ url, title }: { url: string; title: string }) {
+// ---- シェア導線 ------------------------------------------------------------
+// 共有先はここで一元管理し、ヘッダーのメニューと記事末尾の行の両方で使う
+
+function FacebookIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+    </svg>
+  )
+}
+
+function LineIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314" />
+    </svg>
+  )
+}
+
+function CopyLinkIcon() {
+  return (
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5} aria-hidden="true">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+    </svg>
+  )
+}
+
+interface ShareTarget {
+  key: string
+  label: string
+  text: string
+  href?: string
+  onClick?: () => void
+  icon: React.ReactNode
+}
+
+// 前半は SNS を需要順に、末尾に投稿先を選ばない操作（URLコピー・OS の共有シート）を置く。
+// X が主戦場、はてブは技術記事の流入装置、Threads は自社の運用チャネル
+function buildShareTargets(url: string, title: string, includeNative = false): ShareTarget[] {
   const shareUrls = createBlogShareUrls({ url, title })
-  const handleCopy = () => {
-    navigator.clipboard.writeText(url)
-    alert('リンクをコピーしました')
+  const targets: ShareTarget[] = [
+    { key: "x", label: "Xでシェア", text: "X", href: shareUrls.x, icon: <FaXTwitter aria-hidden="true" /> },
+    {
+      key: "hatena",
+      label: "はてなブックマークに追加",
+      text: "はてブ",
+      href: `https://b.hatena.ne.jp/add?mode=confirm&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`,
+      icon: <span className="text-xs font-bold" aria-hidden="true">B!</span>,
+    },
+    { key: "threads", label: "Threadsでシェア", text: "Threads", href: shareUrls.threads, icon: <FaThreads aria-hidden="true" /> },
+    {
+      key: "line",
+      label: "LINEでシェア",
+      text: "LINE",
+      href: `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(url)}`,
+      icon: <LineIcon />,
+    },
+    { key: "linkedin", label: "LinkedInでシェア", text: "LinkedIn", href: shareUrls.linkedin, icon: <FaLinkedinIn aria-hidden="true" /> },
+    {
+      key: "facebook",
+      label: "Facebookでシェア",
+      text: "Facebook",
+      href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+      icon: <FacebookIcon />,
+    },
+    {
+      key: "instagram",
+      label: "Instagramでシェア",
+      text: "Instagram",
+      href: shareUrls.instagram,
+      onClick: () => {
+        navigator.clipboard.writeText(createInstagramShareText({ url, title }))
+        alert("Instagram投稿用のタイトルとURLをコピーしました")
+      },
+      icon: <FaInstagram aria-hidden="true" />,
+    },
+    {
+      key: "copy",
+      label: "URLをコピー",
+      text: "URLをコピー",
+      onClick: () => {
+        navigator.clipboard.writeText(url)
+        alert("URLをコピーしました！")
+      },
+      icon: <CopyLinkIcon />,
+    },
+  ]
+
+  // OS の共有シート。対応環境（主にモバイル）でだけ末尾に出す
+  if (includeNative) {
+    targets.push({
+      key: "native",
+      label: "端末の共有メニューで共有",
+      text: "その他",
+      onClick: () => {
+        navigator.share({ title, url }).catch(() => {
+          // キャンセル時は何もしない
+        })
+      },
+      icon: <MoreHorizontal strokeWidth={1.5} aria-hidden="true" />,
+    })
   }
 
+  return targets
+}
+
+// note 風のシェアメニュー: アイコン 1 個からドロップダウンを開く
+function ShareMenu({ targets }: { targets: ShareTarget[] }) {
+  const itemClass =
+    "cursor-crosshair gap-2.5 rounded-none px-3.5 py-2.5 text-[13px] focus:bg-black focus:text-white [&_svg]:w-4 [&_svg]:h-4"
   return (
-    <div className="flex flex-wrap items-center justify-end gap-2">
-      <a
-        href={shareUrls.x}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="tent-icon-btn"
-        title="Xでシェア"
-        aria-label="Xでシェア"
-      >
-        <FaXTwitter className="w-4 h-4" aria-hidden="true" />
-      </a>
-      <a
-        href={shareUrls.threads}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="tent-icon-btn"
-        title="Threadsでシェア"
-        aria-label="Threadsでシェア"
-      >
-        <FaThreads className="w-4 h-4" aria-hidden="true" />
-      </a>
-      <a
-        href={shareUrls.linkedin}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="tent-icon-btn"
-        title="LinkedInでシェア"
-        aria-label="LinkedInでシェア"
-      >
-        <FaLinkedinIn className="w-4 h-4" aria-hidden="true" />
-      </a>
-      <a
-        href={shareUrls.instagram}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="tent-icon-btn"
-        title="投稿用テキストをコピーしてInstagramを開く"
-        aria-label="Instagramでシェア"
-        onClick={() => {
-          navigator.clipboard.writeText(createInstagramShareText({ url, title }))
-          alert('Instagram投稿用のタイトルとURLをコピーしました')
-        }}
-      >
-        <FaInstagram className="w-4 h-4" aria-hidden="true" />
-      </a>
-      <button
-        onClick={handleCopy}
-        className="tent-icon-btn"
-        title="リンクをコピー"
-        aria-label="リンクをコピー"
-      >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-        </svg>
-      </button>
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button type="button" className="tent-ghost-btn" title="シェア" aria-label="記事をシェア">
+          <Share strokeWidth={1.5} aria-hidden="true" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="rounded-none border-black bg-white p-0 shadow-none">
+        {targets.map((target) =>
+          target.href ? (
+            <DropdownMenuItem key={target.key} asChild className={itemClass}>
+              <a
+                href={target.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={target.label}
+                onClick={target.onClick}
+              >
+                {target.icon}
+                {target.text}
+              </a>
+            </DropdownMenuItem>
+          ) : (
+            <DropdownMenuItem key={target.key} className={itemClass} aria-label={target.label} onSelect={target.onClick}>
+              {target.icon}
+              {target.text}
+            </DropdownMenuItem>
+          ),
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }
 
@@ -337,15 +421,16 @@ function BlogLikeButton({ slug }: { slug: string }) {
         type="button"
         onClick={handleLike}
         disabled={pending || hasLiked}
-        className="tent-action-btn"
+        className="tent-ghost-btn"
         data-active={hasLiked}
         aria-pressed={hasLiked}
+        title={hasLiked ? 'いいね済み' : 'いいね'}
+        aria-label={hasLiked ? 'いいね済み' : 'いいね'}
       >
-        <svg className="w-4 h-4" viewBox="0 0 24 24" fill={hasLiked ? 'currentColor' : 'none'} stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 21s-6.75-4.35-6.75-9.75A4.25 4.25 0 0112 7.25a4.25 4.25 0 016.75 4c0 5.4-6.75 9.75-6.75 9.75z" />
+        <svg viewBox="0 0 24 24" fill={hasLiked ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 21s-6.75-4.35-6.75-9.75A4.25 4.25 0 0112 7.25a4.25 4.25 0 016.75 4c0 5.4-6.75 9.75-6.75 9.75z" />
         </svg>
-        <span className="font-medium">{count ?? '–'}</span>
-        <span className="text-xs">{hasLiked ? 'ありがとう！' : 'いいね'}</span>
+        <span>{count ?? '–'}</span>
       </button>
       {error && <span className="text-xs text-red-500">{error}</span>}
     </div>
@@ -685,8 +770,12 @@ export default function BlogPostClient({
 }: BlogPostClientProps) {
   const processedContent = processContent(contentHtml)
   const plainTitle = stripHtml(post.title)
-  const shareUrls = createBlogShareUrls({ url: canonicalUrl, title: plainTitle })
-  const instagramShareText = createInstagramShareText({ url: canonicalUrl, title: plainTitle })
+  // navigator.share は SSR に存在しないため、マウント後に判定する
+  const [canNativeShare, setCanNativeShare] = useState(false)
+  useEffect(() => {
+    setCanNativeShare(typeof navigator !== "undefined" && typeof navigator.share === "function")
+  }, [])
+  const shareTargets = buildShareTargets(canonicalUrl, plainTitle, canNativeShare)
   const articleRef = useRef<HTMLDivElement>(null)
   
   // Enhance code blocks after content is rendered
@@ -741,7 +830,7 @@ export default function BlogPostClient({
 
             {/* Title */}
             <h1
-              className="text-2xl md:text-4xl font-bold text-foreground mb-6 leading-tight"
+              className="article-title text-2xl md:text-4xl font-bold text-foreground mb-6"
               dangerouslySetInnerHTML={{ __html: post.title }}
             />
 
@@ -773,10 +862,10 @@ export default function BlogPostClient({
                 </address>
               )}
 
-              <div className="flex flex-wrap items-center justify-end gap-3">
+              <div className="flex flex-wrap items-center justify-end gap-4">
                 <BlogLikeButton slug={post.slug} />
                 <BlogFavorite postSlug={post.slug} />
-                <ShareButtons url={canonicalUrl} title={plainTitle} />
+                <ShareMenu targets={shareTargets} />
               </div>
             </div>
           </div>
@@ -839,16 +928,14 @@ export default function BlogPostClient({
                           className="group block"
                         >
                           <div className="bg-muted rounded-lg overflow-hidden hover:shadow-md transition-all border border-border hover:border-primary/30">
-                            {relatedImageUrl && (
-                              <div className="relative aspect-[16/9] bg-muted">
-                                <Image
-                                  src={relatedImageUrl}
-                                  alt={stripHtml(relatedPost.title)}
-                                  fill
-                                  className="object-cover"
-                                />
-                              </div>
-                            )}
+                            <div className="relative aspect-[16/9] bg-muted">
+                              <Image
+                                src={relatedImageUrl ?? getPlaceholderImage(relatedPost.id)}
+                                alt={stripHtml(relatedPost.title)}
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
                             <div className="p-3">
                               {relatedCategories[0] && (
                                 <span className="inline-block px-2 py-0.5 text-[10px] font-medium bg-blue-500/10 text-blue-700 dark:text-blue-300 rounded mb-1.5">
@@ -903,120 +990,38 @@ export default function BlogPostClient({
                 </aside>
               )}
 
-              {/* Share CTA Section */}
-              <aside className="mt-8 p-6 md:p-8" style={{ border: "1px solid var(--m-ink)" }} aria-label="記事をシェア">
-                <h3 className="text-center font-bold text-foreground mb-6">
-                  記事をシェアする
-                </h3>
-                <div className="flex flex-wrap justify-center gap-3">
-                  {/* Twitter/X */}
-                  <a
-                    href={shareUrls.x}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="tent-share-btn"
-                    aria-label="Xでシェア"
-                  >
-                    <FaXTwitter aria-hidden="true" />
-                    <span className="text-sm font-medium">X</span>
-                  </a>
-
-                  {/* Threads */}
-                  <a
-                    href={shareUrls.threads}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="tent-share-btn"
-                    aria-label="Threadsでシェア"
-                  >
-                    <FaThreads aria-hidden="true" />
-                    <span className="text-sm font-medium">Threads</span>
-                  </a>
-
-                  {/* LinkedIn */}
-                  <a
-                    href={shareUrls.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="tent-share-btn"
-                    aria-label="LinkedInでシェア"
-                  >
-                    <FaLinkedinIn aria-hidden="true" />
-                    <span className="text-sm font-medium">LinkedIn</span>
-                  </a>
-
-                  {/* Instagram */}
-                  <a
-                    href={shareUrls.instagram}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="tent-share-btn"
-                    aria-label="Instagramでシェア"
-                    title="投稿用テキストをコピーしてInstagramを開く"
-                    onClick={() => {
-                      navigator.clipboard.writeText(instagramShareText)
-                      alert('Instagram投稿用のタイトルとURLをコピーしました')
-                    }}
-                  >
-                    <FaInstagram aria-hidden="true" />
-                    <span className="text-sm font-medium">Instagram</span>
-                  </a>
-                  
-                  {/* Facebook */}
-                  <a
-                    href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(canonicalUrl)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="tent-share-btn"
-                    aria-label="Facebookでシェア"
-                  >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                    </svg>
-                    <span className="text-sm font-medium">Facebook</span>
-                  </a>
-                  
-                  {/* Hatena Bookmark */}
-                  <a
-                    href={`https://b.hatena.ne.jp/add?mode=confirm&url=${encodeURIComponent(canonicalUrl)}&title=${encodeURIComponent(plainTitle)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="tent-share-btn"
-                    aria-label="はてなブックマークに追加"
-                  >
-                    <span className="font-bold text-sm">B!</span>
-                    <span className="text-sm font-medium">はてブ</span>
-                  </a>
-                  
-                  {/* LINE */}
-                  <a
-                    href={`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(canonicalUrl)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="tent-share-btn"
-                    aria-label="LINEでシェア"
-                  >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314" />
-                    </svg>
-                    <span className="text-sm font-medium">LINE</span>
-                  </a>
-                  
-                  {/* Copy URL */}
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(canonicalUrl)
-                      alert('URLをコピーしました！')
-                    }}
-                    className="tent-share-btn"
-                    aria-label="URLをコピー"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                    </svg>
-                    <span className="text-sm font-medium">URLコピー</span>
-                  </button>
-                </div>
+              {/* Share Section — note 風の細いアイコン行 */}
+              <aside className="mt-10 flex flex-wrap items-center justify-center gap-2" aria-label="記事をシェア">
+                <span className="mr-3 text-[11px] tracking-widest" style={{ opacity: 0.45 }}>
+                  share
+                </span>
+                {shareTargets.map((target) =>
+                  target.href ? (
+                    <a
+                      key={target.key}
+                      href={target.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="tent-ghost-btn"
+                      title={target.text}
+                      aria-label={target.label}
+                      onClick={target.onClick}
+                    >
+                      {target.icon}
+                    </a>
+                  ) : (
+                    <button
+                      key={target.key}
+                      type="button"
+                      className="tent-ghost-btn"
+                      title={target.text}
+                      aria-label={target.label}
+                      onClick={target.onClick}
+                    >
+                      {target.icon}
+                    </button>
+                  ),
+                )}
               </aside>
 
               {/* AI Development CTA Section */}

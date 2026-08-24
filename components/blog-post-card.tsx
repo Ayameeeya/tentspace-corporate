@@ -10,6 +10,7 @@ import {
   formatDate,
   type BlogPost,
 } from "@/lib/blog-content"
+import { getPlaceholderImage } from "@/lib/blog-placeholder"
 
 /**
  * ブログ一覧（MasonryBlogCard）と同じ意匠の記事カード。
@@ -34,16 +35,12 @@ export function BlogPostCard({ post }: { post: BlogPost }) {
                   "polygon(0 0, 100% 0, 100% calc(100% - 24px), 75% calc(100% - 24px), 70% 100%, 0 100%)",
               }}
             >
-              {imageUrl ? (
-                <Image
-                  src={imageUrl}
-                  alt={stripHtml(post.title)}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-700"
-                />
-              ) : (
-                <div className="absolute inset-0 bg-slate-100 dark:bg-gray-800" />
-              )}
+              <Image
+                src={imageUrl ?? getPlaceholderImage(post.id)}
+                alt={stripHtml(post.title)}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-700"
+              />
             </div>
 
             {/* Category Badges - ホバー時に画像左下に表示 */}
@@ -81,11 +78,11 @@ export function BlogPostCard({ post }: { post: BlogPost }) {
             </div>
 
             <h3
-              className="font-bold text-foreground group-hover:text-[#0f00b0] leading-tight text-lg md:text-xl line-clamp-2 mb-3 transition-colors duration-300"
+              className="jp-heading font-bold text-foreground group-hover:text-[#0f00b0] leading-normal text-lg md:text-xl line-clamp-2 mb-3 transition-colors duration-300"
               dangerouslySetInnerHTML={{ __html: post.title }}
             />
 
-            <p className="text-muted-foreground text-sm line-clamp-2 leading-relaxed">{excerpt}</p>
+            <p className="text-muted-foreground text-sm line-clamp-2 leading-[1.8]">{excerpt}</p>
           </div>
         </div>
       </Link>

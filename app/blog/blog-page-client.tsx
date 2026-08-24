@@ -14,6 +14,7 @@ import { N8nBanner } from "@/components/n8n-banner"
 import GlassSurface from "@/components/GlassSurface"
 import { BlogPagination } from "@/components/blog-pagination"
 import { getPosts, getFeaturedImageUrl, getPostTerms, stripHtml, formatDate, type BlogPost } from "@/lib/blog-content"
+import { getPlaceholderImage } from "@/lib/blog-placeholder"
 import { distributePostIndices, type BlogCategory } from "@/lib/content/manifest-query"
 import { fetchLikeCounts } from "@/lib/blog-likes"
 
@@ -134,38 +135,6 @@ function getCardVariant(index: number, isMobile: boolean = false): 'tall' | 'wid
   return patterns[index % patterns.length] as 'tall' | 'wide' | 'square'
 }
 
-// Get random fallback image - no duplicates within 10 posts, consistent for each post
-function getFallbackImage(postId: number, index: number): string {
-  const images = [
-    '/blog-placeholders/annie-spratt-oCqCLEPOf40.jpg',
-    '/blog-placeholders/krystal-ng-1PlVbeOCd78.jpg',
-    '/blog-placeholders/bharath-kumar-biXeua5P7ZU.jpg',
-    '/blog-placeholders/olli-kilpi-K7EEEPFFjh0.jpg',
-    '/blog-placeholders/resource-database-KhPkJtxuYg0.jpg',
-    '/blog-placeholders/alex-sherstnev-MnJy18t6Doo.jpg',
-    '/blog-placeholders/katie-doherty-6RRtOg4AI28.jpg',
-    '/blog-placeholders/russ-lee-vJmW9KI9-ig.jpg',
-    '/blog-placeholders/krystal-ng-PrQqQVPzmlw.jpg',
-    '/blog-placeholders/maxim-tolchinskiy-MJB86VteX64.jpg'
-  ]
-
-  // Calculate block and position within block
-  const blockIndex = Math.floor(index / 10)
-  const positionInBlock = index % 10
-
-  // Create pseudo-random offset for each block using blockIndex
-  // Using prime number (7) to ensure good distribution
-  const blockOffset = (blockIndex * 7) % 10
-
-  // Use postId to ensure same post always gets same image
-  const postOffset = Math.abs(postId * 2654435761) % 10
-
-  // Combine offsets to get final image index
-  const imageIndex = (positionInBlock + blockOffset + postOffset) % 10
-
-  return images[imageIndex]
-}
-
 // Get content display variant (title only, title + excerpt, or full)
 function getContentVariant(index: number): 'title-only' | 'with-excerpt' | 'full' {
   const patterns: Array<'title-only' | 'with-excerpt' | 'full'> = [
@@ -185,7 +154,7 @@ function MasonryBlogCard({ post, likes = 0, index = 0, isMobile = false }: { pos
   const contentVariant = getContentVariant(index)
 
   // Wide uses actual thumbnail, Tall/Square use dummy images (random based on post ID and index)
-  const finalImageUrl = variant === 'wide' && imageUrl ? imageUrl : getFallbackImage(post.id, index)
+  const finalImageUrl = variant === 'wide' && imageUrl ? imageUrl : getPlaceholderImage(post.id, index)
   const finalVariant = variant
 
   // Define aspect ratios for different variants
@@ -246,13 +215,13 @@ function MasonryBlogCard({ post, likes = 0, index = 0, isMobile = false }: { pos
 
             {/* Title - always show */}
             <h3
-              className="font-bold text-foreground group-hover:text-[#0f00b0] leading-tight text-lg md:text-xl line-clamp-2 mb-3 transition-colors duration-300"
+              className="jp-heading font-bold text-foreground group-hover:text-[#0f00b0] leading-normal text-lg md:text-xl line-clamp-2 mb-3 transition-colors duration-300"
               dangerouslySetInnerHTML={{ __html: post.title }}
             />
 
             {/* Pattern 2: with-excerpt - show description */}
             {contentVariant === 'with-excerpt' && (
-              <p className="text-muted-foreground text-sm line-clamp-2 leading-relaxed">
+              <p className="text-muted-foreground text-sm line-clamp-2 leading-[1.8]">
                 {excerpt}
               </p>
             )}
@@ -260,7 +229,7 @@ function MasonryBlogCard({ post, likes = 0, index = 0, isMobile = false }: { pos
             {/* Pattern 3: full - show description + category tags */}
             {contentVariant === 'full' && (
               <>
-                <p className="text-muted-foreground text-sm line-clamp-2 leading-relaxed mb-3">
+                <p className="text-muted-foreground text-sm line-clamp-2 leading-[1.8] mb-3">
                   {excerpt}
                 </p>
                 {categories.length > 0 && (

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { supabaseAuth } from "@/lib/supabase/client"
-import { Heart } from "lucide-react"
+import { Bookmark } from "lucide-react"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,7 +28,6 @@ interface Favorite {
 export function BlogFavorite({ postSlug }: BlogFavoriteProps) {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
-  const [favoriteCount, setFavoriteCount] = useState(0)
   const [isFavorited, setIsFavorited] = useState(false)
   const [showAuthDialog, setShowAuthDialog] = useState(false)
 
@@ -77,15 +76,7 @@ export function BlogFavorite({ postSlug }: BlogFavoriteProps) {
 
   const loadFavorites = async () => {
     try {
-      // Get total count
-      const { count } = await supabaseAuth
-        .from("favorites")
-        .select("*", { count: "exact", head: true })
-        .eq("post_slug", postSlug)
-
-      setFavoriteCount(count || 0)
-
-      // Check if current user favorited
+      // 保存件数は表示しない（いいねと役割を分けるため）。自分が保存済みかだけ見る
       if (user) {
         const { data } = await supabaseAuth
           .from("favorites")
@@ -125,7 +116,6 @@ export function BlogFavorite({ postSlug }: BlogFavoriteProps) {
 
       // Optimistic update
       setIsFavorited(!isFavorited)
-      setFavoriteCount((prev) => (isFavorited ? prev - 1 : prev + 1))
     } catch (error) {
       console.error("Error toggling favorite:", error)
     }
@@ -133,9 +123,8 @@ export function BlogFavorite({ postSlug }: BlogFavoriteProps) {
 
   if (loading) {
     return (
-      <div className="tent-action-btn" style={{ opacity: 0.4 }}>
-        <Heart className="w-4 h-4" />
-        <span className="text-xs">お気に入り</span>
+      <div className="tent-ghost-btn" style={{ opacity: 0.4 }} aria-hidden="true">
+        <Bookmark strokeWidth={1.5} />
       </div>
     )
   }
@@ -144,35 +133,38 @@ export function BlogFavorite({ postSlug }: BlogFavoriteProps) {
     <>
       <button
         onClick={handleToggleFavorite}
-        className="tent-action-btn"
+        className="tent-ghost-btn"
         data-active={isFavorited}
+        title={isFavorited ? "保存済み" : "保存"}
         aria-label={isFavorited ? "お気に入りから削除" : "お気に入りに追加"}
       >
-        <Heart className={`w-4 h-4 transition-all ${isFavorited ? "fill-current" : ""}`} />
-        <span className="text-xs">
-          {isFavorited ? `お気に入り済み (${favoriteCount})` : "お気に入り"}
-        </span>
+        <Bookmark strokeWidth={1.5} className={isFavorited ? "fill-current" : ""} aria-hidden="true" />
       </button>
 
       {/* Auth Dialog for non-logged-in users */}
       <AlertDialog open={showAuthDialog} onOpenChange={setShowAuthDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>お気に入り機能を試しませんか？</AlertDialogTitle>
-            <AlertDialogDescription>
-              お気に入り機能を使うには、ログインが必要です。
-              ログインすると、お気に入りの記事を保存して後で簡単にアクセスできます。
+        {/* ポータルで .tent-page の外に出るため、tent の色は直値で指定する */}
+        <AlertDialogContent className="gap-6 rounded-none border border-black bg-white p-7 shadow-none">
+          <AlertDialogHeader className="gap-3">
+            <span className="text-[11px] tracking-widest text-black/45">save</span>
+            <AlertDialogTitle className="jp-heading text-lg leading-normal text-black">
+              保存にはログインが必要です
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-sm leading-[1.9] text-black/60">
+              ログインすると、気になる記事を保存して、あとから読み返せます。
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>キャンセル</AlertDialogCancel>
+          <AlertDialogFooter className="gap-2">
+            <AlertDialogCancel className="cursor-crosshair rounded-none border border-black bg-white text-black shadow-none hover:bg-black hover:text-white">
+              キャンセル
+            </AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 setShowAuthDialog(false)
                 // Trigger auth modal
                 window.dispatchEvent(new CustomEvent("open-auth-modal"))
               }}
-              className="bg-blue-600 hover:bg-blue-700"
+              className="cursor-crosshair rounded-none border border-black bg-black font-semibold text-white shadow-none hover:bg-[#0f00b0] hover:border-[#0f00b0]"
             >
               ログインする
             </AlertDialogAction>
