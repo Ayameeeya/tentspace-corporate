@@ -13,6 +13,7 @@ import { formatDate, getPostTerms, stripHtml, getFeaturedImageUrl, type BlogPost
 import { getActiveHeadingId, getTocScrollTop } from "@/lib/blog-toc"
 import { addLike, fetchHasLiked, fetchLikeCounts, getClientId } from "@/lib/blog-likes"
 import { createBlogShareUrls, createInstagramShareText } from "@/lib/blog-share"
+import { getPlaceholderImage } from "@/lib/blog-placeholder"
 
 import 'highlight.js/styles/github-dark.css'
 
@@ -771,16 +772,14 @@ export default function BlogPostClient({
                           className="group block"
                         >
                           <div className="bg-muted rounded-lg overflow-hidden hover:shadow-md transition-all border border-border hover:border-primary/30">
-                            {relatedImageUrl && (
-                              <div className="relative aspect-[16/9] bg-muted">
-                                <Image
-                                  src={relatedImageUrl}
-                                  alt={stripHtml(relatedPost.title)}
-                                  fill
-                                  className="object-cover"
-                                />
-                              </div>
-                            )}
+                            <div className="relative aspect-[16/9] bg-muted">
+                              <Image
+                                src={relatedImageUrl ?? getPlaceholderImage(relatedPost.id)}
+                                alt={stripHtml(relatedPost.title)}
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
                             <div className="p-3">
                               {relatedCategories[0] && (
                                 <span className="inline-block px-2 py-0.5 text-[10px] font-medium bg-blue-500/10 text-blue-700 dark:text-blue-300 rounded mb-1.5">
