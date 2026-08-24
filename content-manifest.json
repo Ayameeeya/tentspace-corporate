@@ -1,5 +1,59 @@
 [
   {
+    "id": 696461829,
+    "slug": "chat-to-blog-briefing",
+    "title": "チャットの雑談を翌日ブログにする仕組み｜「発注書」方式とDialogue導入の実装記録",
+    "description": "チャットで生まれた知見を翌日のブログ記事に変える導線を作った実装記録。要約ではなく「発注書」を書かせる理由、体験談や数値を原文のまま運ぶ節構成、冒頭だけ会話にするDialogueコンポーネントの運用ルールまで、実際に動かしている構成を解説します。",
+    "date": "2026-08-24T00:00:00.000Z",
+    "updated": "2026-08-24T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "AIエージェント",
+      "自動化",
+      "ブログ運用"
+    ],
+    "draft": false,
+    "readingTime": 13,
+    "wordCount": 5012,
+    "ogImage": "/blog-assets/chat-to-blog-briefing/featured.jpg",
+    "experiment": {
+      "hook": "contrarian",
+      "cta": "inquiry",
+      "targetKw": "Claude Code ブログ 自動化",
+      "utmCampaign": "chat-to-blog-briefing-202608"
+    }
+  },
+  {
+    "id": 1281366754,
+    "slug": "mcp-server-publish-rate-limit",
+    "title": "自作MCPサーバーに「投稿し過ぎない」制限を実装した記録｜制限はプロンプトではなくサーバーに置く",
+    "description": "AIエージェントに投稿ツールを渡すと放っておくと公開し過ぎます。その制限をプロンプトではなく自作MCPサーバー側（Cloudflare WorkersのKV）に置いた実装記録。単純なカウントではなくreserve→commit/releaseの二段階にした理由と、失敗時に枠を戻す設計まで解説します。",
+    "date": "2026-08-24T00:00:00.000Z",
+    "updated": "2026-08-24T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "MCP",
+      "AIエージェント",
+      "自動化",
+      "Cloudflare Workers"
+    ],
+    "draft": false,
+    "readingTime": 13,
+    "wordCount": 5027,
+    "ogImage": "/blog-assets/mcp-server-publish-rate-limit/featured.jpg",
+    "experiment": {
+      "hook": "contrarian",
+      "cta": "inquiry",
+      "targetKw": "MCP サーバー 自作",
+      "utmCampaign": "mcp-publish-rate-limit-202608"
+    }
+  },
+  {
     "id": 2979247671,
     "slug": "claude-code-hooks-bash-guard",
     "title": "Claude Codeのhooksで自動運用に禁止ラインを引く｜Bashガード実装記録",
