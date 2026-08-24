@@ -334,6 +334,18 @@
   55%, 100% { opacity: 1; }
 }
 .tent-flicker { animation: tent-flicker 0.62s steps(1, end) both; }
+/* 薄い要素用のフリッカー: ピークを --fl（その要素の定常の濃さ）に抑え、
+   点滅の一瞬だけ濃く見えてしまわないようにする */
+@keyframes tent-flicker-dim {
+  0% { opacity: calc(var(--fl, 1) * 0.12); }
+  8% { opacity: var(--fl, 1); }
+  14% { opacity: calc(var(--fl, 1) * 0.18); }
+  22% { opacity: var(--fl, 1); }
+  31% { opacity: calc(var(--fl, 1) * 0.3); }
+  39% { opacity: var(--fl, 1); }
+  47% { opacity: calc(var(--fl, 1) * 0.55); }
+  55%, 100% { opacity: var(--fl, 1); }
+}
 
 /* menu button — シャープな幾何学モーフ。
    開く: 2本のバーが中央の一点へ収縮し、同じ点から × の2ストロークが伸びる。
@@ -736,24 +748,31 @@
 }
 .tent-diff__progress { grid-column: 1 / span 1; display: flex; flex-direction: column; gap: 1em; align-items: flex-start; }
 .tent-diff__counter { display: flex; align-items: center; gap: 0.75em; }
-.tent-diff__counter-line { width: 2em; height: 1px; background: currentColor; }
 .tent-diff__bar { width: 1px; flex: 1; background: currentColor; transform: scaleY(0); transform-origin: top center; }
 .tent-diff__label { grid-column: 3 / span 2; text-transform: lowercase; }
 .tent-diff__content { grid-column: 6 / -1; position: relative; padding: 2em; will-change: transform; }
 .tent-diff__progress, .tent-diff__label { will-change: transform; }
 .tent-diff__line-top { position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--m-ink); }
 .tent-diff__line-left { position: absolute; top: 0; left: 0; bottom: 0; width: 1px; background: var(--m-ink); }
-/* レーン移動の軌跡: バーの元位置から移動後の位置まで、行の足元を
-   左から右へ引かれる 1px（git graph の elbow）。scaleX は JS が叩く */
+/* レーン移動の軌跡: 旧レーンから降りて、曲がって足元を右へ走り、
+   曲がってバーへ合流する。ツリーの sway と同じく接線連続で、
+   90° の角を作らない。描画進行（dashoffset）は JS が叩く */
 .tent-diff__trace {
   position: absolute;
-  height: 1px;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: left center;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
 }
-/* バーとトレースが出会う角 = コミット。成立でパシッと現れて塗りつぶされ、
-   逆走ではおとなしく縮んで消える */
+.tent-diff__trace path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1px;
+  stroke-linecap: round;
+}
+/* トレースがバーに合流する点 = コミット。成立でパシッと現れて
+   塗りつぶされ、逆走ではおとなしく縮んで消える */
 .tent-diff__node {
   position: absolute;
   width: 0.55em;
@@ -767,19 +786,22 @@
   transform: translate(-50%, -50%) scale(1);
   background: currentColor;
 }
-/* コミットハッシュ: 成立の瞬間だけ CRT フリッカーで点灯し、
-   以降は git log --oneline の一行のように label の下に残る */
-.tent-diff__hash {
-  margin-top: 0.4em;
+/* コミットテキスト: 四角の左横に git log の一行のように出る。
+   四角と一緒にパシッと現れて、成立の瞬間だけ CRT フリッカー */
+.tent-diff__node-label {
+  position: absolute;
+  right: 1.4em;
+  top: 50%;
+  transform: translateY(-50%);
   font-family: var(--font-geist-mono), monospace;
   font-size: 0.8em;
   letter-spacing: 0.04em;
-  opacity: 0;
-  transition: opacity 0.3s var(--m-ease);
-}
-.tent-diff__slot[data-committed="true"] .tent-diff__hash {
+  white-space: nowrap;
   opacity: 0.55;
-  animation: tent-flicker 0.62s steps(1, end);
+}
+.tent-diff__slot[data-committed="true"] .tent-diff__node-label {
+  --fl: 0.55;
+  animation: tent-flicker-dim 0.62s steps(1, end);
 }
 @media (max-width: 767px) {
   .tent-diff__head { padding: 4em 0 12vh; }
@@ -1054,10 +1076,12 @@ select.tent-field:invalid { color: color-mix(in srgb, var(--m-ink), transparent 
 
 /* ---------- works (portfolio) ---------- */
 .tent-works { padding: 15vh 0 10vh; }
-/* works に入る前の拡散シーン: works ノード＋main から 3 本のブランチが
-   画面外へ出て行く帯をここに確保する。グラフを描かない幅では通常の間隔に戻る */
+/* works に入る前のグラフシーン: different の最後のレーンが main へ
+   合流し、works ノードを経て 3 本のブランチが画面外へ出て行く。
+   その一連と見出しまでの余白をここに確保する。
+   グラフを描かない幅では通常の間隔に戻る */
 @media (min-width: 992px) {
-  .tent-works { padding-top: 64vh; }
+  .tent-works { padding-top: 120vh; }
 }
 .tent-works__item {
   display: grid;
@@ -1361,9 +1385,15 @@ select.tent-field:invalid { color: color-mix(in srgb, var(--m-ink), transparent 
 }
 .tent-branch__dot[data-on="true"] { background: rgba(255, 255, 255, 0.6); }
 /* フレーバーテキスト（checkout -b … / merge …）は到達で灯るが、
-   リンクのノードのラベルより薄いまま保つ */
+   リンクのノードのラベルより薄いまま保つ（点滅のピークも薄いまま） */
 .tent-branch__dot[data-on="true"] .tent-branch__label {
-  opacity: 0.5;
+  --fl: 0.4;
+  opacity: 0.4;
+  animation: tent-flicker-dim 0.62s steps(1, end);
+}
+/* system / services を切るコミットは、ナビノードのラベルと同じ濃さで灯る */
+.tent-branch__dot--strong[data-on="true"] .tent-branch__label {
+  opacity: 0.72;
   animation: tent-flicker 0.62s steps(1, end);
 }
 .tent-branch__label {

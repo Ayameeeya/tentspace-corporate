@@ -60,8 +60,11 @@ const TRAVEL_RATIO = 0.7
 // 境界上のスクロールで明滅しないようにする（ヒステリシス）
 const COMMIT_AT = 0.58
 const UNCOMMIT_AT = 0.5
+// 最後の行だけ、コミット後にレーンを main（画面中央）まで延長して合流する。
+// コミット成立の後から行の走り切りまでで描く
+const EXT_START = 0.66
 
-function DifferentItem({ item }: { item: (typeof ITEMS)[number] }) {
+function DifferentItem({ item, extendToMain }: { item: (typeof ITEMS)[number]; extendToMain?: boolean }) {
   const rootRef = useRef<HTMLDivElement>(null)
   const innerRef = useRef<HTMLDivElement>(null)
   const barRef = useRef<HTMLDivElement>(null)
@@ -69,7 +72,8 @@ function DifferentItem({ item }: { item: (typeof ITEMS)[number] }) {
   const progRef = useRef<HTMLDivElement>(null)
   const labelRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
-  const traceRef = useRef<HTMLDivElement>(null)
+  const traceRef = useRef<SVGPathElement>(null)
+  const extRef = useRef<SVGPathElement>(null)
   const nodeRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -81,8 +85,9 @@ function DifferentItem({ item }: { item: (typeof ITEMS)[number] }) {
     const label = labelRef.current
     const content = contentRef.current
     const trace = traceRef.current
+    const ext = extRef.current
     const node = nodeRef.current
-    if (!root || !inner || !bar || !text || !prog || !label || !content || !trace || !node) return
+    if (!root || !inner || !bar || !text || !prog || !label || !content || !trace || !ext || !node) return
 
     const lines = content.querySelectorAll<HTMLElement>(".tent-diff__line-top, .tent-diff__line-left")
     const bgAt = gsap.utils.interpolate("rgba(15, 0, 176, 0)", "rgba(15, 0, 176, 1)")
@@ -91,6 +96,8 @@ function DifferentItem({ item }: { item: (typeof ITEMS)[number] }) {
     // each element travels to its horizontally mirrored position within the row
     let shifts = { prog: 0, label: 0, content: 0 }
     let travel = 0
+    let traceLen = 0
+    let extLen = 0
     const measure = () => {
       const mirror = (el: HTMLElement) => inner.clientWidth - el.offsetWidth - 2 * el.offsetLeft
       const wide = window.matchMedia("(min-width: 768px)").matches
@@ -98,16 +105,52 @@ function DifferentItem({ item }: { item: (typeof ITEMS)[number] }) {
         ? { prog: mirror(prog), label: mirror(label), content: mirror(content) }
         : { prog: 0, label: 0, content: 0 }
       travel = window.innerHeight * 0.9 * TRAVEL_RATIO
-      // トレース線: バーの元位置から移動後の位置までを行の足元に敷く。
-      // offsetLeft/Top は transform の影響を受けないので、フリップ途中の
-      // リフレッシュでも素の位置が取れる（offsetParent は relative な inner）
+      // トレース線: バーの元位置から足元を右へ走り、大きくゆったりした
+      // カーブで移動後のバーへ合流する。ツリーの sway と同じく接線連続で
+      // 90° の角を作らない。offsetLeft/Top は transform の影響を
+      // 受けないので、フリップ途中のリフレッシュでも素の位置が取れる
       const traceX = bar.offsetLeft
-      const traceY = prog.offsetTop + prog.offsetHeight
-      trace.style.left = `${traceX}px`
-      trace.style.top = `${traceY - 1}px`
-      trace.style.width = `${Math.max(0, shifts.prog)}px`
-      node.style.left = `${traceX + shifts.prog + 0.5}px`
-      node.style.top = `${traceY - 0.5}px`
+      const endX = traceX + shifts.prog
+      const yLine = prog.offsetTop + prog.offsetHeight - 0.5
+      const r = Math.min(180, Math.max(48, shifts.prog * 0.3))
+      if (shifts.prog > 0) {
+        trace.setAttribute(
+          "d",
+          `M ${traceX} ${yLine}` +
+            ` L ${endX - r} ${yLine}` +
+            ` Q ${endX} ${yLine}, ${endX} ${yLine - r}`,
+        )
+        traceLen = trace.getTotalLength()
+        trace.style.strokeDasharray = `${traceLen}`
+        trace.style.strokeDashoffset = `${traceLen}`
+      } else {
+        trace.setAttribute("d", "")
+        traceLen = 0
+      }
+      // コミットはトレースがバーに合流する点に打つ
+      node.style.left = `${endX + 0.5}px`
+      node.style.top = `${yLine - r}px`
+      // 最後の行: コミットの下に伸びるバーを足元からさらに延長し、
+      // 画面中央の main へ sway して合流する。通常の sway より縦を深く
+      // 取った緩やかな S 字（span = clamp(|dx| * 0.7, 280, 460)）。
+      // BranchGraph 側も同じ式で合流点を割り出している
+      extLen = 0
+      if (extendToMain && shifts.prog > 0) {
+        const footX = endX + 0.5
+        const footY = prog.offsetTop + prog.offsetHeight
+        const mainX = window.innerWidth * 0.5 - inner.getBoundingClientRect().left
+        const span = Math.min(460, Math.max(280, Math.abs(mainX - footX) * 0.7))
+        const mid = footY + span / 2
+        ext.setAttribute(
+          "d",
+          `M ${footX} ${footY} C ${footX} ${mid}, ${mainX} ${mid}, ${mainX} ${footY + span}`,
+        )
+        extLen = ext.getTotalLength()
+        ext.style.strokeDasharray = `${extLen}`
+        ext.style.strokeDashoffset = `${extLen}`
+      } else {
+        ext.setAttribute("d", "")
+      }
     }
     measure()
 
@@ -116,8 +159,8 @@ function DifferentItem({ item }: { item: (typeof ITEMS)[number] }) {
       gsap.set(label, { x: shifts.label * s })
       // text whitens ahead of the background fill so the midpoint stays readable
       gsap.set(content, { x: shifts.content * s, backgroundColor: bgAt(s), color: inkAt(Math.min(1, s * 1.6)) })
-      // レーン移動の軌跡は移動と同じ速さで左から右へ引かれる（先端が常にバーの真下）
-      gsap.set(trace, { scaleX: s })
+      // レーン移動の軌跡は移動と同じ速さで左から右へ引かれる
+      if (traceLen) trace.style.strokeDashoffset = `${traceLen * (1 - s)}`
       lines.forEach((l) => gsap.set(l, { opacity: 1 - s }))
     }
 
@@ -126,6 +169,7 @@ function DifferentItem({ item }: { item: (typeof ITEMS)[number] }) {
       gsap.set(bar, { scaleY: 1 })
       applyFlip(1)
       root.dataset.committed = "true"
+      if (extLen) ext.style.strokeDashoffset = "0"
       return
     }
 
@@ -152,6 +196,8 @@ function DifferentItem({ item }: { item: (typeof ITEMS)[number] }) {
       gsap.set(bar, { scaleY: Math.min(1, p / COMMIT_AT) })
       morph(easeInOutCubic(clamp01((p - TEXT_START) / (TEXT_END - TEXT_START))))
       applyFlip(easeInOutCubic(clamp01((p - FLIP_START) / (FLIP_END - FLIP_START))))
+      // main への延長線はコミット成立の後、行が走り切るまでのあいだに引く
+      if (extLen) ext.style.strokeDashoffset = `${extLen * (1 - clamp01((p - EXT_START) / (1 - EXT_START)))}`
       const committed = commit.on ? p > UNCOMMIT_AT : p >= COMMIT_AT
       if (committed !== commit.on) {
         commit.on = committed
@@ -179,7 +225,7 @@ function DifferentItem({ item }: { item: (typeof ITEMS)[number] }) {
       tween.scrollTrigger?.kill()
       tween.kill()
     }
-  }, [item])
+  }, [item, extendToMain])
 
   return (
     <div ref={rootRef} className="tent-diff__slot">
@@ -187,15 +233,12 @@ function DifferentItem({ item }: { item: (typeof ITEMS)[number] }) {
         <div ref={progRef} className="tent-diff__progress">
           <div className="tent-diff__counter">
             <p className="paragraph-m">{item.num}</p>
-            <div className="tent-diff__counter-line" />
           </div>
           <div ref={barRef} className="tent-diff__bar" />
         </div>
         <div ref={labelRef} className="tent-diff__label">
-          <h3 className="paragraph-m">{item.label}</h3>
-          <p className="tent-diff__hash" aria-hidden="true">
-            {item.hash}
-          </p>
+          {/* 行の識別子はディスプレイ扱い — 本文（heading-m）に対する見出し */}
+          <h3 className="heading-s">{item.label}</h3>
         </div>
         <div ref={contentRef} className="tent-diff__content">
           <div className="tent-diff__line-top" />
@@ -204,8 +247,13 @@ function DifferentItem({ item }: { item: (typeof ITEMS)[number] }) {
             {item.before}
           </p>
         </div>
-        <div ref={traceRef} className="tent-diff__trace" aria-hidden="true" />
-        <div ref={nodeRef} className="tent-diff__node" aria-hidden="true" />
+        <svg className="tent-diff__trace" aria-hidden="true">
+          <path ref={traceRef} />
+          <path ref={extRef} />
+        </svg>
+        <div ref={nodeRef} className="tent-diff__node" aria-hidden="true">
+          <span className="tent-diff__node-label">commit {item.hash}</span>
+        </div>
       </div>
     </div>
   )
@@ -223,8 +271,8 @@ export function DifferentSection() {
             a different studio
           </ScrambleText>
         </div>
-        {ITEMS.map((item) => (
-          <DifferentItem key={item.num} item={item} />
+        {ITEMS.map((item, i) => (
+          <DifferentItem key={item.num} item={item} extendToMain={i === ITEMS.length - 1} />
         ))}
       </div>
     </section>
