@@ -260,22 +260,12 @@ interface ShareTarget {
   icon: React.ReactNode
 }
 
-// 需要が高い順に並べる。X とURLコピー（Slack等への貼り付け）が主流、
-// はてブは技術記事の流入装置、Threads は自社の運用チャネル
+// 前半は SNS を需要順に、末尾に投稿先を選ばない操作（URLコピー・OS の共有シート）を置く。
+// X が主戦場、はてブは技術記事の流入装置、Threads は自社の運用チャネル
 function buildShareTargets(url: string, title: string, includeNative = false): ShareTarget[] {
   const shareUrls = createBlogShareUrls({ url, title })
   const targets: ShareTarget[] = [
     { key: "x", label: "Xでシェア", text: "X", href: shareUrls.x, icon: <FaXTwitter aria-hidden="true" /> },
-    {
-      key: "copy",
-      label: "URLをコピー",
-      text: "URLをコピー",
-      onClick: () => {
-        navigator.clipboard.writeText(url)
-        alert("URLをコピーしました！")
-      },
-      icon: <CopyLinkIcon />,
-    },
     {
       key: "hatena",
       label: "はてなブックマークに追加",
@@ -309,6 +299,16 @@ function buildShareTargets(url: string, title: string, includeNative = false): S
         alert("Instagram投稿用のタイトルとURLをコピーしました")
       },
       icon: <FaInstagram aria-hidden="true" />,
+    },
+    {
+      key: "copy",
+      label: "URLをコピー",
+      text: "URLをコピー",
+      onClick: () => {
+        navigator.clipboard.writeText(url)
+        alert("URLをコピーしました！")
+      },
+      icon: <CopyLinkIcon />,
     },
   ]
 
