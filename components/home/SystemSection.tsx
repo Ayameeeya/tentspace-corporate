@@ -14,13 +14,14 @@ const CHAPTERS = [
   { kw: "evolve", sub: "automate + improve", statement: "運用を自動化して、\nデータをもとに進化し続ける。" },
 ]
 
-const BAR_ACTIVE = { backgroundColor: "#0f00b0", color: "#e5e5e5" }
-const BAR_IDLE = { backgroundColor: "#cbcadf", color: "#000000" }
+// macOS 式の非アクティブ状態: バーが白っぽく沈み、文字とトラフィックライトがグレーになる
+const BAR_IDLE = { backgroundColor: "#f5f5f7", color: "#a1a1a6" }
+const DOT_IDLE = "#d6d6d6"
 
 /**
- * Pinned "system" scene: each process step opens as a retro-OS window and
+ * Pinned "system" scene: each process step opens as a mac-style window and
  * cascades over the previous ones. The newest window carries the active
- * (indigo) title bar; older ones dim to the tint, old-desktop style.
+ * title bar; older ones dim the way macOS inactive windows do.
  * Progress is mapped through a paused timeline (manual render, no scrub lag).
  */
 export function SystemSection() {
@@ -54,6 +55,9 @@ export function SystemSection() {
         })
       })
       gsap.set(bars.slice(0, -1), BAR_IDLE)
+      bars.slice(0, -1).forEach((bar) => {
+        gsap.set(bar.querySelectorAll(".tent-system__win-btns span"), { backgroundColor: DOT_IDLE })
+      })
       return
     }
 
@@ -64,16 +68,23 @@ export function SystemSection() {
 
     wins.forEach((win, i) => {
       tl.set(win, { visibility: "visible" })
-      // 新規ウィンドウは常に中央にポップする
+      // 新規ウィンドウは常に中央にポップする（mac のウィンドウオープン風に
+      // 中央からなめらかにズームイン、バウンスなし）
       tl.fromTo(
         win,
-        { autoAlpha: 0, scale: 0.88, y: "0.9em" },
-        { autoAlpha: 1, scale: 1, y: 0, duration: REVEAL, ease: "systemChapterPop", transformOrigin: "50% 50%" },
+        { autoAlpha: 0, scale: 0.92, y: "1.2em" },
+        { autoAlpha: 1, scale: 1, y: 0, duration: REVEAL, ease: "power3.out", transformOrigin: "50% 50%" },
       )
       const chars = win.querySelectorAll<HTMLElement>(".tent-system__win-ch")
       tl.set(chars, { autoAlpha: 0 }, "<")
       if (i > 0 && bars[i - 1]) {
+        // ひとつ前のウィンドウを macOS の非アクティブ状態へ（バー・トラフィックライトともにグレー）
         tl.to(bars[i - 1], { ...BAR_IDLE, duration: REVEAL * 0.4, ease: "systemEaseOut" }, "<")
+        tl.to(
+          bars[i - 1].querySelectorAll(".tent-system__win-btns span"),
+          { backgroundColor: DOT_IDLE, duration: REVEAL * 0.4, ease: "systemEaseOut" },
+          "<",
+        )
       }
       // 既存のウィンドウを一段ずつ奥（上・少し左）へ送る
       for (let j = 0; j < i; j++) {
@@ -154,13 +165,18 @@ export function SystemSection() {
           {CHAPTERS.map((c, i) => (
             <div key={c.kw} className="tent-system__win" style={{ "--wi": i } as CSSProperties}>
               <div className="tent-system__win-bar">
+                <div className="tent-system__win-btns" aria-hidden="true">
+                  <span data-role="close" />
+                  <span data-role="min" />
+                  <span data-role="max" />
+                </div>
                 <p className="tent-system__win-title">
                   {c.kw} — {c.sub}
                 </p>
-                <div className="tent-system__win-btns" aria-hidden="true">
-                  <span>–</span>
-                  <span>□</span>
-                  <span>✕</span>
+                <div className="tent-system__win-btns tent-system__win-btns--ghost" aria-hidden="true">
+                  <span />
+                  <span />
+                  <span />
                 </div>
               </div>
               <div className="tent-system__win-body">

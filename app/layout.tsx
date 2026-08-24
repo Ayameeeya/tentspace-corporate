@@ -85,27 +85,26 @@ export default function RootLayout({
   return (
     <html lang="ja" suppressHydrationWarning className={`${inter.variable} ${audiowide.variable} ${geistMono.variable} ${vt323.variable}`}>
       <head>
-        {/* Google Tag Consent Mode v2 - Default denied for EEA compliance */}
-        <Script id="gtag-consent-default" strategy="beforeInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            
-            // Default consent state - denied until user accepts
-            gtag('consent', 'default', {
-              'analytics_storage': 'denied',
-              'ad_storage': 'denied',
-              'ad_user_data': 'denied',
-              'ad_personalization': 'denied',
-              'wait_for_update': 500
-            });
-          `}
-        </Script>
-
+        {/* Google Tag Consent Mode v2 - Default denied for EEA compliance.
+            next/script の beforeInteractive はインライン script に非対応で
+            hydration mismatch を起こすため、素の script タグで描画する */}
         <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1533933816704006"
-          crossOrigin="anonymous"
+          id="gtag-consent-default"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+
+              // Default consent state - denied until user accepts
+              gtag('consent', 'default', {
+                'analytics_storage': 'denied',
+                'ad_storage': 'denied',
+                'ad_user_data': 'denied',
+                'ad_personalization': 'denied',
+                'wait_for_update': 500
+              });
+            `,
+          }}
         />
       </head>
       <body className="font-sans antialiased">
@@ -121,6 +120,15 @@ export default function RootLayout({
           <GoogleAnalytics />
           <CookieConsent />
         </ErrorBoundary>
+        {/* AdSense ローダーは hydration 後に読み込む。head に生 script で置くと
+            hydration 前に managed script が head へ注入され、React が consent
+            script と誤って突き合わせて hydration mismatch になる */}
+        <Script
+          id="adsbygoogle-loader"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1533933816704006"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   )

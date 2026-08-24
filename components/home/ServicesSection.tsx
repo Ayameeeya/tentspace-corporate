@@ -42,13 +42,18 @@ export function ServicesSection() {
           <div className="tent-pricing__cards">
             {PLANS.map((plan) => (
               <div key={plan.name} className="tent-win">
-                {/* system セクションと同じレトロ OS ウィンドウでプランを見せる */}
+                {/* system セクションと同じ mac 風ウィンドウでプランを見せる */}
                 <div className="tent-win__bar">
-                  <p className="tent-win__title">plan — {plan.name.toLowerCase()}</p>
                   <div className="tent-win__btns" aria-hidden="true">
-                    <span>–</span>
-                    <span>□</span>
-                    <span>✕</span>
+                    <span data-role="close" />
+                    <span data-role="min" />
+                    <span data-role="max" />
+                  </div>
+                  <p className="tent-win__title">plan — {plan.name.toLowerCase()}</p>
+                  <div className="tent-win__btns tent-win__btns--ghost" aria-hidden="true">
+                    <span />
+                    <span />
+                    <span />
                   </div>
                 </div>
                 <div className="tent-win__body">
@@ -84,7 +89,7 @@ export function ServicesSection() {
           </div>
           <div className="tent-pricing__note">
             <ScrambleText as="p" className="paragraph-s">
-              まずは無料相談から。課題の整理だけでも歓迎です。費用はお見積もりの際に、はっきりお伝えします。
+              まずは無料相談から。課題の整理だけでも歓迎です。費用はお見積もりの際に、ご予算に合わせてお伝えします。
             </ScrambleText>
             <div>
               <div className="tent-pricing__row" style={{ minHeight: "3em" }}>
