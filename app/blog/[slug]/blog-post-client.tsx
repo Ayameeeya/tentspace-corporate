@@ -216,74 +216,6 @@ function TableOfContents({ content }: { content: string }) {
   )
 }
 
-// Share Button Component
-function ShareButtons({ url, title }: { url: string; title: string }) {
-  const shareUrls = createBlogShareUrls({ url, title })
-  const handleCopy = () => {
-    navigator.clipboard.writeText(url)
-    alert('リンクをコピーしました')
-  }
-
-  return (
-    <div className="flex flex-wrap items-center justify-end gap-2">
-      <a
-        href={shareUrls.x}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="tent-icon-btn"
-        title="Xでシェア"
-        aria-label="Xでシェア"
-      >
-        <FaXTwitter className="w-4 h-4" aria-hidden="true" />
-      </a>
-      <a
-        href={shareUrls.threads}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="tent-icon-btn"
-        title="Threadsでシェア"
-        aria-label="Threadsでシェア"
-      >
-        <FaThreads className="w-4 h-4" aria-hidden="true" />
-      </a>
-      <a
-        href={shareUrls.linkedin}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="tent-icon-btn"
-        title="LinkedInでシェア"
-        aria-label="LinkedInでシェア"
-      >
-        <FaLinkedinIn className="w-4 h-4" aria-hidden="true" />
-      </a>
-      <a
-        href={shareUrls.instagram}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="tent-icon-btn"
-        title="投稿用テキストをコピーしてInstagramを開く"
-        aria-label="Instagramでシェア"
-        onClick={() => {
-          navigator.clipboard.writeText(createInstagramShareText({ url, title }))
-          alert('Instagram投稿用のタイトルとURLをコピーしました')
-        }}
-      >
-        <FaInstagram className="w-4 h-4" aria-hidden="true" />
-      </a>
-      <button
-        onClick={handleCopy}
-        className="tent-icon-btn"
-        title="リンクをコピー"
-        aria-label="リンクをコピー"
-      >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-        </svg>
-      </button>
-    </div>
-  )
-}
-
 // Like button (Supabase)
 function BlogLikeButton({ slug }: { slug: string }) {
   const [count, setCount] = useState<number | null>(null)
@@ -773,10 +705,10 @@ export default function BlogPostClient({
                 </address>
               )}
 
+              {/* シェアは記事末尾の 1 箇所に集約している */}
               <div className="flex flex-wrap items-center justify-end gap-3">
                 <BlogLikeButton slug={post.slug} />
                 <BlogFavorite postSlug={post.slug} />
-                <ShareButtons url={canonicalUrl} title={plainTitle} />
               </div>
             </div>
           </div>
@@ -961,7 +893,7 @@ export default function BlogPostClient({
                     <FaInstagram aria-hidden="true" />
                     <span className="text-sm font-medium">Instagram</span>
                   </a>
-                  
+
                   {/* Facebook */}
                   <a
                     href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(canonicalUrl)}`}
@@ -975,7 +907,7 @@ export default function BlogPostClient({
                     </svg>
                     <span className="text-sm font-medium">Facebook</span>
                   </a>
-                  
+
                   {/* Hatena Bookmark */}
                   <a
                     href={`https://b.hatena.ne.jp/add?mode=confirm&url=${encodeURIComponent(canonicalUrl)}&title=${encodeURIComponent(plainTitle)}`}

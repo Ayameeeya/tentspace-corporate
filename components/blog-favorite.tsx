@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { supabaseAuth } from "@/lib/supabase/client"
-import { Heart } from "lucide-react"
+import { Bookmark } from "lucide-react"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,7 +28,6 @@ interface Favorite {
 export function BlogFavorite({ postSlug }: BlogFavoriteProps) {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
-  const [favoriteCount, setFavoriteCount] = useState(0)
   const [isFavorited, setIsFavorited] = useState(false)
   const [showAuthDialog, setShowAuthDialog] = useState(false)
 
@@ -77,15 +76,7 @@ export function BlogFavorite({ postSlug }: BlogFavoriteProps) {
 
   const loadFavorites = async () => {
     try {
-      // Get total count
-      const { count } = await supabaseAuth
-        .from("favorites")
-        .select("*", { count: "exact", head: true })
-        .eq("post_slug", postSlug)
-
-      setFavoriteCount(count || 0)
-
-      // Check if current user favorited
+      // 保存件数は表示しない（いいねと役割を分けるため）。自分が保存済みかだけ見る
       if (user) {
         const { data } = await supabaseAuth
           .from("favorites")
@@ -125,7 +116,6 @@ export function BlogFavorite({ postSlug }: BlogFavoriteProps) {
 
       // Optimistic update
       setIsFavorited(!isFavorited)
-      setFavoriteCount((prev) => (isFavorited ? prev - 1 : prev + 1))
     } catch (error) {
       console.error("Error toggling favorite:", error)
     }
@@ -134,8 +124,8 @@ export function BlogFavorite({ postSlug }: BlogFavoriteProps) {
   if (loading) {
     return (
       <div className="tent-action-btn" style={{ opacity: 0.4 }}>
-        <Heart className="w-4 h-4" />
-        <span className="text-xs">お気に入り</span>
+        <Bookmark className="w-4 h-4" />
+        <span className="text-xs">保存</span>
       </div>
     )
   }
@@ -148,10 +138,8 @@ export function BlogFavorite({ postSlug }: BlogFavoriteProps) {
         data-active={isFavorited}
         aria-label={isFavorited ? "お気に入りから削除" : "お気に入りに追加"}
       >
-        <Heart className={`w-4 h-4 transition-all ${isFavorited ? "fill-current" : ""}`} />
-        <span className="text-xs">
-          {isFavorited ? `お気に入り済み (${favoriteCount})` : "お気に入り"}
-        </span>
+        <Bookmark className={`w-4 h-4 transition-all ${isFavorited ? "fill-current" : ""}`} />
+        <span className="text-xs">{isFavorited ? "保存済み" : "保存"}</span>
       </button>
 
       {/* Auth Dialog for non-logged-in users */}
