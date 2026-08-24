@@ -294,6 +294,13 @@
       "image": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Fsocialpreview%252FBJYuJLS829e7wvgPdf5m%252FGitBook%25201280x630.png%3Falt%3Dmedia%26token%3D535a1998-3467-4390-aef9-2f68fdbe688f&width=1200&height=630&sign=e0b43641&sv=2",
       "favicon": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Ficon%252Fv5uzPttcoF7tjbeDaGCu%252FFavicon.png%3Falt%3Dmedia%26token%3Dd8f83a90-d3fd-4858-bc5f-1d50f340cf79&width=48&height=48&sign=f18fb73f&sv=2"
     },
+    "https://help.openai.com/en/articles/9260256-chatgpt-capabilities-overview": {
+      "title": "ChatGPT Capabilities Overview | OpenAI Help Center",
+      "description": "Learn about ChatGPT's capabilities and features",
+      "domain": "help.openai.com",
+      "image": "https://help.openai.com/og-image.png",
+      "favicon": "https://help.openai.com/favicon.png"
+    },
     "https://n8n.io/pricing/": {
       "title": "n8n Plans and Pricing - n8n.io",
       "description": "Discover n8n's pricing alternatives for cost-effective workflow automation solutions. Find the perfect plan to maximize your workflows.",
