@@ -58,6 +58,19 @@ const source = "mdx"
     expect(html).toContain('<pre tabindex="0"><code>')
   })
 
+  it("本文の外部リンクだけを別タブで開く", async () => {
+    const html = await renderMdxToHtml(
+      "[内部記事](/blog/internal-link-guide) [公式資料](https://example.com/reference)",
+    )
+
+    expect(html).toContain(
+      '<a href="/blog/internal-link-guide">内部記事</a>',
+    )
+    expect(html).toContain(
+      '<a href="https://example.com/reference" target="_blank" rel="noopener noreferrer">公式資料</a>',
+    )
+  })
+
   it("埋め込みコンポーネントを安全なHTMLへ変換する", async () => {
     const html = await renderMdxToHtml(
       '<YouTube id="dQw4w9WgXcQ" title="動画サンプル" />',
@@ -272,6 +285,29 @@ const source = "mdx"
     }
   })
 
+  it("外部カードは指定タイトルをOGPタイトルより優先する", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "link-card-title-override-"))
+    const fetcher = vi.fn(async () =>
+      new Response(
+        '<meta property="og:title" content="取得したタイトル"><meta property="og:description" content="取得した説明">',
+        { status: 200, headers: { "content-type": "text/html" } },
+      ),
+    )
+
+    try {
+      const html = await renderMdxToHtml(
+        '<LinkCard url="https://example.com/reference" title="記事に合わせた公式資料" />',
+        { cachePath: path.join(root, "link-card-cache.json"), fetcher },
+      )
+
+      expect(html).toContain("記事に合わせた公式資料")
+      expect(html).not.toContain("取得したタイトル")
+      expect(html).toContain("取得した説明")
+    } finally {
+      await rm(root, { recursive: true, force: true })
+    }
+  })
+
   it("外部OGP取得結果を保存し2回目はキャッシュから描画する", async () => {
     const root = await mkdtemp(path.join(os.tmpdir(), "link-card-cache-"))
     const cachePath = path.join(root, "link-card-cache.json")
@@ -350,6 +386,38 @@ const source = "mdx"
       expect(html).toBe(
         '<a class="link-card-fallback" href="https://unavailable.example/reference" target="_blank" rel="noopener noreferrer">https://unavailable.example/reference</a>',
       )
+      expect(warn).toHaveBeenCalledWith(
+        expect.stringMatching(/LinkCard.*unavailable\.example/i),
+      )
+    } finally {
+      await rm(root, { recursive: true, force: true })
+    }
+  })
+
+  it("外部OGP取得失敗時も指定タイトルでカード表示を維持する", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "link-card-titled-fallback-"))
+    const warn = vi.fn()
+    const fetcher = vi.fn(async () => {
+      throw new Error("network unavailable")
+    })
+
+    try {
+      const html = await renderMdxToHtml(
+        '<LinkCard url="https://unavailable.example/reference" title="公式リファレンス" />',
+        {
+          cachePath: path.join(root, "link-card-cache.json"),
+          fetcher,
+          logger: { warn },
+        },
+      )
+
+      expect(html).toContain('class="link-card link-card--external"')
+      expect(html).toContain('href="https://unavailable.example/reference"')
+      expect(html).toContain('target="_blank"')
+      expect(html).toContain('rel="noopener noreferrer"')
+      expect(html).toContain("公式リファレンス")
+      expect(html).toContain("unavailable.example")
+      expect(html).not.toContain("link-card-fallback")
       expect(warn).toHaveBeenCalledWith(
         expect.stringMatching(/LinkCard.*unavailable\.example/i),
       )

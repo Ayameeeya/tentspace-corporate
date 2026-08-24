@@ -1,4 +1,355 @@
 {
   "version": 1,
-  "entries": {}
+  "entries": {
+    "https://ahrefs.com/webmaster-tools": {
+      "title": "Ahrefs Webmaster Tools: Free SEO Tools to Grow Your Site",
+      "description": "Free website analytics, technical insights, and SEO metrics – built to jumpstart your online growth.",
+      "domain": "ahrefs.com",
+      "image": "https://static.ahrefs.com/assets/img/og/webmaster-tools-og.jpg?v=2",
+      "favicon": "https://static.ahrefs.com/favicon.ico?v=2"
+    },
+    "https://blog.cloudflare.com/introducing-pay-per-crawl/": {
+      "title": "Introducing pay per crawl: Enabling content owners to charge AI crawlers for access",
+      "description": "Pay per crawl is a new feature to allow content creators to charge AI crawlers for access to their content.",
+      "domain": "blog.cloudflare.com",
+      "image": "https://blog.cloudflare.com/_emdash/api/media/file/01KW49AP3JQQT9ER19RCJR4AXC.png",
+      "favicon": "https://blog.cloudflare.com/favicon.svg"
+    },
+    "https://code.claude.com/docs/en/hooks": {
+      "title": "Hooks reference - Claude Code Docs",
+      "description": "Reference for Claude Code hook events, configuration schema, JSON input/output formats, exit codes, async hooks, HTTP hooks, prompt hooks, and MCP tool hooks.",
+      "domain": "code.claude.com",
+      "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DReference%26appearance%3Dsystem%26title%3DHooks%2Breference%26description%3DReference%2Bfor%2BClaude%2BCode%2Bhook%2Bevents%252C%2Bconfiguration%2Bschema%252C%2BJSON%2Binput%252Foutput%2Bformats%252C%2Bexit%2Bcodes%252C%2Basync%2Bhooks%252C%2BHTTP%2Bhooks%252C%2Bprompt%2Bhooks%252C%2Band%2BMCP%2Btool%2Bhooks.%26logoLight%3Dhttps%253A%252F%252Fmintcdn.com%252Fclaude-code%252Fc5r9_6tjPMzFdDDT%252Flogo%252Flight.svg%253Ffit%253Dmax%2526auto%253Dformat%2526n%253Dc5r9_6tjPMzFdDDT%2526q%253D85%2526s%253D78fd01ff4f4340295a4f66e2ea54903c%26logoDark%3Dhttps%253A%252F%252Fmintcdn.com%252Fclaude-code%252Fc5r9_6tjPMzFdDDT%252Flogo%252Fdark.svg%253Ffit%253Dmax%2526auto%253Dformat%2526n%253Dc5r9_6tjPMzFdDDT%2526q%253D85%2526s%253D1298a0c3b3a1da603b190d0de0e31712%26primaryColor%3D%25230E0E0E%26lightColor%3D%2523D4A27F%26backgroundLight%3D%2523FDFDF7%26backgroundDark%3D%252309090B&w=1200&q=100",
+      "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
+    },
+    "https://code.claude.com/docs/en/skills": {
+      "title": "Extend Claude with skills - Claude Code Docs",
+      "description": "Create, manage, and share skills to extend Claude's capabilities in Claude Code. Includes custom commands and bundled skills.",
+      "domain": "code.claude.com",
+      "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DSkills%26appearance%3Dsystem%26title%3DExtend%2BClaude%2Bwith%2Bskills%26description%3DCreate%252C%2Bmanage%252C%2Band%2Bshare%2Bskills%2Bto%2Bextend%2BClaude%2527s%2Bcapabilities%2Bin%2BClaude%2BCode.%2BIncludes%2Bcustom%2Bcommands%2Band%2Bbundled%2Bskills.%26logoLight%3Dhttps%253A%252F%252Fmintcdn.com%252Fclaude-code%252Fc5r9_6tjPMzFdDDT%252Flogo%252Flight.svg%253Ffit%253Dmax%2526auto%253Dformat%2526n%253Dc5r9_6tjPMzFdDDT%2526q%253D85%2526s%253D78fd01ff4f4340295a4f66e2ea54903c%26logoDark%3Dhttps%253A%252F%252Fmintcdn.com%252Fclaude-code%252Fc5r9_6tjPMzFdDDT%252Flogo%252Fdark.svg%253Ffit%253Dmax%2526auto%253Dformat%2526n%253Dc5r9_6tjPMzFdDDT%2526q%253D85%2526s%253D1298a0c3b3a1da603b190d0de0e31712%26primaryColor%3D%25230E0E0E%26lightColor%3D%2523D4A27F%26backgroundLight%3D%2523FDFDF7%26backgroundDark%3D%252309090B&w=1200&q=100",
+      "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
+    },
+    "https://code.claude.com/docs/en/sub-agents": {
+      "title": "Create custom subagents - Claude Code Docs",
+      "description": "Create and use specialized AI subagents in Claude Code for task-specific workflows and improved context management.",
+      "domain": "code.claude.com",
+      "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DAgents%2Band%2Bparallel%2Bwork%26appearance%3Dsystem%26title%3DCreate%2Bcustom%2Bsubagents%26description%3DCreate%2Band%2Buse%2Bspecialized%2BAI%2Bsubagents%2Bin%2BClaude%2BCode%2Bfor%2Btask-specific%2Bworkflows%2Band%2Bimproved%2Bcontext%2Bmanagement.%26logoLight%3Dhttps%253A%252F%252Fmintcdn.com%252Fclaude-code%252Fc5r9_6tjPMzFdDDT%252Flogo%252Flight.svg%253Ffit%253Dmax%2526auto%253Dformat%2526n%253Dc5r9_6tjPMzFdDDT%2526q%253D85%2526s%253D78fd01ff4f4340295a4f66e2ea54903c%26logoDark%3Dhttps%253A%252F%252Fmintcdn.com%252Fclaude-code%252Fc5r9_6tjPMzFdDDT%252Flogo%252Fdark.svg%253Ffit%253Dmax%2526auto%253Dformat%2526n%253Dc5r9_6tjPMzFdDDT%2526q%253D85%2526s%253D1298a0c3b3a1da603b190d0de0e31712%26primaryColor%3D%25230E0E0E%26lightColor%3D%2523D4A27F%26backgroundLight%3D%2523FDFDF7%26backgroundDark%3D%252309090B&w=1200&q=100",
+      "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
+    },
+    "https://developer.atlassian.com/cloud/trello/guides/rest-api/api-introduction/": {
+      "title": "API Introduction",
+      "description": "",
+      "domain": "developer.atlassian.com",
+      "favicon": "https://dac-static.atlassian.com/favicon.ico"
+    },
+    "https://developers.google.com/crawling/docs/crawl-budget": {
+      "title": "Crawl Budget Management | Google Crawling Infrastructure  |  Crawling infrastructure  |  Google for Developers",
+      "description": "Learn what crawl budget is and how you can optimize Google's crawling of large and frequently updated websites.",
+      "domain": "developers.google.com",
+      "image": "https://developers.google.com/static/crawling/images/crawling-infrastructure-social-card.jpg",
+      "favicon": "https://www.gstatic.com/devrel-devsite/prod/v8c5e9c8e09d4f0c961905721a95aa2027138cb55ec6e1fa60fd7aaa3726ca05f/developers/images/favicon-new.png"
+    },
+    "https://developers.google.com/crawling/docs/troubleshooting/http-status-codes": {
+      "title": "How HTTP Status Codes Affect Google's Crawlers | Google Crawling Infrastructure  |  Crawling infrastructure  |  Google for Developers",
+      "description": "See how different HTTP status codes can affect Google's crawlers.",
+      "domain": "developers.google.com",
+      "image": "https://developers.google.com/static/crawling/images/crawling-infrastructure-social-card.jpg",
+      "favicon": "https://www.gstatic.com/devrel-devsite/prod/v8c5e9c8e09d4f0c961905721a95aa2027138cb55ec6e1fa60fd7aaa3726ca05f/developers/images/favicon-new.png"
+    },
+    "https://developers.google.com/search/docs/appearance/core-web-vitals": {
+      "title": "Como entender o Core Web Vitals e os resultados da pesquisa do Google | Central da Pesquisa Google  |  Documentation  |  Google for Developers",
+      "description": "O Core Web Vitals é um conjunto de métricas que avaliam a experiência do usuário real. Saiba mais sobre a Pesquisa Google e o Core Web Vitals.",
+      "domain": "developers.google.com",
+      "image": "https://developers.google.com/static/search/images/home-social-share-lockup.jpg?hl=pt-br",
+      "favicon": "https://www.gstatic.com/devrel-devsite/prod/v8c5e9c8e09d4f0c961905721a95aa2027138cb55ec6e1fa60fd7aaa3726ca05f/developers/images/favicon-new.png"
+    },
+    "https://developers.google.com/search/docs/appearance/google-images": {
+      "title": "Image SEO Best Practices | Google Search Central  |  Documentation  |  Google for Developers",
+      "description": "Google Search helps users visually discover information on the web. Explore image SEO best practices such as image captions and badges.",
+      "domain": "developers.google.com",
+      "image": "https://developers.google.com/static/search/images/home-social-share-lockup.jpg",
+      "favicon": "https://www.gstatic.com/devrel-devsite/prod/v8c5e9c8e09d4f0c961905721a95aa2027138cb55ec6e1fa60fd7aaa3726ca05f/developers/images/favicon-new.png"
+    },
+    "https://developers.google.com/search/docs/appearance/ranking-systems-guide": {
+      "title": "A Guide to Google Search Ranking Systems | Google Search Central  |  Documentation  |  Google for Developers",
+      "description": "Explore some of Google Search's more notable ranking systems, including systems that are part of our core ranking systems, which are the underlying technologies that produce search results in response to queries.",
+      "domain": "developers.google.com",
+      "image": "https://developers.google.com/static/search/images/home-social-share-lockup.jpg",
+      "favicon": "https://www.gstatic.com/devrel-devsite/prod/v8c5e9c8e09d4f0c961905721a95aa2027138cb55ec6e1fa60fd7aaa3726ca05f/developers/images/favicon-new.png"
+    },
+    "https://developers.google.com/search/docs/appearance/snippet": {
+      "title": "How to Write Meta Descriptions | Google Search Central  |  Documentation  |  Google for Developers",
+      "description": "Learn how to write a quality meta description tag that may be displayed for your page in Google Search results by following these best practices.",
+      "domain": "developers.google.com",
+      "image": "https://developers.google.com/static/search/images/home-social-share-lockup.jpg",
+      "favicon": "https://www.gstatic.com/devrel-devsite/prod/v8c5e9c8e09d4f0c961905721a95aa2027138cb55ec6e1fa60fd7aaa3726ca05f/developers/images/favicon-new.png"
+    },
+    "https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data": {
+      "title": "Intro to How Structured Data Markup Works | Google Search Central  |  Documentation  |  Google for Developers",
+      "description": "Google uses structured data markup to understand content. Explore this guide to discover how structured data works, review formats, and learn where to place it on your site.",
+      "domain": "developers.google.com",
+      "image": "https://developers.google.com/static/search/images/home-social-share-lockup.jpg",
+      "favicon": "https://www.gstatic.com/devrel-devsite/prod/v8c5e9c8e09d4f0c961905721a95aa2027138cb55ec6e1fa60fd7aaa3726ca05f/developers/images/favicon-new.png"
+    },
+    "https://developers.google.com/search/docs/appearance/title-link": {
+      "title": "Influencing Title Links in Google Search | Google Search Central  |  Documentation  |  Google for Developers",
+      "description": "Learn how you can write an SEO-rich titles for your website pages and Google Search by following these best practices.",
+      "domain": "developers.google.com",
+      "image": "https://developers.google.com/static/search/images/home-social-share-lockup.jpg",
+      "favicon": "https://www.gstatic.com/devrel-devsite/prod/v8c5e9c8e09d4f0c961905721a95aa2027138cb55ec6e1fa60fd7aaa3726ca05f/developers/images/favicon-new.png"
+    },
+    "https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls": {
+      "title": "How to Specify a Canonical with rel=\"canonical\" and Other Methods | Google Search Central  |  Documentation  |  Google for Developers",
+      "description": "When a site has duplicate content, Google chooses the canonical URL. Learn more about canonical URLs and how to consolidate duplicate URLs.",
+      "domain": "developers.google.com",
+      "image": "https://developers.google.com/static/search/images/home-social-share-lockup.jpg",
+      "favicon": "https://www.gstatic.com/devrel-devsite/prod/v8c5e9c8e09d4f0c961905721a95aa2027138cb55ec6e1fa60fd7aaa3726ca05f/developers/images/favicon-new.png"
+    },
+    "https://developers.google.com/search/docs/crawling-indexing/links-crawlable": {
+      "title": "Praktik Terbaik Link SEO untuk Google | Pusat Google Penelusuran  |  Documentation  |  Google for Developers",
+      "description": "Google menggunakan link sebagai sinyal saat menentukan relevansi halaman dan untuk menemukan halaman baru yang akan di-crawl. Pelajari cara menjadikan link dapat di-crawl dan meningkatkan kualitas teks link.",
+      "domain": "developers.google.com",
+      "image": "https://developers.google.com/static/search/images/home-social-share-lockup.jpg?hl=id",
+      "favicon": "https://www.gstatic.com/devrel-devsite/prod/v8c5e9c8e09d4f0c961905721a95aa2027138cb55ec6e1fa60fd7aaa3726ca05f/developers/images/favicon-new.png"
+    },
+    "https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview": {
+      "title": "What Is a Sitemap | Google Search Central  |  Documentation  |  Google for Developers",
+      "description": "A sitemap provides information that helps Google more intelligently crawl your site. Discover how a sitemap works and determine if you need one.",
+      "domain": "developers.google.com",
+      "image": "https://developers.google.com/static/search/images/home-social-share-lockup.jpg",
+      "favicon": "https://www.gstatic.com/devrel-devsite/prod/v8c5e9c8e09d4f0c961905721a95aa2027138cb55ec6e1fa60fd7aaa3726ca05f/developers/images/favicon-new.png"
+    },
+    "https://developers.google.com/search/docs/crawling-indexing/url-structure": {
+      "title": "URL Structure Best Practices for Google Search | Google Search Central  |  Documentation  |  Google for Developers",
+      "description": "It's a good idea to keep your site's URL structure as simple as possible. Learn more about the URL format recommended by Google, such as the use of hyphens, underscores, and domain structure.",
+      "domain": "developers.google.com",
+      "image": "https://developers.google.com/static/search/images/home-social-share-lockup.jpg",
+      "favicon": "https://www.gstatic.com/devrel-devsite/prod/v8c5e9c8e09d4f0c961905721a95aa2027138cb55ec6e1fa60fd7aaa3726ca05f/developers/images/favicon-new.png"
+    },
+    "https://developers.google.com/search/docs/essentials": {
+      "title": "Google Search Essentials (formerly Webmaster Guidelines) | Google Search Central  |  Documentation  |  Google for Developers",
+      "description": "The Google Search Essentials make up the core parts of what makes your web-based content (web pages, images, videos, or other publicly-available material that Google finds on the web) eligible to appear and perform well on Google Search.",
+      "domain": "developers.google.com",
+      "image": "https://developers.google.com/static/search/images/home-social-share-lockup.jpg",
+      "favicon": "https://www.gstatic.com/devrel-devsite/prod/v8c5e9c8e09d4f0c961905721a95aa2027138cb55ec6e1fa60fd7aaa3726ca05f/developers/images/favicon-new.png"
+    },
+    "https://developers.google.com/search/docs/essentials/spam-policies#cloaking": {
+      "title": "Spam Policies for Google Web Search | Google Search Central  |  Documentation  |  Google for Developers",
+      "description": "The spam policies detail the behaviors and tactics that can lead to a page or an entire site being ranked lower or completely omitted from Google Search.",
+      "domain": "developers.google.com",
+      "image": "https://developers.google.com/static/search/images/home-social-share-lockup.jpg",
+      "favicon": "https://www.gstatic.com/devrel-devsite/prod/v8c5e9c8e09d4f0c961905721a95aa2027138cb55ec6e1fa60fd7aaa3726ca05f/developers/images/favicon-new.png"
+    },
+    "https://developers.google.com/search/docs/essentials/spam-policies#link-spam": {
+      "title": "นโยบายสแปมสำหรับ Google Web Search | Google Search Central  |  Documentation  |  Google for Developers",
+      "description": "นโยบายสแปมจะแสดงรายละเอียดพฤติกรรมและกลยุทธ์ที่อาจทำให้หน้าเว็บหรือทั้งเว็บไซต์อยู่ในอันดับที่ต่ำลงหรือไม่แสดงใน Google Search เลย",
+      "domain": "developers.google.com",
+      "image": "https://developers.google.com/static/search/images/home-social-share-lockup.jpg?hl=th",
+      "favicon": "https://www.gstatic.com/devrel-devsite/prod/v8c5e9c8e09d4f0c961905721a95aa2027138cb55ec6e1fa60fd7aaa3726ca05f/developers/images/favicon-new.png"
+    },
+    "https://developers.google.com/search/docs/fundamentals/creating-helpful-content": {
+      "title": "Creating Helpful, Reliable, People-First Content | Google Search Central  |  Documentation  |  Google for Developers",
+      "description": "Google's ranking systems are designed to present helpful, reliable information that's created to benefit people. Learn how to evaluate your own content with the self-assessment questions.",
+      "domain": "developers.google.com",
+      "image": "https://developers.google.com/static/search/images/home-social-share-lockup.jpg",
+      "favicon": "https://www.gstatic.com/devrel-devsite/prod/v8c5e9c8e09d4f0c961905721a95aa2027138cb55ec6e1fa60fd7aaa3726ca05f/developers/images/favicon-new.png"
+    },
+    "https://developers.google.com/search/docs/fundamentals/how-search-works": {
+      "title": "In-Depth Guide to How Google Search Works | Google Search Central  |  Documentation  |  Google for Developers",
+      "description": "Get an in-depth understanding of how Google Search works and improve your site for Google's crawling, indexing, and ranking processes.",
+      "domain": "developers.google.com",
+      "image": "https://developers.google.com/static/search/images/home-social-share-lockup.jpg",
+      "favicon": "https://www.gstatic.com/devrel-devsite/prod/v8c5e9c8e09d4f0c961905721a95aa2027138cb55ec6e1fa60fd7aaa3726ca05f/developers/images/favicon-new.png"
+    },
+    "https://developers.google.com/search/docs/fundamentals/seo-starter-guide": {
+      "title": "SEO Starter Guide: The Basics | Google Search Central  |  Documentation  |  Google for Developers",
+      "description": "A knowledge of basic SEO can have a noticeable impact. Explore the Google SEO starter guide for an overview of search engine optimization essentials.",
+      "domain": "developers.google.com",
+      "image": "https://developers.google.com/static/search/images/home-social-share-lockup.jpg",
+      "favicon": "https://www.gstatic.com/devrel-devsite/prod/v8c5e9c8e09d4f0c961905721a95aa2027138cb55ec6e1fa60fd7aaa3726ca05f/developers/images/favicon-new.png"
+    },
+    "https://docs.docker.com/get-started/": {
+      "title": "Get started",
+      "description": "Get started with Docker",
+      "domain": "docs.docker.com",
+      "image": "https://docs.docker.com/images/thumbnail.webp",
+      "favicon": "https://docs.docker.com/assets/images/favicon-32x32.png"
+    },
+    "https://docs.flutter.dev/app-architecture/guide": {
+      "title": "Guide to app architecture",
+      "description": "The recommended way to architect a Flutter app.",
+      "domain": "docs.flutter.dev",
+      "image": "https://docs.flutter.dev/assets/images/flutter-logo-sharing.png",
+      "favicon": "https://docs.flutter.dev/assets/images/branding/flutter/icon/64.png"
+    },
+    "https://docs.n8n.io/": {
+      "title": "n8n Docs",
+      "description": "",
+      "domain": "docs.n8n.io",
+      "image": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Fsocialpreview%252FBJYuJLS829e7wvgPdf5m%252FGitBook%25201280x630.png%3Falt%3Dmedia%26token%3D535a1998-3467-4390-aef9-2f68fdbe688f&width=1200&height=630&sign=e0b43641&sv=2",
+      "favicon": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Ficon%252Fv5uzPttcoF7tjbeDaGCu%252FFavicon.png%3Falt%3Dmedia%26token%3Dd8f83a90-d3fd-4858-bc5f-1d50f340cf79&width=48&height=48&sign=f18fb73f&sv=2"
+    },
+    "https://docs.n8n.io/build-your-first-workflow": {
+      "title": "Build your first workflow | n8n Docs",
+      "description": "Create your first workflow in n8n and learn some key concepts.",
+      "domain": "docs.n8n.io",
+      "image": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Fsocialpreview%252FBJYuJLS829e7wvgPdf5m%252FGitBook%25201280x630.png%3Falt%3Dmedia%26token%3D535a1998-3467-4390-aef9-2f68fdbe688f&width=1200&height=630&sign=e0b43641&sv=2",
+      "favicon": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Ficon%252Fv5uzPttcoF7tjbeDaGCu%252FFavicon.png%3Falt%3Dmedia%26token%3Dd8f83a90-d3fd-4858-bc5f-1d50f340cf79&width=48&height=48&sign=f18fb73f&sv=2"
+    },
+    "https://docs.n8n.io/build/integrate-ai": {
+      "title": "Integrate AI | Build | n8n Docs",
+      "description": "",
+      "domain": "docs.n8n.io",
+      "image": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Fsocialpreview%252FBJYuJLS829e7wvgPdf5m%252FGitBook%25201280x630.png%3Falt%3Dmedia%26token%3D535a1998-3467-4390-aef9-2f68fdbe688f&width=1200&height=630&sign=e0b43641&sv=2",
+      "favicon": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Ficon%252Fv5uzPttcoF7tjbeDaGCu%252FFavicon.png%3Falt%3Dmedia%26token%3Dd8f83a90-d3fd-4858-bc5f-1d50f340cf79&width=48&height=48&sign=f18fb73f&sv=2"
+    },
+    "https://docs.n8n.io/build/integrate-ai/understand-ai-components/retrieve-relevant-context": {
+      "title": "Retrieve relevant context | Build | n8n Docs",
+      "description": "With Retrieval-Augmented Generation (RAG), you can give your models access to context-specific resources to help generate relevant answers. Learn how it works and how to use RAG in n8n.",
+      "domain": "docs.n8n.io",
+      "image": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Fsocialpreview%252FBJYuJLS829e7wvgPdf5m%252FGitBook%25201280x630.png%3Falt%3Dmedia%26token%3D535a1998-3467-4390-aef9-2f68fdbe688f&width=1200&height=630&sign=e0b43641&sv=2",
+      "favicon": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Ficon%252Fv5uzPttcoF7tjbeDaGCu%252FFavicon.png%3Falt%3Dmedia%26token%3Dd8f83a90-d3fd-4858-bc5f-1d50f340cf79&width=48&height=48&sign=f18fb73f&sv=2"
+    },
+    "https://docs.n8n.io/build/ways-of-building-workflows/connect-to-n8n-mcp-server": {
+      "title": "Use n8n MCP server | Build | n8n Docs",
+      "description": "Understand what it means to build and run n8n workflows from MCP clients.",
+      "domain": "docs.n8n.io",
+      "image": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Fsocialpreview%252FBJYuJLS829e7wvgPdf5m%252FGitBook%25201280x630.png%3Falt%3Dmedia%26token%3D535a1998-3467-4390-aef9-2f68fdbe688f&width=1200&height=630&sign=e0b43641&sv=2",
+      "favicon": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Ficon%252Fv5uzPttcoF7tjbeDaGCu%252FFavicon.png%3Falt%3Dmedia%26token%3Dd8f83a90-d3fd-4858-bc5f-1d50f340cf79&width=48&height=48&sign=f18fb73f&sv=2"
+    },
+    "https://docs.n8n.io/deploy/host-n8n": {
+      "title": "Host n8n | Deploy | n8n Docs",
+      "description": "Access n8n hosting documentation and guides. Find comprehensive resources to help you set up and manage your self-hosted n8n instances.",
+      "domain": "docs.n8n.io",
+      "image": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Fsocialpreview%252FBJYuJLS829e7wvgPdf5m%252FGitBook%25201280x630.png%3Falt%3Dmedia%26token%3D535a1998-3467-4390-aef9-2f68fdbe688f&width=1200&height=630&sign=e0b43641&sv=2",
+      "favicon": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Ficon%252Fv5uzPttcoF7tjbeDaGCu%252FFavicon.png%3Falt%3Dmedia%26token%3Dd8f83a90-d3fd-4858-bc5f-1d50f340cf79&width=48&height=48&sign=f18fb73f&sv=2"
+    },
+    "https://docs.n8n.io/deploy/host-n8n/configure-n8n/choose-n8ns-database": {
+      "title": "Choose n8n's database | Deploy | n8n Docs",
+      "description": "",
+      "domain": "docs.n8n.io",
+      "image": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Fsocialpreview%252FBJYuJLS829e7wvgPdf5m%252FGitBook%25201280x630.png%3Falt%3Dmedia%26token%3D535a1998-3467-4390-aef9-2f68fdbe688f&width=1200&height=630&sign=e0b43641&sv=2",
+      "favicon": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Ficon%252Fv5uzPttcoF7tjbeDaGCu%252FFavicon.png%3Falt%3Dmedia%26token%3Dd8f83a90-d3fd-4858-bc5f-1d50f340cf79&width=48&height=48&sign=f18fb73f&sv=2"
+    },
+    "https://docs.n8n.io/deploy/host-n8n/install-options/install-with-docker": {
+      "title": "Install with Docker | Deploy | n8n Docs",
+      "description": "",
+      "domain": "docs.n8n.io",
+      "image": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Fsocialpreview%252FBJYuJLS829e7wvgPdf5m%252FGitBook%25201280x630.png%3Falt%3Dmedia%26token%3D535a1998-3467-4390-aef9-2f68fdbe688f&width=1200&height=630&sign=e0b43641&sv=2",
+      "favicon": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Ficon%252Fv5uzPttcoF7tjbeDaGCu%252FFavicon.png%3Falt%3Dmedia%26token%3Dd8f83a90-d3fd-4858-bc5f-1d50f340cf79&width=48&height=48&sign=f18fb73f&sv=2"
+    },
+    "https://docs.n8n.io/deploy/host-n8n/install-options/install-with-npm": {
+      "title": "Install with npm | Deploy | n8n Docs",
+      "description": "",
+      "domain": "docs.n8n.io",
+      "image": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Fsocialpreview%252FBJYuJLS829e7wvgPdf5m%252FGitBook%25201280x630.png%3Falt%3Dmedia%26token%3D535a1998-3467-4390-aef9-2f68fdbe688f&width=1200&height=630&sign=e0b43641&sv=2",
+      "favicon": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Ficon%252Fv5uzPttcoF7tjbeDaGCu%252FFavicon.png%3Falt%3Dmedia%26token%3Dd8f83a90-d3fd-4858-bc5f-1d50f340cf79&width=48&height=48&sign=f18fb73f&sv=2"
+    },
+    "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.gmail/": {
+      "title": "Gmail | Nodes | n8n Docs",
+      "description": "Learn how to use the Gmail node in n8n. Follow technical documentation to integrate Gmail node into your workflows.",
+      "domain": "docs.n8n.io",
+      "image": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Fsocialpreview%252FBJYuJLS829e7wvgPdf5m%252FGitBook%25201280x630.png%3Falt%3Dmedia%26token%3D535a1998-3467-4390-aef9-2f68fdbe688f&width=1200&height=630&sign=e0b43641&sv=2",
+      "favicon": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Ficon%252Fv5uzPttcoF7tjbeDaGCu%252FFavicon.png%3Falt%3Dmedia%26token%3Dd8f83a90-d3fd-4858-bc5f-1d50f340cf79&width=48&height=48&sign=f18fb73f&sv=2"
+    },
+    "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.googlesheets/": {
+      "title": "Google Sheets | Nodes | n8n Docs",
+      "description": "Documentation for the Google Sheets node in n8n, a workflow automation platform. Includes details of operations and configuration, and links to examples and credentials information.",
+      "domain": "docs.n8n.io",
+      "image": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Fsocialpreview%252FBJYuJLS829e7wvgPdf5m%252FGitBook%25201280x630.png%3Falt%3Dmedia%26token%3D535a1998-3467-4390-aef9-2f68fdbe688f&width=1200&height=630&sign=e0b43641&sv=2",
+      "favicon": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Ficon%252Fv5uzPttcoF7tjbeDaGCu%252FFavicon.png%3Falt%3Dmedia%26token%3Dd8f83a90-d3fd-4858-bc5f-1d50f340cf79&width=48&height=48&sign=f18fb73f&sv=2"
+    },
+    "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.slack/": {
+      "title": "Slack | Nodes | n8n Docs",
+      "description": "Learn how to use the Slack node in n8n. Follow technical documentation to integrate Slack node into your workflows.",
+      "domain": "docs.n8n.io",
+      "image": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Fsocialpreview%252FBJYuJLS829e7wvgPdf5m%252FGitBook%25201280x630.png%3Falt%3Dmedia%26token%3D535a1998-3467-4390-aef9-2f68fdbe688f&width=1200&height=630&sign=e0b43641&sv=2",
+      "favicon": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Ficon%252Fv5uzPttcoF7tjbeDaGCu%252FFavicon.png%3Falt%3Dmedia%26token%3Dd8f83a90-d3fd-4858-bc5f-1d50f340cf79&width=48&height=48&sign=f18fb73f&sv=2"
+    },
+    "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-langchain.anthropic/": {
+      "title": "Anthropic | Nodes | n8n Docs",
+      "description": "Learn how to use the Anthropic node in n8n. Follow technical documentation to integrate Anthropic node into your workflows.",
+      "domain": "docs.n8n.io",
+      "image": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Fsocialpreview%252FBJYuJLS829e7wvgPdf5m%252FGitBook%25201280x630.png%3Falt%3Dmedia%26token%3D535a1998-3467-4390-aef9-2f68fdbe688f&width=1200&height=630&sign=e0b43641&sv=2",
+      "favicon": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Ficon%252Fv5uzPttcoF7tjbeDaGCu%252FFavicon.png%3Falt%3Dmedia%26token%3Dd8f83a90-d3fd-4858-bc5f-1d50f340cf79&width=48&height=48&sign=f18fb73f&sv=2"
+    },
+    "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-langchain.openai/": {
+      "title": "OpenAI | Nodes | n8n Docs",
+      "description": "Learn how to use the OpenAI node in n8n. Follow technical documentation to integrate OpenAI node into your workflows.",
+      "domain": "docs.n8n.io",
+      "image": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Fsocialpreview%252FBJYuJLS829e7wvgPdf5m%252FGitBook%25201280x630.png%3Falt%3Dmedia%26token%3D535a1998-3467-4390-aef9-2f68fdbe688f&width=1200&height=630&sign=e0b43641&sv=2",
+      "favicon": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Ficon%252Fv5uzPttcoF7tjbeDaGCu%252FFavicon.png%3Falt%3Dmedia%26token%3Dd8f83a90-d3fd-4858-bc5f-1d50f340cf79&width=48&height=48&sign=f18fb73f&sv=2"
+    },
+    "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.webhook/": {
+      "title": "Webhook | Nodes | n8n Docs",
+      "description": "Learn how to use the Webhook node in n8n. Follow technical documentation to integrate Webhook node into your workflows.",
+      "domain": "docs.n8n.io",
+      "image": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Fsocialpreview%252FBJYuJLS829e7wvgPdf5m%252FGitBook%25201280x630.png%3Falt%3Dmedia%26token%3D535a1998-3467-4390-aef9-2f68fdbe688f&width=1200&height=630&sign=e0b43641&sv=2",
+      "favicon": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Ficon%252Fv5uzPttcoF7tjbeDaGCu%252FFavicon.png%3Falt%3Dmedia%26token%3Dd8f83a90-d3fd-4858-bc5f-1d50f340cf79&width=48&height=48&sign=f18fb73f&sv=2"
+    },
+    "https://docs.n8n.io/privacy-and-security/sustainable-use-license": {
+      "title": "Sustainable use license | Privacy and security | n8n Docs",
+      "description": "The n8n Sustainable Use License.",
+      "domain": "docs.n8n.io",
+      "image": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Fsocialpreview%252FBJYuJLS829e7wvgPdf5m%252FGitBook%25201280x630.png%3Falt%3Dmedia%26token%3D535a1998-3467-4390-aef9-2f68fdbe688f&width=1200&height=630&sign=e0b43641&sv=2",
+      "favicon": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Ficon%252Fv5uzPttcoF7tjbeDaGCu%252FFavicon.png%3Falt%3Dmedia%26token%3Dd8f83a90-d3fd-4858-bc5f-1d50f340cf79&width=48&height=48&sign=f18fb73f&sv=2"
+    },
+    "https://n8n.io/pricing/": {
+      "title": "n8n Plans and Pricing - n8n.io",
+      "description": "Discover n8n's pricing alternatives for cost-effective workflow automation solutions. Find the perfect plan to maximize your workflows.",
+      "domain": "n8n.io",
+      "image": "https://n8niostorageaccount.blob.core.windows.net/n8nio-strapi-blobs-stage/assets/og_image_website_3_afd66761a9.png",
+      "favicon": "https://n8n.io/favicon.ico"
+    },
+    "https://n8n.io/workflows/": {
+      "title": "Discover 11665  Automation Workflows from the n8n's Community",
+      "description": "Explore 11665  automated workflow templates from n8n's global community. Simplify your automation tasks with ready-made solutions tailored to your needs.",
+      "domain": "n8n.io",
+      "image": "https://n8niostorageaccount.blob.core.windows.net/n8nio-strapi-blobs-prod/assets/og_image_website_3_afd66761a9_4b5695cba2.png",
+      "favicon": "https://n8n.io/favicon.ico"
+    },
+    "https://plato.stanford.edu/entries/descartes/": {
+      "title": "René Descartes (Stanford Encyclopedia of Philosophy)",
+      "description": "",
+      "domain": "plato.stanford.edu",
+      "favicon": "https://plato.stanford.edu/favicon.ico"
+    },
+    "https://react.dev/blog/2025/12/03/critical-security-vulnerability-in-react-server-components": {
+      "title": "Critical Security Vulnerability in React Server Components – React",
+      "description": "The library for web and native user interfaces",
+      "domain": "react.dev",
+      "image": "https://react.dev/images/og/blog-2025-12-03-critical-security-vulnerability-in-react-server-components.png",
+      "favicon": "https://react.dev/favicon-32x32.png"
+    },
+    "https://search.google.com/search-console/about": {
+      "title": "Google Search Console",
+      "description": "",
+      "domain": "search.google.com",
+      "favicon": "https://www.gstatic.com/search-console/scfe/favicon.png"
+    },
+    "https://support.google.com/analytics/answer/10089681": {
+      "title": "Introducing the next generation of Analytics, Google Analytics - Analytics Help",
+      "description": "Explore Google Analytics, the next generation of Analytics which collects event-based data from both websites and appsGoogle Analytics is a new kind of property designed for the future of measurement:",
+      "domain": "support.google.com",
+      "favicon": "https://support.google.com/favicon.png"
+    },
+    "https://support.google.com/gemini/answer/14286560": {
+      "title": "Generate & edit images with Gemini Apps - Computer - Gemini Apps Help",
+      "description": "You can create captivating images in seconds with Nano Banana 2. From work, play, or anything in between, Gemini Apps can help you generate and refine images to help bring your imagination to life. Fo",
+      "domain": "support.google.com",
+      "favicon": "https://support.google.com/favicon.png"
+    },
+    "https://support.google.com/google-ads/answer/7337243": {
+      "title": "Use Keyword Planner - Google Ads Help",
+      "description": "Google Keyword Planner helps you research keywords for your Search campaigns. You can use the Google Keyword Planner tool to",
+      "domain": "support.google.com",
+      "favicon": "https://support.google.com/favicon.png"
+    },
+    "https://www.typescriptlang.org/docs/": {
+      "title": "The starting point for learning TypeScript",
+      "description": "Find TypeScript starter projects: from Angular to React or Node.js and CLIs.",
+      "domain": "www.typescriptlang.org",
+      "favicon": "https://www.typescriptlang.org/favicon-32x32.png?v=8944a05a8b601855de116c8a56d3b3ae"
+    }
+  }
 }

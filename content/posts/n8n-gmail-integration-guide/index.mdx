@@ -71,7 +71,7 @@ n8nからGmailを操作するには、Google Cloud PlatformでOAuth認証を設�
 
 **1\. プロジェクトの作成**
 
-1.  Google Cloud Console（[https://console.cloud.google.com）にアクセス](https://console.cloud.google.com）にアクセス)
+1.  [Google Cloud Console](https://console.cloud.google.com/)にアクセス
 2.  上部の「プロジェクトを選択」→「新しいプロジェクト」をクリック
 3.  プロジェクト名（例：n8n-gmail-automation）を入力して「作成」
 
@@ -86,7 +86,7 @@ n8nからGmailを操作するには、Google Cloud PlatformでOAuth認証を設�
 1.  「APIとサービス」→「OAuth同意画面」を選択
 2.  User Typeで「外部」を選択（G Suiteの場合は「内部」も可）
 3.  アプリ名、ユーザーサポートメール、デベロッパー連絡先を入力
-4.  スコープの追加で「[https://mail.google.com/」を選択](https://mail.google.com/」を選択)
+4.  スコープの追加で `https://mail.google.com/` を選択
 5.  テストユーザーに自分のGmailアドレスを追加
 
 **4\. OAuth クライアントIDの作成**
@@ -127,7 +127,7 @@ Gmailの操作に必要なスコープを適切に設定してください。
 
 -   **メール読み取り**：[https://www.googleapis.com/auth/gmail.readonly](https://www.googleapis.com/auth/gmail.readonly)
 -   **メール送信**：[https://www.googleapis.com/auth/gmail.send](https://www.googleapis.com/auth/gmail.send)
--   **フルアクセス**：[https://mail.google.com/（すべての操作が可能）](https://mail.google.com/（すべての操作が可能）)
+-   **フルアクセス**：`https://mail.google.com/`（すべての操作が可能）
 
 ## 基本ワークフロー：AI自動返信の構築
 
@@ -489,3 +489,9 @@ A. はい、Gmail Triggerの「Filters」→「Label Names or IDs」で特定ラ
 AIを活用したメール自動返信により、月間20時間以上の作業時間削減が可能です。返信品質の向上と一貫性も実現でき、本質的な業務に集中する時間を確保できます。
 
 まずは「下書き保存」の安全なワークフローから始めて、徐々に自動化の範囲を広げていきましょう。
+
+## 関連記事・公式資料
+
+<LinkCard slug="n8n-slack-integration-guide" />
+<LinkCard slug="n8n-google-sheets-integration-guide" />
+<LinkCard url="https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.gmail/" title="n8n公式：Gmailノード" />

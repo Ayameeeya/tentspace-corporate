@@ -49,6 +49,22 @@ function XEmbed({ url }: { url: string }) {
   )
 }
 
+function MdxLink({
+  href,
+  ...props
+}: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
+  const isExternal = typeof href === "string" && /^https?:\/\//i.test(href)
+  return (
+    <a
+      href={href}
+      {...props}
+      {...(isExternal
+        ? { target: "_blank", rel: "noopener noreferrer" }
+        : {})}
+    />
+  )
+}
+
 export interface RenderMdxOptions {
   publicDirectory?: string
   postsDirectory?: string
@@ -71,7 +87,13 @@ interface MdxNode {
 function getStaticLinkCardProps(node: MdxNode): LinkCardProps {
   const props: LinkCardProps = {}
   for (const attribute of node.attributes ?? []) {
-    if (attribute.name !== "slug" && attribute.name !== "url") continue
+    if (
+      attribute.name !== "slug" &&
+      attribute.name !== "url" &&
+      attribute.name !== "title"
+    ) {
+      continue
+    }
     if (typeof attribute.value !== "string") {
       throw new Error(
         `LinkCard ${attribute.name} must be a static string literal`,
@@ -215,6 +237,7 @@ export async function renderMdxToHtml(
   let html = renderToStaticMarkup(
     React.createElement(evaluated.default, {
       components: {
+        a: MdxLink,
         YouTube,
         XEmbed,
         Dialogue,

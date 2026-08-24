@@ -156,3 +156,8 @@ PreToolUseが安全の層だとすると、Stopに入れた `npm run check` は�
 エージェントの自動運用は、スキル（手順を教える）、critic（結果を審査する）、hooks（越えてはいけない線で止める）の3層で考えると整理できます。プロンプトは1層目と2層目までしか担えません。戻れない操作の手前には、モデルの判断を経由しない壁が1枚要ります。
 
 導入は今日からできます。自分のプロジェクトで「エージェントに絶対やられたくない操作」を3つ書き出し、`.claude/settings.json` にPreToolUseフックを1本、コマンド文字列を正規表現で見るスクリプトを1枚。まずはブロックせずstderrへ警告を書くだけの運用で数日走らせて、誤検知を潰してからexit 2に切り替えると安全です。ガードは、エージェントを信用しないための仕組みではなく、安心して仕事を任せる範囲を広げるための仕組みでした。
+
+## 関連記事・公式資料
+
+<LinkCard slug="react2shell-vulnerability-alert" />
+<LinkCard url="https://code.claude.com/docs/en/hooks" title="Claude Code公式：Hooks" />

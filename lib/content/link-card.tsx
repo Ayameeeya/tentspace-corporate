@@ -22,6 +22,7 @@ export interface LinkCardResolverOptions {
 export interface LinkCardProps {
   slug?: string
   url?: string
+  title?: string
 }
 
 interface LinkCardMetadata {
@@ -168,15 +169,23 @@ async function persistCacheEntry(
   }
 }
 
-function validateProps({ slug, url }: LinkCardProps) {
+function validateProps({ slug, url, title }: LinkCardProps) {
   if ((slug && url) || (!slug && !url)) {
     throw new Error('LinkCard requires exactly one of "slug" or "url"')
+  }
+  if (slug && title) {
+    throw new Error('LinkCard "title" can only be used with "url"')
+  }
+  if (title !== undefined && !title.trim()) {
+    throw new Error('LinkCard "title" must not be empty')
   }
 }
 
 export function getLinkCardKey(props: LinkCardProps): string {
   validateProps(props)
-  return props.slug ? `slug:${props.slug}` : `url:${props.url}`
+  return props.slug
+    ? `slug:${props.slug}`
+    : `url:${props.url}:title:${props.title ?? ""}`
 }
 
 async function resolveInternalCard(
@@ -259,6 +268,7 @@ async function fetchExternalCard(
 async function resolveExternalCard(
   rawUrl: string,
   options: LinkCardResolverOptions,
+  displayTitle?: string,
 ): Promise<ResolvedLinkCard> {
   let url: URL
   try {
@@ -276,7 +286,7 @@ async function resolveExternalCard(
     return {
       kind: "external",
       href: normalizedUrl,
-      title: cached.title,
+      title: displayTitle ?? cached.title,
       description:
         typeof cached.description === "string" ? cached.description : "",
       domain:
@@ -298,13 +308,22 @@ async function resolveExternalCard(
     const card = await fetchExternalCard(url, options)
     const { kind: _kind, href: _href, ...cacheEntry } = card
     await persistCacheEntry(options.cachePath, normalizedUrl, cacheEntry)
-    return card
+    return displayTitle ? { ...card, title: displayTitle } : card
   } catch (error) {
     const reason = error instanceof Error ? error.message : String(error)
+    const fallbackType = displayTitle ? "a titled card" : "a text link"
     options.logger.warn(
-      `[LinkCard] Could not fetch OGP for ${normalizedUrl}; using a text link (${reason})`,
+      `[LinkCard] Could not fetch OGP for ${normalizedUrl}; using ${fallbackType} (${reason})`,
     )
-    return { kind: "fallback", href: normalizedUrl }
+    return displayTitle
+      ? {
+          kind: "external",
+          href: normalizedUrl,
+          title: displayTitle,
+          description: "",
+          domain: url.hostname,
+        }
+      : { kind: "fallback", href: normalizedUrl }
   }
 }
 
@@ -315,7 +334,7 @@ export async function resolveLinkCard(
   validateProps(props)
   return props.slug
     ? resolveInternalCard(props.slug, options.postsDirectory)
-    : resolveExternalCard(props.url as string, options)
+    : resolveExternalCard(props.url as string, options, props.title)
 }
 
 export function createLinkCardComponent(cards: Map<string, ResolvedLinkCard>) {
