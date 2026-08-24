@@ -273,12 +273,13 @@ function BlogLikeButton({ slug }: { slug: string }) {
         className="tent-action-btn"
         data-active={hasLiked}
         aria-pressed={hasLiked}
+        title={hasLiked ? 'いいね済み' : 'いいね'}
+        aria-label={hasLiked ? 'いいね済み' : 'いいね'}
       >
-        <svg className="w-4 h-4" viewBox="0 0 24 24" fill={hasLiked ? 'currentColor' : 'none'} stroke="currentColor">
+        <svg className="w-4 h-4" viewBox="0 0 24 24" fill={hasLiked ? 'currentColor' : 'none'} stroke="currentColor" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 21s-6.75-4.35-6.75-9.75A4.25 4.25 0 0112 7.25a4.25 4.25 0 016.75 4c0 5.4-6.75 9.75-6.75 9.75z" />
         </svg>
         <span className="font-medium">{count ?? '–'}</span>
-        <span className="text-xs">{hasLiked ? 'ありがとう！' : 'いいね'}</span>
       </button>
       {error && <span className="text-xs text-red-500">{error}</span>}
     </div>
