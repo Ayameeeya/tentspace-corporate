@@ -282,26 +282,27 @@ export function BranchGraph() {
         const wide = window.matchMedia("(min-width: 768px)").matches
         // 幹の描き始め。合流があるときはそこまで上へ伸びる
         let trunkTop = bandTop
+        // 合流点と、design の行の延長線（ext）が引き終わる reveal 位置
+        let mergeAt: number | null = null
+        let extDone: number | null = null
         if (lastSlot && lastInner && lastProg && lastBar && wide) {
           const mirror = lastInner.clientWidth - lastProg.offsetWidth - 2 * lastProg.offsetLeft
           const laneX = lastInner.offsetLeft + lastBar.offsetLeft + mirror + 0.5
           const laneBottom = docY(lastSlot) + lastBar.offsetTop + lastBar.offsetHeight + vh * 0.9 * 0.7
-          // 一呼吸（56px）置いてから sway で main に合流する。合流点から
-          // 分岐帯までは main が長めに直走し（幹の上部だけ伸ばす）、
-          // 分岐帯そのものは従来どおり見出し基準の位置に保つ
-          const mergeStart = laneBottom + 56
-          const mergeSway = swaySpan(laneX, xHow)
-          const mergePoint = mergeStart + mergeSway
-          segs.push({
-            d: `M ${laneX} ${mergeStart}` + sway(laneX, xHow, mergeStart),
-            top: mergeStart,
-            bottom: mergePoint,
-          })
+          // 合流の線そのものは design の行が自分のミニグラフとして
+          //（コミットの下に伸びるバーの延長 = DifferentSection の ext）描く。
+          // こちらは同じ式（緩やかな S 字: clamp(|dx| * 0.7, 280, 460)）で
+          // 合流点を割り出し、マージのコミットと幹の起点だけを合わせる
+          const mergePoint = laneBottom + Math.min(460, Math.max(280, Math.abs(xHow - laneX) * 0.7))
           dots.push({ x: xHow, y: mergePoint, label: "merge different" })
           // 合流される側の main は、合流点より上から先に張っておく
           //（着地したカードの下端すぐ下から。カードとは重ねない）
           trunkTop = laneBottom + 16
           bandTop = Math.max(mergePoint + 24, bandBottom - 520)
+          mergeAt = mergePoint
+          // ext は行のスクラブ終了（trigger: start "top 32%" + 0.9vh）で
+          // 引き終わる。そのときの reveal 線 = slotTop + 0.58vh + 0.72vh
+          extDone = docY(lastSlot) + vh * 1.3
         }
         const splitTop = bandTop + 48
         const splitGap = Math.max(36, Math.min(56, (bandBottom - splitTop) * 0.12))
@@ -333,11 +334,26 @@ export function BranchGraph() {
         // 再開）。works ノードはこの先端 = セクションに入る直前に置く
         const trunkTail = lastSplit + 96
         worksNodeRange = [trunkTail - 48, trunkTail]
-        segs.push({
-          d: `M ${xHow} ${trunkTop} L ${xHow} ${trunkTail}`,
-          top: trunkTop,
-          bottom: trunkTail,
-        })
+        if (mergeAt !== null && extDone !== null) {
+          // 合流点までの上部 main は、ext が降りてくるのと並走して先に
+          // 引き終える（reveal 窓を前倒し）— マージの瞬間、main は既にそこにある
+          segs.push({
+            d: `M ${xHow} ${trunkTop} L ${xHow} ${mergeAt + 32}`,
+            top: extDone - 400,
+            bottom: extDone - 60,
+          })
+          segs.push({
+            d: `M ${xHow} ${mergeAt + 32} L ${xHow} ${trunkTail}`,
+            top: mergeAt + 32,
+            bottom: trunkTail,
+          })
+        } else {
+          segs.push({
+            d: `M ${xHow} ${trunkTop} L ${xHow} ${trunkTail}`,
+            top: trunkTop,
+            bottom: trunkTail,
+          })
+        }
       }
 
       // 本文テキストの矩形: 線はこの領域では描かない（マスクで抜く）
