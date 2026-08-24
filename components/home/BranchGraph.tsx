@@ -14,7 +14,7 @@ const NODE_STOPS = [
 ]
 
 type Node = { id: string; label: string; x: number; y: number; merge?: boolean }
-type Dot = { x: number; y: number; label?: string }
+type Dot = { x: number; y: number; label?: string; strong?: boolean }
 type Seg = { d: string; top: number; bottom: number; dim?: boolean }
 type Rect = { x: number; y: number; w: number; h: number }
 
@@ -248,12 +248,13 @@ export function BranchGraph() {
       // 分岐・合流点のコミット。git graph では枝が分かれる・戻る点も
       // 必ずコミットなので四角を置き、何が起きたかのフレーバーテキスト
       // （checkout -b … / merge …）を添える。リンクは持たない
+      // system / services を切るコミットは、ナビノードのラベルと同じ濃さ
       const dots: Dot[] = [
         { x: xHow, y: branchY, label: "checkout -b the-shift" },
-        { x: xVision, y: sysSplitY, label: "checkout -b system" },
+        { x: xVision, y: sysSplitY, label: "checkout -b system", strong: true },
         { x: xVision, y: sysMergeY, label: "merge system" },
         { x: xHow, y: howJogY, label: "merge the-shift" },
-        { x: xHow, y: svcBranchY, label: "checkout -b services" },
+        { x: xHow, y: svcBranchY, label: "checkout -b services", strong: true },
       ]
 
       // works の手前: main から 3 本のブランチが拡散して画面外へ出て行く。
@@ -266,8 +267,42 @@ export function BranchGraph() {
       // works ノードの居場所 = 幹の直線区間（最初の分岐より上）
       let worksNodeRange: [number, number] | null = null
       if (worksSec && worksHead) {
-        const bandBottom = docY(worksHead) - 24
-        const bandTop = Math.max(docY(worksSec) + 24, bandBottom - 520)
+        // 見出しとの間はしっかり空ける — 線が文字に迫ると窮屈に見える
+        const bandBottom = docY(worksHead) - 120
+        let bandTop = Math.max(docY(worksSec) + 24, bandBottom - 520)
+        // different の最後の行のレーン（コミットを終えて着地したバー）を
+        // main へ合流させてから拡散帯に入る。着地位置は疑似ピンの移動量
+        //（0.9vh × 0.7）とミラー幅を DifferentSection と同じ式で再計算する
+        const lastSlot = Array.from(
+          document.querySelectorAll<HTMLElement>("#different .tent-diff__slot"),
+        ).pop()
+        const lastInner = lastSlot?.querySelector<HTMLElement>(".tent-diff__item")
+        const lastProg = lastSlot?.querySelector<HTMLElement>(".tent-diff__progress")
+        const lastBar = lastSlot?.querySelector<HTMLElement>(".tent-diff__bar")
+        const wide = window.matchMedia("(min-width: 768px)").matches
+        // 幹の描き始め。合流があるときはそこまで上へ伸びる
+        let trunkTop = bandTop
+        if (lastSlot && lastInner && lastProg && lastBar && wide) {
+          const mirror = lastInner.clientWidth - lastProg.offsetWidth - 2 * lastProg.offsetLeft
+          const laneX = lastInner.offsetLeft + lastBar.offsetLeft + mirror + 0.5
+          const laneBottom = docY(lastSlot) + lastBar.offsetTop + lastBar.offsetHeight + vh * 0.9 * 0.7
+          // 一呼吸（56px）置いてから sway で main に合流する。合流点から
+          // 分岐帯までは main が長めに直走し（幹の上部だけ伸ばす）、
+          // 分岐帯そのものは従来どおり見出し基準の位置に保つ
+          const mergeStart = laneBottom + 56
+          const mergeSway = swaySpan(laneX, xHow)
+          const mergePoint = mergeStart + mergeSway
+          segs.push({
+            d: `M ${laneX} ${mergeStart}` + sway(laneX, xHow, mergeStart),
+            top: mergeStart,
+            bottom: mergePoint,
+          })
+          dots.push({ x: xHow, y: mergePoint, label: "merge different" })
+          // 合流される側の main は、合流点より上から先に張っておく
+          //（着地したカードの下端すぐ下から。カードとは重ねない）
+          trunkTop = laneBottom + 16
+          bandTop = Math.max(mergePoint + 24, bandBottom - 520)
+        }
         const splitTop = bandTop + 48
         const splitGap = Math.max(36, Math.min(56, (bandBottom - splitTop) * 0.12))
         // ブランチ名は実績を匿名化した work-a/b/c（実名は出さない）
@@ -299,8 +334,8 @@ export function BranchGraph() {
         const trunkTail = lastSplit + 96
         worksNodeRange = [trunkTail - 48, trunkTail]
         segs.push({
-          d: `M ${xHow} ${bandTop} L ${xHow} ${trunkTail}`,
-          top: bandTop,
+          d: `M ${xHow} ${trunkTop} L ${xHow} ${trunkTail}`,
+          top: trunkTop,
           bottom: trunkTail,
         })
       }
@@ -312,6 +347,11 @@ export function BranchGraph() {
           "main h1, main h2, main h3, main p, main .tent-works__tags, main .main-btn, main .tent-win, main .tent-works__shot, main .tent-stack-band, .tent-footer p, .tent-footer a, .tent-footer nav, .tent-footer__legals",
         )
         .forEach((el) => {
+          // different の行内テキストは除外する。行は疑似ピンで 63vh 移動する
+          // ため、リフレッシュのタイミング次第で矩形が移動後の位置を拾い、
+          // design のコミット後に main へ降りる合流線を誤って抜いてしまう。
+          // 行の周囲（移動前・移動後とも）に他の線は通らないのでマスク不要
+          if (el.closest(".tent-diff__item")) return
           const r = el.getBoundingClientRect()
           if (r.width < 8 || r.height < 8) return
           textRects.push({ x: r.left, y: r.top + window.scrollY, w: r.width, h: r.height })
@@ -471,7 +511,7 @@ export function BranchGraph() {
         {layout.dots.map((d, i) => (
           <span
             key={i}
-            className="tent-branch__dot"
+            className={d.strong ? "tent-branch__dot tent-branch__dot--strong" : "tent-branch__dot"}
             style={{ left: d.x, top: d.y }}
             data-node-y={d.y}
             aria-hidden="true"
