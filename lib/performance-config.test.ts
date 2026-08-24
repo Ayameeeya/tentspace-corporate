@@ -49,17 +49,15 @@ describe("performance configuration", () => {
     expect(analytics).not.toContain("dataLayer.push(args)")
   })
 
-  it("全ページのheadでAdSenseのサイト所有権確認コードを読み込む", async () => {
+  it("AdSenseのサイト所有権確認は広告スクリプトを使わずメタタグで行う", async () => {
     const layout = await read("app/layout.tsx")
     const head = layout.match(/<head>([\s\S]*?)<\/head>/)?.[1] ?? ""
-    const adsenseScripts = head.match(/<script[\s\S]*?adsbygoogle\.js[\s\S]*?\/>/g) ?? []
 
-    expect(adsenseScripts).toHaveLength(1)
-    expect(adsenseScripts[0]).toContain("async")
-    expect(adsenseScripts[0]).toContain(
-      "client=ca-pub-1533933816704006",
+    expect(head).toContain(
+      '<meta name="google-adsense-account" content="ca-pub-1533933816704006" />',
     )
-    expect(adsenseScripts[0]).toContain('crossOrigin="anonymous"')
+    expect(head).not.toContain("pagead2.googlesyndication.com")
+    expect(head).not.toContain("adsbygoogle.js")
   })
 
   it("無効なVercel Analyticsのスクリプトを配信しない", async () => {
