@@ -2,7 +2,7 @@
 
 import { useEffect, useLayoutEffect, useState, useCallback, useRef, useMemo } from "react"
 import Link from "next/link"
-import Image from "next/image"
+import { MasonryThumb } from "@/components/masonry-thumb"
 // import Masonry from 'react-masonry-css' // Replaced with custom masonry
 import { TentBlogNav } from "@/components/home/TentBlogNav"
 import { TentFooterStandalone } from "@/components/home/TentFooterStandalone"
@@ -45,7 +45,7 @@ function getContentVariant(index: number): 'title-only' | 'with-excerpt' | 'full
 }
 
 // Masonry Blog Card
-function MasonryBlogCard({ post, likes = 0, index = 0, isMobile = false }: { post: BlogPost; likes?: number; index?: number; isMobile?: boolean }) {
+function MasonryBlogCard({ post, index = 0, isMobile = false }: { post: BlogPost; likes?: number; index?: number; isMobile?: boolean }) {
   const imageUrl = getFeaturedImageUrl(post)
   const excerpt = stripHtml(post.description)
   const readingTime = post.readingTime
@@ -54,12 +54,14 @@ function MasonryBlogCard({ post, likes = 0, index = 0, isMobile = false }: { pos
   const variant = getCardVariant(index, isMobile)
   const contentVariant = getContentVariant(index)
 
-  // Wide uses actual thumbnail, Tall/Square use dummy images (random based on post ID and index)
-  const finalImageUrl = variant === 'wide' && imageUrl ? imageUrl : getPlaceholderImage(post.id, index)
+  // 実サムネイルがあれば全バリアントで使う（縦長/正方形は MasonryThumb が
+  // blur-fill で収める）。ない記事だけストックフォトにフォールバック
+  const finalImageUrl = imageUrl ?? getPlaceholderImage(post.id, index)
   const finalVariant = variant
 
   const aspectRatios = {
-    tall: 'aspect-[3/4]',
+    // tall は square(4/5) より高さを保ちつつ控えめに（3/4 だと高すぎた）
+    tall: 'aspect-[10/13]',
     wide: 'aspect-[16/9]',
     square: 'aspect-[4/5]'
   }
@@ -73,11 +75,11 @@ function MasonryBlogCard({ post, likes = 0, index = 0, isMobile = false }: { pos
             <div className="absolute inset-0" style={{
               clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 24px), 75% calc(100% - 24px), 70% 100%, 0 100%)'
             }}>
-              <Image
+              <MasonryThumb
                 src={finalImageUrl}
                 alt={post.title}
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-700"
+                isRealThumb={Boolean(imageUrl)}
+                variant={finalVariant}
               />
             </div>
 
@@ -87,6 +89,7 @@ function MasonryBlogCard({ post, likes = 0, index = 0, isMobile = false }: { pos
                 {categories.map((category) => (
                   <GlassSurface
                     key={category.id}
+                    idSeed={`category-${post.id}-${category.id}`}
                     width="auto"
                     height={24}
                     borderRadius={12}
@@ -238,7 +241,7 @@ export function CategoryPageClient({
         const slugs = posts.map((p) => p.slug)
         const counts = await fetchLikeCounts(slugs)
         setLikeCounts(prev => ({ ...prev, ...counts }))
-      } catch (err) {
+      } catch {
         // Silently fail - likes are optional feature
         console.warn("Could not load like counts")
       }
@@ -308,7 +311,7 @@ export function CategoryPageClient({
 
   const estimateHeight = useCallback((index: number, isMobileLayout: boolean) => {
     const variant = getCardVariant(index, isMobileLayout)
-    const aspect = { tall: 4 / 3, wide: 9 / 16, square: 5 / 4 }[variant]
+    const aspect = { tall: 13 / 10, wide: 9 / 16, square: 5 / 4 }[variant]
     const content = getContentVariant(index)
     const text = { "title-only": 0.42, "with-excerpt": 0.6, full: 0.82 }[content]
     return aspect + text
@@ -331,6 +334,8 @@ export function CategoryPageClient({
       // single column: drop any multi-column assignment so columnPosts
       // falls back to the simple 1-column distribution
       assignRef.current = { count: 0, cols: 0, firstId: null, columns: [] }
+      // DOM 計測前提のメイソンリー振り分けで、計測結果を state に反映する正当な用途
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setColumnAssign((prev) => (prev.length > 0 ? [] : prev))
       return
     }
@@ -375,7 +380,7 @@ export function CategoryPageClient({
       <TentBlogNav ticker />
 
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/30 to-background" />
+        <div className="absolute inset-0 bg-linear-to-b from-background via-muted/30 to-background" />
       </div>
 
       <main id="main-content" className="pt-[calc(var(--blog-nav-h,128px)+1.5rem)] relative z-10">
@@ -490,7 +495,7 @@ export function CategoryPageClient({
               {!hasMore && posts.length > 0 && (
                 <div className="mt-12 flex flex-col items-center gap-4">
                   <EyeLoader variant="end" />
-                  <p className="text-xs md:text-sm text-muted-foreground font-pixel">That's all for now!</p>
+                  <p className="text-xs md:text-sm text-muted-foreground font-pixel">That&apos;s all for now!</p>
                 </div>
               )}
             </>
