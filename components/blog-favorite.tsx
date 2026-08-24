@@ -123,8 +123,8 @@ export function BlogFavorite({ postSlug }: BlogFavoriteProps) {
 
   if (loading) {
     return (
-      <div className="tent-action-btn" style={{ opacity: 0.4 }} aria-hidden="true">
-        <Bookmark className="w-4 h-4" />
+      <div className="tent-ghost-btn" style={{ opacity: 0.4 }} aria-hidden="true">
+        <Bookmark strokeWidth={1.5} />
       </div>
     )
   }
@@ -133,12 +133,12 @@ export function BlogFavorite({ postSlug }: BlogFavoriteProps) {
     <>
       <button
         onClick={handleToggleFavorite}
-        className="tent-action-btn"
+        className="tent-ghost-btn"
         data-active={isFavorited}
         title={isFavorited ? "保存済み" : "保存"}
         aria-label={isFavorited ? "お気に入りから削除" : "お気に入りに追加"}
       >
-        <Bookmark className={`w-4 h-4 transition-all ${isFavorited ? "fill-current" : ""}`} aria-hidden="true" />
+        <Bookmark strokeWidth={1.5} className={isFavorited ? "fill-current" : ""} aria-hidden="true" />
       </button>
 
       {/* Auth Dialog for non-logged-in users */}

@@ -1174,6 +1174,26 @@ select.tent-field:invalid { color: color-mix(in srgb, var(--m-ink), transparent 
 .tent-icon-btn:hover { background: #000; color: #fff; }
 .tent-icon-btn svg { width: 1rem; height: 1rem; }
 
+/* 枠なしのアクションアイコン（記事のいいね・保存・シェア）。
+   note 風に線を持たず、状態はインクとインディゴの色だけで示す */
+.tent-ghost-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.2rem;
+  border: 0;
+  background: transparent;
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 0.875rem;
+  line-height: 1;
+  cursor: crosshair;
+  transition: color 0.3s cubic-bezier(0.625, 0.05, 0, 1);
+}
+.tent-ghost-btn:hover { color: #000; }
+.tent-ghost-btn[data-active="true"] { color: var(--m-indigo, #0f00b0); }
+.tent-ghost-btn:disabled { pointer-events: none; }
+.tent-ghost-btn svg { width: 1.375rem; height: 1.375rem; }
+
 /* ---------- logo loop band ---------- */
 .tent-stack-band { padding: 4em 0; border-top: 1px solid var(--m-border); }
 
