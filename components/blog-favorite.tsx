@@ -144,23 +144,28 @@ export function BlogFavorite({ postSlug }: BlogFavoriteProps) {
 
       {/* Auth Dialog for non-logged-in users */}
       <AlertDialog open={showAuthDialog} onOpenChange={setShowAuthDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>お気に入り機能を試しませんか？</AlertDialogTitle>
-            <AlertDialogDescription>
-              お気に入り機能を使うには、ログインが必要です。
-              ログインすると、お気に入りの記事を保存して後で簡単にアクセスできます。
+        {/* ポータルで .tent-page の外に出るため、tent の色は直値で指定する */}
+        <AlertDialogContent className="gap-6 rounded-none border border-black bg-white p-7 shadow-none">
+          <AlertDialogHeader className="gap-3">
+            <span className="text-[11px] tracking-widest text-black/45">save</span>
+            <AlertDialogTitle className="jp-heading text-lg leading-normal text-black">
+              保存にはログインが必要です
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-sm leading-[1.9] text-black/60">
+              ログインすると、気になる記事を保存して、あとから読み返せます。
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>キャンセル</AlertDialogCancel>
+          <AlertDialogFooter className="gap-2">
+            <AlertDialogCancel className="cursor-crosshair rounded-none border border-black bg-white text-black shadow-none hover:bg-black hover:text-white">
+              キャンセル
+            </AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 setShowAuthDialog(false)
                 // Trigger auth modal
                 window.dispatchEvent(new CustomEvent("open-auth-modal"))
               }}
-              className="bg-blue-600 hover:bg-blue-700"
+              className="cursor-crosshair rounded-none border border-black bg-black font-semibold text-white shadow-none hover:bg-[#0f00b0] hover:border-[#0f00b0]"
             >
               ログインする
             </AlertDialogAction>
