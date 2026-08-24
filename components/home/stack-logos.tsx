@@ -25,7 +25,6 @@ import {
   SiBluetooth,
   SiThreedotjs,
 } from "react-icons/si"
-import { FaJava } from "react-icons/fa"
 
 /** n8n is absent from react-icons — inline its mark, sized like the other icons. */
 function N8nIcon() {
@@ -49,7 +48,7 @@ function N8nIcon() {
 
 /**
  * Curated on two axes: high-demand technologies, plus scarce-supply skills
- * (Java legacy work, Three.js, BLE) that few small studios can take on.
+ * (Three.js, BLE) that few small studios can take on.
  * The full capability range is described in the about page's coverage/services.
  */
 export const STACK_LOGOS = [
@@ -66,7 +65,6 @@ export const STACK_LOGOS = [
   { node: <SiPhp />, title: "PHP" },
   { node: <SiLaravel />, title: "Laravel" },
   { node: <SiRuby />, title: "Ruby on Rails" },
-  { node: <FaJava />, title: "Java" },
   { node: <SiPostgresql />, title: "PostgreSQL" },
   { node: <SiMysql />, title: "MySQL" },
   { node: <SiAmazonwebservices />, title: "AWS" },
