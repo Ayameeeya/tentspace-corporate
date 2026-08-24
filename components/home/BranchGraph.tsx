@@ -13,6 +13,7 @@ const NODE_STOPS = [
 ]
 
 type Node = { id: string; label: string; x: number; y: number; merge?: boolean }
+type Dot = { x: number; y: number }
 type Seg = { d: string; top: number; bottom: number; dim?: boolean }
 type Rect = { x: number; y: number; w: number; h: number }
 
@@ -52,6 +53,7 @@ export function BranchGraph() {
     height: number
     segs: Seg[]
     nodes: Node[]
+    dots: Dot[]
     textRects: Rect[]
   } | null>(null)
 
@@ -288,7 +290,16 @@ export function BranchGraph() {
       }
       nodes.push({ id: "__merge", label: "(HEAD -> main)", x: xMerge, y: mergeY, merge: true })
 
-      setLayout({ height, segs, nodes, textRects })
+      // 分岐・合流点のコミット。git graph では枝が分かれる・戻る点も
+      // 必ずコミットなので、装飾として四角を置く（リンクは持たない）
+      const dots: Dot[] = [
+        { x: xHow, y: branchY }, // main → shift 分岐
+        { x: xVision, y: sysSplitY }, // shift → system 分岐
+        { x: xVision, y: sysMergeY }, // system → shift 合流
+        { x: xHow, y: howJogY }, // shift → main 合流
+      ]
+
+      setLayout({ height, segs, nodes, dots, textRects })
     }
     measure()
     const ro = new ResizeObserver(measure)
@@ -380,6 +391,15 @@ export function BranchGraph() {
       </div>
       {/* section nodes = commits（前面レイヤー、difference 合成） */}
       <nav className="tent-branch__nodes" style={{ height: layout.height }} aria-label="セクションナビゲーション">
+        {layout.dots.map((d, i) => (
+          <span
+            key={i}
+            className="tent-branch__dot"
+            style={{ left: d.x, top: d.y }}
+            data-node-y={d.y}
+            aria-hidden="true"
+          />
+        ))}
         {layout.nodes.map((n) => (
           <button
             key={n.id}

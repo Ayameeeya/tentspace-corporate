@@ -1305,6 +1305,17 @@ select.tent-field:invalid { color: color-mix(in srgb, var(--m-ink), transparent 
   transition: background 0.3s var(--m-ease);
 }
 .tent-branch__node[data-on="true"] { background: #fff; }
+/* 分岐・合流点のコミット（装飾のみ）。ナビノードよりひと回り小さく */
+.tent-branch__dot {
+  position: absolute;
+  width: 0.55em;
+  height: 0.55em;
+  transform: translate(-50%, -50%);
+  border: 1px solid #fff;
+  background: transparent;
+  transition: background 0.3s var(--m-ease);
+}
+.tent-branch__dot[data-on="true"] { background: #fff; }
 .tent-branch__label {
   position: absolute;
   left: 1.3em;
@@ -1360,6 +1371,8 @@ select.tent-field:invalid { color: color-mix(in srgb, var(--m-ink), transparent 
 }
 @media (max-width: 991px) {
   .tent-branch { display: none; }
+  /* 線が消える幅では分岐・合流のコミットも意味を失うので一緒に消す */
+  .tent-branch__dot { display: none; }
 }
 @media (max-width: 767px) {
   .tent-branch__nodes { display: none; }
