@@ -11,8 +11,8 @@
   --m-border: #a8a8a8;
   --m-indigo: #0f00b0;
   --m-indigo-light: #2b1add;
-  --m-olive: #cbcadf; /* light indigo tint (was olive) */
-  --m-olive-dark: #a3a2c6;
+  --m-lilac: #cbcadf; /* light indigo tint */
+  --m-lilac-dark: #a3a2c6;
   --m-ease: cubic-bezier(0.625, 0.05, 0, 1);
   --m-snap: cubic-bezier(0.32, 0.72, 0, 1);
   --m-page-pad: 2em;
@@ -216,10 +216,10 @@
   --nav-body: #e5e5e5;
   --nav-outline: var(--m-indigo-light);
 }
-.tent-nav[data-nav-theme="olive"] {
-  --nav-bg: var(--m-olive);
+.tent-nav[data-nav-theme="lilac"] {
+  --nav-bg: var(--m-lilac);
   --nav-body: #000;
-  --nav-outline: var(--m-olive-dark);
+  --nav-outline: var(--m-lilac-dark);
 }
 .tent-nav__main {
   display: flex;
@@ -743,6 +743,44 @@
 .tent-diff__progress, .tent-diff__label { will-change: transform; }
 .tent-diff__line-top { position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--m-ink); }
 .tent-diff__line-left { position: absolute; top: 0; left: 0; bottom: 0; width: 1px; background: var(--m-ink); }
+/* レーン移動の軌跡: バーの元位置から移動後の位置まで、行の足元を
+   左から右へ引かれる 1px（git graph の elbow）。scaleX は JS が叩く */
+.tent-diff__trace {
+  position: absolute;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+/* バーとトレースが出会う角 = コミット。成立でパシッと現れて塗りつぶされ、
+   逆走ではおとなしく縮んで消える */
+.tent-diff__node {
+  position: absolute;
+  width: 0.55em;
+  height: 0.55em;
+  border: 1px solid currentColor;
+  background: transparent;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.3s var(--m-snap), background 0.3s var(--m-ease);
+}
+.tent-diff__slot[data-committed="true"] .tent-diff__node {
+  transform: translate(-50%, -50%) scale(1);
+  background: currentColor;
+}
+/* コミットハッシュ: 成立の瞬間だけ CRT フリッカーで点灯し、
+   以降は git log --oneline の一行のように label の下に残る */
+.tent-diff__hash {
+  margin-top: 0.4em;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.8em;
+  letter-spacing: 0.04em;
+  opacity: 0;
+  transition: opacity 0.3s var(--m-ease);
+}
+.tent-diff__slot[data-committed="true"] .tent-diff__hash {
+  opacity: 0.55;
+  animation: tent-flicker 0.62s steps(1, end);
+}
 @media (max-width: 767px) {
   .tent-diff__head { padding: 4em 0 12vh; }
   .tent-diff__head h2 { grid-column: 1 / -1; }
@@ -755,7 +793,7 @@
 .tent-pricing {
   position: relative;
   padding-bottom: 25vh;
-  background: var(--m-olive);
+  background: var(--m-lilac);
 }
 .tent-pricing .tent-pricing__row { border-top-color: var(--m-ink); }
 .tent-pricing__head {
@@ -1016,6 +1054,11 @@ select.tent-field:invalid { color: color-mix(in srgb, var(--m-ink), transparent 
 
 /* ---------- works (portfolio) ---------- */
 .tent-works { padding: 15vh 0 10vh; }
+/* works に入る前の拡散シーン: works ノード＋main から 3 本のブランチが
+   画面外へ出て行く帯をここに確保する。グラフを描かない幅では通常の間隔に戻る */
+@media (min-width: 992px) {
+  .tent-works { padding-top: 64vh; }
+}
 .tent-works__item {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
@@ -1305,17 +1348,24 @@ select.tent-field:invalid { color: color-mix(in srgb, var(--m-ink), transparent 
   transition: background 0.3s var(--m-ease);
 }
 .tent-branch__node[data-on="true"] { background: #fff; }
-/* 分岐・合流点のコミット（装飾のみ）。ナビノードよりひと回り小さく */
+/* 分岐・合流点のコミット（装飾のみ）。リンクのナビノードと見分けが
+   つくよう、ひと回り小さく・薄く */
 .tent-branch__dot {
   position: absolute;
   width: 0.55em;
   height: 0.55em;
   transform: translate(-50%, -50%);
-  border: 1px solid #fff;
+  border: 1px solid rgba(255, 255, 255, 0.6);
   background: transparent;
   transition: background 0.3s var(--m-ease);
 }
-.tent-branch__dot[data-on="true"] { background: #fff; }
+.tent-branch__dot[data-on="true"] { background: rgba(255, 255, 255, 0.6); }
+/* フレーバーテキスト（checkout -b … / merge …）は到達で灯るが、
+   リンクのノードのラベルより薄いまま保つ */
+.tent-branch__dot[data-on="true"] .tent-branch__label {
+  opacity: 0.5;
+  animation: tent-flicker 0.62s steps(1, end);
+}
 .tent-branch__label {
   position: absolute;
   left: 1.3em;
