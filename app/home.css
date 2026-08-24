@@ -18,7 +18,7 @@
   --m-page-pad: 2em;
   background: var(--m-bg);
   color: var(--m-ink);
-  font-family: var(--font-inter), Arial, sans-serif;
+  font-family: var(--font-sans-jp, sans-serif);
   font-weight: 400;
   cursor: crosshair;
   overflow-x: clip;

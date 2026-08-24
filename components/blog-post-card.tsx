@@ -81,11 +81,11 @@ export function BlogPostCard({ post }: { post: BlogPost }) {
             </div>
 
             <h3
-              className="font-bold text-foreground group-hover:text-[#0f00b0] leading-tight text-lg md:text-xl line-clamp-2 mb-3 transition-colors duration-300"
+              className="jp-heading font-bold text-foreground group-hover:text-[#0f00b0] leading-normal text-lg md:text-xl line-clamp-2 mb-3 transition-colors duration-300"
               dangerouslySetInnerHTML={{ __html: post.title }}
             />
 
-            <p className="text-muted-foreground text-sm line-clamp-2 leading-relaxed">{excerpt}</p>
+            <p className="text-muted-foreground text-sm line-clamp-2 leading-[1.8]">{excerpt}</p>
           </div>
         </div>
       </Link>

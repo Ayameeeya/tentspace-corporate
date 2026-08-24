@@ -741,7 +741,7 @@ export default function BlogPostClient({
 
             {/* Title */}
             <h1
-              className="text-2xl md:text-4xl font-bold text-foreground mb-6 leading-tight"
+              className="article-title text-2xl md:text-4xl font-bold text-foreground mb-6"
               dangerouslySetInnerHTML={{ __html: post.title }}
             />
 

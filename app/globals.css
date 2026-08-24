@@ -75,7 +75,7 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-inter), "Inter", system-ui, sans-serif;
+  --font-sans: var(--font-sans-jp);
   --font-mono: var(--font-geist-mono), "Geist Mono", monospace;
   --font-tech: var(--font-audiowide), "Audiowide", monospace;
   --font-pixel: var(--font-vt323), "VT323", monospace;
@@ -294,23 +294,54 @@ html {
 }
 
 /* Article content styles for blog posts (light theme - Zenn style) */
+
+/* サイト全体の和文対応スタック: 欧文(Inter)を先頭に置き、和文は
+   ヒラギノ → Noto Sans JP → 游ゴシック → メイリオ の順でフォールバック */
+:root {
+  --font-sans-jp: var(--font-inter), "Inter", "Hiragino Sans",
+    "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic Medium", YuGothic,
+    "Yu Gothic", Meiryo, sans-serif;
+}
+
+/* 和文見出し用の字詰め(palt)。和文グリフのみに効き、欧文(Inter)には影響しない。
+   字間は付けない(欧文の組みを崩さないため)。行間はユーティリティ側で指定 */
+.jp-heading {
+  font-feature-settings: "palt" 1;
+}
+
+/* 記事タイトル(h1)— 本文と同じ和文スタック+見出し向け字詰め */
+.article-title {
+  font-family: var(--font-sans-jp);
+  line-height: 1.45;
+  font-feature-settings: "palt" 1;
+  text-wrap: balance;
+}
+
 .article-content {
-  line-height: 1.8;
+  font-family: var(--font-sans-jp);
+  line-height: 2;
   color: #374151;
+  overflow-wrap: break-word;
+  line-break: strict;
 }
 
 .article-content p {
   margin-bottom: 1.5rem;
   font-size: 1rem;
-  line-height: 1.9;
+  line-height: 2;
+  text-wrap: pretty;
 }
 
+/* 見出しのみ字詰め(palt)。和文グリフ専用の詰めで、欧文には影響しない */
 .article-content h2 {
   font-size: 1.5rem;
   font-weight: 700;
+  line-height: 1.5;
+  font-feature-settings: "palt" 1;
+  text-wrap: balance;
   color: #111827;
-  margin-top: 2.5rem;
-  margin-bottom: 1rem;
+  margin-top: 3rem;
+  margin-bottom: 1.25rem;
   padding-bottom: 0.5rem;
   border-bottom: 2px solid #e5e7eb;
 }
@@ -323,16 +354,21 @@ html {
 .article-content h3 {
   font-size: 1.25rem;
   font-weight: 600;
+  line-height: 1.5;
+  font-feature-settings: "palt" 1;
+  text-wrap: balance;
   color: #1f2937;
-  margin-top: 2rem;
+  margin-top: 2.25rem;
   margin-bottom: 0.75rem;
 }
 
 .article-content h4 {
   font-size: 1.1rem;
   font-weight: 600;
+  line-height: 1.5;
+  font-feature-settings: "palt" 1;
   color: #374151;
-  margin-top: 1.5rem;
+  margin-top: 1.75rem;
   margin-bottom: 0.5rem;
 }
 
@@ -598,6 +634,12 @@ html {
   border-right: inherit;
 }
 
+/* バブル内の段落は本文サイズに引きずられず、バブル自身の設計値に従う */
+.article-content .dialogue__bubble p {
+  font-size: inherit;
+  line-height: inherit;
+}
+
 .article-content .dialogue__bubble > :first-child {
   margin-top: 0;
 }
@@ -684,7 +726,8 @@ html {
 
 .article-content li {
   margin-bottom: 0.5rem;
-  color: #4b5563;
+  color: inherit;
+  line-height: 1.9;
   display: list-item;
 }
 
@@ -762,8 +805,9 @@ html {
 }
 
 @media (min-width: 768px) {
-  .article-content p {
-    font-size: 1.0625rem;
+  .article-content p,
+  .article-content li {
+    font-size: 1.125rem;
   }
 
   .article-content h2 {

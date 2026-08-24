@@ -146,13 +146,13 @@ function MasonryBlogCard({ post, likes = 0, index = 0, isMobile = false }: { pos
 
             {/* Title - always show */}
             <h3
-              className="font-bold text-foreground group-hover:text-[#0f00b0] leading-tight text-lg md:text-xl line-clamp-2 mb-3 transition-colors duration-300"
+              className="jp-heading font-bold text-foreground group-hover:text-[#0f00b0] leading-normal text-lg md:text-xl line-clamp-2 mb-3 transition-colors duration-300"
               dangerouslySetInnerHTML={{ __html: post.title }}
             />
 
             {/* Pattern 2: with-excerpt - show description */}
             {contentVariant === 'with-excerpt' && (
-              <p className="text-muted-foreground text-sm line-clamp-2 leading-relaxed">
+              <p className="text-muted-foreground text-sm line-clamp-2 leading-[1.8]">
                 {excerpt}
               </p>
             )}
@@ -160,7 +160,7 @@ function MasonryBlogCard({ post, likes = 0, index = 0, isMobile = false }: { pos
             {/* Pattern 3: full - show description + quote */}
             {contentVariant === 'full' && (
               <>
-                <p className="text-muted-foreground text-sm line-clamp-2 leading-relaxed mb-3">
+                <p className="text-muted-foreground text-sm line-clamp-2 leading-[1.8] mb-3">
                   {excerpt}
                 </p>
                 {categories.length > 0 && (
