@@ -47,6 +47,25 @@ export function distributePostIndices(
   return distributed
 }
 
+export function selectRelatedPosts(
+  posts: ContentManifestEntry[],
+  currentPostId: ContentManifestEntry["id"],
+  limit = 3,
+): ContentManifestEntry[] {
+  const currentIndex = posts.findIndex((post) => post.id === currentPostId)
+  const relatedLimit = Math.min(
+    Math.max(0, Math.floor(limit)),
+    Math.max(0, posts.length - 1),
+  )
+
+  if (currentIndex < 0 || relatedLimit === 0) return []
+
+  return Array.from(
+    { length: relatedLimit },
+    (_, offset) => posts[(currentIndex + offset + 1) % posts.length],
+  )
+}
+
 export function tagToSlug(tag: string): string {
   return encodeURIComponent(tag.trim().toLowerCase()).toLowerCase()
 }
