@@ -10,6 +10,7 @@ import {
   type BlogPost,
 } from "@/lib/blog-content"
 import { getRenderedPostBySlug } from "@/lib/blog-content-server"
+import { selectRelatedPosts } from "@/lib/content/manifest-query"
 import { SITE_URL } from "@/lib/site"
 import BlogPostClient from "./blog-post-client"
 
@@ -162,11 +163,9 @@ export default async function BlogPostPage({
   const categories = getPostTerms(post)
   const { posts: categoryPosts } = await getPosts({
     categories: post.categories.slice(0, 1),
-    perPage: 4,
+    perPage: 1000,
   })
-  const relatedPosts = categoryPosts
-    .filter((relatedPost) => relatedPost.id !== post.id)
-    .slice(0, 3)
+  const relatedPosts = selectRelatedPosts(categoryPosts, post.id, 3)
 
   return (
     <>

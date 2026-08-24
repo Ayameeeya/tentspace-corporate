@@ -115,3 +115,41 @@ describe("distributePostIndices", () => {
     expect(distributePostIndices(0, 3)).toEqual([[], [], []])
   })
 })
+
+describe("selectRelatedPosts", () => {
+  it("すべての記事が関連記事リンクを受け取れるよう循環して選ぶ", () => {
+    const selectRelatedPosts = (
+      manifestQuery as typeof manifestQuery & {
+        selectRelatedPosts?: (
+          posts: ContentManifestEntry[],
+          currentPostId: number,
+          limit?: number,
+        ) => ContentManifestEntry[]
+      }
+    ).selectRelatedPosts
+
+    expect(selectRelatedPosts).toBeTypeOf("function")
+    if (!selectRelatedPosts) return
+
+    const categoryPosts = Array.from({ length: 5 }, (_, index) => ({
+      ...posts[0],
+      id: index + 1,
+      slug: `post-${index + 1}`,
+    }))
+    const inboundCounts = new Map(
+      categoryPosts.map((post) => [post.id, 0]),
+    )
+
+    for (const post of categoryPosts) {
+      const related = selectRelatedPosts(categoryPosts, post.id, 3)
+
+      expect(related).toHaveLength(3)
+      expect(related.some((candidate) => candidate.id === post.id)).toBe(false)
+      for (const candidate of related) {
+        inboundCounts.set(candidate.id, (inboundCounts.get(candidate.id) ?? 0) + 1)
+      }
+    }
+
+    expect([...inboundCounts.values()]).toEqual([3, 3, 3, 3, 3])
+  })
+})

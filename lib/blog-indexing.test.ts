@@ -166,4 +166,12 @@ describe("blog indexing recovery", () => {
     expect(pagination).toContain("buildBlogPageHref")
     expect(pagination).toContain("<Link")
   })
+
+  it("記事詳細の関連記事をカテゴリ全体から循環選択する", async () => {
+    const page = await read("app/blog/[slug]/page.tsx")
+
+    expect(page).toContain("selectRelatedPosts")
+    expect(page).toContain("perPage: 1000")
+    expect(page).not.toContain(".filter((relatedPost) =>")
+  })
 })
