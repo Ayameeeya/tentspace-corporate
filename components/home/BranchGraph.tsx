@@ -80,8 +80,7 @@ export function BranchGraph() {
       const xVision = 0.8 * w
       const xSystem = 0.9 * w
       const xHow = 0.5 * w
-      // services レーンは .tent-svc の空けてある12カラム目を通る
-      const xServices = 0.95 * w
+      const xServices = 0.88 * w
       const xMerge = 0.5 * w
       // マージ点はコントリビューションフィールドの上端 — main の実体に着地する
       const footerVisual = footer.querySelector<HTMLElement>(".tent-footer__visual")
@@ -395,12 +394,10 @@ export function BranchGraph() {
       const note = document.querySelector<HTMLElement>(".tent-pricing__foot")
       if (note) textRects.push({ x: 0, y: docY(note), w, h: note.offsetHeight })
 
-      // services の3段リスト: meta 表（engagement / scope）のブロックだけ
-      // 線を通さない。レーン自体は空けてある12カラム目を途切れず走る
-      document.querySelectorAll<HTMLElement>(".tent-svc__meta").forEach((el) => {
-        const r = el.getBoundingClientRect()
-        textRects.push({ x: r.left, y: r.top + window.scrollY, w: r.width, h: r.height })
-      })
+      // services の3段リスト: チャプターテキスト帯と同じ扱いで、
+      // 帯の裏には git グラフの線を通さない（全幅で抜く）
+      const svc = document.querySelector<HTMLElement>(".tent-svc")
+      if (svc) textRects.push({ x: 0, y: docY(svc), w, h: svc.offsetHeight })
 
       // ノードは必ずレーンの直線区間上に置く。テキストと重なるなら区間内で上下に逃がす
       const isClear = (x: number, y: number) =>
