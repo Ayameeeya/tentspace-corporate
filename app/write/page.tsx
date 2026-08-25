@@ -36,7 +36,7 @@ export default function WritePage() {
       if (currentUser?.email_confirmed_at) {
         setUser(currentUser)
       } else {
-        router.push("/pricing")
+        router.push("/blog")
       }
       setLoading(false)
     }
