@@ -26,6 +26,7 @@ import {
   changePassword
 } from "@/lib/auth"
 import { getLoginHistory, type LoginHistory } from "@/lib/dashboard"
+import { PASSWORD_RULES, validatePassword } from "@/lib/password-rules"
 
 export default function SecuritySettingsPage() {
   const router = useRouter()
@@ -170,15 +171,6 @@ export default function SecuritySettingsPage() {
     setFactorId(null)
     setVerificationCode("")
     setMessage(null)
-  }
-
-  const validatePassword = (password: string): string | null => {
-    if (password.length < 8) return "パスワードは8文字以上である必要があります"
-    if (!/[a-z]/.test(password)) return "パスワードには小文字を1文字以上含める必要があります"
-    if (!/[A-Z]/.test(password)) return "パスワードには大文字を1文字以上含める必要があります"
-    if (!/[0-9]/.test(password)) return "パスワードには数字を1文字以上含める必要があります"
-    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) return "パスワードには特殊文字を1文字以上含める必要があります"
-    return null
   }
 
   const handleChangePassword = async () => {
@@ -474,9 +466,17 @@ export default function SecuritySettingsPage() {
                     )}
                   </button>
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  8文字以上、小文字・大文字・数字・特殊文字をそれぞれ1文字以上含める必要があります
-                </p>
+                {/* 条件は最初から全部見せ、満たしたものから印を付ける */}
+                <ul className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                  {PASSWORD_RULES.map((rule) => {
+                    const ok = rule.test(newPassword)
+                    return (
+                      <li key={rule.label} className={ok ? "text-foreground" : undefined}>
+                        <span aria-hidden="true">{ok ? "✓" : "・"}</span> {rule.label}
+                      </li>
+                    )
+                  })}
+                </ul>
               </div>
               
               <div className="space-y-2">
