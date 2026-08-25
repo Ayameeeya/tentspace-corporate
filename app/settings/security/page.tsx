@@ -26,7 +26,7 @@ import {
   changePassword
 } from "@/lib/auth"
 import { getLoginHistory, type LoginHistory } from "@/lib/dashboard"
-import { PASSWORD_RULES, validatePassword } from "@/lib/password-rules"
+import { passwordHint, validatePassword } from "@/lib/password-rules"
 
 export default function SecuritySettingsPage() {
   const router = useRouter()
@@ -466,17 +466,12 @@ export default function SecuritySettingsPage() {
                     )}
                   </button>
                 </div>
-                {/* 条件は最初から全部見せ、満たしたものから印を付ける */}
-                <ul className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
-                  {PASSWORD_RULES.map((rule) => {
-                    const ok = rule.test(newPassword)
-                    return (
-                      <li key={rule.label} className={ok ? "text-foreground" : undefined}>
-                        <span aria-hidden="true">{ok ? "✓" : "・"}</span> {rule.label}
-                      </li>
-                    )
-                  })}
-                </ul>
+                {/* 入力を始めるまでは条件を出さず、残りだけを静かに示す */}
+                <p className="text-xs text-muted-foreground">
+                  {newPassword.length > 0
+                    ? passwordHint(newPassword)
+                    : "8文字以上、小文字・大文字・数字・記号を含めてください"}
+                </p>
               </div>
               
               <div className="space-y-2">

@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 import { Input } from "@/components/ui/input"
-import { PASSWORD_RULES, validatePassword } from "@/lib/password-rules"
+import { passwordHint, validatePassword } from "@/lib/password-rules"
 
 interface AuthModalProps {
   isOpen: boolean
@@ -391,21 +391,12 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                         </div>
                       )}
 
-                      {/* 条件は最初から全部見せ、満たしたものから印を付ける */}
-                      {mode === "signup" && (
-                        <ul className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
-                          {PASSWORD_RULES.map((rule) => {
-                            const ok = rule.test(password)
-                            return (
-                              <li
-                                key={rule.label}
-                                className={ok ? "text-foreground" : undefined}
-                              >
-                                <span aria-hidden="true">{ok ? "✓" : "・"}</span> {rule.label}
-                              </li>
-                            )
-                          })}
-                        </ul>
+                      {/* 入力を始めるまでは出さない。残りの条件だけを静かに示し、
+                          満たしきったら 1 行に畳む */}
+                      {mode === "signup" && password.length > 0 && (
+                        <p className="text-xs text-muted-foreground">
+                          {passwordHint(password)}
+                        </p>
                       )}
 
                       {/* Confirm Password (Signup only) */}
