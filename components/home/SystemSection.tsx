@@ -9,9 +9,10 @@ import { prefersReducedMotion } from "./gsap-setup"
 const CHAPTERS = [
   { kw: "intent", sub: "hearing + goal", statement: "まずは、じっくり聞く。\n作るべきものを見つける。" },
   { kw: "design", sub: "ux + architecture", statement: "画面も、仕組みも設計する。\nフロントからAWSまで。" },
-  { kw: "build", sub: "code + review", statement: "AIが速く作り、\n人が丁寧に確かめる。" },
+  { kw: "build", sub: "code + review", statement: "作りながら、確かめる。\n動くものだけを、積み上げる。" },
   { kw: "launch", sub: "deploy + operate", statement: "リリースして、終わりじゃない。\nそのまま運用まで。" },
   { kw: "evolve", sub: "automate + improve", statement: "運用を自動化して、\nデータをもとに進化し続ける。" },
+  { kw: "prune", sub: "measure + retire", statement: "増やすだけが、改善じゃない。\n使われないものは、畳む。" },
 ]
 
 // macOS 式の非アクティブ状態: バーが白っぽく沈み、文字とトラフィックライトがグレーになる
@@ -132,7 +133,7 @@ export function SystemSection() {
     const st = ScrollTrigger.create({
       trigger: pin,
       start: "top top",
-      end: () => `+=${window.innerHeight * 3.8}`,
+      end: () => `+=${window.innerHeight * CHAPTERS.length * 0.76}`,
       pin,
       pinSpacing: true,
       anticipatePin: 1,
@@ -156,7 +157,7 @@ export function SystemSection() {
         </ScrambleText>
         <div style={{ maxWidth: "62em", margin: "0.5em auto 0" }}>
           <ScrambleText as="h3" className="heading-l ws-pre-line" intensity={2}>
-            {"聞いて、設計して、\n作って、育てる。\nAIがスピードを、\n人が品質を。"}
+            {"聞いて、設計して、\n作って、育てて、畳む。\n届けた後の時間が、\n価値を決める。"}
           </ScrambleText>
         </div>
       </div>
@@ -187,10 +188,10 @@ export function SystemSection() {
                   <div className="tent-system__win-track-row" aria-hidden="true">
                     <div className="tent-system__win-track">
                       {Array.from({ length: 20 }).map((_, k) => (
-                        <span key={k} className="tent-system__win-seg" data-on={k < (i + 1) * 4} />
+                        <span key={k} className="tent-system__win-seg" data-on={k < Math.round(((i + 1) / CHAPTERS.length) * 20)} />
                       ))}
                     </div>
-                    <p className="tent-system__win-pct">{(i + 1) * 20}%</p>
+                    <p className="tent-system__win-pct">{Math.round(((i + 1) / CHAPTERS.length) * 100)}%</p>
                   </div>
                 </div>
                 <p className="tent-system__win-statement">

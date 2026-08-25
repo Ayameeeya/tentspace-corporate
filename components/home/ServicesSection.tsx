@@ -104,6 +104,12 @@ export function ServicesSection() {
               <div className="tent-pricing__row" style={{ minHeight: "3em" }}>
                 <p className="paragraph-m">IoT・BLEデバイス連携: 対応可</p>
               </div>
+              <div className="tent-pricing__row" style={{ minHeight: "3em" }}>
+                <p className="paragraph-m">保守運用の引き継ぎ・見直し: 対応可</p>
+              </div>
+              <div className="tent-pricing__row" style={{ minHeight: "3em" }}>
+                <p className="paragraph-m">機能やシステムの整理・クローズ: 対応可</p>
+              </div>
             </div>
           </div>
         </div>

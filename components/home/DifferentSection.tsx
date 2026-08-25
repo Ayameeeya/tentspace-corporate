@@ -44,6 +44,13 @@ const ITEMS = [
     after: "デザインから構築・保守まで、世界観ごとひとつのチームで形にする。",
     before: "デザイン会社と開発会社のあいだで、意図が少しずつ失われていく。",
   },
+  {
+    num: "06",
+    label: "prune",
+    hash: "9d4f2c1",
+    after: "使われていないものは、測って、畳む。残ったものが、速くなる。",
+    before: "機能は増え続ける。どれが使われているのか、もう誰も答えられない。",
+  },
 ]
 
 // motion leads, copy follows: the row flips and inverts first, then the text

@@ -67,10 +67,10 @@ export function HowSection() {
           </div>
           <div className="tent-how__text">
             <p className="heading-m ti-2">
-              tent space は、Web・スマホアプリの開発を軸に、AIエージェント開発や業務改善・DX・運用自動化まで、ともに手がける開発パートナー。
+              作れば作るほど、支える仕事が増えていく。tent space は、その後ろ側まで引き受ける開発パートナー。
             </p>
             <p className="heading-m">
-              設計も、実装も、インフラも、デザインも。はじめから終わりまで、ひとつのチームで。
+              設計も、実装も、インフラも、デザインも。届けた後の運用と改善まで、ひとつのチームで。
             </p>
           </div>
         </div>
