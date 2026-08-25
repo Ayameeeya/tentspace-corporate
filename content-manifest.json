@@ -1,5 +1,32 @@
 [
   {
+    "id": 1210402204,
+    "slug": "ai-agent-notion-queue-claim",
+    "title": "AIエージェントの二重投稿を止める排他claim設計｜Notionキューのstatus遷移 実装記録",
+    "description": "AIエージェントにSNS投稿を任せると、怖いのは投稿しないことではなく二重に投稿することです。行ロックが使えないNotionの投稿キューで、status遷移と「claim→直後再読」の楽観的排他、15分staleルール、あえて自動リトライしない設計をどう組んだか、実運用中の構成をそのまま解説します。",
+    "date": "2026-08-25T00:00:00.000Z",
+    "updated": "2026-08-25T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "AIエージェント",
+      "自動化",
+      "Notion",
+      "設計"
+    ],
+    "draft": false,
+    "readingTime": 10,
+    "wordCount": 3915,
+    "ogImage": "/blog-assets/ai-agent-notion-queue-claim/featured.jpg",
+    "experiment": {
+      "hook": "howto",
+      "cta": "inquiry",
+      "targetKw": "AIエージェント 排他制御",
+      "utmCampaign": "ai-agent-notion-queue-claim-202608"
+    }
+  },
+  {
     "id": 696461829,
     "slug": "chat-to-blog-briefing",
     "title": "チャットの雑談を翌日ブログにする仕組み｜「発注書」方式とDialogue導入の実装記録",
