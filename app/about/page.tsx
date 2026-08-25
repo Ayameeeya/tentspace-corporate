@@ -9,8 +9,8 @@ import { STACK_LOGOS } from "@/components/home/stack-logos"
 
 const VALUES = [
   { num: "01", title: "one team", desc: "設計も実装も運用も、同じチームで最後まで。はじめの想いを薄めない。" },
-  { num: "02", title: "ai-augmented", desc: "AIと、ともに作る。繰り返しはエージェントに任せて、人は判断と品質に集中する。" },
-  { num: "03", title: "build to last", desc: "作って終わりにしない。公開の後も、育ち続けるソフトウェアを。" },
+  { num: "02", title: "automate ourselves", desc: "AIも自動化も、まず自分たちの仕事で試す。毎日使って、効いた仕組みだけを、あなたに渡す。" },
+  { num: "03", title: "build to grow", desc: "作って終わりにしない。公開の後も、育ち続けるソフトウェアを。" },
 ]
 
 const SERVICES = [
@@ -71,7 +71,7 @@ export default function AboutPage() {
               indent: 0,
             },
             {
-              text: "少人数のチームに、AIエージェントという仲間を加え、設計から運用までを一気通貫で担う。2023年、伊豆の小さな拠点から始まりました。",
+              text: "作って、育てて、役目を終えたら畳む。テントと同じやり方で、ソフトウェアに向き合っています。2023年、伊豆の小さな拠点から始まりました。",
               indent: 0,
             },
           ]}
@@ -189,7 +189,7 @@ export default function AboutPage() {
         <section style={{ padding: "20vh 0 10vh" }}>
           <div className="tent-container" style={{ display: "flex", flexDirection: "column", gap: "3em", alignItems: "flex-start" }}>
             <ScrambleText as="h2" className="heading-m">
-              まずは、作りたいものの話から始めましょう。
+              作りたいことでも、お困りのことでも。まずは、そこから始めましょう。
             </ScrambleText>
             <MainBtn label="start a project" href="/contact" variant="inside" twoLine />
           </div>

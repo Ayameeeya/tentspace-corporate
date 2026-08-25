@@ -34,7 +34,7 @@ const ITEMS = [
     num: "04",
     label: "dx",
     hash: "58c1b9d",
-    after: "業務の流れを見直して、自動化。良くなり続ける仕組みを作る。",
+    after: "業務の流れを見直して、自動化。エンジニアがいなくても回る仕組みを作る。",
     before: "ツールを入れて終わり。現場に定着せず、元のやり方に戻る。",
   },
   {
@@ -46,30 +46,44 @@ const ITEMS = [
   },
   {
     num: "06",
+    label: "team",
+    hash: "4b8e91a",
+    after: "必要なときに、必要なぶんだけ。tent space が、あなたの開発チームになる。",
+    before: "エンジニアの採用は難しい。かといって、組織を抱えるのは重い。",
+  },
+  {
+    num: "07",
     label: "prune",
     hash: "9d4f2c1",
-    after: "使われていないものは、測って、畳む。残ったものが、速くなる。",
+    after: "使われていないものは、測って、畳む。保守の費用も、そのぶん軽くなる。",
     before: "機能は増え続ける。どれが使われているのか、もう誰も答えられない。",
   },
 ]
 
+// トリガー全長（innerHeight 比）。コミット成立までの絶対スクロール量は
+// 従来（0.9 時代）のまま、成立後に after を読める保持区間だけを伸ばしてある。
+// 変更時は .tent-diff__slot の margin-bottom（= RANGE * TRAVEL_RATIO）も合わせること。
+// BranchGraph が合流点の再計算に同じ値を使うため export している
+export const DIFF_RANGE = 1.15
+const RANGE = DIFF_RANGE
 // motion leads, copy follows: the row flips and inverts first, then the text
 // morphs while it settles — the "after" copy never appears in the "before" layout
-const FLIP_START = 0.12
-const FLIP_END = 0.5
-const TEXT_START = 0.24
-const TEXT_END = 0.55
-// the row itself follows the scroll at 70% speed (pseudo-pin) so the flipped
+const FLIP_START = 0.09
+const FLIP_END = 0.39
+const TEXT_START = 0.19
+const TEXT_END = 0.43
+// the row itself follows the scroll at 75% speed (pseudo-pin) so the flipped
 // state stays on screen through the rest of the trigger range
-const TRAVEL_RATIO = 0.7
+export const DIFF_TRAVEL_RATIO = 0.75
+const TRAVEL_RATIO = DIFF_TRAVEL_RATIO
 // git ツリーの物語では、この行の変化はここで「コミット」される。
 // モーフが落ち着いた直後を成立点とし、解除は少し手前に取って
 // 境界上のスクロールで明滅しないようにする（ヒステリシス）
-const COMMIT_AT = 0.58
-const UNCOMMIT_AT = 0.5
+const COMMIT_AT = 0.45
+const UNCOMMIT_AT = 0.39
 // 最後の行だけ、コミット後にレーンを main（画面中央）まで延長して合流する。
 // コミット成立の後から行の走り切りまでで描く
-const EXT_START = 0.66
+const EXT_START = 0.52
 
 function DifferentItem({ item, extendToMain }: { item: (typeof ITEMS)[number]; extendToMain?: boolean }) {
   const rootRef = useRef<HTMLDivElement>(null)
@@ -111,7 +125,7 @@ function DifferentItem({ item, extendToMain }: { item: (typeof ITEMS)[number]; e
       shifts = wide
         ? { prog: mirror(prog), label: mirror(label), content: mirror(content) }
         : { prog: 0, label: 0, content: 0 }
-      travel = window.innerHeight * 0.9 * TRAVEL_RATIO
+      travel = window.innerHeight * RANGE * TRAVEL_RATIO
       // トレース線: バーの元位置から足元を右へ走り、大きくゆったりした
       // カーブで移動後のバーへ合流する。ツリーの sway と同じく接線連続で
       // 90° の角を作らない。offsetLeft/Top は transform の影響を
@@ -222,7 +236,7 @@ function DifferentItem({ item, extendToMain }: { item: (typeof ITEMS)[number]; e
       scrollTrigger: {
         trigger: root,
         start: "top 32%",
-        end: () => "+=" + window.innerHeight * 0.9,
+        end: () => "+=" + window.innerHeight * RANGE,
         scrub: coarse ? 0.45 : 0.075,
         invalidateOnRefresh: true,
         onRefresh: measure,

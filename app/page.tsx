@@ -26,7 +26,7 @@ export default function Home() {
         <section className="tent-hero" id="vision">
           <div className="tent-container tent-hero__content">
             <ScrambleText as="h1" className="heading-l" mode="load" intensity={5}>
-              tent space は、webとスマホアプリの開発スタジオ。フロントからサーバ、AWSまでをひとつのチームで。作って、動かして、育て続けます。
+              tent space は、エンジニアリングで事業を良くする会社。webもスマホアプリも、作るだけじゃなく、運用も、整理も引き受けます。
             </ScrambleText>
             <div className="tent-hero__usps">
               <ScrambleText as="p" className="paragraph-m" mode="load" intensity={5}>
@@ -55,11 +55,11 @@ export default function Home() {
           wrapperClass="tent-text__wrapper--first"
           paragraphs={[
             {
-              text: "AIで、作ることは速くなった。機能もシステムも増え続ける。そのぶん、運用と保守、使われなくなったものの面倒が、静かに積み上がっていく。",
+              text: "AIで、作るのは速く安くなった。それでも、いま動いているシステムの保守費は重いまま。少し直すにも見積もりが要り、中身の分かる人が社内にいない。",
               indent: 5,
             },
             {
-              text: "tent space は、その先を引き受ける。運用は自動化して軽く、使われないものは畳んで身軽に。作ったものを、価値のまま動かし続ける。",
+              text: "tent space となら、直したいときに直せて、畳むものは選べます。保守に消えていた費用と時間は、次の一手に回せます。エンジニアを抱えなくても、事業は良くしていけます。",
               indent: 0,
             },
           ]}

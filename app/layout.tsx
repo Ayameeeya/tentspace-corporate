@@ -9,9 +9,9 @@ import { GoogleAnalytics } from "@/components/google-analytics"
 import { SITE_URL } from "@/lib/site"
 import "./globals.css"
 
-const SITE_TITLE = "tent␣ - AI-Driven Development"
+const SITE_TITLE = "tent space - エンジニアリングで事業を良くする会社"
 const SITE_DESCRIPTION =
-  "tent space(テントスペース)は、AI駆動開発と実績のある専門知識を組み合わせて、より迅速でスマートなソリューションを提供するテックスタジオです。"
+  "保守費が重い。直したいのに動けない。エンジニアが足りない。tent spaceは、必要なぶんだけ使える開発チームです。web・スマホアプリの開発から、運用の自動化、使わなくなったシステムの整理まで。無料相談から、課題の整理だけでも。"
 const DEFAULT_SOCIAL_IMAGE = `${SITE_URL}/logo_gradation_yoko.png`
 
 const inter = Inter({
@@ -85,6 +85,36 @@ export default function RootLayout({
   return (
     <html lang="ja" suppressHydrationWarning className={`${inter.variable} ${audiowide.variable} ${geistMono.variable} ${vt323.variable}`}>
       <head>
+        {/* Google 検索のサイト名認識用。タイトルの「tent␣」から ␣ が落ちて
+            「tent」と表示されるのを防ぎ、ブランド名 tent space と
+            登記名 株式会社tent space を検索エンジン上で紐付ける */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  "@id": `${SITE_URL}/#organization`,
+                  name: "tent space",
+                  legalName: "株式会社tent space",
+                  alternateName: ["テントスペース"],
+                  url: SITE_URL,
+                  logo: `${SITE_URL}/logo_gradation_yoko.png`,
+                },
+                {
+                  "@type": "WebSite",
+                  "@id": `${SITE_URL}/#website`,
+                  name: "tent space",
+                  alternateName: ["tent␣", "テントスペース"],
+                  url: SITE_URL,
+                  publisher: { "@id": `${SITE_URL}/#organization` },
+                },
+              ],
+            }),
+          }}
+        />
         {/* Google Tag Consent Mode v2 - Default denied for EEA compliance.
             next/script の beforeInteractive はインライン script に非対応で
             hydration mismatch を起こすため、素の script タグで描画する */}

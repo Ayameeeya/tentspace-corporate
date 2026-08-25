@@ -738,7 +738,8 @@
 .tent-diff__head h2 { grid-column: 1 / span 7; }
 .tent-diff__head p { grid-column: 9 / -1; align-self: end; }
 /* reserves the vertical distance the row travels while pseudo-pinned */
-.tent-diff__slot { margin-bottom: 63vh; }
+/* = DifferentSection の RANGE * TRAVEL_RATIO（擬似ピンの移動量を吸収する） */
+.tent-diff__slot { margin-bottom: 86.25vh; }
 .tent-diff__item {
   position: relative;
   display: grid; grid-template-columns: repeat(12, 1fr); gap: 2em;
@@ -860,21 +861,35 @@
 .tent-win__btns--ghost { visibility: hidden; }
 .tent-win__body { background: #ffffff; padding: 0 1.25em 0.75em; }
 
-.tent-pricing__grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 2em; }
-.tent-pricing__cards { grid-column: 1 / span 8; display: grid; grid-template-columns: 1fr 1fr; gap: 2em; }
-.tent-pricing__note { grid-column: 10 / -1; display: flex; flex-direction: column; gap: 1.5em; }
+/* 行末の孤立（「ます。」だけの行など）を防ぐ。balance は行数の揃う宣言文だけに使い、
+   hero は行を短く切りすぎるので pretty（最終行の調整のみ）に留める */
+.tent-how__text p { text-wrap: balance; }
+.tent-hero__content h1,
+.tent-text__component h2,
+.tent-pricing__entry-lead h3,
+.tent-pricing__entry-lead p { text-wrap: pretty; }
+
+.tent-pricing__entries { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2em; }
+/* ウィンドウのタイトルバー直下なので lead は罫線なし */
+.tent-pricing__entry-lead {
+  min-height: 12em;
+  padding: 1.25em 0;
+  display: flex; flex-direction: column; gap: 1em;
+}
 .tent-pricing__row {
   border-top: 1px solid var(--m-ink);
   min-height: 4em;
   display: flex; justify-content: space-between; align-items: center;
   gap: 1em;
 }
-/* ウィンドウのタイトルバー直下なので先頭行は罫線なし */
-.tent-pricing__row--top { min-height: 14em; align-items: flex-start; padding-top: 1em; border-top: none; }
-.tent-pricing__cost { display: flex; align-items: baseline; gap: 0.25em; }
+.tent-pricing__foot {
+  margin-top: 6em;
+  display: flex; justify-content: space-between; align-items: flex-end; gap: 2em;
+}
+.tent-pricing__foot-note { max-width: 46em; display: flex; flex-direction: column; gap: 1.5em; }
 @media (max-width: 991px) {
-  .tent-pricing__cards { grid-column: 1 / -1; grid-template-columns: 1fr; }
-  .tent-pricing__note { grid-column: 1 / -1; }
+  .tent-pricing__entries { grid-template-columns: 1fr; }
+  .tent-pricing__foot { flex-direction: column; align-items: flex-start; }
 }
 @media (max-width: 767px) {
   .tent-pricing__head { padding: 5vh 0 12vh; }

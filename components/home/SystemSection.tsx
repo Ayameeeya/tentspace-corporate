@@ -7,12 +7,12 @@ import { ScrambleText } from "./ScrambleText"
 import { prefersReducedMotion } from "./gsap-setup"
 
 const CHAPTERS = [
-  { kw: "intent", sub: "hearing + goal", statement: "まずは、じっくり聞く。\n作るべきものを見つける。" },
+  { kw: "intent", sub: "hearing + goal", statement: "まずは、じっくり聞く。\nやるべきことを見つける。" },
   { kw: "design", sub: "ux + architecture", statement: "画面も、仕組みも設計する。\nフロントからAWSまで。" },
   { kw: "build", sub: "code + review", statement: "作りながら、確かめる。\n動くものだけを、積み上げる。" },
   { kw: "launch", sub: "deploy + operate", statement: "リリースして、終わりじゃない。\nそのまま運用まで。" },
-  { kw: "evolve", sub: "automate + improve", statement: "運用を自動化して、\nデータをもとに進化し続ける。" },
-  { kw: "prune", sub: "measure + retire", statement: "増やすだけが、改善じゃない。\n使われないものは、畳む。" },
+  { kw: "evolve", sub: "automate + improve", statement: "運用は自動化に任せて、\n数字を見て、良くし続ける。" },
+  { kw: "prune", sub: "measure + retire", statement: "増やすだけが、改善じゃない。\n役目を終えたら、畳む。" },
 ]
 
 // macOS 式の非アクティブ状態: バーが白っぽく沈み、文字とトラフィックライトがグレーになる
@@ -157,7 +157,7 @@ export function SystemSection() {
         </ScrambleText>
         <div style={{ maxWidth: "62em", margin: "0.5em auto 0" }}>
           <ScrambleText as="h3" className="heading-l ws-pre-line" intensity={2}>
-            {"聞いて、設計して、\n作って、育てて、畳む。\n届けた後の時間が、\n価値を決める。"}
+            {"聞いて、設計して、\n作って、育てて、\n畳んで、また作る。\n届けた後の時間が、\n価値を決める。"}
           </ScrambleText>
         </div>
       </div>
