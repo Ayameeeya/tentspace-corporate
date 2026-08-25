@@ -361,7 +361,7 @@ export function BranchGraph() {
       const textRects: Rect[] = []
       document
         .querySelectorAll<HTMLElement>(
-          "main h1, main h2, main h3, main p, main .tent-works__tags, main .main-btn, main .tent-win, main .tent-works__shot, main .tent-stack-band, .tent-footer p, .tent-footer a, .tent-footer nav, .tent-footer__legals",
+          "main h1, main h2, main h3, main p, main .tent-works__tags, main .main-btn, main .tent-works__shot, main .tent-stack-band, .tent-footer p, .tent-footer a, .tent-footer nav, .tent-footer__legals",
         )
         .forEach((el) => {
           // different の行内テキストは除外する。行は疑似ピンで 63vh 移動する
@@ -393,6 +393,11 @@ export function BranchGraph() {
       // services セクションの結び: 無料相談の一文から CTA までは線を通さない
       const note = document.querySelector<HTMLElement>(".tent-pricing__foot")
       if (note) textRects.push({ x: 0, y: docY(note), w, h: note.offsetHeight })
+
+      // services の3段リスト: チャプターテキスト帯と同じ扱いで、
+      // 帯の裏には git グラフの線を通さない（全幅で抜く）
+      const svc = document.querySelector<HTMLElement>(".tent-svc")
+      if (svc) textRects.push({ x: 0, y: docY(svc), w, h: svc.offsetHeight })
 
       // ノードは必ずレーンの直線区間上に置く。テキストと重なるなら区間内で上下に逃がす
       const isClear = (x: number, y: number) =>
