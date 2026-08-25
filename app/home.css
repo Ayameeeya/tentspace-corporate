@@ -848,8 +848,9 @@
   grid-column: 3 / span 6;
   display: flex; flex-direction: column; gap: 1.25em;
 }
+/* 12カラム目は空けておく — git グラフの services レーンの通り道 */
 .tent-svc__meta {
-  grid-column: 10 / -1;
+  grid-column: 10 / span 2;
   align-self: end;
   display: flex; flex-direction: column;
 }
