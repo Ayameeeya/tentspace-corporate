@@ -822,7 +822,9 @@
   display: grid; grid-template-columns: repeat(12, 1fr); gap: 2em;
   padding: 5vh 0 25vh;
 }
-.tent-pricing__head h2 { grid-column: 1 / -1; }
+/* 全幅グリッドに置くが、箱はテキスト幅に留める — 箱が右端まで広がると
+   git グラフの自動マスク（main h2）が services レーンを見出しの高さで切ってしまう */
+.tent-pricing__head h2 { grid-column: 1 / -1; width: fit-content; }
 .tent-pricing__head p { grid-column: 10 / -1; align-self: end; }
 
 /* 行末の孤立（「ます。」だけの行など）を防ぐ。balance は行数の揃う宣言文だけに使い、
