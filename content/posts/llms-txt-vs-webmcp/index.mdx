@@ -1,0 +1,128 @@
+---
+title: "llms.txtとWebMCPの違い｜自分の家計簿サービスで実験して分かった役割分担"
+description: "llms.txtとWebMCPは同じ「AI対応」に見えて、実は別レイヤーの技術です。自分の家計簿サービスにWebMCPを実装し、MCP切断状態の生JS実験と比較して分かった決定的な差（認証と画面共有）、Chromeフラグの盲点、役割分担の判断軸を実験ログ付きで解説します。"
+date: 2026-08-25
+slug: llms-txt-vs-webmcp
+categories: ["AI活用"]
+tags: ["MCP", "WebMCP", "llms.txt", "AIエージェント"]
+draft: false
+ogImage: "/blog-assets/llms-txt-vs-webmcp/featured.jpg"
+experiment:
+  pillar: "ai-dev"
+  hook: "contrarian"
+  cta: "inquiry"
+  targetKw: "llms.txt WebMCP 違い"
+  utmCampaign: "llms-txt-vs-webmcp-202608"
+---
+
+<Dialogue>
+  <Say by="hiro">llms.txtとWebMCPって、同じようなものな気がするけど</Say>
+  <Say by="ai">「読む」と「操作する」で、実は別レイヤーの話です</Say>
+  <Say by="hiro">でも結局llms.txtに操作方法を書けば、操作できるって話では？</Say>
+  <Say by="ai">半分正解です。決定的な差は認証。公開ファイルにAPIキーは書けません</Say>
+  <Say by="hiro">ログイン済みのCookieを一時的に拝借して実行する、みたいなこと？</Say>
+  <Say by="ai">ほぼ正解。ただし拝借ではなく、エージェントはCookieに一切触れない設計です</Say>
+  <Say by="hiro">じゃあMCPを切断したので、moneru.usで7月分のデータが取れるかやってみて</Say>
+  <Say by="ai">取れました、123件。ただしAPIは推測で、キー名も一度間違えました</Say>
+</Dialogue>
+
+先に結論を言い切ります。WebMCPは「MCPのブラウザ版」ではありません。データの読み書きや自動化ならリモートMCPで足ります。WebMCPの固有価値は、エージェントがユーザーと同じ画面を見て、同じログインセッションの内側で動けること。つまり「画面の前で迷う人間の道案内」に張るべき技術です。自分の家計簿サービスで実験して、そこに辿り着きました。
+
+対象読者は、MCPは触ったことがあるけれどWebMCPは名前しか知らない開発者と、自社SaaSのAI対応を検討している人です。持ち帰ってもらいたいのは、llms.txt・リモートMCP・WebMCPの役割分担の判断軸と、Chromeの実験フラグで検証するときの盲点です。
+
+## 「同じようなもの」に見える理由
+
+llms.txtは、サイトのコンテンツをAIが読みやすい形で案内するための提案です。トップに`/llms.txt`を置いて、ページの構成や要約をMarkdownで渡す。私が運用しているこのブログも`/llms.txt`を配信しています。
+
+<LinkCard url="https://llmstxt.org/" title="llms.txt（提案サイト）" />
+
+一方のWebMCPは、Webページ自体がAIエージェントへツールを公開するための提案仕様で、W3CのWeb Machine Learning Community Groupで議論が進んでいます。執筆時点ではまだ提案段階で、Chromeでは実験的な提供です。
+
+<LinkCard url="https://github.com/webmachinelearning/webmcp" title="webmachinelearning/webmcp（提案リポジトリ）" />
+
+抽象度を上げると、どちらも「AIに自サイトの文脈を提供する仕組み」です。だから冒頭の会話のように「同じでは？」となる。実際、llms.txtにAPIの操作方法まで書き込めば、エージェントはそれを読んで操作できてしまいそうに見えます。
+
+この直感は半分正しくて、半分間違っていました。
+
+## 決定的な差は認証にある
+
+llms.txtは公開ファイルです。そこにAPIの仕様は書けても、APIキーは書けません。ログインが必要なサービスでは、「読んで理解する」ことはできても「あなたのデータで実行する」ことができない。
+
+WebMCPはここが違います。ツールはログイン済みのページの中で動くJavaScriptとして実行されるので、エージェントは認証情報に一切触れません。Cookieを拝借するのではなく、「このページに実行を委譲する」モデルです。エージェントが持つのは「navigateというツールを呼ぶ権利」だけで、セッションはブラウザとページの側に留まったまま。この設計の違いが、後の実験で効いてきます。
+
+## 実験1: MCPを切って、生JSでどこまで行けるか
+
+理屈だけでは腹落ちしないので、自分の家計簿サービス（moneru.us）で実験しました。moneruにはすでにリモートMCPサーバーがあるのですが、これをあえて切断して、「ログイン済みブラウザのページコンテキストだけ」でデータが取れるかを試しました。llms.txtやドキュメントを読んだエージェントが生のJavaScriptで頑張る状況の再現です。
+
+手順はこうです。まずネットワークリクエストを監視して、`/api/auth/get-session`、`/api/accounts`、`/api/transactions`、`/api/budgets`、`/api/webmcp/consent`といったエンドポイントを発見。次にページコンテキストから`fetch('/api/transactions', { credentials: 'same-origin' })`を実行したところ、200が返りました。7月分の明細123件（計算対象のみ）を取得して、収支の集計まで通りました。金額の実額はここでは伏せますが、「取れてしまう」こと自体は確認できたわけです。
+
+ただし、きれいに成功した話ではありません。カテゴリ別に集計しようとしてキー名を`category`と推測したら、集計結果が全部「未分類」になりました。実データを見直すと、正しいキー名は`largeCategory`。推測で直して再集計、でようやく通りました。
+
+これが「ドキュメント方式」の実力です。同一オリジンのセッションが生きていれば、データ取得はできる。ただし、APIの発見はネットワーク監視からの推測、引数やレスポンスの構造も推測。一発では当たらず、失敗して直すループが前提になります。
+
+## 実験2: WebMCPの正規ルートが、まず動かない
+
+次に本命のWebMCPです。moneruには、consent APIとツール3本のWebMCP対応を実装済みでした。ところがブラウザのコンソールで`navigator.modelContext`を叩くと、undefined。navigatorとwindowを総当たりで探してもMCP系のAPIは見つかりませんでした。環境はChrome 151のStableです。
+
+原因はブラウザ側でした。ChromeのWebMCPはまだ実験提供で、フラグ`chrome://flags/#enable-webmcp-testing`（WebMCP for testing）をEnabledにして再起動するまで、APIそのものが生えてきません。サーバー側にどれだけ実装があっても、ブラウザが黙っていれば何も起きない。「実装したのに動かない」で最初に疑うべきは自分のコードではなくフラグでした。これが今日いちばん伝えたい盲点です。
+
+フラグを有効化すると、`navigator.modelContext`に`getTools` / `executeTool` / `registerTool` / `ontoolchange`が生えました。consent APIのレスポンスはこうです。
+
+```json
+{
+  "granted": false,
+  "ownerBinding": null,
+  "policyVersion": "2026-08-22-chrome-webmcp-experimental-v1",
+  "provider": "google-chrome-webmcp-experimental"
+}
+```
+
+`getTools()`で、登録した3本のツールが見えます。
+
+- `navigate`: ページを移動する。inputSchemaの`page`はenumで`dashboard / transactions / subscriptions / chat / settings`の5値
+- `open_csv_import`: CSV取り込み画面へ移動してファイル入力へフォーカスする。ファイルの選択と確定は人間がやる
+- `set_subscriptions_year`: サブスク一覧の表示年を切り替える（2000〜2100）
+
+実行にも一つ罠がありました。`executeTool`の第一引数はツール名の文字列ではなく、`getTools()`が返すRegisteredToolオブジェクトです。文字列を渡すと`The provided value is not of type 'RegisteredTool'`と怒られます。正しく渡すと、`navigate`に`{page:"subscriptions"}`で画面がhttps://moneru.us/subscriptionsへ遷移し、戻り値はMCPと同じ形式で返ってきました。
+
+```json
+{
+  "content": [{ "type": "text", "text": "{\"status\":\"navigated\",\"page\":\"subscriptions\"}" }],
+  "structuredContent": { "status": "navigated", "page": "subscriptions" }
+}
+```
+
+一つ、未解決の発見も正直に書いておきます。ツールの説明文には「現在の状態は get_current_view で確認できます」とあるのに、`get_current_view`はツール一覧に存在しませんでした。consent許可後に解禁されるのか、単なる実装漏れなのかは未確認です。
+
+## 生JS方式とWebMCPを並べる
+
+2つの実験を並べると、差がはっきりします。
+
+| 観点 | 生JS方式（llms.txt/ドキュメント＋推測） | WebMCP正規ルート |
+| --- | --- | --- |
+| APIの発見 | ネットワーク監視から推測 | `getTools()`で列挙される |
+| 引数の当て方 | キー名ミスでリトライ（`category`→`largeCategory`） | enum付きスキーマで最初から確定 |
+| 実行 | `fetch`を自作 | `executeTool`を呼ぶだけ |
+| 結果の解釈 | 生JSONを自己解釈 | MCP標準形式で返る |
+
+生JS方式も「動く」には動きます。ただ、全工程が推測ベースで、堅牢さはスキーマのあるWebMCPに届きません。
+
+## 役割分担: データはMCP、介助はWebMCP
+
+ここで冒頭の問いに戻ります。「どこまで行ってもリモートMCPでよくない？」——データ用途なら、本当にそのとおりです。自動化やレポート生成のようにデータを出し入れする仕事は、画面もブラウザも要らないリモートMCPが向いています。moneruにリモートMCPを残しているのもそのためです。
+
+<LinkCard slug="mcp-server-publish-rate-limit" />
+
+一方で、今回moneruがWebMCPに登録したツールを見返すと、`navigate`、`open_csv_import`、`set_subscriptions_year`——全部「画面の案内」でした。データを返すツールがひとつもない。実装しながら自然とそうなったのですが、これがWebMCPの固有価値をそのまま表しています。ユーザーと同じ画面を共有して、その場で操作を介助する。確定の一歩は人間に残す。CSV取り込みのファイル選択を人間に残したのは、その線引きの実例です。
+
+本命のユースケースは、GCPやAWSのコンソール、Stripeの管理画面のような「初見殺し」の複雑な画面だと考えています。「ナビゲーションメニュー > IAMと管理 > …」と文章で書かれていたマニュアルが、ツール1本になる。しかも「いまこの画面でエラーが出ている」という状態依存の質問に、一般論ではなくその画面を見て答えられる。逆に、迷いようのない単純な画面や、人間がそもそも画面の前にいないバッチ処理には向きません。
+
+## まとめ: いま張るなら、どの温度感か
+
+最後に、自社サービスへの導入温度感を私の判断で言うと、こうなります。
+
+- **llms.txt**: metaタグ枠。コストがほぼゼロなので置いておく。効果の実測はまだ難しい
+- **リモートMCP**: データ層の本命。自動化・生成の材料はこちらに寄せる
+- **WebMCP**: 初期のレスポンシブ対応枠。実装コストはあるが、画面共有という固有価値は他で代替できない。号砲はChromeがフラグを外すとき
+
+WebMCPはまだ提案段階で、エコシステムはこれからです。それでも「エージェントがユーザーと同じ画面を見る」というモデルは、llms.txtの延長線上にはありませんでした。同じに見えた2つは、読むための地図と、隣で道案内する人くらい違う。実験してみて、ようやくそう言えるようになりました。次はconsentの許可フローを通して、`get_current_view`の謎を確かめるつもりです。
