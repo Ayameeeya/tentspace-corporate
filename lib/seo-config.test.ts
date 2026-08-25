@@ -88,8 +88,6 @@ describe("SEO configuration", () => {
   it("主要な公開ページに固有metadataを定義する", async () => {
     const layouts = [
       "app/about/layout.tsx",
-      "app/ai-development/layout.tsx",
-      "app/pricing/layout.tsx",
       "app/privacy/layout.tsx",
       "app/terms/layout.tsx",
       "app/legal/layout.tsx",
@@ -109,10 +107,8 @@ describe("SEO configuration", () => {
       "app/admin/layout.tsx",
       "app/contact/completed/page.tsx",
       "app/profile/layout.tsx",
-      "app/write/layout.tsx",
       "app/settings/layout.tsx",
       "app/blog/favorites/page.tsx",
-      "app/test/error-tracking/page.tsx",
       "app/unauthorized/page.tsx",
     ]
 

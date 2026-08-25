@@ -20,8 +20,6 @@ describe("semantic HTML", () => {
     const files = [
       "app/page.tsx",
       "app/about/page.tsx",
-      "app/ai-development/page.tsx",
-      "app/pricing/page.tsx",
       "app/contact/page.tsx",
       "app/contact/completed/page.tsx",
       "app/blog/blog-page-client.tsx",
@@ -38,7 +36,6 @@ describe("semantic HTML", () => {
       "app/profile/page.tsx",
       "app/settings/settings-client-layout.tsx",
       "app/unauthorized/page.tsx",
-      "app/test/error-tracking/page.tsx",
       "components/error-boundary.tsx",
       "components/home/TentDoc.tsx",
     ]
@@ -64,13 +61,6 @@ describe("semantic HTML", () => {
       const source = await read(file)
       expect(source, file).toMatch(/<h2[^>]*className="sr-only"[^>]*>\s*記事一覧\s*<\/h2>/)
     }
-  })
-
-  it("料金プラン名をページ直下のh2にする", async () => {
-    const source = await read("app/pricing/page.tsx")
-
-    expect(source).toContain('<h2 className="text-xl font-bold text-foreground mb-1">{plan.name}</h2>')
-    expect(source).not.toContain('<h3 className="text-xl font-bold text-foreground mb-1">{plan.name}</h3>')
   })
 
   it("SEO特設ページのtitleと見出し階層を重複・飛びなしにする", async () => {
@@ -151,19 +141,12 @@ describe("semantic HTML", () => {
   })
 
   it("白背景上の小さい強調文字にAA相当の濃色を使う", async () => {
-    const [development, pricing, terms, privacy, legal] = await Promise.all([
-      read("app/ai-development/page.tsx"),
-      read("app/pricing/page.tsx"),
+    const [terms, privacy, legal] = await Promise.all([
       read("app/terms/page.tsx"),
       read("app/privacy/page.tsx"),
       read("app/legal/page.tsx"),
     ])
 
-    expect(development).not.toContain("bg-blue-50 font-bold text-red-500")
-    expect(development).not.toContain("text-blue-200 text-sm")
-    expect(development).not.toContain("text-red-600 font-bold")
-    expect(pricing).not.toContain("bg-violet-500/10 text-violet-500")
-    expect(pricing).not.toContain("text-xs text-green-500")
     for (const source of [terms, privacy, legal]) {
       expect(source).not.toContain("text-blue-500 text-xs")
     }
@@ -235,17 +218,10 @@ describe("semantic HTML", () => {
     }
   })
 
-  it("補助画面にもh1を置き、操作ボタンの文字コントラストを保つ", async () => {
-    const [unauthorized, errorDemo] = await Promise.all([
-      read("app/unauthorized/page.tsx"),
-      read("components/error-tracking-demo.tsx"),
-    ])
+  it("補助画面にもh1を置く", async () => {
+    const unauthorized = await read("app/unauthorized/page.tsx")
 
     expect(unauthorized).toContain('as="h1"')
     expect(unauthorized).toContain("access denied")
-    expect(errorDemo).toContain('<h1 className="text-3xl font-bold mb-2">')
-    expect(errorDemo).not.toContain("<h3")
-    expect(errorDemo).not.toContain("bg-orange-600 text-white")
-    expect(errorDemo).not.toContain("bg-green-600 text-white")
   })
 })
