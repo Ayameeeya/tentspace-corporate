@@ -1,29 +1,41 @@
 "use client"
 
 import { ScrambleText } from "./ScrambleText"
+import { ShuffleText } from "./ShuffleText"
 import { MainBtn } from "./MainBtn"
 
-const PLANS = [
+// 料金プランではなく「いまの状態」から入ってもらう。
+// 3つの入口は system セクションのライフサイクル（build / operate / prune）と同じ語彙。
+// 状況の声を主役にした全幅の帯で、窓のクロームは使わない
+const ENTRIES = [
   {
-    name: "Project",
-    price: "ask",
-    per: "/project",
-    rows: [
+    num: "01",
+    kw: "build",
+    voice: "これから、作りたいものがある。",
+    res: "じっくり聞いて、設計から作って、届けます。運用も、そのまま続けます。",
+    meta: [
       ["engagement", "プロジェクト型"],
-      ["scope", "設計〜リリース"],
-      ["stack", "web · mobile · aws"],
-      ["estimate", "無料"],
+      ["scope", "設計〜運用まで"],
     ],
   },
   {
-    name: "Partner",
-    price: "ask",
-    per: "/month",
-    rows: [
-      ["engagement", "伴走型"],
-      ["scope", "開発〜保守運用"],
-      ["automation", "運用自動化"],
-      ["estimate", "無料"],
+    num: "02",
+    kw: "operate",
+    voice: "動いてはいるが、保守が重い。",
+    res: "コードごと引き継いで、運用を自動化。毎月かかる手間と費用を軽くしていきます。",
+    meta: [
+      ["engagement", "伴走型 / 月額"],
+      ["scope", "引き継ぎ〜自動化"],
+    ],
+  },
+  {
+    num: "03",
+    kw: "prune",
+    voice: "増えすぎて、全体が見えない。",
+    res: "資産を棚卸しして、残すか畳むか、判断できる材料を揃えます。整理だけでも大丈夫です。",
+    meta: [
+      ["engagement", "相談から"],
+      ["scope", "棚卸し〜クローズ"],
     ],
   },
 ]
@@ -33,79 +45,49 @@ export function ServicesSection() {
     <section className="tent-pricing" id="services">
       <div className="tent-container">
         <div className="tent-pricing__head">
-          <h2 className="heading-m ti-2">作りたいものに合わせて、ふたつの関わり方</h2>
+          <h2 className="heading-m ti-2">これから作る人も、すでに持っている人も。</h2>
           <ScrambleText as="p" className="paragraph-l">
-            project-based, or ongoing. your choice.
+            three ways in, one team
           </ScrambleText>
         </div>
-        <div className="tent-pricing__grid">
-          <div className="tent-pricing__cards">
-            {PLANS.map((plan) => (
-              <div key={plan.name} className="tent-win">
-                {/* system セクションと同じ mac 風ウィンドウでプランを見せる */}
-                <div className="tent-win__bar">
-                  <div className="tent-win__btns" aria-hidden="true">
-                    <span data-role="close" />
-                    <span data-role="min" />
-                    <span data-role="max" />
-                  </div>
-                  <p className="tent-win__title">plan — {plan.name.toLowerCase()}</p>
-                  <div className="tent-win__btns tent-win__btns--ghost" aria-hidden="true">
-                    <span />
-                    <span />
-                    <span />
-                  </div>
-                </div>
-                <div className="tent-win__body">
-                  <div className="tent-pricing__row tent-pricing__row--top">
-                    <h3 className="paragraph-l">plan</h3>
-                    <div style={{ textAlign: "right" }}>
-                      <ScrambleText as="p" className="heading-s">
-                        {plan.name}
-                      </ScrambleText>
-                      <div className="tent-pricing__cost">
-                        <p className="heading-s">¥</p>
-                        <ScrambleText as="p" className="heading-s">
-                          {plan.price}
-                        </ScrambleText>
-                        <p className="paragraph-m">{plan.per}</p>
-                      </div>
-                    </div>
-                  </div>
-                  {plan.rows.map(([k, v]) => (
-                    <div key={k} className="tent-pricing__row">
-                      <h3 className="paragraph-l">{k}</h3>
-                      <ScrambleText as="p" className="heading-s">
-                        {v}
-                      </ScrambleText>
-                    </div>
-                  ))}
-                  <div className="tent-pricing__row" style={{ justifyContent: "flex-end", minHeight: "6em" }}>
-                    <MainBtn label="start a project" href="/contact" variant="inside" twoLine />
-                  </div>
-                </div>
+        <div className="tent-svc">
+          {ENTRIES.map((e) => (
+            <div key={e.kw} className="tent-svc__row">
+              <div className="tent-svc__id">
+                <p className="paragraph-regular opacity-64">{e.num}</p>
+                <ScrambleText as="p" className="paragraph-l">
+                  {e.kw}
+                </ScrambleText>
               </div>
-            ))}
-          </div>
-          <div className="tent-pricing__note">
+              <div className="tent-svc__main">
+                <ShuffleText as="h3" className="heading-m">
+                  {`「${e.voice}」`}
+                </ShuffleText>
+                <p className="paragraph-m opacity-64">{e.res}</p>
+              </div>
+              <div className="tent-svc__meta">
+                {e.meta.map(([k, v]) => (
+                  <div key={k} className="tent-svc__meta-row">
+                    <p className="paragraph-regular opacity-64">{k}</p>
+                    <ScrambleText as="p" className="paragraph-m">
+                      {v}
+                    </ScrambleText>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="tent-pricing__foot">
+          <div className="tent-pricing__foot-note">
             <ScrambleText as="p" className="paragraph-s">
               まずは無料相談から。課題の整理だけでも歓迎です。費用はお見積もりの際に、ご予算に合わせてお伝えします。
             </ScrambleText>
-            <div>
-              <div className="tent-pricing__row" style={{ minHeight: "3em" }}>
-                <p className="paragraph-m">契約形態: 請負 / 準委任</p>
-              </div>
-              <div className="tent-pricing__row" style={{ minHeight: "3em" }}>
-                <p className="paragraph-m">AI導入・DXの相談: 歓迎</p>
-              </div>
-              <div className="tent-pricing__row" style={{ minHeight: "3em" }}>
-                <p className="paragraph-m">サイトデザインのみ: 対応可</p>
-              </div>
-              <div className="tent-pricing__row" style={{ minHeight: "3em" }}>
-                <p className="paragraph-m">IoT・BLEデバイス連携: 対応可</p>
-              </div>
-            </div>
+            <p className="paragraph-m opacity-64">
+              契約形態: 請負 / 準委任 ・ サイトデザインのみ対応可 ・ IoT・BLEデバイス連携対応可 ・ AI導入・DXの相談歓迎
+            </p>
           </div>
+          <MainBtn label="start a project" href="/contact" variant="inside" twoLine />
         </div>
       </div>
     </section>

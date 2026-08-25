@@ -99,6 +99,10 @@ const nextConfig = {
         destination,
         permanent: true,
       })),
+      // 2026-08: 旧LP・旧料金ページを廃止（facts.md にない数値主張を含む
+      // 旧軸のページだったため）。インデックス済み URL はトップへ逃がす
+      { source: "/ai-development", destination: "/", permanent: true },
+      { source: "/pricing", destination: "/", permanent: true },
     ]
   },
 }

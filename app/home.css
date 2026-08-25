@@ -738,7 +738,8 @@
 .tent-diff__head h2 { grid-column: 1 / span 7; }
 .tent-diff__head p { grid-column: 9 / -1; align-self: end; }
 /* reserves the vertical distance the row travels while pseudo-pinned */
-.tent-diff__slot { margin-bottom: 63vh; }
+/* = DifferentSection の RANGE * TRAVEL_RATIO（擬似ピンの移動量を吸収する） */
+.tent-diff__slot { margin-bottom: 86.25vh; }
 .tent-diff__item {
   position: relative;
   display: grid; grid-template-columns: repeat(12, 1fr); gap: 2em;
@@ -817,64 +818,61 @@
   padding-bottom: 25vh;
   background: var(--m-lilac);
 }
-.tent-pricing .tent-pricing__row { border-top-color: var(--m-ink); }
 .tent-pricing__head {
   display: grid; grid-template-columns: repeat(12, 1fr); gap: 2em;
   padding: 5vh 0 25vh;
 }
-.tent-pricing__head h2 { grid-column: 1 / span 8; }
+/* 全幅グリッドに置くが、箱はテキスト幅に留める — 箱が右端まで広がると
+   git グラフの自動マスク（main h2）が services レーンを見出しの高さで切ってしまう */
+.tent-pricing__head h2 { grid-column: 1 / -1; width: fit-content; }
 .tent-pricing__head p { grid-column: 10 / -1; align-self: end; }
-/* 汎用 mac 風ウィンドウ（system セクションの意匠の軽量版） */
-.tent-win {
-  background: #ffffff;
-  padding: 0;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-  border-radius: 0.8em;
-  overflow: hidden;
-  box-shadow: 0 0.9em 2.6em rgba(0, 0, 0, 0.16);
-  align-self: start;
-}
-.tent-win__bar {
-  display: flex; align-items: center; justify-content: space-between; gap: 1em;
-  background: #ececec;
-  color: #1d1d1f;
-  padding: 0.5em 0.8em;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-}
-.tent-win__title {
-  margin: 0; font-size: 1em; text-transform: lowercase; letter-spacing: 0.03em;
-  flex: 1; min-width: 0; text-align: center;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-/* mac 風トラフィックライト。右側の --ghost はタイトル中央寄せ用のダミー */
-.tent-win__btns { display: flex; gap: 0.45em; flex-shrink: 0; }
-.tent-win__btns span {
-  width: 0.85em; height: 0.85em;
-  border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  background: var(--m-bg);
-}
-.tent-win__btns span[data-role="close"] { background: #ff5f57; }
-.tent-win__btns span[data-role="min"] { background: #febc2e; }
-.tent-win__btns span[data-role="max"] { background: #28c840; }
-.tent-win__btns--ghost { visibility: hidden; }
-.tent-win__body { background: #ffffff; padding: 0 1.25em 0.75em; }
 
-.tent-pricing__grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 2em; }
-.tent-pricing__cards { grid-column: 1 / span 8; display: grid; grid-template-columns: 1fr 1fr; gap: 2em; }
-.tent-pricing__note { grid-column: 10 / -1; display: flex; flex-direction: column; gap: 1.5em; }
-.tent-pricing__row {
+/* 行末の孤立（「ます。」だけの行など）を防ぐ。balance は行数の揃う宣言文だけに使い、
+   hero は行を短く切りすぎるので pretty（最終行の調整のみ）に留める */
+.tent-how__text p { text-wrap: balance; }
+.tent-hero__content h1,
+.tent-text__component h2,
+.tent-svc__main h3,
+.tent-svc__main p { text-wrap: pretty; }
+
+/* 3つの入口は全幅の帯。状況の声（引用）を主役に、上から下へ一直線に読ませる */
+.tent-svc { border-top: 1px solid var(--m-ink); }
+.tent-svc__row {
+  display: grid; grid-template-columns: repeat(12, 1fr); gap: 2em;
+  padding: 4em 0 5em;
+  border-bottom: 1px solid var(--m-ink);
+}
+.tent-svc__id {
+  grid-column: 1 / span 2;
+  display: flex; flex-direction: column; gap: 0.75em;
+}
+.tent-svc__main {
+  grid-column: 3 / span 6;
+  display: flex; flex-direction: column; gap: 1.25em;
+}
+.tent-svc__meta {
+  grid-column: 10 / -1;
+  align-self: end;
+  display: flex; flex-direction: column;
+}
+.tent-svc__meta-row {
   border-top: 1px solid var(--m-ink);
-  min-height: 4em;
+  min-height: 3.25em;
   display: flex; justify-content: space-between; align-items: center;
   gap: 1em;
 }
-/* ウィンドウのタイトルバー直下なので先頭行は罫線なし */
-.tent-pricing__row--top { min-height: 14em; align-items: flex-start; padding-top: 1em; border-top: none; }
-.tent-pricing__cost { display: flex; align-items: baseline; gap: 0.25em; }
+.tent-svc__meta-row:first-child { border-top: none; }
+.tent-pricing__foot {
+  margin-top: 6em;
+  display: flex; justify-content: space-between; align-items: flex-end; gap: 2em;
+}
+.tent-pricing__foot-note { max-width: 46em; display: flex; flex-direction: column; gap: 1.5em; }
 @media (max-width: 991px) {
-  .tent-pricing__cards { grid-column: 1 / -1; grid-template-columns: 1fr; }
-  .tent-pricing__note { grid-column: 1 / -1; }
+  .tent-svc__id { grid-column: 1 / -1; flex-direction: row; gap: 1em; }
+  .tent-svc__main { grid-column: 1 / -1; }
+  .tent-svc__meta { grid-column: 1 / -1; align-self: stretch; margin-top: 1em; }
+  .tent-svc__meta-row:first-child { border-top: 1px solid var(--m-ink); }
+  .tent-pricing__foot { flex-direction: column; align-items: flex-start; }
 }
 @media (max-width: 767px) {
   .tent-pricing__head { padding: 5vh 0 12vh; }

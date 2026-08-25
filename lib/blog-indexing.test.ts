@@ -114,6 +114,8 @@ describe("blog indexing recovery", () => {
     const configured = new Map(
       (await redirects())
         .filter((entry) => !entry.has)
+        // 廃止ページのリダイレクト（記事URLではない）は対象外
+        .filter((entry) => entry.source.startsWith("/blog/"))
         .map((entry) => [entry.source, entry.destination]),
     )
 

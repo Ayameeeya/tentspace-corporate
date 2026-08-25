@@ -5,7 +5,7 @@ import { ScrambleText } from "./ScrambleText"
 
 const STEPS = [
   { title: "consult", desc: "作りたいこと、お困りのこと。メモ一枚でも、雑談からでも大丈夫です。", num: "01" },
-  { title: "propose", desc: "ちょうどいい構成と概算をご提案。プロトタイプで、イメージを合わせます。", num: "02" },
+  { title: "propose", desc: "ちょうどいい進め方と概算をご提案。作る話なら、プロトタイプでイメージを合わせます。", num: "02" },
   { title: "build & operate", desc: "作って、届けて、その後も。改善を重ねていきます。", num: "03" },
 ]
 
@@ -67,10 +67,10 @@ export function HowSection() {
           </div>
           <div className="tent-how__text">
             <p className="heading-m ti-2">
-              tent space は、Web・スマホアプリの開発を軸に、AIエージェント開発や業務改善・DX・運用自動化まで、ともに手がける開発パートナー。
+              作れば作るほど、支える仕事が増えていく。tent space は、その後ろ側まで支えます。
             </p>
             <p className="heading-m">
-              設計も、実装も、インフラも、デザインも。はじめから終わりまで、ひとつのチームで。
+              設計も、実装も、インフラも、デザインも。届けた後の運用と改善まで、ひとつのチームで。
             </p>
           </div>
         </div>

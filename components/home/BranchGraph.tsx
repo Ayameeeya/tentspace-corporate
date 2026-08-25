@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import { DIFF_RANGE, DIFF_TRAVEL_RATIO } from "./DifferentSection"
 
 /** ノードを置くセクションとレーン位置（画面幅比） */
 const NODE_STOPS = [
@@ -272,7 +273,7 @@ export function BranchGraph() {
         let bandTop = Math.max(docY(worksSec) + 24, bandBottom - 520)
         // different の最後の行のレーン（コミットを終えて着地したバー）を
         // main へ合流させてから拡散帯に入る。着地位置は疑似ピンの移動量
-        //（0.9vh × 0.7）とミラー幅を DifferentSection と同じ式で再計算する
+        //（DIFF_RANGE × DIFF_TRAVEL_RATIO）とミラー幅を DifferentSection と同じ式で再計算する
         const lastSlot = Array.from(
           document.querySelectorAll<HTMLElement>("#different .tent-diff__slot"),
         ).pop()
@@ -288,7 +289,7 @@ export function BranchGraph() {
         if (lastSlot && lastInner && lastProg && lastBar && wide) {
           const mirror = lastInner.clientWidth - lastProg.offsetWidth - 2 * lastProg.offsetLeft
           const laneX = lastInner.offsetLeft + lastBar.offsetLeft + mirror + 0.5
-          const laneBottom = docY(lastSlot) + lastBar.offsetTop + lastBar.offsetHeight + vh * 0.9 * 0.7
+          const laneBottom = docY(lastSlot) + lastBar.offsetTop + lastBar.offsetHeight + vh * DIFF_RANGE * DIFF_TRAVEL_RATIO
           // 合流の線そのものは design の行が自分のミニグラフとして
           //（コミットの下に伸びるバーの延長 = DifferentSection の ext）描く。
           // こちらは同じ式（緩やかな S 字: clamp(|dx| * 0.7, 280, 460)）で
@@ -300,9 +301,9 @@ export function BranchGraph() {
           trunkTop = laneBottom + 16
           bandTop = Math.max(mergePoint + 24, bandBottom - 520)
           mergeAt = mergePoint
-          // ext は行のスクラブ終了（trigger: start "top 32%" + 0.9vh）で
-          // 引き終わる。そのときの reveal 線 = slotTop + 0.58vh + 0.72vh
-          extDone = docY(lastSlot) + vh * 1.3
+          // ext は行のスクラブ終了（trigger: start "top 32%" + DIFF_RANGE vh）で
+          // 引き終わる。そのときの reveal 線 = slotTop + (DIFF_RANGE - 0.32)vh + 0.72vh
+          extDone = docY(lastSlot) + vh * (DIFF_RANGE + 0.4)
         }
         const splitTop = bandTop + 48
         const splitGap = Math.max(36, Math.min(56, (bandBottom - splitTop) * 0.12))
@@ -360,7 +361,7 @@ export function BranchGraph() {
       const textRects: Rect[] = []
       document
         .querySelectorAll<HTMLElement>(
-          "main h1, main h2, main h3, main p, main .tent-works__tags, main .main-btn, main .tent-win, main .tent-works__shot, main .tent-stack-band, .tent-footer p, .tent-footer a, .tent-footer nav, .tent-footer__legals",
+          "main h1, main h2, main h3, main p, main .tent-works__tags, main .main-btn, main .tent-works__shot, main .tent-stack-band, .tent-footer p, .tent-footer a, .tent-footer nav, .tent-footer__legals",
         )
         .forEach((el) => {
           // different の行内テキストは除外する。行は疑似ピンで 63vh 移動する
@@ -389,9 +390,14 @@ export function BranchGraph() {
         textRects.push({ x: 0, y: bandTop, w, h: bandBottom - bandTop })
       })
 
-      // 料金セクションの注記: 無料相談の一文から「対応可」の行末までは線を通さない
-      const note = document.querySelector<HTMLElement>(".tent-pricing__note")
+      // services セクションの結び: 無料相談の一文から CTA までは線を通さない
+      const note = document.querySelector<HTMLElement>(".tent-pricing__foot")
       if (note) textRects.push({ x: 0, y: docY(note), w, h: note.offsetHeight })
+
+      // services の3段リスト: チャプターテキスト帯と同じ扱いで、
+      // 帯の裏には git グラフの線を通さない（全幅で抜く）
+      const svc = document.querySelector<HTMLElement>(".tent-svc")
+      if (svc) textRects.push({ x: 0, y: docY(svc), w, h: svc.offsetHeight })
 
       // ノードは必ずレーンの直線区間上に置く。テキストと重なるなら区間内で上下に逃がす
       const isClear = (x: number, y: number) =>

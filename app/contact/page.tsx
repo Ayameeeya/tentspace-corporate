@@ -7,7 +7,7 @@ import { ContactForm } from "./contact-form"
 
 const title = "お問い合わせ | tent space"
 const description =
-  "tent spaceへのお問い合わせはこちらから。Web・スマホアプリ開発、AIエージェント開発・業務自動化に関するご相談を承ります。"
+  "tent spaceへのお問い合わせはこちらから。Web・スマホアプリ開発から、業務自動化、保守運用の見直し、システムの整理まで、ご相談を承ります。"
 const canonicalUrl = `${SITE_URL}/contact`
 const socialImage = `${SITE_URL}/logo_gradation_yoko.png`
 
@@ -43,7 +43,7 @@ export default function ContactPage() {
           </ScrambleText>
           <div className="tent-doc__meta">
             <ScrambleText as="p" className="paragraph-regular opacity-64" mode="load" intensity={2}>
-              開発のご相談、お見積もりなど、お気軽にどうぞ。まずは無料で、作りたいものの話から始めましょう。
+              開発のご相談、お見積もりなど、お気軽にどうぞ。作りたいことでも、お困りのことでも、まずは無料で。
             </ScrambleText>
           </div>
 

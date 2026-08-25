@@ -4,8 +4,11 @@ import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { MainBtn } from "@/components/home/MainBtn"
 
+// services の3つの入口（build / operate / prune）を先頭に、同じ順で並べる
 const INQUIRY_OPTIONS = [
   { value: "web-mobile", label: "Web・スマホアプリ開発のご相談" },
+  { value: "maintenance", label: "保守運用の引き継ぎ・見直しのご相談" },
+  { value: "portfolio-pruning", label: "システムや機能の整理・クローズのご相談" },
   { value: "ai-automation", label: "AIエージェント開発・業務自動化・DXのご相談" },
   { value: "design", label: "サイトデザインのご相談" },
   { value: "iot-devices", label: "IoT・BLEデバイス連携のご相談" },

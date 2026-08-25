@@ -26,6 +26,7 @@ import {
   changePassword
 } from "@/lib/auth"
 import { getLoginHistory, type LoginHistory } from "@/lib/dashboard"
+import { passwordHint, validatePassword } from "@/lib/password-rules"
 
 export default function SecuritySettingsPage() {
   const router = useRouter()
@@ -170,15 +171,6 @@ export default function SecuritySettingsPage() {
     setFactorId(null)
     setVerificationCode("")
     setMessage(null)
-  }
-
-  const validatePassword = (password: string): string | null => {
-    if (password.length < 8) return "パスワードは8文字以上である必要があります"
-    if (!/[a-z]/.test(password)) return "パスワードには小文字を1文字以上含める必要があります"
-    if (!/[A-Z]/.test(password)) return "パスワードには大文字を1文字以上含める必要があります"
-    if (!/[0-9]/.test(password)) return "パスワードには数字を1文字以上含める必要があります"
-    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) return "パスワードには特殊文字を1文字以上含める必要があります"
-    return null
   }
 
   const handleChangePassword = async () => {
@@ -474,8 +466,11 @@ export default function SecuritySettingsPage() {
                     )}
                   </button>
                 </div>
+                {/* 入力を始めるまでは条件を出さず、残りだけを静かに示す */}
                 <p className="text-xs text-muted-foreground">
-                  8文字以上、小文字・大文字・数字・特殊文字をそれぞれ1文字以上含める必要があります
+                  {newPassword.length > 0
+                    ? passwordHint(newPassword)
+                    : "8文字以上、小文字・大文字・数字・記号を含めてください"}
                 </p>
               </div>
               

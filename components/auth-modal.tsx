@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 import { Input } from "@/components/ui/input"
+import { passwordHint, validatePassword } from "@/lib/password-rules"
 
 interface AuthModalProps {
   isOpen: boolean
@@ -63,25 +64,6 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
   const [mfaFactorId, setMfaFactorId] = useState<string | null>(null)
   const [mfaChallengeId, setMfaChallengeId] = useState<string | null>(null)
   const [mfaCode, setMfaCode] = useState("")
-
-  const validatePassword = (password: string): string | null => {
-    if (password.length < 8) {
-      return "パスワードは8文字以上である必要があります"
-    }
-    if (!/[a-z]/.test(password)) {
-      return "パスワードには小文字を1文字以上含める必要があります"
-    }
-    if (!/[A-Z]/.test(password)) {
-      return "パスワードには大文字を1文字以上含める必要があります"
-    }
-    if (!/[0-9]/.test(password)) {
-      return "パスワードには数字を1文字以上含める必要があります"
-    }
-    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
-      return "パスワードには特殊文字を1文字以上含める必要があります"
-    }
-    return null
-  }
 
   const resetForm = () => {
     setEmail("")
@@ -407,6 +389,14 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                             )}
                           </button>
                         </div>
+                      )}
+
+                      {/* 入力を始めるまでは出さない。残りの条件だけを静かに示し、
+                          満たしきったら 1 行に畳む */}
+                      {mode === "signup" && password.length > 0 && (
+                        <p className="text-xs text-muted-foreground">
+                          {passwordHint(password)}
+                        </p>
                       )}
 
                       {/* Confirm Password (Signup only) */}
