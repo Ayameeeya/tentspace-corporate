@@ -60,6 +60,34 @@ async function findRetiredCmsReferences(directory: string): Promise<string[]> {
   return [...new Set(matches)].sort()
 }
 
+async function findStructuralHeadingLabels(since: string): Promise<string[]> {
+  const postsDirectory = path.join(process.cwd(), "content/posts")
+  const matches: string[] = []
+  const structuralLabel =
+    /^#{2,6}\s+(?:起|承|転|結|導入|構成|前提|補足)(?:\s*[:：]|\s*$)/
+
+  for (const entry of await readdir(postsDirectory, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue
+
+    const postPath = path.join(postsDirectory, entry.name, "index.mdx")
+    if (!existsSync(postPath)) continue
+
+    const source = await readFile(postPath, "utf8")
+    const publishedDate = source.match(/^date:\s*["']?(\d{4}-\d{2}-\d{2})/m)?.[1]
+    if (!publishedDate || publishedDate < since) continue
+
+    source.split("\n").forEach((line, index) => {
+      if (structuralLabel.test(line)) {
+        matches.push(
+          `${path.relative(process.cwd(), postPath)}:${index + 1}: ${line}`,
+        )
+      }
+    })
+  }
+
+  return matches.sort()
+}
+
 describe("repository hygiene", () => {
   it("retired CMS identifiers are absent from repository files and paths", async () => {
     expect(await findRetiredCmsReferences(process.cwd())).toEqual([])
@@ -109,6 +137,8 @@ describe("repository hygiene", () => {
     expect(writingGuide).toContain("実在した会話の再構成のみ")
     expect(writingGuide).toContain("結論先出しを鉄則")
     expect(writingGuide).toContain("起承転結のストーリーライン")
+    expect(writingGuide).toContain("構成の名前を見出しに書かない")
+    expect(writingGuide).toContain("構成の指示")
     expect(writingGuide).toContain("5,000〜8,000字")
     expect(writingGuide).toContain("水増しは禁止")
     expect(writingGuide).toContain("32字前後")
@@ -128,6 +158,10 @@ describe("repository hygiene", () => {
       "utf8",
     )
     expect(dialogueAssetGuide).toContain("差し替え")
+  })
+
+  it("2026-08-24以降の記事見出しに構成ラベルを公開しない", async () => {
+    expect(await findStructuralHeadingLabels("2026-08-24")).toEqual([])
   })
 
   it("公開URLは一つのSITE_URL定義を使う", async () => {

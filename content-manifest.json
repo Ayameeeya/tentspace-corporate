@@ -17,7 +17,7 @@
     ],
     "draft": false,
     "readingTime": 13,
-    "wordCount": 4855,
+    "wordCount": 4851,
     "ogImage": "/blog-assets/ai-agent-two-layer-review/featured.jpg",
     "experiment": {
       "hook": "howto",
@@ -44,7 +44,7 @@
     ],
     "draft": false,
     "readingTime": 14,
-    "wordCount": 5269,
+    "wordCount": 5263,
     "ogImage": "/blog-assets/zed-vs-vscode-agent-coding/featured.jpg",
     "experiment": {
       "hook": "contrarian",
@@ -71,7 +71,7 @@
     ],
     "draft": false,
     "readingTime": 10,
-    "wordCount": 3915,
+    "wordCount": 3913,
     "ogImage": "/blog-assets/ai-agent-notion-queue-claim/featured.jpg",
     "experiment": {
       "hook": "howto",
@@ -125,7 +125,7 @@
     ],
     "draft": false,
     "readingTime": 13,
-    "wordCount": 5027,
+    "wordCount": 5024,
     "ogImage": "/blog-assets/mcp-server-publish-rate-limit/featured.jpg",
     "experiment": {
       "hook": "contrarian",
