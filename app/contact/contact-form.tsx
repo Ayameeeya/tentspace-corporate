@@ -99,6 +99,7 @@ function TentSelect({
 
 export function ContactForm() {
   const router = useRouter()
+  const submissionIdRef = useRef("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [inquiryType, setInquiryType] = useState("")
   const [inquiryError, setInquiryError] = useState<string | null>(null)
@@ -114,9 +115,13 @@ export function ContactForm() {
 
     const form = e.currentTarget
     const formData = new FormData(form)
+    if (!submissionIdRef.current) {
+      submissionIdRef.current = crypto.randomUUID()
+    }
+    formData.set("submission_id", submissionIdRef.current)
 
     try {
-      const response = await fetch(process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL || "", {
+      const response = await fetch("/api/contact", {
         method: "POST",
         body: formData,
       })
@@ -124,7 +129,8 @@ export function ContactForm() {
       if (response.ok) {
         router.push("/contact/completed")
       } else {
-        alert("送信に失敗しました。もう一度お試しください。")
+        const body = await response.json().catch(() => null)
+        alert(body?.error || "送信に失敗しました。もう一度お試しください。")
         setIsSubmitting(false)
       }
     } catch (error) {
@@ -136,7 +142,13 @@ export function ContactForm() {
 
   return (
     <div className="tent-form">
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "2em" }}>
+      <form
+        onSubmit={handleSubmit}
+        onChange={() => {
+          submissionIdRef.current = ""
+        }}
+        style={{ display: "flex", flexDirection: "column", gap: "2em" }}
+      >
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(16em, 1fr))", gap: "2em" }}>
           <div>
             <label htmlFor="name">お名前 *</label>

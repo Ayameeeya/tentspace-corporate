@@ -1,5 +1,32 @@
 [
   {
+    "id": 3497094271,
+    "slug": "ai-agent-two-layer-review",
+    "title": "AIエージェントの公開前チェックは2層に分ける｜決定的ルールとLLM審査の設計",
+    "description": "AIエージェントに公開作業を任せるときのチェック機構を「決定的に落とす層」と「LLMに判断させる層」の2層に分けて運用している実装記録。GitHubがalt textチェックで公開した同じ層分けの設計と突き合わせ、誤検知で審査が信用を失わないための逃げ道の作り方、PASSを床として扱う考え方をまとめます。",
+    "date": "2026-08-26T00:00:00.000Z",
+    "updated": "2026-08-26T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "AIエージェント",
+      "自動化",
+      "LLM",
+      "設計"
+    ],
+    "draft": false,
+    "readingTime": 13,
+    "wordCount": 4855,
+    "ogImage": "/blog-assets/ai-agent-two-layer-review/featured.jpg",
+    "experiment": {
+      "hook": "howto",
+      "cta": "inquiry",
+      "targetKw": "AIエージェント 品質管理",
+      "utmCampaign": "ai-agent-two-layer-review-202608"
+    }
+  },
+  {
     "id": 2490314766,
     "slug": "zed-vs-vscode-agent-coding",
     "title": "Zed vs VS Codeを突き詰めたら「エディタはどうでもよくなった」｜Codexメイン時代のエディタ選定",
