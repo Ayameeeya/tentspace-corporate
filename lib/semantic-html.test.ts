@@ -95,6 +95,13 @@ describe("semantic HTML", () => {
     expect(source).toContain('autoComplete="tel"')
   })
 
+  it("問い合わせをサーバー側APIへ送信する", async () => {
+    const source = await read("app/contact/contact-form.tsx")
+
+    expect(source).toContain('fetch("/api/contact"')
+    expect(source).not.toContain("NEXT_PUBLIC_N8N_WEBHOOK_URL")
+  })
+
   it("ブログ検索欄に明示的なラベルを付ける", async () => {
     const source = await read("app/blog/blog-page-client.tsx")
 
