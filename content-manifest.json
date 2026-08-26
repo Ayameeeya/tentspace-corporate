@@ -1,5 +1,32 @@
 [
   {
+    "id": 2490314766,
+    "slug": "zed-vs-vscode-agent-coding",
+    "title": "Zed vs VS Codeを突き詰めたら「エディタはどうでもよくなった」｜Codexメイン時代のエディタ選定",
+    "description": "Codexなど CLIエージェント主体の開発でZedとVS Codeを本気で比較した記録。ZedのACP統合とサブスク対応の非対称を調べた末に、エディタの役割が「たまにコードを読むビューア」へ縮む過程と、差分レビューをPRに寄せるとエディタ選定が「好みの問題」になる判断フレームをまとめます。",
+    "date": "2026-08-26T00:00:00.000Z",
+    "updated": "2026-08-26T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "AIエージェント",
+      "Codex",
+      "Zed",
+      "VS Code"
+    ],
+    "draft": false,
+    "readingTime": 14,
+    "wordCount": 5269,
+    "ogImage": "/blog-assets/zed-vs-vscode-agent-coding/featured.jpg",
+    "experiment": {
+      "hook": "contrarian",
+      "cta": "inquiry",
+      "targetKw": "Zed VS Code 比較",
+      "utmCampaign": "zed-vs-vscode-agent-coding-202608"
+    }
+  },
+  {
     "id": 1210402204,
     "slug": "ai-agent-notion-queue-claim",
     "title": "AIエージェントの二重投稿を止める排他claim設計｜Notionキューのstatus遷移 実装記録",

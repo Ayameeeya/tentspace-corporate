@@ -357,6 +357,20 @@
       "description": "Find TypeScript starter projects: from Angular to React or Node.js and CLIs.",
       "domain": "www.typescriptlang.org",
       "favicon": "https://www.typescriptlang.org/favicon-32x32.png?v=8944a05a8b601855de116c8a56d3b3ae"
+    },
+    "https://zed.dev/blog/chatgpt-subscription-in-zed": {
+      "title": "Use Your ChatGPT Subscription in Zed - Zed Blog",
+      "description": "From the Zed Blog: Sign in with your ChatGPT account and use OpenAI's models in Zed.",
+      "domain": "zed.dev",
+      "image": "https://images.zed.dev/blog/chatgpt-subscription-in-zed/thumbnail-gptsub.webp",
+      "favicon": "https://zed.dev/favicon_black_16.png"
+    },
+    "https://zed.dev/blog/codex-is-live-in-zed": {
+      "title": "Codex is Live in Zed - Zed Blog",
+      "description": "From the Zed Blog: OpenAI's Codex AI agent is now available in Zed via the Agent Client Protocol (ACP).",
+      "domain": "zed.dev",
+      "image": "https://zed.dev/img/post/acp-codex/thumbnail.webp",
+      "favicon": "https://zed.dev/favicon_black_16.png"
     }
   }
 }
