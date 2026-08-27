@@ -67,7 +67,14 @@ export function selectRelatedPosts(
 }
 
 export function tagToSlug(tag: string): string {
-  return encodeURIComponent(tag.trim().toLowerCase()).toLowerCase()
+  const trimmed = tag.trim()
+  let decoded = trimmed
+  try {
+    decoded = decodeURIComponent(trimmed)
+  } catch {
+    decoded = trimmed
+  }
+  return decoded.toLowerCase()
 }
 
 export function queryPosts(

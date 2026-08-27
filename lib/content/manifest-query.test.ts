@@ -57,6 +57,23 @@ describe("queryPosts", () => {
 
     expect(result.posts.map((post) => post.slug)).toEqual(["mdx-ui-parity"])
   })
+
+  it("listCategories の id で絞り込む", () => {
+    const tech = listCategories(posts).find((category) => category.name === "テクノロジー")
+    expect(tech).toBeDefined()
+
+    const result = queryPosts(posts, { categories: [tech!.id] })
+
+    expect(result.posts.map((post) => post.slug)).toEqual(["mdx-ui-parity"])
+  })
+
+  it("パーセントエンコード済みの旧カテゴリslugでも絞り込む", () => {
+    const result = queryPosts(posts, {
+      categories: ["%e3%83%86%e3%82%af%e3%83%8e%e3%83%ad%e3%82%b8%e3%83%bc"],
+    })
+
+    expect(result.posts.map((post) => post.slug)).toEqual(["mdx-ui-parity"])
+  })
 })
 
 describe("listCategories", () => {
@@ -64,8 +81,8 @@ describe("listCategories", () => {
     expect(listCategories(posts)).toEqual([
       { id: "seo", slug: "seo", name: "SEO", count: 1 },
       {
-        id: "%e3%83%86%e3%82%af%e3%83%8e%e3%83%ad%e3%82%b8%e3%83%bc",
-        slug: "%e3%83%86%e3%82%af%e3%83%8e%e3%83%ad%e3%82%b8%e3%83%bc",
+        id: "テクノロジー",
+        slug: "テクノロジー",
         name: "テクノロジー",
         count: 1,
       },
