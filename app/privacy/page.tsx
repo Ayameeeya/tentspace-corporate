@@ -102,7 +102,6 @@ export default function PrivacyPage() {
             "Amazon Web Services, Inc.（東京リージョン）— 不具合情報の保存、メールの送信",
             "Slack Technologies, LLC（米国）— お問い合わせ通知の送信",
             "Google LLC（米国）— アクセス解析（同意前または拒否時はCookieを使用しない測定信号に限定し、Cookieによる識別子を利用する計測は同意後のみ）",
-            "Stripe, Inc.（米国）— アカウント登録時の顧客情報（メールアドレス、表示名）の管理。カード情報の取扱いはありません。",
           ],
         },
         {

@@ -4,9 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
   LayoutDashboard,
-  Package,
   Users,
-  Settings,
   ChevronRight,
   LogOut,
 } from "lucide-react"
@@ -35,19 +33,9 @@ const menuItems = [
     icon: LayoutDashboard,
   },
   {
-    title: "商品管理",
-    url: "/admin/products",
-    icon: Package,
-  },
-  {
     title: "ユーザー管理",
     url: "/admin/users",
     icon: Users,
-  },
-  {
-    title: "設定",
-    url: "/admin/settings",
-    icon: Settings,
   },
 ]
 
