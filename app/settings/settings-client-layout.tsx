@@ -35,7 +35,6 @@ export default function SettingsClientLayout({
   }, [router])
 
   const menuItems = [
-    { id: "general", label: "一般設定", icon: "⚙️", href: "/settings/general" },
     { id: "account", label: "アカウント", icon: "👤", href: "/settings/account" },
     { id: "security", label: "セキュリティ", icon: "🔐", href: "/settings/security" },
     { id: "privacy", label: "プライバシー", icon: "🔒", href: "/settings/privacy" },
