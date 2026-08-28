@@ -52,7 +52,6 @@ interface User {
   email: string | null
   avatar_url: string | null
   role: string | null
-  stripe_customer_id: string | null
   bio: string | null
   created_at: string | null
 }
@@ -185,7 +184,6 @@ export function UserListTable({ users, currentUserId }: UserListTableProps) {
               <TableHead>ユーザー</TableHead>
               <TableHead>メールアドレス</TableHead>
               <TableHead>権限</TableHead>
-              <TableHead>Stripe ID</TableHead>
               <TableHead>登録日</TableHead>
               <TableHead className="w-[50px]"></TableHead>
             </TableRow>
@@ -232,15 +230,6 @@ export function UserListTable({ users, currentUserId }: UserListTableProps) {
                       currentRole={user.role || "user"}
                       disabled={user.id === currentUserId}
                     />
-                  </TableCell>
-                  <TableCell>
-                    {user.stripe_customer_id ? (
-                      <Badge variant="outline" className="font-mono text-xs">
-                        {user.stripe_customer_id.slice(0, 12)}...
-                      </Badge>
-                    ) : (
-                      <span className="text-muted-foreground text-sm">未連携</span>
-                    )}
                   </TableCell>
                   <TableCell>
                     {user.created_at
@@ -325,12 +314,6 @@ export function UserListTable({ users, currentUserId }: UserListTableProps) {
                 <div>
                   <Label className="text-muted-foreground">自己紹介</Label>
                   <p className="text-sm">{selectedUser.bio || "未設定"}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Stripe顧客ID</Label>
-                  <p className="font-mono text-sm">
-                    {selectedUser.stripe_customer_id || "未連携"}
-                  </p>
                 </div>
                 <div>
                   <Label className="text-muted-foreground">登録日</Label>
