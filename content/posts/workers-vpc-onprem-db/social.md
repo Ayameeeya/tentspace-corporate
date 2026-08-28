@@ -1,0 +1,6 @@
+オンプレのDBをサーバーレスから叩くのに、VPNもDirect Connectも要らなくなりました。Cloudflare Workers VPCの話です。
+
+cloudflaredを1プロセス起動して、wranglerでVPC Serviceを登録するだけ。あとはHyperdriveがコネクションプールまで持ってくれるので、Workerが何千インスタンス起きてもDB側の接続数は爆発しません。インバウンド開放も固定IPも不要。
+
+AWSで同じことをやるとVPN＋VPCアタッチ＋SG設計＋自前プーリングのインフラ案件になる、その落差と判断基準を記事にしました。
+https://www.tentspace.net/blog/workers-vpc-onprem-db
