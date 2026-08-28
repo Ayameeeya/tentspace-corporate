@@ -39,7 +39,6 @@ export default function SettingsClientLayout({
     { id: "account", label: "アカウント", icon: "👤", href: "/settings/account" },
     { id: "security", label: "セキュリティ", icon: "🔐", href: "/settings/security" },
     { id: "privacy", label: "プライバシー", icon: "🔒", href: "/settings/privacy" },
-    { id: "notifications", label: "通知", icon: "🔔", href: "/settings/notifications" },
   ]
 
   if (loading) {

@@ -42,12 +42,6 @@ export interface UserSettings {
   profile_visibility: 'public' | 'followers' | 'private'
   show_email: boolean
   show_activity: boolean
-  email_notifications: boolean
-  email_new_follower: boolean
-  email_new_comment: boolean
-  email_new_like: boolean
-  email_newsletter: boolean
-  push_notifications: boolean
   created_at: string
   updated_at: string
 }
