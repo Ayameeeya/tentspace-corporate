@@ -5,16 +5,9 @@ const { sendMock, fetchMock } = vi.hoisted(() => ({
   fetchMock: vi.fn(),
 }))
 
-vi.mock("@aws-sdk/client-sesv2", () => ({
-  SESv2Client: class {
-    send = sendMock
-  },
-  SendEmailCommand: class {
-    input: unknown
-
-    constructor(input: unknown) {
-      this.input = input
-    }
+vi.mock("resend", () => ({
+  Resend: class {
+    emails = { send: sendMock }
   },
 }))
 
@@ -43,7 +36,7 @@ describe("POST /api/contact", () => {
     process.env.CONTACT_FROM_EMAIL = "tent space <noreply@tentspace.net>"
     process.env.CONTACT_TO_EMAIL = "back-office@tentspace.net"
     process.env.CONTACT_SLACK_WEBHOOK_URL = "https://hooks.slack.test/contact"
-    sendMock.mockResolvedValue({ MessageId: "email_123" })
+    sendMock.mockResolvedValue({ data: { id: "email_123" }, error: null })
     fetchMock.mockResolvedValue(new Response("ok", { status: 200 }))
     vi.stubGlobal("fetch", fetchMock)
   })
@@ -88,39 +81,49 @@ describe("POST /api/contact", () => {
     expect(response.status).toBe(200)
   })
 
-  it("delivers the contact email through AWS SES", async () => {
+  it("delivers the contact email through Resend", async () => {
     const response = await POST(createRequest())
 
     expect(response.status).toBe(200)
-    const command = sendMock.mock.calls[0]?.[0] as { input: unknown }
-    expect(command.input).toEqual(
+    expect(sendMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        FromEmailAddress: "tent space <noreply@tentspace.net>",
-        Destination: { ToAddresses: ["back-office@tentspace.net"] },
-        ReplyToAddresses: ["taro@example.com"],
-        EmailTags: [
+        from: "tent space <noreply@tentspace.net>",
+        to: ["back-office@tentspace.net"],
+        replyTo: "taro@example.com",
+        tags: [
           {
-            Name: "submission_id",
-            Value: "123e4567-e89b-42d3-a456-426614174000",
+            name: "submission_id",
+            value: "123e4567-e89b-42d3-a456-426614174000",
           },
         ],
       }),
     )
   })
 
-  it("uses the verified SES domain by default", async () => {
+  it("uses the verified sender domain by default", async () => {
     delete process.env.CONTACT_FROM_EMAIL
     delete process.env.CONTACT_TO_EMAIL
 
     const response = await POST(createRequest())
 
     expect(response.status).toBe(200)
-    const command = sendMock.mock.calls[0]?.[0] as { input: unknown }
-    expect(command.input).toEqual(
+    expect(sendMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        FromEmailAddress: "tent space <noreply@tentspace.net>",
-        Destination: { ToAddresses: ["back-office@tentspace.net"] },
+        from: "tent space <noreply@tentspace.net>",
+        to: ["back-office@tentspace.net"],
       }),
     )
+  })
+
+  it("returns 502 when Resend reports a delivery error", async () => {
+    sendMock.mockResolvedValue({
+      data: null,
+      error: { name: "application_error", message: "Unable to send email" },
+    })
+
+    const response = await POST(createRequest())
+
+    expect(response.status).toBe(502)
+    expect(fetchMock).not.toHaveBeenCalled()
   })
 })

@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "@aws-sdk/client-cloudwatch-logs": "^3.709.0",
-    "@aws-sdk/client-sesv2": "^3.953.0",
     "@hookform/resolvers": "^3.10.0",
     "@mdx-js/mdx": "^3.1.1",
     "@radix-ui/react-accordion": "1.2.2",
@@ -89,6 +88,7 @@
     "react-resizable-panels": "^2.1.7",
     "recharts": "2.15.4",
     "remark-gfm": "^4.0.1",
+    "resend": "^6.24.0",
     "sonner": "^1.7.4",
     "svg-path-commander": "^2.1.11",
     "tailwind-merge": "^2.6.0",
