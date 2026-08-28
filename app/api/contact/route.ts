@@ -1,4 +1,4 @@
-import { SendEmailCommand, SESv2Client } from "@aws-sdk/client-sesv2"
+import { Resend } from "resend"
 
 import {
   buildContactEmail,
@@ -7,10 +7,6 @@ import {
 
 const defaultFrom = "tent space <noreply@tentspace.net>"
 const defaultTo = "back-office@tentspace.net"
-
-const ses = new SESv2Client({
-  region: process.env.AWS_REGION || "ap-northeast-1",
-})
 
 async function notifySlack(webhookUrl: string, text: string) {
   const maxSlackTextLength = 2_900
@@ -46,31 +42,27 @@ export async function POST(request: Request) {
       from: process.env.CONTACT_FROM_EMAIL || defaultFrom,
       to: process.env.CONTACT_TO_EMAIL || defaultTo,
     })
-    const result = await ses.send(
-      new SendEmailCommand({
-        FromEmailAddress: email.from,
-        Destination: { ToAddresses: [email.to] },
-        ReplyToAddresses: [email.replyTo],
-        EmailTags: [
-          {
-            Name: "submission_id",
-            Value: submission.submissionId,
-          },
-        ],
-        Content: {
-          Simple: {
-            Subject: { Data: email.subject, Charset: "UTF-8" },
-            Body: {
-              Text: { Data: email.text, Charset: "UTF-8" },
-              Html: { Data: email.html, Charset: "UTF-8" },
-            },
-          },
+    // ビルド時にモジュールが評価されても落ちないよう、クライアントは送信時に生成する
+    const resend = new Resend(process.env.RESEND_API_KEY)
+    const { data, error } = await resend.emails.send({
+      from: email.from,
+      to: [email.to],
+      replyTo: email.replyTo,
+      subject: email.subject,
+      text: email.text,
+      html: email.html,
+      tags: [
+        {
+          name: "submission_id",
+          value: submission.submissionId,
         },
-      }),
-    )
+      ],
+    })
 
-    if (!result.MessageId) {
-      throw new Error("AWS SES did not return a message ID")
+    if (error || !data?.id) {
+      throw new Error(
+        `Resend delivery failed: ${error?.message ?? "no message ID returned"}`,
+      )
     }
 
     const slackWebhookUrl = process.env.CONTACT_SLACK_WEBHOOK_URL
@@ -82,6 +74,6 @@ export async function POST(request: Request) {
       }
     }
 
-    return { id: result.MessageId }
+    return { id: data.id }
   })
 }
