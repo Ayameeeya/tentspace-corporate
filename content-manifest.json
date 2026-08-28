@@ -1,5 +1,59 @@
 [
   {
+    "id": 720107839,
+    "slug": "claude-md-agents-md-guide",
+    "title": "CLAUDE.mdの書き方｜AGENTS.mdに1本化して「強制はコードに逃がす」",
+    "description": "CLAUDE.mdに何を書き、何を書かないべきかを実運用の構成で解説します。CLAUDE.mdを1行にしてAGENTS.mdへ1本化する理由、複数エージェントで指示書のドリフトを止める設計、守らせたいルールをhooksへ逃がす使い分けまでを記録します。",
+    "date": "2026-08-28T00:00:00.000Z",
+    "updated": "2026-08-28T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "AIエージェント",
+      "自動化",
+      "設計"
+    ],
+    "draft": false,
+    "readingTime": 9,
+    "wordCount": 3564,
+    "ogImage": "/blog-assets/claude-md-agents-md-guide/featured.jpg",
+    "experiment": {
+      "hook": "contrarian",
+      "cta": "inquiry",
+      "targetKw": "CLAUDE.md 書き方",
+      "utmCampaign": "claude-md-agents-md-202608"
+    }
+  },
+  {
+    "id": 249075589,
+    "slug": "workers-vpc-onprem-db",
+    "title": "Workers VPCでオンプレDBに接続する｜AWSのVPN構成と何が違うか",
+    "description": "オンプレや私設ネットワークのDBをサーバーレスから使う方法を整理します。Cloudflare Workers VPCとHyperdriveによる接続手順、AWSでVPN／Direct Connectを組む場合との構成の落差、Tailscaleとの棲み分けまで、検討過程の判断を記録します。",
+    "date": "2026-08-28T00:00:00.000Z",
+    "updated": "2026-08-28T00:00:00.000Z",
+    "categories": [
+      "テクノロジー"
+    ],
+    "tags": [
+      "Cloudflare",
+      "Cloudflare Workers",
+      "サーバーレス",
+      "データベース"
+    ],
+    "draft": false,
+    "readingTime": 14,
+    "wordCount": 5528,
+    "ogImage": "/blog-assets/workers-vpc-onprem-db/featured.jpg",
+    "experiment": {
+      "hook": "contrarian",
+      "cta": "inquiry",
+      "targetKw": "Workers VPC オンプレ DB",
+      "utmCampaign": "workers-vpc-onprem-db-202608"
+    }
+  },
+  {
     "id": 3497094271,
     "slug": "ai-agent-two-layer-review",
     "title": "AIエージェントの公開前チェックは2層に分ける｜決定的ルールとLLM審査の設計",
