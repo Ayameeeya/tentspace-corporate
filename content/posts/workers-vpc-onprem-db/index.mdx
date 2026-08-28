@@ -1,0 +1,145 @@
+---
+title: "Workers VPCでオンプレDBに接続する｜AWSのVPN構成と何が違うか"
+description: "オンプレや私設ネットワークのDBをサーバーレスから使う方法を整理します。Cloudflare Workers VPCとHyperdriveによる接続手順、AWSでVPN／Direct Connectを組む場合との構成の落差、Tailscaleとの棲み分けまで、検討過程の判断を記録します。"
+date: 2026-08-28
+slug: workers-vpc-onprem-db
+categories: ["テクノロジー"]
+tags: ["Cloudflare", "Cloudflare Workers", "サーバーレス", "データベース"]
+draft: false
+ogImage: "/blog-assets/workers-vpc-onprem-db/featured.jpg"
+experiment:
+  pillar: "ai-dev"
+  hook: "contrarian"
+  cta: "inquiry"
+  targetKw: "Workers VPC オンプレ DB"
+  utmCampaign: "workers-vpc-onprem-db-202608"
+---
+
+<Dialogue>
+  <Say by="hiro">CloudflareのWorkers VPCとAWSのDirect Connectって、どう違うの？</Say>
+  <Say by="ai">レイヤーが違います。Direct Connectは物理の専用線、Workers VPCはWorkersから私設リソースに届くアプリ層の仕組みです</Say>
+  <Say by="hiro">要するに、エージェント・サーバー方式に近い感じ？</Say>
+  <Say by="ai">そうです。VPC内にcloudflaredを置いて、内側から外へトンネルを張る方式です</Say>
+  <Say by="hiro">TCPもいけるなら、トンネル経由でDBコネクションを張ることも可能？</Say>
+  <Say by="ai">可能です。今はそれが公式推奨で、Hyperdriveがコネクションプールまで持ってくれます</Say>
+  <Say by="hiro">すごいね。同じレベルの機能、AWSにはないの？</Say>
+  <Say by="ai">部品は全部ありますが、一体で提供するものはありません。VPNかDirect Connectを組む話になります</Say>
+  <Say by="hiro" mood="troubled">VPNは嫌だな</Say>
+  <Say by="ai">その感覚は正しいです。cloudflaredはただのプロセスで、outbound 443が出れば動きます</Say>
+</Dialogue>
+
+オンプレのDBをサーバーレスから叩くのに、VPNもDirect Connectも組まない選択肢ができました。cloudflaredを1プロセス起動して `wrangler vpc service create` を打てば、Cloudflare WorkersからプライベートネットワークのPostgreSQLに読み書きできます。私自身、Workers VPCとAWSのVPN構成を比べる中で「これはネットワークを繋ぐ話ではなく、サービスを引っ張り出す話なんだ」という設計思想の違いに行き着きました。この記事はその検討過程の記録です。
+
+対象読者は、オンプレ資産や複数クラウドを抱えたまま、WorkersやLambdaのようなサーバーレスを使いたい個人開発者・小規模チームのエンジニアです。VPNやDirect Connectの構築・運用に苦い記憶がある人なら、なおさら刺さるはずです。持ち帰ってもらいたいのは次の3点です。
+
+- Workers VPCとDirect Connectは「レイヤーが違う」という整理
+- cloudflared 1プロセスでオンプレDBにWorkersから読み書きする具体的な手順
+- Tailscaleとの棲み分け（管理面のアクセスと、本番データパスの分離）
+
+なお、Workers VPCは執筆時点（2026年8月）でオープンベータの機能です。仕様は変わる可能性があるので、導入時は一次情報を確認してください。
+
+## 名前は似ているが、比較のレイヤーが違う
+
+発端は素朴な疑問でした。CloudflareのWorkers VPCとAWSのDirect Connect、どちらも「私設ネットワークに繋ぐもの」に見えて、何が違うのか。
+
+調べてみると、この2つは比較のレイヤーがそもそも違いました。
+
+- **AWS Direct Connect**: オンプレとAWSを繋ぐ物理専用線。専用接続では1G/10G/100Gの回線を契約し、BGPでルートを交換します（[AWS公式ドキュメント](https://docs.aws.amazon.com/directconnect/latest/UserGuide/Welcome.html)）。物理回線の敷設や事業者との調整を伴うため、即日で開通する類の仕組みではありません
+- **Cloudflare Workers VPC**: Workersから、公衆インターネットに公開されていない外部クラウド（AWS/Azure/GCP/オンプレ）のプライベートAPIやDBに届くための、アプリ層の仕組み
+
+AWSの世界に対応関係を探すなら、Direct Connectに相当するのはCloudflareでいうCNI（Network Interconnect）です。Workers VPCのほうは、LambdaからPrivateLink／VPCエンドポイント経由で他所のサービスを使う感覚に近い。「どの経路で繋ぐか」ではなく「どのサービスに繋ぐか」を指定する仕組みです。
+
+<LinkCard url="https://developers.cloudflare.com/workers-vpc/" title="Cloudflare公式ドキュメント: Workers VPC" />
+
+Workers VPCには2つのモードがあります。ホスト:ポート単位でバインドするVPC Servicesと、トンネルやCNI全体にバインドして `connect()` で生TCPを話せるVPC Networksです。DB接続に使うのは前者のVPC Servicesが基本になります。
+
+## 内側から外へ張る「エージェント型」の接続
+
+仕組みを一言でいうと、エージェント・サーバー方式です。オンプレやVPCの内側にcloudflared（コネクタのプロセス）を置き、そこから外向きにトンネルを張ります。接続は常に内側から外へ向かうので、次のものが全部不要になります。
+
+- インバウンドポートの開放
+- 固定IPアドレス
+- ルーターやファイアウォールの設定変更
+
+NATの裏でも動きます。この「エージェント型」に属するのがWorkers VPC（Cloudflare Tunnel）やTailscaleで、設定は数分〜数時間の粒度です。対する「回線・ルーティング型」がDirect ConnectやVPNゲートウェイで、BGP・回線契約・IP設計が必要な代わりに、帯域や遅延の保証が得られます。軽さと保証のトレードオフですが、個人開発や小規模チームのユースケースで専用線の帯域保証が要る場面は、正直そう多くありません。
+
+## トンネル経由でDBコネクションは張れるのか
+
+ここが一番意外だったところです。「HTTPだけでなくTCPも通るなら、トンネル越しにPostgreSQLのコネクションを張れるのでは」と思って調べたら、可能どころか、**TCPタイプのVPC ServiceとHyperdriveを組み合わせるのが公式推奨ルート**になっていました。2026年4月末のchangelogで、Hyperdrive経由でプライベートDB（PostgreSQL/MySQL）に接続する構成が正式化されています。
+
+<LinkCard url="https://developers.cloudflare.com/hyperdrive/configuration/connect-to-private-database-vpc/" title="Hyperdrive: Connect to a private database using Workers VPC" />
+
+手順の中核はコマンド1つです。トンネルを張ったうえで、DBをVPC Serviceとして登録します。
+
+```bash
+npx wrangler vpc service create my-postgres-db \
+  --type tcp --tcp-port 5432 --app-protocol postgresql \
+  --tunnel-id <TUNNEL_ID> --ipv4 10.0.0.5
+```
+
+あとはこのVPC Serviceを指すHyperdrive設定を作り、Workerからは `pg` や `mysql2` をいつも通り使って、Hyperdriveの接続文字列を渡すだけです。対象はPostgreSQLとMySQLです。
+
+### Hyperdriveのプーリングが、オンプレDBにちょうどいい
+
+この構成で効いてくるのがHyperdriveのコネクションプーリングです。Workerは短命な実行環境なので、自前で長生きするDBコネクションを保持できません。代わりにHyperdrive側がプールをホットに保ち、DBから見ると「Cloudflareのプールから、安定した少数の接続が来ている」状態になります。
+
+これはオンプレDBにとってむしろ好都合です。Workerが世界中で何千インスタンス起きても、DB側の接続数は爆発しない。エッジ側のスケールとDB側の接続数保護が、仕組みとして両立します。プーリングの設計背景はCloudflareのエンジニアリングブログに詳しく書かれています。
+
+<LinkCard url="https://blog.cloudflare.com/elephants-in-tunnels-how-hyperdrive-connects-to-databases-inside-your-vpc-networks/" title="Cloudflare Blog: How Hyperdrive connects to databases inside your VPC networks" />
+
+## AWSで同じことをやると、何が要るか
+
+対比のために、LambdaからオンプレDBに繋ぐ場合に典型的に登場する構成要素を並べます（要件により増減します。LambdaのVPC接続の前提は[AWS公式ドキュメント](https://docs.aws.amazon.com/lambda/latest/dg/configuration-vpc.html)を参照）。
+
+1. Site-to-Site VPNまたはDirect Connect
+2. LambdaのVPCアタッチと、サブネット・ルートテーブル・セキュリティグループの設計
+3. オンプレ側ファイアウォールのインバウンド許可
+4. コネクションプーリングの自前運用（PgBouncerなど）
+5. 場合によってはRoute 53 Resolverのアウトバウンドエンドポイント
+
+一方、Workers VPC側の必要物はこうです。
+
+1. cloudflaredを1プロセス（outboundのみ。ファイアウォール変更不要）
+2. `wrangler vpc service create` とHyperdriveの設定
+3. 終わり
+
+この落差が、この記事で一番伝えたいことです。前者は関係者調整も含めれば日単位〜週単位になりがちなインフラ案件で、後者は半日あれば試せる作業です（この規模感は私の体感による一般論で、環境によって差はあります）。
+
+VPNを組みたくない理由は、構築の重さだけではありません。私の実感として、VPNは「つながらない時に何が悪いか分からない」系トラブルの宝庫です。ルーターの挙動、再接続、鍵のローテーション、MTU、CIDRの衝突。一度組むと誰も触りたがらない資産になりがちです。cloudflaredはただのプロセスなので、outbound 443が出れば動き、拠点同士でIPレンジが被っていても関係ありません。この違いは運用フェーズで効いてきます。
+
+## Tailscaleとどう棲み分けるか
+
+エージェント型つながりで、Tailscaleとの関係も整理しておきます。私は自宅のMac Miniを常駐エージェントホストにして、TailscaleでAWSのVPCに入る構成を実運用しています。SSHや踏み台の置き換え、CIからのDBマイグレーションのような「人とマシンの管理面アクセス」には、Tailscaleは本番環境相手でも普通に使える道具です。
+
+ただし、ユーザートラフィックのデータパスにTailscaleを挟む構成は主流ではありません。コントロールプレーンがTailscale社に依存し、リレー（DERP）経由になった場合の性能が読みにくいためです（この整理は一般的な運用慣行の話で、Tailscale社の公式見解ではありません）。
+
+結論としての棲み分けはこうなります。
+
+- **Tailscale**: 開発・運用のための通路（SSH、踏み台置き換え、CIからの管理アクセス）
+- **Cloudflare Tunnel + Workers VPC**: 本番のデータパス
+
+Cloudflare Tunnelはもともと本番トラフィックを通すための製品で、Webサイトのオリジン保護にも同じ仕組みが使われています。本番のリクエスト経路に置くことが最初から想定されている点が、性格の違いです。
+
+## AWS側の言い分も公平に
+
+Workers VPC礼賛で終わると不公平なので、AWS構成の利点も書いておきます。
+
+一度VPNやDirect Connectを繋げば、Lambdaだけでなく、ECS・EC2・Glueなど**AWS上のあらゆるサービスからオンプレに届きます**。Workers VPCが提供するのはWorkers（とHyperdrive）からの経路に限定されるので、「組織のワークロード全体をオンプレと接続する」用途なら回線型に分があります。また、VPCにアタッチしたLambdaは文字通り「ネットワークの中にいる」ので、届けたいサービスを個別に登録する必要がないという素直さもあります。
+
+それでも構成としての性格の違いは残ります。AWS側は「ネットワーク同士を接続してから、その中で各サービスを使う」手順で、VPN／Direct Connectの構築・ルーティング設計・セキュリティグループ設計という段階を踏みます。Workers VPC側は「届きたいサービスを1つずつ登録する」手順で、ネットワーク全体の接続設計を省略できる代わりに、経路はWorkers（とHyperdrive）からに限られます。Cloudflare自身は、外部クラウドやオンプレのリソースへ届くことをWorkers VPCの設計目標として掲げており、既存のCloudflare Tunnelを土台に採用した経緯や、今後のIPsec・CNI・AWS Transit Gateway対応、双方向化のロードマップがオープンベータ発表で語られています。
+
+<LinkCard url="https://blog.cloudflare.com/workers-vpc-open-beta/" title="Cloudflare Blog: Workers VPC now in open beta" />
+
+逆方向、つまりオンプレ側からWorkersのアプリを呼ぶのは、公開URLがあるので普通にHTTPS＋Access／mTLSで済みます。オンプレからD1やKVのようなCloudflare側リソースへ直接届く「双方向化」は、上記発表の中でロードマップとして言及されている段階です。
+
+## どちらを選ぶかの判断基準
+
+最後に、検討の結論を判断基準の形でまとめます。
+
+- **オンプレDBを1〜数本、サーバーレスから使いたいだけ**: Workers VPC + Hyperdrive。cloudflared 1プロセスで済み、プーリングも付いてくる
+- **組織のワークロード全体をオンプレと相互接続したい**: AWSのVPN／Direct Connect（Cloudflare側ならCNI）。回線型の重さは、この規模なら妥当なコスト
+- **人が管理作業でネットワークに入りたい**: Tailscaleのようなメッシュ型。データパスとは分けて考える
+
+「オンプレDBがあるからサーバーレスは無理」と諦めていた構成が、エージェント型の接続で崩せるようになった。これが2026年時点の現在地です。オープンベータという但し書きは付きますが、outbound 443さえ出れば試せるので、検証のハードルは驚くほど低い。VPNの苦い記憶がある人ほど、一度触ってみる価値があります。
+
+変更履歴の一次情報はこちらです: [Hyperdrive can now connect to private databases in your VPC（Cloudflare changelog, 2026-04-29）](https://developers.cloudflare.com/changelog/post/2026-04-29-hyperdrive-vpc-private-databases/)
