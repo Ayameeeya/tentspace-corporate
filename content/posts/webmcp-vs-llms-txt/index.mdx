@@ -1,0 +1,139 @@
+---
+title: "WebMCPとは？llms.txt・リモートMCPとの違いを自分のサービスで実験した"
+description: "WebMCPとllms.txt・リモートMCPの役割の違いを整理します。自分の家計簿サービスでMCPを切断して生JSでのデータ取得を試し、Chromeのフラグを有効化してWebMCPツールを実行するまでの検証手順と、「データはMCP、画面の介助はWebMCP」という役割分担の判断軸をまとめます。"
+date: 2026-08-30
+slug: webmcp-vs-llms-txt
+categories: ["AI活用"]
+tags: ["WebMCP", "MCP", "AIエージェント", "Chrome"]
+draft: false
+ogImage: "/blog-assets/webmcp-vs-llms-txt/featured.jpg"
+experiment:
+  pillar: "ai-dev"
+  hook: "contrarian"
+  cta: "inquiry"
+  targetKw: "WebMCP とは"
+  utmCampaign: "webmcp-vs-llms-txt-202608"
+---
+
+<Dialogue>
+  <Say by="hiro">llms.txtとWebMCPって、同じようなものな気がするけど</Say>
+  <Say by="ai">「読む」と「操作する」で、実は別レイヤーの話です</Say>
+  <Say by="hiro">でも結局llms.txtに操作方法を書けば、操作できるレベルの話では？</Say>
+  <Say by="ai">半分正解です。決定的な差は認証。公開ファイルにAPIキーは書けません</Say>
+  <Say by="hiro">ログイン済みのCookieを一時的に拝借してMCPを実行する、みたいなこと？</Say>
+  <Say by="ai">ほぼ正解。ただし拝借ではなく、エージェントはCookieに一切触れない設計です</Say>
+  <Say by="hiro">じゃあMCPを切断したので、moneru.usで7月分のデータが取れるかやってみて</Say>
+  <Say by="ai">取れました、123件。ただしAPIは推測で、キー名も一度間違えました</Say>
+</Dialogue>
+
+先に結論から。WebMCPは「MCPのブラウザ版」ではありません。リモートMCPと競合するのはデータ取得の部分だけで、固有価値は「エージェントがユーザーと同じ画面を見て、同じログインセッションの内側で動く」こと。自分で運用している家計簿サービス（moneru.us）にWebMCP対応を実装し、あえてMCPを切断した状態と比較する実験をして、この結論に辿り着きました。
+
+対象読者は、MCPは触ったことがあるけれどWebMCPは名前しか知らない開発者と、自社SaaSへのAI対応をどの層でやるか検討している人です。llms.txt・リモートMCP・WebMCPの役割分担の判断軸と、Chromeの実験フラグでWebMCPを動かすまでの検証手順を持ち帰れるように書きます。
+
+## 抽象度を上げると、llms.txtとWebMCPは同じに見える
+
+まずllms.txtから。サイトのルートに置くMarkdownファイルで、「このサイトには何があるか」をAIが読みやすい形で列挙する提案仕様です。人間向けのHTMLからコンテンツを推測させる代わりに、AI向けの目次を明示的に用意する。それだけのシンプルな仕組みです。
+
+<LinkCard url="https://llmstxt.org/" title="llms.txt公式: The /llms.txt file" />
+
+一方のWebMCPは、Webページ自身がAIエージェントへ「ツール」を登録できるようにする提案です。ページ側がJavaScriptで `navigator.modelContext` にツールを登録し、エージェントはそれを呼び出してページを操作します。標準化前の提案段階で、仕様の議論はGitHubのwebmachinelearningリポジトリで進んでいます。
+
+<LinkCard url="https://github.com/webmachinelearning/webmcp" title="WebMCP提案仕様（webmachinelearning/webmcp）" />
+
+冒頭の会話のとおり、私も最初は「同じようなものでは」と思っていました。抽象度を上げると、どちらも「AIに自サイトの文脈を提供する仕組み」です。llms.txtに「取引一覧は /api/transactions をGETしてください」と操作方法まで書いてしまえば、WebMCPと同じことができそうに見えます。
+
+## 「llms.txtに操作方法を書けば同じ」は半分正しい
+
+実際、公開情報の範囲ならこの理解で困りません。ドキュメントの場所、APIの使い方、レスポンスの形式。読んで理解する用途なら、llms.txtは十分に機能します。
+
+決定的に埋まらないのが認証です。llms.txtは誰でも読める公開ファイルなので、APIキーやトークンは書けません。「ログインした本人のデータを操作する」段になった瞬間、ドキュメント方式は行き止まりになります。
+
+ではWebMCPはどうやってこれを越えているのか。最初に私が想像したのは「ログイン済みCookieをエージェントが一時的に拝借する」モデルでした。これは違いました。WebMCPでは、エージェントはCookieにもトークンにも一切触れません。ツールの実体はページ側のJavaScriptで、実行もページのコンテキストで行われます。エージェントがやるのは「ページに実行を委譲する」ことだけ。認証情報を渡すのではなく、認証済みの画面そのものに働いてもらう設計です。
+
+この「ページへの実行委譲」が本当に効いているのか、自分のサービスで確かめることにしました。
+
+## 実験1: MCPを切断して、生JSでどこまで取れるか
+
+moneru.usには普段からリモートMCPサーバーを繋いでいて、データの読み書きはそちら経由でできます。今回はそれをあえて切断し、ログイン済みブラウザセッションだけをエージェントに渡して「7月分の明細を取って」と頼みました。ブラウザ操作のできるエージェントが、ページのコンテキストで生のJavaScriptを実行していく方式です。
+
+エージェントはまずネットワークリクエストを監視して、`/api/auth/get-session`、`/api/accounts`、`/api/transactions`、`/api/budgets`、`/api/webmcp/consent` といったエンドポイントを見つけました。次にページのコンテキストで `fetch('/api/transactions', { credentials: 'same-origin' })` を実行。200が返り、7月分の明細123件（計算対象のみ）の取得と収支の集計までできました。
+
+つまり「同じログインセッションの内側で動く」こと自体は、WebMCPがなくても生JSで再現できます。ここだけ見ると、WebMCP不要論に傾きそうです。
+
+ただ、この方式の脆さも同時に露呈しました。カテゴリ別に集計させたところ、結果が全部「未分類」になったのです。原因はキー名。エージェントはカテゴリのキーを `category` と推測していましたが、実データを見ると `largeCategory` でした。修正して再集計するまでの間、出力は「もっともらしく間違った集計」です。ドキュメントや推測に頼る方式は、APIの発見も引数の形も、全部が推論ベース。動くときは動くけれど、外れたときに静かに外れます。
+
+ちなみにこの実験中、`/api/webmcp/consent` はこんなレスポンスを返していました。
+
+```json
+{"granted":false,"ownerBinding":null,"policyVersion":"2026-08-22-chrome-webmcp-experimental-v1","provider":"google-chrome-webmcp-experimental"}
+```
+
+moneru.us側に実装してあるWebMCPの同意管理APIで、この時点では未同意の状態です。ここから先が実験2になります。
+
+## 実験2: WebMCP実装済みのはずが、APIが見えない
+
+moneru.usにはWebMCP対応（同意API＋ツール3本）を実装済みでした。ところがブラウザのコンソールで確認すると、`navigator.modelContext` は `undefined`。`navigator` と `window` を総当たりで探してもMCP系のAPIは見つからず、Origin Trialトークンもありません。使っていたのはChrome 151のStableです。
+
+盲点はブラウザ側の設定でした。`chrome://flags/#enable-webmcp-testing` にある「WebMCP for testing」をEnabledにして再起動すると、`navigator.modelContext` が現れます。生えたAPIは `getTools` / `executeTool` / `registerTool` / `ontoolchange` の4つ。サーバー側に実装があっても、ブラウザ側のフラグが立っていなければ何も起きない。実験段階の仕様なので当然といえば当然ですが、「実装したのに動かない」の原因としては見落としやすいところです。
+
+`getTools()` を呼ぶと、ページが登録していたツール3本が見えました。
+
+| ツール名 | 役割 | 入力 |
+| --- | --- | --- |
+| `navigate` | ページを移動する | `page` enum: dashboard / transactions / subscriptions / chat / settings |
+| `open_csv_import` | CSV取り込み画面へ移動し、ファイル入力へフォーカスする（ファイル選択と確定は人間） | なし |
+| `set_subscriptions_year` | サブスク一覧の表示年を切り替える | 2000〜2100の年 |
+
+3本ともannotationsは `readOnlyHint: false`、`untrustedContentHint: false` でした。
+
+実行にも一癖ありました。`executeTool("navigate", ...)` のようにツール名の文字列を渡すと、`The provided value is not of type 'RegisteredTool'` というエラーになります。第一引数はツール名ではなく、`getTools()` が返すRegisteredToolオブジェクトそのものでした。正しく渡すと成功します。
+
+```json
+{"content":[{"type":"text","text":"{\"status\":\"navigated\",\"page\":\"subscriptions\"}"}],"structuredContent":{"status":"navigated","page":"subscriptions"}}
+```
+
+`navigate` に `{page: "subscriptions"}` を渡した結果で、実際にブラウザのURLが `https://moneru.us/subscriptions` へ遷移しました。戻り値の形はMCPの標準形式そのままです。
+
+未解決の発見もひとつ。ツールの説明文に「現在の状態は get_current_view で確認できます」とあるのに、`get_current_view` はツール一覧に存在しませんでした。同意後に解禁されるのか、単なる実装漏れなのかは未確認です。
+
+## 生JSと正規ルートで、何が違ったか
+
+2つの実験を並べると、差は「できるかどうか」ではなく「どう間違えるか」に出ました。
+
+| 観点 | 生JS方式（実験1） | WebMCP正規ルート（実験2） |
+| --- | --- | --- |
+| APIの発見 | ネットワーク監視から推測 | `getTools()` で列挙される |
+| 引数の形 | キー名ミスでリトライ | enum付きスキーマで型が決まる |
+| 実行 | `fetch` を自作 | `executeTool` に委譲 |
+| 結果の解釈 | 生JSONを自己解釈 | MCP標準形式で返る |
+
+生JS方式は全工程が推論で、`largeCategory` の一件のように静かに間違えます。正規ルートは、発見・引数・実行・結果の全部に契約がある。エージェントに仕事を任せるときの信頼性の差は、この契約の有無です。
+
+## 役割分担: データはMCP、介助はWebMCP
+
+それでも「データを取るだけならリモートMCPで足りる」という事実は動きません。moneru.usには既にリモートMCPがあり、自動化やレポート生成の材料はそちらで賄えています。冒頭の「どこまで行ってもMCPでよくね？」という問いへの正直な答えは、「データ用途なら本当にMCPでいい」です。
+
+WebMCPの固有価値は別の場所にありました。実験2で登録されていたツールを見返すと、`navigate`、`open_csv_import`、`set_subscriptions_year`。全部「画面の案内」です。データを返すツールはひとつもない。CSV取り込みに至っては、画面へ移動してファイル入力にフォーカスを当てるところまでで、選択と確定は人間に残しています。
+
+つまり役割分担はこうなります。
+
+- リモートMCP = データ層。自動化・生成の材料。人間が画面にいなくても動く
+- WebMCP = UI層。ユーザーと同じ画面を共有して、その場で道案内する。確定は人間
+
+この整理で考えると、WebMCPの本命は自分の家計簿アプリのような単純な画面ではなく、メニュー階層が深く、初回操作の説明が「ナビゲーションメニュー > IAMと管理 > …」のような文章マニュアルに頼りがちな管理画面だと思います。手順書の1章がツール1本に置き換わり、「今この画面でエラーが出ている」という状態依存の質問に、一般論ではなくその画面の文脈で答えられるようになる。逆に、迷いようのない単純な画面や、人間が画面にいないバッチ処理には向きません。そこはリモートMCPの領分です。
+
+自社サービスへの導入温度感としては、llms.txtは「metaタグ枠」だと思っています。コストがほぼゼロなので入れておく、効果は正直まだ不明。WebMCPは「レスポンシブ対応の初期」に似た枠です。実装コストはかかるし、エコシステムはブラウザのフラグの内側にいる。号砲はChromeがフラグを外すときで、それまでは小さく仕込んで待つのが現実的な判断です。
+
+なお、リモートMCP側の実装の話は別の記事に書いています。サーバー側に制限を置く設計の話ですが、「エージェントに渡す道具はサーバー側で契約を切る」という考え方はWebMCPのツール設計とも地続きです。
+
+<LinkCard slug="mcp-server-publish-rate-limit" />
+
+## まとめ
+
+- llms.txtとWebMCPは「AIへの文脈提供」という抽象度では同じに見えるが、認証の壁で分かれる。公開ファイルには書けないものがある
+- WebMCPはCookieの拝借ではなく「ページへの実行委譲」。エージェントは認証情報に触れず、認証済みの画面に働いてもらう
+- ログインセッションの内側で動くこと自体は生JSでも再現できたが、APIの発見も引数も推論ベースで、キー名ひとつで静かに壊れる
+- WebMCPの正規ルートは発見・引数・実行・結果の全部に契約がある。ただしChrome 151 Stableではフラグ `#enable-webmcp-testing` の有効化が必要だった
+- 役割分担は「データはリモートMCP、画面の介助はWebMCP」。WebMCPは道案内に張る仕様で、本命は初回操作が文章マニュアル依存になりがちな複雑な管理画面
+
+自分のサービスに仕込んだツール3本は、当面このまま置いておきます。フラグが外れた日に、最初の一歩をすでに終えているために。
