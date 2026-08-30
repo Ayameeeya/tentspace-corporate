@@ -36,6 +36,13 @@
       "image": "https://blog.cloudflare.com/_emdash/api/media/file/01KW47G6K18ZKMNC8636CN3FNG.png",
       "favicon": "https://blog.cloudflare.com/favicon.svg"
     },
+    "https://code.claude.com/docs/en/changelog": {
+      "title": "Claude Code changelog - Claude Code Docs",
+      "description": "Release notes for Claude Code, including new features, improvements, and bug fixes by version.",
+      "domain": "code.claude.com",
+      "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DGetting%2Bstarted%26title%3DClaude%2BCode%2Bchangelog%26description%3DRelease%2Bnotes%2Bfor%2BClaude%2BCode%252C%2Bincluding%2Bnew%2Bfeatures%252C%2Bimprovements%252C%2Band%2Bbug%2Bfixes%2Bby%2Bversion.%26theme%3D03628e99c753a03aec319053&w=1200&q=100",
+      "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
+    },
     "https://code.claude.com/docs/en/hooks": {
       "title": "Hooks reference - Claude Code Docs",
       "description": "Reference for Claude Code hook events, configuration schema, JSON input/output formats, exit codes, async hooks, HTTP hooks, prompt hooks, and MCP tool hooks.",
@@ -202,6 +209,13 @@
       "domain": "developers.google.com",
       "image": "https://developers.google.com/static/search/images/home-social-share-lockup.jpg",
       "favicon": "https://www.gstatic.com/devrel-devsite/prod/v8c5e9c8e09d4f0c961905721a95aa2027138cb55ec6e1fa60fd7aaa3726ca05f/developers/images/favicon-new.png"
+    },
+    "https://docs.claude.com/en/docs/build-with-claude/prompt-caching": {
+      "title": "Prompt caching",
+      "description": "Cache prompt prefixes with `cache_control` to cut costs and latency, using automatic caching or explicit breakpoints with 5-minute or 1-hour TTLs.",
+      "domain": "platform.claude.com",
+      "image": "https://platform.claude.com/web-api/og/docs/en/build-with-claude/prompt-caching?design-rev=2",
+      "favicon": "https://platform.claude.com/favicon.ico"
     },
     "https://docs.docker.com/get-started/": {
       "title": "Get started",
