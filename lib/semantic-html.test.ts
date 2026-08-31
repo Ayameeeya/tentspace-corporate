@@ -215,6 +215,26 @@ describe("semantic HTML", () => {
     expect(highlightedCodeRule).toContain("overflow-x: visible")
   })
 
+  it("コードブロックのスクロールバーをフォールバック時も最細かつ背景になじませる", async () => {
+    const source = await read("app/globals.css")
+    const webkitRule = source.match(
+      /:is\(\.ts-code-wrapper pre, pre\.ts-code\)::\-webkit-scrollbar \{[\s\S]*?\}/,
+    )?.[0] ?? ""
+    const thumbRule = source.match(
+      /:is\(\.ts-code-wrapper pre, pre\.ts-code\)::\-webkit-scrollbar-thumb \{[\s\S]*?\}/,
+    )?.[0] ?? ""
+    const firefoxRule = source.match(
+      /:is\(\.ts-code-wrapper pre, pre\.ts-code\) \{[\s\S]*?\}/,
+    )?.[0] ?? ""
+
+    expect(webkitRule).toContain("height: 2px")
+    expect(thumbRule).toContain("rgba(148, 163, 184, 0.1)")
+    expect(firefoxRule).toContain("scrollbar-width: thin")
+    expect(firefoxRule).toContain(
+      "scrollbar-color: rgba(148, 163, 184, 0.1) transparent",
+    )
+  })
+
   it("ブログカードの小さい引用文に透明色を使わない", async () => {
     for (const file of [
       "app/blog/blog-page-client.tsx",

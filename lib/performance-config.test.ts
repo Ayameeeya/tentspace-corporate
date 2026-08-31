@@ -126,15 +126,16 @@ describe("performance configuration", () => {
   })
 
   it("構文ハイライトをコードブロックがある記事だけで読み込む", async () => {
-    const article = await read("app/blog/[slug]/blog-post-client.tsx")
-    const guardIndex = article.indexOf("if (codeBlocks.length === 0) return")
-    const dynamicImportIndex = article.indexOf(
-      "await import('highlight.js/lib/core')",
+    const enhancement = await read("lib/code-block-enhancement.ts")
+    const guardIndex = enhancement.indexOf(
+      'if (!container.querySelector("pre.ts-code:not(.enhanced)")) return',
     )
+    const loadIndex = enhancement.indexOf("const highlighter = await loadHighlighter()")
 
-    expect(article).not.toMatch(/^import hljs from/m)
+    expect(enhancement).not.toMatch(/^import hljs from/m)
+    expect(enhancement).toContain('await import("highlight.js/lib/core")')
     expect(guardIndex).toBeGreaterThan(0)
-    expect(dynamicImportIndex).toBeGreaterThan(guardIndex)
+    expect(loadIndex).toBeGreaterThan(guardIndex)
   })
 
   it("ブログロゴのintrinsic比率を実ファイルに合わせる", async () => {
@@ -157,14 +158,14 @@ describe("performance configuration", () => {
   })
 
   it("モバイルで非表示になるコードコピー文言をアクセシブル名で補う", async () => {
-    const article = await read("app/blog/[slug]/blog-post-client.tsx")
+    const enhancement = await read("lib/code-block-enhancement.ts")
 
-    expect(article).toContain("copyBtn.type = 'button'")
-    expect(article).toContain(
-      "copyBtn.setAttribute('aria-label', 'コードをコピー')",
+    expect(enhancement).toContain('copyButton.type = "button"')
+    expect(enhancement).toContain(
+      'copyButton.setAttribute("aria-label", "コードをコピー")',
     )
-    expect(article).toContain(
-      "copyBtn.setAttribute('aria-label', 'コピー完了')",
+    expect(enhancement).toContain(
+      'copyButton.setAttribute("aria-label", "コピー完了")',
     )
   })
 
