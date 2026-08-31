@@ -36,11 +36,25 @@
       "image": "https://blog.cloudflare.com/_emdash/api/media/file/01KW47G6K18ZKMNC8636CN3FNG.png",
       "favicon": "https://blog.cloudflare.com/favicon.svg"
     },
+    "https://code.claude.com/docs/en/changelog": {
+      "title": "Claude Code changelog - Claude Code Docs",
+      "description": "Release notes for Claude Code, including new features, improvements, and bug fixes by version.",
+      "domain": "code.claude.com",
+      "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DGetting%2Bstarted%26title%3DClaude%2BCode%2Bchangelog%26description%3DRelease%2Bnotes%2Bfor%2BClaude%2BCode%252C%2Bincluding%2Bnew%2Bfeatures%252C%2Bimprovements%252C%2Band%2Bbug%2Bfixes%2Bby%2Bversion.%26theme%3D03628e99c753a03aec319053&w=1200&q=100",
+      "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
+    },
     "https://code.claude.com/docs/en/hooks": {
       "title": "Hooks reference - Claude Code Docs",
       "description": "Reference for Claude Code hook events, configuration schema, JSON input/output formats, exit codes, async hooks, HTTP hooks, prompt hooks, and MCP tool hooks.",
       "domain": "code.claude.com",
       "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DReference%26appearance%3Dsystem%26title%3DHooks%2Breference%26description%3DReference%2Bfor%2BClaude%2BCode%2Bhook%2Bevents%252C%2Bconfiguration%2Bschema%252C%2BJSON%2Binput%252Foutput%2Bformats%252C%2Bexit%2Bcodes%252C%2Basync%2Bhooks%252C%2BHTTP%2Bhooks%252C%2Bprompt%2Bhooks%252C%2Band%2BMCP%2Btool%2Bhooks.%26logoLight%3Dhttps%253A%252F%252Fmintcdn.com%252Fclaude-code%252Fc5r9_6tjPMzFdDDT%252Flogo%252Flight.svg%253Ffit%253Dmax%2526auto%253Dformat%2526n%253Dc5r9_6tjPMzFdDDT%2526q%253D85%2526s%253D78fd01ff4f4340295a4f66e2ea54903c%26logoDark%3Dhttps%253A%252F%252Fmintcdn.com%252Fclaude-code%252Fc5r9_6tjPMzFdDDT%252Flogo%252Fdark.svg%253Ffit%253Dmax%2526auto%253Dformat%2526n%253Dc5r9_6tjPMzFdDDT%2526q%253D85%2526s%253D1298a0c3b3a1da603b190d0de0e31712%26primaryColor%3D%25230E0E0E%26lightColor%3D%2523D4A27F%26backgroundLight%3D%2523FDFDF7%26backgroundDark%3D%252309090B&w=1200&q=100",
+      "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
+    },
+    "https://code.claude.com/docs/en/permission-modes": {
+      "title": "Choose a permission mode - Claude Code Docs",
+      "description": "Control whether Claude asks before acting. Switch permission modes with Shift+Tab in the CLI, the mode indicator in VS Code, or the mode selector in Desktop.",
+      "domain": "code.claude.com",
+      "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DPermissions%2Band%2Bsandboxing%26title%3DChoose%2Ba%2Bpermission%2Bmode%26description%3DControl%2Bwhether%2BClaude%2Basks%2Bbefore%2Bacting.%2BSwitch%2Bpermission%2Bmodes%2Bwith%2BShift%252BTab%2Bin%2Bthe%2BCLI%252C%2Bthe%2Bmode%2Bindicator%2Bin%2BVS%2BCode%252C%2Bor%2Bthe%2Bmode%2Bselector%2Bin%2BDesktop.%26theme%3D03628e99c753a03aec319053&w=1200&q=100",
       "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
     },
     "https://code.claude.com/docs/en/skills": {
@@ -62,6 +76,20 @@
       "description": "",
       "domain": "developer.atlassian.com",
       "favicon": "https://dac-static.atlassian.com/favicon.ico"
+    },
+    "https://developers.cloudflare.com/d1/": {
+      "title": "Cloudflare D1",
+      "description": "Build serverless SQL databases on Cloudflare's global network and query them from Workers and Pages projects.",
+      "domain": "developers.cloudflare.com",
+      "image": "https://developers.cloudflare.com/og-docs.png",
+      "favicon": "https://developers.cloudflare.com/favicon.png"
+    },
+    "https://developers.cloudflare.com/durable-objects/platform/pricing/": {
+      "title": "Pricing",
+      "description": "Durable Objects compute and storage billing, including pricing examples and free tier limits.",
+      "domain": "developers.cloudflare.com",
+      "image": "https://developers.cloudflare.com/og-docs.png",
+      "favicon": "https://developers.cloudflare.com/favicon.png"
     },
     "https://developers.cloudflare.com/hyperdrive/configuration/connect-to-private-database-vpc/": {
       "title": "Connect to a private database using Workers VPC (Recommended)",
@@ -203,6 +231,20 @@
       "image": "https://developers.google.com/static/search/images/home-social-share-lockup.jpg",
       "favicon": "https://www.gstatic.com/devrel-devsite/prod/v8c5e9c8e09d4f0c961905721a95aa2027138cb55ec6e1fa60fd7aaa3726ca05f/developers/images/favicon-new.png"
     },
+    "https://docs.claude.com/en/docs/build-with-claude/prompt-caching": {
+      "title": "Prompt caching",
+      "description": "Cache prompt prefixes with `cache_control` to cut costs and latency, using automatic caching or explicit breakpoints with 5-minute or 1-hour TTLs.",
+      "domain": "platform.claude.com",
+      "image": "https://platform.claude.com/web-api/og/docs/en/build-with-claude/prompt-caching?design-rev=2",
+      "favicon": "https://platform.claude.com/favicon.ico"
+    },
+    "https://docs.claude.com/en/docs/claude-code/mcp": {
+      "title": "Connect Claude Code to tools via MCP - Claude Code Docs",
+      "description": "Learn how to connect Claude Code to your tools with the Model Context Protocol.",
+      "domain": "code.claude.com",
+      "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DMCP%26title%3DConnect%2BClaude%2BCode%2Bto%2Btools%2Bvia%2BMCP%26description%3DLearn%2Bhow%2Bto%2Bconnect%2BClaude%2BCode%2Bto%2Byour%2Btools%2Bwith%2Bthe%2BModel%2BContext%2BProtocol.%26theme%3D03628e99c753a03aec319053&w=1200&q=100",
+      "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
+    },
     "https://docs.docker.com/get-started/": {
       "title": "Get started",
       "description": "Get started with Docker",
@@ -329,12 +371,33 @@
       "image": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Fsocialpreview%252FBJYuJLS829e7wvgPdf5m%252FGitBook%25201280x630.png%3Falt%3Dmedia%26token%3D535a1998-3467-4390-aef9-2f68fdbe688f&width=1200&height=630&sign=e0b43641&sv=2",
       "favicon": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Ficon%252Fv5uzPttcoF7tjbeDaGCu%252FFavicon.png%3Falt%3Dmedia%26token%3Dd8f83a90-d3fd-4858-bc5f-1d50f340cf79&width=48&height=48&sign=f18fb73f&sv=2"
     },
+    "https://github.com/webmachinelearning/webmcp": {
+      "title": "GitHub - webmachinelearning/webmcp: 🤖 WebMCP",
+      "description": "🤖 WebMCP. Contribute to webmachinelearning/webmcp development by creating an account on GitHub.",
+      "domain": "github.com",
+      "image": "https://opengraph.githubassets.com/c976777a739e63590fe9054d97271b667dddc38ae2af4705e3d37917e8e38ea0/webmachinelearning/webmcp",
+      "favicon": "https://github.githubassets.com/favicons/favicon.png"
+    },
     "https://help.openai.com/en/articles/9260256-chatgpt-capabilities-overview": {
       "title": "ChatGPT Capabilities Overview | OpenAI Help Center",
       "description": "Learn about ChatGPT's capabilities and features",
       "domain": "help.openai.com",
       "image": "https://help.openai.com/og-image.png",
       "favicon": "https://help.openai.com/favicon.png"
+    },
+    "https://litestream.io/": {
+      "title": "Litestream",
+      "description": "Litestream is an open-source, real-time streaming replication tool that lets you safely run SQLite applications on a single node.",
+      "domain": "litestream.io",
+      "image": "https://litestream.io/images/twitter-image.png",
+      "favicon": "https://litestream.io/favicon-32x32.png"
+    },
+    "https://llmstxt.org/": {
+      "title": "The /llms.txt file, v2 – llms-txt",
+      "description": "A proposal to standardise on using an /llms.txt file to provide information to help agents use a website.",
+      "domain": "llmstxt.org",
+      "image": "https://llmstxt.org//sample.png",
+      "favicon": "https://llmstxt.org/favicon.ico"
     },
     "https://n8n.io/pricing/": {
       "title": "n8n Plans and Pricing - n8n.io",
@@ -362,6 +425,13 @@
       "domain": "react.dev",
       "image": "https://react.dev/images/og/blog-2025-12-03-critical-security-vulnerability-in-react-server-components.png",
       "favicon": "https://react.dev/favicon-32x32.png"
+    },
+    "https://rubyonrails.org/2024/11/7/rails-8-no-paas-required": {
+      "title": "Rails 8.0: No PaaS Required",
+      "description": "Deploying modern web apps – with all the provisions needed to be fast and secure while easily updateable – has become so hard that many developers don’t dare do it without a PaaS (platform-as-a-service). But that’s ridiculous. Nobody should have to pay orders of magnitude more for basic computing just to make deployment friendly and usable. That’s a job for open source, and Rails 8 is ready to solve it. So it’s with great pleasure that we are now ready with the final version of Rails 8.0, after a successful beta release and several release candidates!",
+      "domain": "rubyonrails.org",
+      "image": "https://rubyonrails.org/assets/images/opengraph.png",
+      "favicon": "https://rubyonrails.org/assets/images/favicon.png"
     },
     "https://search.google.com/search-console/about": {
       "title": "Google Search Console",
@@ -393,6 +463,12 @@
       "domain": "code.claude.com",
       "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DUse%2BClaude%2BCode%26appearance%3Dsystem%26title%3DBest%2Bpractices%2Bfor%2BClaude%2BCode%26description%3DTips%2Band%2Bpatterns%2Bfor%2Bgetting%2Bthe%2Bmost%2Bout%2Bof%2BClaude%2BCode%252C%2Bfrom%2Bconfiguring%2Byour%2Benvironment%2Bto%2Bscaling%2Bacross%2Bparallel%2Bsessions.%26logoLight%3Dhttps%253A%252F%252Fmintcdn.com%252Fclaude-code%252Fc5r9_6tjPMzFdDDT%252Flogo%252Flight.svg%253Ffit%253Dmax%2526auto%253Dformat%2526n%253Dc5r9_6tjPMzFdDDT%2526q%253D85%2526s%253D78fd01ff4f4340295a4f66e2ea54903c%26logoDark%3Dhttps%253A%252F%252Fmintcdn.com%252Fclaude-code%252Fc5r9_6tjPMzFdDDT%252Flogo%252Fdark.svg%253Ffit%253Dmax%2526auto%253Dformat%2526n%253Dc5r9_6tjPMzFdDDT%2526q%253D85%2526s%253D1298a0c3b3a1da603b190d0de0e31712%26primaryColor%3D%25230E0E0E%26lightColor%3D%2523D4A27F%26backgroundLight%3D%2523FDFDF7%26backgroundDark%3D%252309090B&w=1200&q=100",
       "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
+    },
+    "https://www.sqlite.org/wal.html": {
+      "title": "Write-Ahead Logging",
+      "description": "",
+      "domain": "www.sqlite.org",
+      "favicon": "https://www.sqlite.org/favicon.ico"
     },
     "https://www.typescriptlang.org/docs/": {
       "title": "The starting point for learning TypeScript",

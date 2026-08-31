@@ -21,6 +21,7 @@ import { getActiveHeadingId, getTocScrollTop } from "@/lib/blog-toc"
 import { addLike, fetchHasLiked, fetchLikeCounts, getClientId } from "@/lib/blog-likes"
 import { createBlogShareUrls, createInstagramShareText } from "@/lib/blog-share"
 import { getPlaceholderImage } from "@/lib/blog-placeholder"
+import { enhanceCodeBlocks } from "@/lib/code-block-enhancement"
 
 import 'highlight.js/styles/github-dark.css'
 
@@ -437,65 +438,6 @@ function BlogLikeButton({ slug }: { slug: string }) {
   )
 }
 
-// Language display names mapping
-const LANGUAGE_NAMES: Record<string, string> = {
-  javascript: 'JavaScript',
-  js: 'JavaScript',
-  typescript: 'TypeScript',
-  ts: 'TypeScript',
-  python: 'Python',
-  py: 'Python',
-  java: 'Java',
-  csharp: 'C#',
-  cs: 'C#',
-  cpp: 'C++',
-  c: 'C',
-  go: 'Go',
-  rust: 'Rust',
-  ruby: 'Ruby',
-  php: 'PHP',
-  swift: 'Swift',
-  kotlin: 'Kotlin',
-  scala: 'Scala',
-  html: 'HTML',
-  css: 'CSS',
-  scss: 'SCSS',
-  sass: 'Sass',
-  less: 'Less',
-  json: 'JSON',
-  xml: 'XML',
-  yaml: 'YAML',
-  yml: 'YAML',
-  markdown: 'Markdown',
-  md: 'Markdown',
-  sql: 'SQL',
-  bash: 'Bash',
-  shell: 'Shell',
-  sh: 'Shell',
-  powershell: 'PowerShell',
-  ps1: 'PowerShell',
-  dockerfile: 'Dockerfile',
-  docker: 'Docker',
-  nginx: 'Nginx',
-  apache: 'Apache',
-  graphql: 'GraphQL',
-  vue: 'Vue',
-  react: 'React',
-  jsx: 'JSX',
-  tsx: 'TSX',
-  dart: 'Dart',
-  r: 'R',
-  matlab: 'MATLAB',
-  perl: 'Perl',
-  lua: 'Lua',
-  haskell: 'Haskell',
-  elixir: 'Elixir',
-  erlang: 'Erlang',
-  clojure: 'Clojure',
-  text: 'Text',
-  plaintext: 'Plain Text',
-}
-
 // Process content to add IDs to headings (server-safe)
 function processContent(content: string): string {
   // Add IDs to headings using regex (works on both server and client)
@@ -511,232 +453,16 @@ function processContent(content: string): string {
 }
 
 
-// Clean up code text - remove leading/trailing empty lines
-function cleanCodeText(text: string): string {
-  // Split into lines
-  const lines = text.split('\n')
-  
-  // Remove leading empty lines
-  while (lines.length > 0 && lines[0].trim() === '') {
-    lines.shift()
-  }
-  // Remove trailing empty lines
-  while (lines.length > 0 && lines[lines.length - 1].trim() === '') {
-    lines.pop()
-  }
-  
-  return lines.join('\n')
-}
-
 // Code Block Enhancement Component
 function useCodeBlockEnhancement(containerRef: React.RefObject<HTMLElement | null>) {
   useEffect(() => {
-    if (!containerRef.current) return
-
-    const codeBlocks = containerRef.current.querySelectorAll('pre.ts-code')
-    if (codeBlocks.length === 0) return
+    const container = containerRef.current
+    if (!container) return
 
     let cancelled = false
-
-    async function enhanceCodeBlocks() {
-      const { default: hljs } = await import('highlight.js/lib/core')
-      const [
-        { default: javascript },
-        { default: typescript },
-        { default: python },
-        { default: go },
-        { default: rust },
-        { default: java },
-        { default: kotlin },
-        { default: swift },
-        { default: php },
-        { default: ruby },
-        { default: bash },
-        { default: json },
-        { default: yaml },
-        { default: sql },
-        { default: css },
-        { default: scss },
-        { default: xml },
-        { default: csharp },
-        { default: c },
-        { default: cpp },
-        { default: dockerfile },
-        { default: graphql },
-      ] = await Promise.all([
-        import('highlight.js/lib/languages/javascript'),
-        import('highlight.js/lib/languages/typescript'),
-        import('highlight.js/lib/languages/python'),
-        import('highlight.js/lib/languages/go'),
-        import('highlight.js/lib/languages/rust'),
-        import('highlight.js/lib/languages/java'),
-        import('highlight.js/lib/languages/kotlin'),
-        import('highlight.js/lib/languages/swift'),
-        import('highlight.js/lib/languages/php'),
-        import('highlight.js/lib/languages/ruby'),
-        import('highlight.js/lib/languages/bash'),
-        import('highlight.js/lib/languages/json'),
-        import('highlight.js/lib/languages/yaml'),
-        import('highlight.js/lib/languages/sql'),
-        import('highlight.js/lib/languages/css'),
-        import('highlight.js/lib/languages/scss'),
-        import('highlight.js/lib/languages/xml'),
-        import('highlight.js/lib/languages/csharp'),
-        import('highlight.js/lib/languages/c'),
-        import('highlight.js/lib/languages/cpp'),
-        import('highlight.js/lib/languages/dockerfile'),
-        import('highlight.js/lib/languages/graphql'),
-      ])
-
-      if (cancelled) return
-
-      for (const [names, language] of [
-        [['javascript', 'js'], javascript],
-        [['typescript', 'ts'], typescript],
-        [['python', 'py'], python],
-        [['go'], go],
-        [['rust'], rust],
-        [['java'], java],
-        [['kotlin'], kotlin],
-        [['swift'], swift],
-        [['php'], php],
-        [['ruby'], ruby],
-        [['bash', 'shell', 'sh'], bash],
-        [['json'], json],
-        [['yaml', 'yml'], yaml],
-        [['sql'], sql],
-        [['css'], css],
-        [['scss'], scss],
-        [['html', 'xml'], xml],
-        [['csharp', 'cs'], csharp],
-        [['c'], c],
-        [['cpp'], cpp],
-        [['dockerfile', 'docker'], dockerfile],
-        [['graphql'], graphql],
-      ] as const) {
-        for (const name of names) hljs.registerLanguage(name, language)
-      }
-
-      codeBlocks.forEach((block) => {
-      // Skip if already enhanced
-      if (block.classList.contains('enhanced')) return
-      block.classList.add('enhanced')
-      
-      const pre = block as HTMLPreElement
-      const lang = pre.dataset.lang || 'text'
-      const title = pre.dataset.title || ''
-      const codeElement = pre.querySelector('code')
-      
-      // Get and clean code text
-      // Replace <br> tags with newlines before getting text content
-      let rawCode = ''
-      if (codeElement) {
-        // Clone the element to avoid modifying the original
-        const tempElement = codeElement.cloneNode(true) as HTMLElement
-        // Replace <br> tags with newlines
-        tempElement.innerHTML = tempElement.innerHTML.replace(/<br\s*\/?>/gi, '\n')
-        rawCode = tempElement.textContent || ''
-      }
-      const code = cleanCodeText(rawCode)
-      
-      // Create wrapper
-      const wrapper = document.createElement('div')
-      wrapper.className = 'ts-code-wrapper'
-      
-      // Create header
-      const header = document.createElement('div')
-      header.className = 'ts-code-header'
-      
-      // Language badge
-      const langBadge = document.createElement('span')
-      langBadge.className = 'ts-code-lang'
-      langBadge.textContent = LANGUAGE_NAMES[lang.toLowerCase()] || lang.toUpperCase()
-      header.appendChild(langBadge)
-      
-      // Title if exists
-      if (title) {
-        const titleSpan = document.createElement('span')
-        titleSpan.className = 'ts-code-title'
-        titleSpan.textContent = title
-        header.appendChild(titleSpan)
-      }
-      
-      // Copy button
-      const copyBtn = document.createElement('button')
-      copyBtn.type = 'button'
-      copyBtn.className = 'ts-code-copy'
-      copyBtn.setAttribute('aria-label', 'コードをコピー')
-      copyBtn.innerHTML = `
-        <svg class="copy-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-        </svg>
-        <svg class="check-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
-          <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-        <span class="copy-text">コピー</span>
-      `
-      copyBtn.addEventListener('click', async () => {
-        try {
-          await navigator.clipboard.writeText(code)
-          const copyIcon = copyBtn.querySelector('.copy-icon') as HTMLElement
-          const checkIcon = copyBtn.querySelector('.check-icon') as HTMLElement
-          const copyText = copyBtn.querySelector('.copy-text') as HTMLElement
-          
-          copyIcon.style.display = 'none'
-          checkIcon.style.display = 'block'
-          copyText.textContent = 'コピー完了!'
-          copyBtn.setAttribute('aria-label', 'コピー完了')
-          copyBtn.classList.add('copied')
-          
-          setTimeout(() => {
-            copyIcon.style.display = 'block'
-            checkIcon.style.display = 'none'
-            copyText.textContent = 'コピー'
-            copyBtn.setAttribute('aria-label', 'コードをコピー')
-            copyBtn.classList.remove('copied')
-          }, 2000)
-        } catch (err) {
-          console.error('Failed to copy:', err)
-        }
-      })
-      header.appendChild(copyBtn)
-      
-      // Wrap everything
-      pre.parentNode?.insertBefore(wrapper, pre)
-      wrapper.appendChild(header)
-      wrapper.appendChild(pre)
-      
-      // Set language attribute for CSS styling
-      pre.dataset.language = lang.toLowerCase()
-      
-      if (codeElement) {
-        // Set cleaned code
-        codeElement.textContent = code
-        pre.className = 'ts-code enhanced'
-        
-        // Apply syntax highlighting with highlight.js
-        const langLower = lang.toLowerCase()
-        try {
-          if (hljs.getLanguage(langLower)) {
-            const result = hljs.highlight(code, { language: langLower })
-            codeElement.innerHTML = result.value
-            codeElement.classList.add('hljs')
-          } else {
-            // Auto-detect language if not found
-            const result = hljs.highlightAuto(code)
-            codeElement.innerHTML = result.value
-            codeElement.classList.add('hljs')
-          }
-        } catch (err) {
-          console.warn(`Highlight.js failed for language: ${langLower}`, err)
-          codeElement.textContent = code
-        }
-      }
-      })
-    }
-
-    void enhanceCodeBlocks()
+    void enhanceCodeBlocks(container, undefined, () => cancelled).catch((error) => {
+      console.warn("Code block enhancement failed", error)
+    })
 
     return () => {
       cancelled = true
