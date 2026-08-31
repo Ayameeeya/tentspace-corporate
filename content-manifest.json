@@ -1,5 +1,167 @@
 [
   {
+    "id": 1743758738,
+    "slug": "claude-code-mcp-setup",
+    "title": "Claude CodeにMCPサーバーを追加する設定ガイド｜3つのスコープと.mcp.jsonの使い分け",
+    "description": "Claude CodeへMCPサーバーを接続する設定方法を解説します。claude mcp addの基本、local・project・userの3スコープの使い分け、.mcp.jsonのチーム共有と環境変数展開、接続確認と権限設定、サーバーを足しすぎない判断軸をまとめます。",
+    "date": "2026-08-31T00:00:00.000Z",
+    "updated": "2026-08-31T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "MCP",
+      "AIエージェント",
+      "設定"
+    ],
+    "draft": false,
+    "readingTime": 11,
+    "wordCount": 4067,
+    "ogImage": "/blog-assets/claude-code-mcp-setup/featured.jpg",
+    "experiment": {
+      "hook": "howto",
+      "cta": "inquiry",
+      "targetKw": "Claude Code MCP 設定",
+      "utmCampaign": "claude-code-mcp-setup-202608"
+    }
+  },
+  {
+    "id": 245302604,
+    "slug": "durable-objects-pricing-ai-chat",
+    "title": "Durable Objectsの高額請求は怖くない｜AIチャットのコストの本体はトークン代",
+    "description": "Cloudflare WorkersでSaaSにAIチャットを組み込むときの費用の見方を整理します。Durable Objectsの課金を実際に計算すると月16万チャットまで無料枠に収まり、請求の本体はモデルのトークン代でした。家計簿サービスの設計検討で出た試算とプラン逆算をまとめます。",
+    "date": "2026-08-31T00:00:00.000Z",
+    "updated": "2026-08-31T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Cloudflare Workers",
+      "Durable Objects",
+      "AIエージェント",
+      "コスト設計"
+    ],
+    "draft": false,
+    "readingTime": 13,
+    "wordCount": 5147,
+    "ogImage": "/blog-assets/durable-objects-pricing-ai-chat/featured.jpg",
+    "experiment": {
+      "hook": "contrarian",
+      "cta": "inquiry",
+      "targetKw": "Durable Objects 料金",
+      "utmCampaign": "durable-objects-pricing-ai-chat-202608"
+    }
+  },
+  {
+    "id": 3068310611,
+    "slug": "claude-code-prompt-cache",
+    "title": "Claude Codeのプロンプトキャッシュ入門｜エージェント運用のコストを観測して設計する",
+    "description": "Claude Codeを定時実行で運用するときのAPIコストを左右するプロンプトキャッシュの仕組みを解説します。キャッシュが静かに切れる箇所、2026年8月末に追加された/costのキャッシュ行やエージェント別cacheTtlなどの観測・制御手段、日次運用での設計判断をまとめます。",
+    "date": "2026-08-30T00:00:00.000Z",
+    "updated": "2026-08-30T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "AIエージェント",
+      "自動化",
+      "LLM"
+    ],
+    "draft": false,
+    "readingTime": 13,
+    "wordCount": 5103,
+    "ogImage": "/blog-assets/claude-code-prompt-cache/featured.jpg",
+    "experiment": {
+      "hook": "howto",
+      "cta": "inquiry",
+      "targetKw": "Claude Code プロンプトキャッシュ",
+      "utmCampaign": "claude-code-prompt-cache-202608"
+    }
+  },
+  {
+    "id": 2367384461,
+    "slug": "webmcp-vs-llms-txt",
+    "title": "WebMCPとは？llms.txt・リモートMCPとの違いを自分のサービスで実験した",
+    "description": "WebMCPとllms.txt・リモートMCPの役割の違いを整理します。自分の家計簿サービスでMCPを切断して生JSでのデータ取得を試し、Chromeのフラグを有効化してWebMCPツールを実行するまでの検証手順と、「データはMCP、画面の介助はWebMCP」という役割分担の判断軸をまとめます。",
+    "date": "2026-08-30T00:00:00.000Z",
+    "updated": "2026-08-30T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "WebMCP",
+      "MCP",
+      "AIエージェント",
+      "Chrome"
+    ],
+    "draft": false,
+    "readingTime": 14,
+    "wordCount": 5245,
+    "ogImage": "/blog-assets/webmcp-vs-llms-txt/featured.jpg",
+    "experiment": {
+      "hook": "contrarian",
+      "cta": "inquiry",
+      "targetKw": "WebMCP とは",
+      "utmCampaign": "webmcp-vs-llms-txt-202608"
+    }
+  },
+  {
+    "id": 2904988274,
+    "slug": "claude-code-permission-layers",
+    "title": "Claude Codeの権限設定4層ガイド｜denyを厚くするだけでは守れない",
+    "description": "Claude Codeの権限設定を「渡さない・許す・止める・外側で強制」の4層で設計する方法を解説します。allowルールのワイルドカード警告や--restrictedフラグなど直近の公式アップデートを根拠に、hooksによる禁止だけでは塞げない穴と、各層の使い分けを実運用の構成で整理します。",
+    "date": "2026-08-29T00:00:00.000Z",
+    "updated": "2026-08-29T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "AIエージェント",
+      "自動化",
+      "セキュリティ"
+    ],
+    "draft": false,
+    "readingTime": 10,
+    "wordCount": 3734,
+    "ogImage": "/blog-assets/claude-code-permission-layers/featured.jpg",
+    "experiment": {
+      "hook": "contrarian",
+      "cta": "inquiry",
+      "targetKw": "Claude Code 権限設定",
+      "utmCampaign": "claude-code-permission-layers-202608"
+    }
+  },
+  {
+    "id": 416508504,
+    "slug": "sqlite-production-db",
+    "title": "SQLiteを本番DBに使う判断基準｜「書き込み直列化」は弱点ではない",
+    "description": "SQLiteの「書き込みが同時1本に直列化される」制約が本番でどう効くかを解説します。ロックの正体と待ち時間の実感値、ECを例にした思考実験、唯一の事故パターンである長いトランザクション、在庫競合がむしろ単純になる理由、採用判断の目安までを整理します。",
+    "date": "2026-08-29T00:00:00.000Z",
+    "updated": "2026-08-29T00:00:00.000Z",
+    "categories": [
+      "テクノロジー"
+    ],
+    "tags": [
+      "SQLite",
+      "データベース",
+      "設計",
+      "バックエンド"
+    ],
+    "draft": false,
+    "readingTime": 11,
+    "wordCount": 4400,
+    "ogImage": "/blog-assets/sqlite-production-db/featured.jpg",
+    "experiment": {
+      "hook": "contrarian",
+      "cta": "inquiry",
+      "targetKw": "SQLite 本番",
+      "utmCampaign": "sqlite-production-db-202608"
+    }
+  },
+  {
     "id": 720107839,
     "slug": "claude-md-agents-md-guide",
     "title": "CLAUDE.mdの書き方｜AGENTS.mdに1本化して「強制はコードに逃がす」",
