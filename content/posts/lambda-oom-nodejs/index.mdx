@@ -1,0 +1,154 @@
+---
+title: "LambdaのOOM対策｜メモリ解放では直らずPresigned URLで直る理由"
+description: "Node.jsのLambdaがPDF処理でOOMになる原因を整理します。null代入で直らない理由、event.bodyで受けた時点でBase64込みの全量がヒープに乗る構造、Presigned URLとストリームでピークメモリを頭打ちにする設計と裏取りをまとめます。"
+date: 2026-09-01
+slug: lambda-oom-nodejs
+categories: ["テクノロジー"]
+tags: ["AWS", "Lambda", "Node.js", "サーバーレス"]
+draft: false
+ogImage: "/blog-assets/lambda-oom-nodejs/featured.jpg"
+experiment:
+  pillar: "ai-dev"
+  hook: "contrarian"
+  cta: "inquiry"
+  targetKw: "Lambda OOM Node.js"
+  utmCampaign: "lambda-oom-nodejs-202609"
+---
+
+<Dialogue>
+  <Say by="hiro">S3にアップロードし終わったら、Lambdaに任せず明示的にメモリ解放した方がいいんですかね</Say>
+  <Say by="ai">ローカル変数ならreturnした時点で参照が切れるので不要です。null代入はおまじない程度ですね</Say>
+  <Say by="hiro">それ、さっきの「ウォームスタートで残る」って話と矛盾してませんか</Say>
+  <Say by="ai">残るのはハンドラ外のモジュールスコープだけです。コンテナは生き残っても、変数スコープのルールは変わらないんですよ</Say>
+  <Say by="hiro">でもPDFはbodyとして渡ってくるんだから、最初から変数に乗ってますよね</Say>
+  <Say by="ai">乗ってます。しかも全量です。event.bodyはハンドラ1行目の時点でBase64文字列が丸ごとヒープにいます</Say>
+  <Say by="hiro">ならストリームにしたところで、一度バイナリはLambdaに来るのでは？</Say>
+  <Say by="ai">来ます。ただ「通過する」と「溜まる」は別物で、メモリに居るのは流れてる断片だけなんです</Say>
+</Dialogue>
+
+結論を先に書きます。PDFアップロードを受けるNode.js LambdaのOOMは、`buffer = null` のような明示解放では直りません。犯人は解放漏れではなく、「API Gateway経由の `event.body` で受けた瞬間に、ファイル全量がヒープに乗る」という構造そのものです。直すべきはコードの1行ではなくデータの入口です。入口をPresigned URLでS3直行に変えると、初めてストリーム処理という選択肢が生まれ、ピークメモリはファイルサイズに関係なく数MB規模で頭打ちにできます。
+
+想定読者は、Lambdaでファイルアップロード処理を書いていてOOM（Out of Memory）に遭遇した、あるいはメモリリークを疑っているNode.jsエンジニアです。「変数をnullにすれば解放される？」「ウォームスタートでメモリが残り続ける？」あたりで混乱している人。この記事も、冒頭の対話と同じ順番で疑問を一段ずつ切り分けていきます。持ち帰ってほしいのは次の3点です。
+
+- 関数スコープの変数は放置でよく、明示解放を考える必要があるのはモジュールスコープだけ
+- `event.body` は受信時点で全量ヒープ行きで、ハンドラ内では回避不能
+- 「バイナリがLambdaを通過する」と「メモリに溜まる」は別物——ストリームなら大きなPDFも小さなメモリ割り当てで捌ける
+
+## null代入は効くのか——ウォームスタートの正確な理解
+
+最初の疑問は「S3へのアップロードが終わったら、明示的にメモリ解放すべきか」でした。答えは、ローカル変数なら不要です。JavaScriptのGCは参照が切れたものを回収するので、関数スコープの変数はreturnした時点で回収候補になります。`buffer = null` を書き足しても、returnの直前に置く限りは意味のないおまじないです。
+
+ここで引っかかるのがウォームスタートです。「Lambdaのコンテナは使い回されるから、メモリも残るのでは」という直感。これは半分だけ正しくて、使い回されるのはコンテナ（プロセス）であって、変数スコープのルールは変わりません。次の呼び出しに持ち越されるのはハンドラの外、つまりモジュールスコープに置いたものだけです。`event` はハンドラの引数＝関数スコープなので持ち越されません。
+
+だから原則はこう覚えれば足ります。**残ってほしいもの（DBコネクション、SDKクライアント）はハンドラの外に、残ってほしくないもの（PDFのバッファ）はハンドラの中に置く。**
+
+null代入に意味が出るのは限定的な場面だけです。(a) 大きなデータをうっかりモジュールスコープに掴ませてしまった場合、(b) 1回の実行の中で後続処理が長く、使い終わった巨大変数の参照を早めに切りたい場合。後者はブロックスコープで囲むか `event.body = null` で参照を切る形になりますが、これをやってもアップロード受信中のピークは消せません。つまり対症療法です。ピークの正体は次で説明します。
+
+## メモリには何倍乗っているのか——試算すると元PDFの約3.3倍
+
+API GatewayのLambdaプロキシ統合でバイナリを受けると、ボディは[Base64エンコードされて `event.body` に入ります](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-payload-encodings.html)。Base64は3バイトを4文字で表すので、[データはおよそ33%膨らみます](https://developer.mozilla.org/en-US/docs/Glossary/Base64)。つまり10MBのPDFなら、Base64文字列が約13.3MB。それをデコードしたBufferが10MB。デコードの瞬間には両方が同時に存在するので、この時点で合計23MB強がヒープに同居します。
+
+題材は「受け取ったPDFをZIP化してS3に置く」関数です。この形だとさらに続きがあります。ZIP後のバッファも変数に持つことになる。PDFはもともと圧縮済みのフォーマットなので、ZIPしてもほとんど縮みません。すると、ピーク時には (1) Base64文字列 約1.33倍 + (2) デコード後バッファ 1倍 + (3) ZIP後バッファ 約1倍で、**元PDFの約3.3倍**がメモリに同居する計算になります。20MBのPDFなら66MB。ZIPライブラリが内部バッファを別途持つ分、実際はさらに上振れし得ます。128〜256MBのメモリ割り当てなら普通に死ぬ数字です。
+
+断っておくと、この10MB→23MB、20MB→66MBという数字は算術的な試算で、実測値ではありません。それでも「リークしていないのにOOMする」現象は、この同居で説明が付きます。そして重要なのは、この同居はコードの書き方の問題ではないことです。`event.body` はハンドラの1行目が実行される時点で、すでに全量がヒープにいます。ハンドラ内でどう工夫しても、受け取り方そのものは変えられません。おまけにLambdaの同期呼び出しには[ペイロード6MBの上限](https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html)があるので、そもそも大きいファイルはこの経路を通れません。
+
+<LinkCard url="https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html" title="AWS公式: Lambda quotas（ペイロード上限・メモリ設定範囲）" />
+
+ちなみに「同時にアップロードが複数来たら、その分メモリが足し算されるのでは」という心配は不要です。Lambdaは[1つの実行環境が同時に1リクエストしか処理しない](https://docs.aws.amazon.com/lambda/latest/dg/lambda-concurrency.html)モデルなので、同時リクエストは別のコンテナに分かれます。1コンテナ内で足し算されるのは1リクエスト分だけです。
+
+## 「通過する」と「溜まる」は別物——認識が反転した瞬間
+
+ここまでの切り分けで出てくる当然の疑問が、「Presigned URLにしたところで、結局バイナリはLambdaに飛んでくるのでは」「ストリームにしても、一度はLambdaを通るのでは」です。冒頭の対話の最後の疑問がまさにこれでした。この疑問への答えが、この記事でいちばん持ち帰ってほしい部分です。
+
+バケツリレーで例えます。全量バッファリングは、100Lの水をまずタンクに溜めてから下流へ流すやり方。タンクは100L必要です。ストリームは、コップで汲んでは渡すやり方。手元にあるのは常にコップ1杯だけで、100Lが「通過」しても、手元に「溜まる」のはコップの容量までです。Node.jsのストリームでは、このコップの大きさが `highWaterMark`（既定で16KB〜数MB程度）で、下流が詰まったら上流の読み込みを止める[バックプレッシャーの仕組み](https://nodejs.org/api/stream.html)があるので、「下流が遅くて結局全量メモリに乗る」ことも起きません。
+
+<LinkCard url="https://nodejs.org/api/stream.html" title="Node.js公式: Stream（highWaterMarkとバックプレッシャー）" />
+
+そしてもうひとつ、S3のGetObjectと `event.body` の非対称性。ここで認識が反転しました。`await s3.send(new GetObjectCommand(...))` が解決した時点で手元に届いているのは、実はHTTPレスポンスのヘッダーまでです。`obj.Body` はデータの塊ではなく、「読めば届く約束の口」——蛇口です。読まなければデータは流れてきませんし、受信を止めればTCPのフロー制御でS3側の送信も止まります。OSのTCP受信バッファに数十〜数百KB程度が先行して溜まりますが（この数字はOS設定に依存する概算です）、これはヒープとは別の場所で、ファイルサイズに比例しません。
+
+一方のPOST + API Gateway経路は、API Gatewayが全量を受信し、Base64化し、完成品の文字列を `event.body` に格納してからハンドラを呼びます。こちらには「読まない」という選択肢が存在しません。**蛇口を渡されるGetObjectと、満タンのタンクを問答無用で渡されるevent.body。**ストリーム処理が選択肢になるかどうかは、コードの腕前ではなく、データがどちらの入口から入ってくるかで決まっていたわけです。
+
+だから、ストリーム化には成立条件があります。「Bufferに固めるAPIを一度も呼ばない」ことです。`obj.Body.transformToByteArray()` を呼んだ瞬間、チャンクを配列にpushして最後に `Buffer.concat` した瞬間、それはタンク方式に戻ります。せっかく蛇口を渡されたのに自分でタンクに溜め直す、ありがちな罠です。
+
+## 入口をS3に変える——Presigned URL構成とarchiverのパイプ
+
+構造が分かれば、直し方は素直です。データの入口をLambdaからS3に変えます。[S3のPresigned URL](https://docs.aws.amazon.com/AmazonS3/latest/userguide/PresignedUrlUploadObject.html)を使うと、クライアントが期限付きURLへ直接PUTできるので、アップロードのバイナリはLambdaを一切通りません。構成は3ステップです。
+
+1. **URL発行Lambda**: `getSignedUrl` でPUT用のURLを返すだけ。メモリはほぼ使いません
+2. **クライアント**: 受け取ったURLへ `fetch(uploadUrl, { method: "PUT", body: file })` でS3直行
+3. **後段Lambda**: S3の `ObjectCreated` イベント（または完了通知API）で起動し、S3から読んで処理
+
+```js
+// 1. URL発行Lambda
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+
+const s3 = new S3Client({}); // 残したいものはハンドラの外
+
+export const handler = async () => {
+  const key = `uploads/${crypto.randomUUID()}.pdf`;
+  const uploadUrl = await getSignedUrl(
+    s3,
+    new PutObjectCommand({
+      Bucket: process.env.BUCKET,
+      Key: key,
+      ContentType: "application/pdf",
+    }),
+    { expiresIn: 300 }
+  );
+  return { statusCode: 200, body: JSON.stringify({ uploadUrl, key }) };
+};
+```
+
+クライアント側の改修は、アップロード先を自前APIからPresigned URLへ差し替える数行で済みます。6MB上限も消えます。
+
+後段のZIP化は、S3読み込みストリームを `archiver` に繋ぎ、出力を `@aws-sdk/lib-storage` の `Upload` でS3へ流します。S3→ZIP→S3が全部パイプで繋がり、全量バッファリングがどこにも現れません。
+
+```js
+// 2. ZIP化Lambda（S3 → ZIP → S3 をパイプ接続）
+import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import { Upload } from "@aws-sdk/lib-storage";
+import { PassThrough } from "node:stream";
+import archiver from "archiver";
+
+const s3 = new S3Client({});
+
+export const handler = async (event) => {
+  const { bucket, keys, outKey } = parseEvent(event);
+
+  const archive = archiver("zip");
+  const out = new PassThrough();
+  const upload = new Upload({
+    client: s3,
+    params: { Bucket: bucket, Key: outKey, Body: out, ContentType: "application/zip" },
+  });
+  archive.pipe(out);
+
+  for (const key of keys) {
+    const obj = await s3.send(new GetObjectCommand({ Bucket: bucket, Key: key }));
+    archive.append(obj.Body, { name: key.split("/").pop() }); // 蛇口の接続
+  }
+  await archive.finalize();
+  await upload.done();
+};
+```
+
+`archive.append(obj.Body, ...)` は一見「PDF全体を渡している」ように見えますが、渡しているのは蛇口です。実際にデータが流れるのは `finalize()` 以降で、流れている間も手元にあるのは断片だけ。この構成なら全量バッファリングがどこにも現れないので、設計上、ピークメモリはファイルサイズと切り離せます。
+
+<LinkCard url="https://docs.aws.amazon.com/AmazonS3/latest/userguide/PresignedUrlUploadObject.html" title="AWS公式: Presigned URLによるオブジェクトのアップロード" />
+
+## 裏取りの方法と、応急処置の順位
+
+自分の環境で同じ症状か確かめるのは簡単です。CloudWatchのレポートに出る `Max Memory Used` と、落ちたときのPDFサイズを突き合わせてください。ファイルサイズの3倍前後で推移しているなら、リークではなく今回の「同居」構造でほぼ確定です。
+
+対処の順位は次のとおりです。
+
+1. **本命: Presigned URLで入口をS3に変える。**構造を直すのはこれだけです
+2. **次善: ブロックスコープで早期に参照を切る。**ピークは消えませんが、実行後半の滞留は減らせます
+3. **応急: メモリ割り当てを増やす。**Lambdaは[メモリに比例してCPUも増える](https://docs.aws.amazon.com/lambda/latest/dg/configuration-memory.html)ので、処理速度も上がり、応急処置としては意外とコスパが悪くありません
+
+## まとめ
+
+「メモリを解放すべきか」から始まった疑問は、切り分けていくと「データがどの入口から入るか」の問題でした。関数スコープはGCに任せてよい。ウォームスタートで残るのはモジュールスコープだけ。`event.body` は受けた時点で全量ヒープ行きで、ハンドラ内では直せない。そして「通過」と「滞留」は別物だから、蛇口（ストリーム）を渡される入口に変えれば、大きなファイルも小さなLambdaで捌ける。
+
+OOMのスタックトレースを見て `buffer = null` を足したくなったら、その前にCloudWatchの `Max Memory Used` とファイルサイズの比を見てください。3倍前後なら、直すのはコードの1行ではなく、データの入口です。
