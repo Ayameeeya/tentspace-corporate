@@ -245,6 +245,20 @@
       "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DMCP%26title%3DConnect%2BClaude%2BCode%2Bto%2Btools%2Bvia%2BMCP%26description%3DLearn%2Bhow%2Bto%2Bconnect%2BClaude%2BCode%2Bto%2Byour%2Btools%2Bwith%2Bthe%2BModel%2BContext%2BProtocol.%26theme%3D03628e99c753a03aec319053&w=1200&q=100",
       "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
     },
+    "https://docs.claude.com/en/docs/claude-code/memory": {
+      "title": "How Claude remembers your project - Claude Code Docs",
+      "description": "Give Claude persistent instructions with CLAUDE.md files, and let Claude accumulate learnings automatically with auto memory.",
+      "domain": "code.claude.com",
+      "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DUse%2BClaude%2BCode%26title%3DHow%2BClaude%2Bremembers%2Byour%2Bproject%26description%3DGive%2BClaude%2Bpersistent%2Binstructions%2Bwith%2BCLAUDE.md%2Bfiles%252C%2Band%2Blet%2BClaude%2Baccumulate%2Blearnings%2Bautomatically%2Bwith%2Bauto%2Bmemory.%26theme%3D03628e99c753a03aec319053&w=1200&q=100",
+      "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
+    },
+    "https://docs.claude.com/en/docs/claude-code/slash-commands": {
+      "title": "Extend Claude with skills - Claude Code Docs",
+      "description": "Create, manage, and share skills to extend Claude's capabilities in Claude Code. Includes custom commands and bundled skills.",
+      "domain": "code.claude.com",
+      "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DSkills%26title%3DExtend%2BClaude%2Bwith%2Bskills%26description%3DCreate%252C%2Bmanage%252C%2Band%2Bshare%2Bskills%2Bto%2Bextend%2BClaude%2527s%2Bcapabilities%2Bin%2BClaude%2BCode.%2BIncludes%2Bcustom%2Bcommands%2Band%2Bbundled%2Bskills.%26theme%3D03628e99c753a03aec319053&w=1200&q=100",
+      "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
+    },
     "https://docs.docker.com/get-started/": {
       "title": "Get started",
       "description": "Get started with Docker",
