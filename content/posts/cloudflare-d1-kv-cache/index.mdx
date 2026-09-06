@@ -56,7 +56,7 @@ Workers + D1で作っているアプリのDBアクセスが増えてきて、「
 「キャッシュ＝KV」と直行する前に、用途別の分岐を先に潰しておきます。
 
 1. **静的ファイル（HTML/CSS/JS/画像）**: WorkersのStatic Assetsに置きます。静的アセットへのリクエストは課金対象外・無制限です。旧Workers Sitesの流儀でKVに置くと、保存$0.50/GB・月と読み取り課金がかかるだけ損です
-2. **動的レスポンス**: Cache API（`caches.default`）や`Cache-Control`によるCDNキャッシュが先です。操作単位の課金がありません。ただしキャッシュは**データセンター単位**で、東京で温めたキャッシュはロンドンには存在しません
+2. **動的レスポンス**: [Cache API](https://developers.cloudflare.com/workers/runtime-apis/cache/)（`caches.default`）や`Cache-Control`によるCDNキャッシュが先です。操作単位の課金がありません。ただしキャッシュは**データセンター単位**で、東京で温めたキャッシュはロンドンには存在しません
 3. **それでも足りない場合のみKV**: 全拠点で共有したい、オリジンが遠い・重い、計算結果や中間データを持ちたい、という条件が残ったときの選択肢です
 
 今回の用途は「DBの読み取り結果」なので3に該当します。話は次のコスト設計へ進みます。
@@ -90,7 +90,7 @@ TTL付きキャッシュとしてKVを使う場合、月間の書き込み回数
 
 見てほしいのは読み取り単価です。**KVの読み取り$0.50/100万に対して、D1の読み取りは$0.001/100万行。500倍の差**があります。つまり「DBリクエストを減らすため」に挟んだキャッシュ層のほうが、元のDBより500倍高い単価で読み取りを課金される構造です。
 
-含まれる枠も桁が違います。250億行/月がどれくらいかというと、1リクエストで20行読む計算で**月1億リクエスト分**。そこまで行ったら、コストより先に別の悩みが出てくるはずです。
+含まれる枠も桁が違います。250億行/月がどれくらいかというと、1リクエストで20行読む計算で**月12.5億リクエスト分**。そこまで行ったら、コストより先に別の悩みが出てくるはずです。
 
 キーの粒度とTTLの設計を詰めていたのに、そもそも「DBリクエストを減らす」という目的がコストの前提から間違っていました。設計の議論をしていたつもりが、設計の必要がなかったわけです。
 
@@ -197,3 +197,4 @@ cache:v{N}:users:123
 - [Hyperdrive Metrics](https://developers.cloudflare.com/hyperdrive/observability/metrics)（`volatile`ステータス）
 - [D1 Read replication](https://developers.cloudflare.com/d1/best-practices/read-replication/)（レプリカの追加料金なし、Sessions APIとread-your-writes整合性）
 - [Workers Smart Placement](https://developers.cloudflare.com/workers/configuration/smart-placement/)（Workerの配置最適化）
+- [Workers Cache API](https://developers.cloudflare.com/workers/runtime-apis/cache/)（データセンター単位のキャッシュ）
