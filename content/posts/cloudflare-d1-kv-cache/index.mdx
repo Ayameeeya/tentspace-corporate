@@ -1,0 +1,200 @@
+---
+title: "Cloudflare D1にKVキャッシュ層は不要｜読み取り単価500倍差の落とし穴"
+description: "Cloudflare D1の前にWorkers KVでキャッシュ層を組むと、コスト面ではほぼ逆効果です。D1の読み取り単価はKVの約500分の1で、キャッシュ層のほうが高くつく構造を料金表から整理し、rows_read実測→インデックス→read replicationの順番をまとめます。"
+date: "2026-09-06"
+slug: "cloudflare-d1-kv-cache"
+categories: ["テクノロジー"]
+tags: ["Cloudflare", "D1", "Workers KV", "コスト設計"]
+draft: false
+ogImage: "/blog-assets/cloudflare-d1-kv-cache/featured.jpg"
+experiment:
+  pillar: "build-public"
+  hook: "contrarian"
+  cta: "inquiry"
+  targetKw: "Cloudflare D1 キャッシュ"
+  utmCampaign: "cloudflare-d1-kv-cache"
+---
+
+<Dialogue>
+  <Say by="hiro">Cloudflare KVって比較的安いですか？</Say>
+  <Say by="ai">読み9割・書き1割の小さい値ならとても安いです。書き込みは読み取りの10倍単価ですが</Say>
+  <Say by="hiro">基本的にはDBデータっすかね。DBへのリクエストを減らしたい用途で。コスト的にもパフォーマンス的にも</Say>
+  <Say by="ai">DBは何を使ってますか。そこで結論が変わります</Say>
+  <Say by="hiro">D1ですね</Say>
+  <Say by="ai">ならKVは挟まないほうがいいです。D1の読み取りはKVの500分の1の単価。キャッシュ層のほうが高くつきます</Say>
+  <Say by="hiro">ようはD1の負荷分散で済むってことですかね</Say>
+  <Say by="ai">レイテンシはreplicationで解決します。ただrows_readは減りません。原因の切り分けが先です</Say>
+</Dialogue>
+
+Cloudflare D1を使っているなら、その前にWorkers KVでキャッシュ層を組むのはやめたほうがいいです。DBリクエストを減らすつもりで足したキャッシュのほうが、元のDBより約500倍高い読み取り単価で課金されるからです。
+
+Workers + D1で作っているアプリのDBアクセスが増えてきて、「コスト的にもパフォーマンス的にも、KVでキャッシュしておくか」と考え始めたところでした。KVの料金を読み、キーの粒度とTTLの設計まで進んだところで前提がひっくり返ったので、その過程を順番に記録します。なお本記事の料金は2026年8月時点のものです。最新は公式ドキュメントを確認してください。
+
+<LinkCard url="https://developers.cloudflare.com/workers/platform/pricing/" title="Cloudflare Workers Pricing（公式・KV/D1/R2の料金表）" />
+
+## KVの料金表を素直に読むと「読み9割なら安い」になる
+
+まずWorkers KV単体の料金です。Workers Paidプラン（月$5）に含まれる枠と超過単価はこうなっています。
+
+| 項目 | Free | Paidに含まれる枠 | 超過 |
+| --- | --- | --- | --- |
+| 読み取り | 10万/日 | 1,000万/月 | $0.50/100万 |
+| 書き込み | 1,000/日 | 100万/月 | $5.00/100万 |
+| 削除 | 1,000/日 | 100万/月 | $5.00/100万 |
+| list | 1,000/日 | 100万/月 | $5.00/100万 |
+| 保存容量 | 1GB | 1GB | $0.50/GB・月 |
+
+読み取り$0.50/100万は確かに安い部類です。ただし2点、最初から引っかかる数字があります。
+
+- 書き込みは読み取りの**10倍単価**。しかもD1の行書き込み（$1.00/100万行）より高い
+- 保存$0.50/GB・月は、R2の$0.015/GB・月の**33倍以上**。大きめのJSONやファイルの置き場には向かない
+
+それでも「読み9割・書き1割の小さい値」という典型的なキャッシュ用途なら安い、という結論がいったん出ます。ここまでは順調でした。
+
+## そもそもWebのキャッシュなら、KVの前に2つ選択肢がある
+
+「キャッシュ＝KV」と直行する前に、用途別の分岐を先に潰しておきます。
+
+1. **静的ファイル（HTML/CSS/JS/画像）**: WorkersのStatic Assetsに置きます。静的アセットへのリクエストは課金対象外・無制限です。旧Workers Sitesの流儀でKVに置くと、保存$0.50/GB・月と読み取り課金がかかるだけ損です
+2. **動的レスポンス**: [Cache API](https://developers.cloudflare.com/workers/runtime-apis/cache/)（`caches.default`）や`Cache-Control`によるCDNキャッシュが先です。操作単位の課金がありません。ただしキャッシュは**データセンター単位**で、東京で温めたキャッシュはロンドンには存在しません
+3. **それでも足りない場合のみKV**: 全拠点で共有したい、オリジンが遠い・重い、計算結果や中間データを持ちたい、という条件が残ったときの選択肢です
+
+今回の用途は「DBの読み取り結果」なので3に該当します。話は次のコスト設計へ進みます。
+
+## KVのコストは書き込み回数でほぼ決まる
+
+TTL付きキャッシュとしてKVを使う場合、月間の書き込み回数はほぼこの式で決まります。
+
+```text
+月間書き込み回数 ≒ キーの種類数 × (2,592,000秒 ÷ TTL秒)
+```
+
+2,592,000秒は30日です。キャッシュミスのたびに書き戻す前提なら、各キーがTTLごとに1回ずつ書き込まれる計算になります。実際に数字を入れると振れ幅が分かります。
+
+- キー100種 × TTL 300秒 → 約86万回/月。**無料枠（100万/月）に収まる**
+- キー1万種 × TTL 60秒 → **約4.3億回/月 → 書き込みだけで$2,000超**
+
+「ユーザーIDごとにキーを切る」といった設計は、この式に入れてから決めるべきです。キー粒度を細かくしすぎない、TTLを短くしすぎない。KVのコスト設計はほぼこれで決まります。
+
+ここまでで「キー粒度とTTLをどう設計するか」という議論が普通に成立していました。それが次の一言で全部ひっくり返ります。
+
+## DBがD1だと分かった瞬間、前提がひっくり返る
+
+「で、DBは何を使ってますか？」——D1です、と答えた瞬間に設計の議論が終わりました。D1の料金を並べます。
+
+| 項目 | Free | Paid |
+| --- | --- | --- |
+| Rows read | 500万/日 | 250億/月込み + $0.001/100万行 |
+| Rows written | 10万/日 | 5,000万/月込み + $1.00/100万行 |
+| ストレージ | 5GB | 5GB込み + $0.75/GB・月 |
+
+見てほしいのは読み取り単価です。**KVの読み取り$0.50/100万に対して、D1の読み取りは$0.001/100万行。500倍の差**があります。つまり「DBリクエストを減らすため」に挟んだキャッシュ層のほうが、元のDBより500倍高い単価で読み取りを課金される構造です。
+
+含まれる枠も桁が違います。250億行/月がどれくらいかというと、1リクエストで20行読む計算で**月12.5億リクエスト分**。そこまで行ったら、コストより先に別の悩みが出てくるはずです。
+
+キーの粒度とTTLの設計を詰めていたのに、そもそも「DBリクエストを減らす」という目的がコストの前提から間違っていました。設計の議論をしていたつもりが、設計の必要がなかったわけです。
+
+D1の課金構造そのもの（「返した行数」ではなく「スキャンした行数」で数えられる話）は別記事で詳しく書いています。
+
+<LinkCard slug="cloudflare-d1-pricing" />
+
+## rows_readが多いのはキャッシュ不足ではなくインデックス不足
+
+「でも実際、請求のrows_readが多いんだけど」という場合。それはキャッシュで隠す問題ではなく、たいていインデックスの問題です。
+
+D1のrows_readは**スキャンした行数**でカウントされます。5,000行のテーブルに`SELECT *`を投げれば5,000行の読み取りです。行のサイズや列数はカウントに影響しません（1KBの行も100KBの行も1行は1行）。そしてインデックスのない列でフィルタすると、返る行数が1行でもスキャンした全量が課金されます。
+
+ダッシュボードで行数が異常に多いなら、先に見るべきはクエリ実行計画とインデックスで、キャッシュ層はその後です。
+
+## read replicationが解決するのは「距離」だけ
+
+コストの話が消えると、残る動機は「パフォーマンス」です。ここでD1には[read replication](https://developers.cloudflare.com/d1/best-practices/read-replication/)があります。公式ドキュメントに沿って要点だけ並べます。
+
+- **レプリカ自体に追加料金はかかりません**。課金は従来どおりrows_read / rows_writtenベースです
+- Sessions APIを使うと、read-your-writes整合性（自分の書き込みが直後の読み取りに反映される）を保ったままレプリカから読めます
+
+コードはこういう形になります（説明用の形で、動作確認済みの実コードではありません）。
+
+```javascript
+// ブックマークをCookie等で持ち回る
+const session = env.DB.withSession(bookmark ?? 'first-unconstrained');
+const { results } = await session.prepare('SELECT ...').bind(id).all();
+const newBookmark = session.getBookmark(); // 次リクエストに渡す
+```
+
+KVに自前の無効化ロジックを書き込むより、事故の余地が少ない仕組みです。
+
+ただし重要な限界がひとつ。**replicationで速くなるのは「遠いから遅い」部分だけ**です。レプリカから読んでもrows_readは同じようにカウントされますし、重いクエリが重いことも変わりません。全レプリカで同じように遅いクエリが走るだけです。「負荷分散すればいい」も半分だけ正しい、ということになります。
+
+## 「遅い」の原因は3つに分かれる
+
+なので、キャッシュでもreplicationでも、手を打つ前に原因の切り分けが先です。遅さの原因は3つに分解できます。
+
+| 原因 | 打ち手 |
+| --- | --- |
+| 距離が遠い | read replicationで解決する |
+| クエリ自体が重い | インデックス・クエリの書き直し。replicationでは直らない |
+| 同じ重いクエリを何度も実行している | ここだけKVの出番 |
+
+切り分けは実測でできます。D1のクエリ結果には`meta`が付いてきます。
+
+```javascript
+const { results, meta } = await env.DB.prepare('SELECT ...').all();
+console.log(meta.rows_read, meta.duration);
+```
+
+- `rows_read`が数千〜数万に膨れている → インデックスの問題
+- `rows_read`は小さいのに`duration`が大きい → 距離の問題。replicationが効きます
+
+1リクエストの中で何度もD1を叩く処理なら、[Smart Placement](https://developers.cloudflare.com/workers/configuration/smart-placement/)でWorkerごとプライマリの近くへ寄せる手も併用できます。
+
+## それでもKVを使うなら——条件と無効化の型
+
+D1の前段でもKVに意味が残るケースはあります。条件は3つ揃ったときです。
+
+- 全ユーザー共通で重い集計結果を返している（ランキング、統計、ダッシュボードのサマリ）
+- TTLを数分〜数時間取っても業務上問題ない
+- キーの種類が少ない（数十〜数百程度）
+
+この条件なら削れるのは「DBコスト」ではなく「重いクエリの実行時間そのもの」なので、挟む意味があります。逆にユーザーIDごとにキーを切る設計は、先の式で書き込み課金が跳ねるうえ、たいていread replicationで済む話です。
+
+使う場合の無効化設計もひとつだけ。KVには一括パージもタグ削除もなく、list + deleteは書き込みと同単価です。実務的にはバージョンプレフィックスが楽です。
+
+```text
+cache:v{N}:users:123
+```
+
+`N`を別キーに置いて、更新時にインクリメントするだけ。古いキーはTTLで自然に消えるので、削除操作の課金がゼロで済みます。
+
+## DBが外部PostgresならHyperdriveが先
+
+対比として、DBがD1ではなく外部のPostgres / MySQLの場合はどうか。この場合もKVを自前で組む前にHyperdriveが先です。
+
+- Workers Paidにクエリ数無制限で含まれます
+- 読み取りクエリを自動キャッシュし、Cache APIと違って全拠点で共有されます。デフォルトTTLは60秒で、`--max-age`で変更、`--caching-disabled`で無効化できます
+- `NOW()`や`RANDOM()`を含むクエリはキャッシュ対象外です（メトリクス上は`volatile`ステータス）
+- 注意点として、**書き込みでキャッシュは無効化されません**。read-after-writeが必要な経路には、キャッシュ無効の別Hyperdrive設定を用意して分ける必要があります
+
+コネクション確立のラウンドトリップも肩代わりしてくれるので、「外部DBが遠くて遅い」問題の一次回答はここです。Workersから外部DBへつなぐ構成そのものは、こちらの記事で扱っています。
+
+<LinkCard slug="workers-vpc-onprem-db" />
+
+## 毎回読んでいい。キャッシュは複雑さのコストのほうが高い
+
+結論です。D1なら、大半のケースで毎回素直に読んで問題ありません。これは私の判断ですが、キャッシュ層は無効化のバグや「開発中に古いデータが返ってきて混乱する」といった複雑さのコストを持ち込む割に、D1構成では得るものが少なすぎます。
+
+- キャッシュを足す前に、**キャッシュ層自身の単価を元のDBと比べる**。今回はこの習慣がなかったせいで、500倍高い層を挟みかけました
+- D1で困ったときの順番は、`meta.rows_read` / `meta.duration`の実測 → インデックス見直し → read replication
+- 後から効いてくる可能性があるのはrows_readの暴発だけなので、ダッシュボードのRow Metricsをたまに見るくらいで十分です
+
+打ち合わせの最後は「毎回読んでも大したことないなら、それでいいっすね」で終わりました。キャッシュは、実際に困ってから挟めばいい。その時もまず、単価の比較からです。
+
+### 出典（2026年8月時点で確認）
+
+- [Cloudflare Workers Pricing](https://developers.cloudflare.com/workers/platform/pricing/)（KV・D1・R2の料金）
+- [Hyperdrive Getting started](https://developers.cloudflare.com/hyperdrive/get-started/)（デフォルトTTL 60秒、`--max-age`、`--caching-disabled`）
+- [How Hyperdrive works](https://developers.cloudflare.com/hyperdrive/concepts/how-hyperdrive-works/)（読み取りクエリのキャッシュ動作）
+- [Hyperdrive Metrics](https://developers.cloudflare.com/hyperdrive/observability/metrics)（`volatile`ステータス）
+- [D1 Read replication](https://developers.cloudflare.com/d1/best-practices/read-replication/)（レプリカの追加料金なし、Sessions APIとread-your-writes整合性）
+- [Workers Smart Placement](https://developers.cloudflare.com/workers/configuration/smart-placement/)（Workerの配置最適化）
+- [Workers Cache API](https://developers.cloudflare.com/workers/runtime-apis/cache/)（データセンター単位のキャッシュ）
