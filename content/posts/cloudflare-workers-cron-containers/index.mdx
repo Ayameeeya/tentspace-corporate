@@ -1,0 +1,228 @@
+---
+title: "Cloudflare Workersの定時実行ガイド｜cronとContainersの使い分け"
+description: "Cloudflareで定時バッチを組む方法を整理します。高頻度×軽量ならWorkers Cron Trigger（実質無料）、重いバッチならContainers（月$5にほぼ収まる試算）。cron式のUTC罠、fetch/scheduled同居の仕組み、TinyGo+WASMでGoを載せる最小構成のコード解説までまとめます。"
+date: "2026-09-08"
+slug: "cloudflare-workers-cron-containers"
+categories: ["テクノロジー"]
+tags: ["Cloudflare", "Cloudflare Workers", "Go", "コスト設計"]
+draft: false
+ogImage: "/blog-assets/cloudflare-workers-cron-containers/featured.jpg"
+experiment:
+  pillar: "build-public"
+  hook: "question"
+  cta: "inquiry"
+  targetKw: "Cloudflare Workers 定時実行"
+  utmCampaign: "cloudflare-workers-cron-containers"
+---
+
+<Dialogue>
+  <Say by="hiro">Cloudflareに定時実行ってあるんですか？</Say>
+  <Say by="ai">WorkersのCron Triggersがあります。設定にcron式を書くだけでscheduled()が呼ばれます</Say>
+  <Say by="hiro">ウェブアプリが同じWorkerにあると、cronでアプリまで実行されちゃいますよね？</Say>
+  <Say by="ai">実は分けなくて大丈夫です。HTTPはfetch()、cronはscheduled()で経路が完全に別なんです</Say>
+  <Say by="hiro">でも実は分けたくて。コンパイラであるGoで書いた方がメリットあるかなと。Go使えますよね？</Say>
+  <Say by="ai">使えます。ただWASM化が必要で、素のGoだと8MB近くてサイズ制限に引っかかります。TinyGoなら0.75MBです</Say>
+  <Say by="hiro">ならコンテナだな。$5払ったとして5分間隔で実行したらいくらかかる？</Say>
+  <Say by="ai">liteインスタンスなら全メーターが無料枠内。追加課金ゼロ、月$5のままです</Say>
+</Dialogue>
+
+結論から言い切ります。Cloudflareの定時実行は、高頻度×軽量な処理ならWorkers Cron Trigger（実質無料）、重いバッチならContainers（それでも月$5にほぼ収まる試算）。そしてGoで書きたい人は、両方Goでいけます。
+
+「Cloudflareに定時実行はあるのか」という素朴な疑問から調べ始めて、途中で設計が2回ひっくり返ったので、判断の分岐ごと記録しておきます。想定読者は、Cloudflareで定時バッチを組みたい個人開発者・フリーランスエンジニア。特に「JSよりGoで書きたい」と思っている方です。
+
+## Cron Triggersの仕組み——cron式を書くだけ、ただしUTC基準
+
+Workersには標準でCron Triggersという定時実行の仕組みがあります。`wrangler.toml`の`[triggers]`にcron式を書くだけで、指定時刻に`scheduled()`ハンドラが呼ばれる。追加料金はなく、無料プランでも使えます。
+
+<LinkCard url="https://developers.cloudflare.com/workers/configuration/cron-triggers/" title="Cron Triggers（Cloudflare公式ドキュメント）" />
+
+ひとつだけ最初に踏みやすい罠があって、cron式は**UTC基準**です。日本時間で考えるなら9時間ずらす必要があります。
+
+- `0 23 * * *` → UTC 23:00 = 日本時間 朝8:00（毎日）
+- `0 5 * * 1` → UTC 月曜5:00 = 日本時間 月曜14:00
+
+一方で`*/5 * * * *`のような間隔指定は、時差の影響を受けません。「5分ごと」はどのタイムゾーンでも5分ごとなので、そのまま書けます。時刻指定だけずれて間隔指定はずれない。この非対称は知っておくと混乱が減ります。
+
+## ウェブアプリと同居できる——fetchとscheduledは呼び出し経路が別
+
+次に浮かんだのが「ウェブアプリが同じWorkerにあると、cronでアプリ側まで実行されてしまわないか？」という疑問でした。cronのためだけに別Workerへ分けるべきなのか。
+
+答えは、分けなくてよい。HTTPリクエストが来たときは`fetch()`だけが、Cronの発火時は`scheduled()`だけが呼ばれます。[scheduledハンドラの公式ドキュメント](https://developers.cloudflare.com/workers/runtime-apis/handlers/scheduled/)にある通り、ハンドラが完全に分離していて、互いに一切干渉しません。
+
+同居のメリットは実利があります。環境変数・シークレット・D1やR2のバインディングを共有できて、デプロイは1回、共通ロジックもそのまま使い回せる。逆にあえて分けるとしたら、デプロイやロールバックを独立させたい、課金・監視を分けたい、そもそも責務やリポジトリが違う——そういう運用上の理由があるときです。仕組みの制約ではなく、運用の選択の問題でした。
+
+## 「Goで書きたい」で話が変わる——Workersの正体とふたつの選択肢
+
+ここまでで「定時実行はある。同居もできる」と分かりました。ただ、私の場合は「バッチはGoで書きたい」という希望があり、ここから話が変わります。
+
+まずWorkersの正体を押さえておくと、Workersはブラウザで動いているわけではなく、Cloudflareのエッジサーバーで動くサーバーサイド実行環境です。ランタイムはV8（Chromeと同じJavaScriptエンジン）ベースの独自ランタイムworkerd。コンテナやVMを起動する代わりに、V8のisolateという軽量サンドボックスでコードを分離実行するので、コールドスタートがほぼゼロという特性があります。
+
+その代わり制限もはっきりしています。OSなし、ファイルシステムなし、任意のプロセス起動なし、外部通信は基本fetch経由、メモリ128MB。そして動くのは**JavaScriptとWASMだけ**。サーバーサイドではあるけれど、コンテナのように好き勝手できるわけではない。ただしWASMは使える——これが今回の分岐点です。
+
+GoをCloudflareで動かす方法は2つあります。
+
+**方法1: WASMにコンパイルしてWorkersで動かす。** Workersは[WASMをサポートしている](https://developers.cloudflare.com/workers/languages/)ので、GoをWASMにビルドすれば載ります。ただし通常のGoコンパイラでビルドすると8MB近くになり、Workersのスクリプトサイズ制限（無料3MB、有料10MB）に対してかなり苦しい。TinyGoを使うと大幅に縮みます。[外部の実例](https://dev.to/ergofriend/gos-template-engine-templ-is-convenient-it-also-works-with-tinygo-3ad6)では、text/template入りのバイナリが通常ビルド7.6MB→TinyGoで556KBまで縮んだ報告があります。
+
+**方法2: Cloudflare Containers。** Cron Triggerからコンテナをスケジュール起動する公式パターンがあります。構成は「Cron Trigger（UTC）→ 薄いWorker（scheduledハンドラでコンテナを起動するだけ）→ Goバイナリ入りコンテナが実処理」。こちらはネイティブのGoバイナリがそのまま動くので、goroutineもnet/httpも好きなライブラリも全部使えます。Dockerfileは`FROM scratch`にGoバイナリを置くだけの数MBイメージで済む。
+
+<LinkCard url="https://developers.cloudflare.com/containers/examples/cron" title="Cron Container（Cloudflare公式ドキュメント）" />
+
+WASMには制約がある、Containersには自由がある。この時点では「ならContainers一択では」と思っていました。料金を試算するまでは。
+
+## 料金試算——liteインスタンスなら5分間隔でも追加課金ゼロ
+
+ContainersはWorkers Paid（月$5）が前提です。課金は起動中のみ10ms単位で、スリープ中は無料。メモリとディスクは割当ベース、CPUは実使用ベースで計算されます。$5プランには無料枠として、メモリ25GiB時間/月、CPU 375vCPU分/月、ディスク200GB時間/月が含まれます。
+
+そこで「5分間隔で回したらいくらか」を、公式レートを前提に試算してみました。5分間隔は月8,640回。1回30秒稼働するとして月72時間です。最小のliteインスタンス（1/16 vCPU、256MiBメモリ、2GBディスク）だと——
+
+| メーター | 消費量の試算 | 無料枠 | 判定 |
+| --- | --- | --- | --- |
+| メモリ | 0.25GiB × 72h = 18GiB時間 | 25GiB時間 | 枠内 |
+| CPU | フル使用でも 1/16vCPU × 72h ≒ 270vCPU分 | 375vCPU分 | 枠内 |
+| ディスク | 2GB × 72h = 144GB時間 | 200GB時間 | 枠内 |
+
+全メーターが無料枠内。つまり**追加課金ゼロ、月$5のまま**という結果になりました。これが1つ目の「予想と違った点」です。重いバッチを5分間隔で回しても$5に収まるのか、と。
+
+<LinkCard url="https://developers.cloudflare.com/containers/pricing/" title="Containers Pricing（Cloudflare公式ドキュメント）" />
+
+感度も見ておくと、1回の稼働が60秒に伸びても超過は合計$0.3程度。ひとつ上のbasicインスタンス（1/4 vCPU、1GiB）で30秒稼働でも超過は$1強で月$6台です。なお、この試算は公式の料金レートに基づく私の計算であって、公式が保証する金額ではありません。稼働時間とスリープ設定次第で変わります。
+
+変わる要因の最大がスリープ設定です。コスト最適化の要点は実質ひとつで、**処理が終わったら即スリープさせる**（sleepAfterを短くするか、明示的にstopする）。スリープまでの猶予が長いと、5分間隔では実質常時起動に近づいて、liteでも月$7〜8程度まで上がる試算になります。
+
+## 高頻度の軽い処理はWorkers cronの方が構造的に安い
+
+ここで2つ目のどんでん返しがありました。Containersが枠内に収まるのは分かった。では同じ5分間隔をWorkers Cron Triggerでやるとどうなるか。
+
+Workersのcron実行は課金上「通常のリクエスト1回」と同じ扱いです。[公式の料金ページ](https://developers.cloudflare.com/workers/platform/pricing/)の通り、$5のWorkers Paidには月1,000万リクエストの枠が含まれていて、月8,640回は**枠の0.1%未満**。誤差ですらない。しかもCron Triggersは無料プランでも使えるので、軽い処理なら$0運用も可能です。
+
+Containersも枠内には収まりますが、「メモリ25GiB時間/月」といった枠を着実に消費します。軽いポーリングのために、他の重要なバッチ用の枠を削るのはもったいない。この構造的な理由で、当初の「Containers一択」から設計が反転しました。
+
+- **高頻度×軽量**（監視、ポーリング、キュー処理の起点）→ Workers Cron Trigger。isolateの起動の軽さが効く
+- **低頻度×重い**（集計、レポート生成、大きめのETL）→ Containers。コンテナ起動のオーバーヘッドが相対的に無視でき、ネイティブの自由度が効く
+
+頻度が高いほどWorkersの起動の軽さが効き、処理が重いほどContainersの自由度が効く。きれいな対称です。分け方は「Worker単位」ではなく「頻度×重さ」でした。
+
+そして、この使い分けをGoでやるなら——重い側はContainersのネイティブGo、軽い側はTinyGo+WASMでWorkersに載せれば、**Goのモノレポでドメインロジックを共通パッケージ化し、軽い方はWASM・重い方はネイティブで出し分ける**構成が組めます。ここからは、そのWASM側の最小構成を実際のコードで見ていきます。
+
+## TinyGo+WASMでWorkers cronをGoで書く最小構成
+
+WorkersでGoを動かすのに使うのは、コミュニティ製のフレームワーク[syumai/workers](https://github.com/syumai/workers)です。Cron Triggersに対応していて（`cron.ScheduleTask`）、D1・KV・R2などのバインディングもGoから使えます。
+
+プロジェクト構成はこれだけです。
+
+```text
+my-cron-worker/
+├── main.go          # Goで書くバッチ本体
+├── go.mod
+├── build/           # ビルド生成物（wasm + JSシム）が入る
+└── wrangler.toml
+```
+
+### main.go——バッチ本体は普通のGo
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"net/http"
+
+	"github.com/syumai/workers/cloudflare/cron"
+)
+
+func task(ctx context.Context) error {
+	e, err := cron.NewEvent(ctx)
+	if err != nil {
+		return err
+	}
+	fmt.Println("cron fired:", e.ScheduledTime.String())
+
+	// ここにバッチ処理を書く（普通のGoコード）
+	resp, err := http.Get("https://api.example.com/health")
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	fmt.Println("status:", resp.StatusCode)
+
+	return nil
+}
+
+func main() {
+	cron.ScheduleTask(task)
+}
+```
+
+各パーツの役割を分解します。
+
+- `cron.ScheduleTask(task)`: これがエントリポイントです。渡した関数がWorkerの`scheduled()`ハンドラにマッピングされ、Cron Triggerの発火ごとに呼ばれます。JS側のイベント配線を意識する必要はありません。
+- `cron.NewEvent(ctx)`: Cron発火イベントの情報を取り出します。`e.ScheduledTime`で「いつの発火として呼ばれたか」が取れるので、ログや冪等性チェックの基準時刻に使えます。
+- `task`の中身: 見ての通り普通のGoです。`net/http`の`http.Get`がそのまま書けます（内部的にはWorkersのfetchに橋渡しされます）。エラーを返せば失敗として扱われます。
+- HTTPも同じWorkerで受けたい場合は、`workers.Serve(handler)`を併用すれば、fetch側とscheduled側を1つのGoプログラムに同居させられます。
+
+### wrangler.toml——mainが指すのはGoではなく生成されるJS
+
+```toml
+name = "my-cron-worker"
+main = "./build/worker.mjs"
+compatibility_date = "2026-08-01"
+
+[triggers]
+crons = ["*/5 * * * *"]   # 5分ごと（UTC基準だが間隔指定なので時差の影響なし）
+
+[build]
+command = "go run github.com/syumai/workers/cmd/workers-assets-gen && tinygo build -o ./build/app.wasm -target wasm -no-debug ./..."
+```
+
+読み解きのポイントは2つ。
+
+- `main = "./build/worker.mjs"`: エントリはGoファイルではなく、ビルドで生成されるJSファイルを指します。Goを直接デプロイするのではなく、「WASMを呼ぶJS」をデプロイする構図です。
+- `[build]`の`command`: `wrangler deploy`のたびに自動で走ります。前半の`workers-assets-gen`がJSシム（後述）を生成し、後半の`tinygo build`がGoコードを`app.wasm`にコンパイルする。2段構えのビルドが1行に入っています。
+
+### セットアップからデプロイまで
+
+```bash
+go mod init my-cron-worker
+go get github.com/syumai/workers
+
+npx wrangler deploy   # buildコマンドが走り、WASM生成→デプロイまで一気に
+```
+
+ビルドの仕組みを構図で押さえておくと、生成物は2つです。(1) `app.wasm`——TinyGoがGoコードをコンパイルしたWASMバイナリ。(2) `worker.mjs`とシム——WASMをロードして、Workersのfetch/scheduledイベントをGo側の関数に橋渡しする薄いJS。これは`workers-assets-gen`が自動生成するので、自分でJSを書くことはありません。**Cloudflareから見えるのは普通のJS Workerで、その中身が「WASMを呼ぶだけのガワ」になっている**わけです。
+
+デプロイ前のローカルテストもできます。`--test-scheduled`付きでdevサーバーを起動すると、専用エンドポイントでcron発火を疑似できます。
+
+```bash
+npx wrangler dev --test-scheduled
+curl "http://localhost:8787/__scheduled?cron=*/5+*+*+*+*"
+```
+
+D1やKVを使う場合は、`github.com/syumai/workers/cloudflare/d1`などのサブパッケージを使い、`wrangler.toml`にバインディングを追加すれば、Goから読み書きできます。
+
+## 正直な注意点——experimentalであることと、TinyGoの制約
+
+ここまでGo推しで書いてきましたが、採用判断の材料として注意点も同じ解像度で書いておきます。
+
+- **syumai/workersはREADME自身がexperimentalと明言している個人メンテのプロジェクト**です。Cloudflare公式がファーストクラスで扱う言語（JS/TS、Rust、Python）とは安定度の前提が違います。
+- TinyGoは標準ライブラリに制約があります。特にreflectに依存するライブラリ（encoding/jsonの一部挙動を含む）で罠を踏みやすい。
+- デバッグ体験はJS直書きより落ちます。エラーがWASM境界で丸められて、原因の特定に手間がかかることがあります。
+- Workersの新機能・新バインディングへの追従は、ラッパー側の対応待ちになります。
+
+この前提での私の判断軸はこうです。API を叩いて D1 に書くだけ、のような**数十行のglueならJSで書く方がトータルで楽**。逆に、バッチのロジックが太っていく見込みがある、あるいはContainers側のバッチとコードを共有したいなら、WASM化の価値が出ます。「JSよりマシか」はケースバイケースで、Goで統一すること自体が目的化しないようにだけ気をつけたいところです。
+
+コストの考え方が近い話として、D1の課金構造を掘った記事も置いておきます。Cloudflareの料金は「何に課金されるかの軸」を先に押さえると設計が楽になります。
+
+<LinkCard slug="cloudflare-d1-pricing" />
+
+## 冒頭の疑問に答える
+
+最初の疑問に戻ります。「Cloudflareに定時実行はあるのか？」——あります。Cron Triggersは無料プランから使えて、ウェブアプリと同じWorkerに同居できます。分けるかどうかは仕組みの制約ではなく運用の選択。
+
+そして分け方の本質はWorker単位ではなく、**頻度×重さ**でした。
+
+- 高頻度×軽量 → Workers Cron Trigger。月8,640回でもリクエスト枠の0.1%未満で実質無料
+- 低頻度×重い → Containers。liteインスタンスなら5分間隔×30秒稼働でも追加課金ゼロの試算で、月$5にほぼ収まる
+- Goで書きたい → 重い側はネイティブGoのコンテナ、軽い側はTinyGo+WASM。モノレポでロジックを共通化できる
+
+「とりあえずcronを回したい」だけならWorkers Cron Triggerを設定に3行足すところから。Goで統一したくなったら、この記事の最小構成から始めるのが近道です。
