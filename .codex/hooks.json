@@ -6,7 +6,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/hooks/guard-bash.sh"
+            "command": "/bin/bash \"$(git rev-parse --show-toplevel)/hooks/guard-bash.sh\"",
+            "timeout": 30
           }
         ]
       }
@@ -17,17 +18,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/hooks/validate-on-edit.sh"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "cd $CLAUDE_PROJECT_DIR && npm run check"
+            "command": "/bin/bash \"$(git rev-parse --show-toplevel)/hooks/validate-on-edit.sh\"",
+            "timeout": 30
           }
         ]
       }
