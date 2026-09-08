@@ -28,8 +28,12 @@ const retiredCmsMarkers = [
   "blog" + ".tentspace.net",
   "word" + "press" + "_user_id",
 ]
-// 技術スタックに載せているCMSのロゴ表記は提供サービスであり、移行元の識別子ではない
-const allowedFiles = new Set(["components/home/stack-logos.tsx"])
+// 外部OGPには移行元と無関係なCMS固有URLが含まれうる。元のMDXとパスは別途検査する。
+const allowedFiles = new Set([
+  "components/home/stack-logos.tsx",
+  "content-rendered.json",
+  "content/link-card-cache.json",
+])
 
 async function findRetiredCmsReferences(directory: string): Promise<string[]> {
   const matches: string[] = []

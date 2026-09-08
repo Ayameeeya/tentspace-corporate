@@ -1,5 +1,410 @@
 [
   {
+    "id": 607099278,
+    "slug": "cloudflare-workers-cron-containers",
+    "title": "Cloudflare Workersの定時実行ガイド｜cronとContainersの使い分け",
+    "description": "Cloudflareの定時バッチを整理します。高頻度×軽量ならWorkers Cron Trigger（実質無料）、重いバッチならContainers（月$5にほぼ収まる試算）。cron式のUTC罠、fetch/scheduled同居の仕組み、TinyGo+WASMでGoを載せる最小構成のコード解説までまとめます。",
+    "date": "2026-09-08T00:00:00.000Z",
+    "updated": "2026-09-08T00:00:00.000Z",
+    "categories": [
+      "テクノロジー"
+    ],
+    "tags": [
+      "Cloudflare",
+      "Cloudflare Workers",
+      "Go",
+      "コスト設計"
+    ],
+    "draft": false,
+    "readingTime": 17,
+    "wordCount": 6662,
+    "ogImage": "/blog-assets/cloudflare-workers-cron-containers/featured.jpg",
+    "experiment": {
+      "hook": "question",
+      "cta": "inquiry",
+      "targetKw": "Cloudflare Workers 定時実行",
+      "utmCampaign": "cloudflare-workers-cron-containers"
+    }
+  },
+  {
+    "id": 1840429280,
+    "slug": "claude-code-checkpoint-rewind",
+    "title": "Claude Codeのチェックポイント入門｜/rewindで戻れる範囲と戻れないもの",
+    "description": "Claude Codeのチェックポイント機能と/rewindの使い方を公式ドキュメントベースで整理します。編集前に自動保存される仕組み、コードと会話を別々に戻す操作、bashの副作用など戻らないもの、gitとの住み分け、プランモード・権限設定との役割分担までをまとめます。",
+    "date": "2026-09-07T00:00:00.000Z",
+    "updated": "2026-09-07T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "AIエージェント",
+      "自動化",
+      "チェックポイント"
+    ],
+    "draft": false,
+    "readingTime": 8,
+    "wordCount": 2916,
+    "ogImage": "/blog-assets/claude-code-checkpoint-rewind/featured.jpg",
+    "experiment": {
+      "hook": "howto",
+      "cta": "inquiry",
+      "targetKw": "Claude Code チェックポイント",
+      "utmCampaign": "claude-code-checkpoint-rewind"
+    }
+  },
+  {
+    "id": 2516909288,
+    "slug": "email-sending-service-comparison",
+    "title": "メール送信サービス比較｜「後で安い方に移る」が通用しない理由",
+    "description": "メール送信サービスをAmazon SES・Cloudflare Email Service・Resendの料金表で比較します。単価はSESが全域で最安ですが、「楽な方で始めて後で移る」計画は送信者レピュテーションという移行コストで崩れました。判断の過程と最終構成をまとめます。",
+    "date": "2026-09-07T00:00:00.000Z",
+    "updated": "2026-09-07T00:00:00.000Z",
+    "categories": [
+      "テクノロジー"
+    ],
+    "tags": [
+      "Amazon SES",
+      "Cloudflare",
+      "メール送信",
+      "コスト設計"
+    ],
+    "draft": false,
+    "readingTime": 13,
+    "wordCount": 4880,
+    "ogImage": "/blog-assets/email-sending-service-comparison/featured.jpg",
+    "experiment": {
+      "hook": "contrarian",
+      "cta": "inquiry",
+      "targetKw": "メール送信サービス 比較",
+      "utmCampaign": "email-sending-service-comparison"
+    }
+  },
+  {
+    "id": 2815296647,
+    "slug": "claude-code-plan-mode",
+    "title": "Claude Codeのプランモード使い方｜編集させる前に計画をレビューする",
+    "description": "Claude Codeのプランモード（Plan Mode）の使い方を公式ドキュメントベースで整理します。Shift+Tabでの切り替え、--permission-mode planや設定での固定、読み取り専用で計画を提案させてから実行へ移す流れ、権限設定・hooksとの役割分担までをまとめます。",
+    "date": "2026-09-06T00:00:00.000Z",
+    "updated": "2026-09-06T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "AIエージェント",
+      "自動化",
+      "権限管理"
+    ],
+    "draft": false,
+    "readingTime": 8,
+    "wordCount": 2918,
+    "ogImage": "/blog-assets/claude-code-plan-mode/featured.jpg",
+    "experiment": {
+      "hook": "howto",
+      "cta": "inquiry",
+      "targetKw": "Claude Code プランモード",
+      "utmCampaign": "claude-code-plan-mode"
+    }
+  },
+  {
+    "id": 117742071,
+    "slug": "cloudflare-d1-kv-cache",
+    "title": "Cloudflare D1にKVキャッシュ層は不要｜読み取り単価500倍差の落とし穴",
+    "description": "Cloudflare D1の前にWorkers KVでキャッシュ層を組むと、コスト面ではほぼ逆効果です。D1の読み取り単価はKVの約500分の1で、キャッシュ層のほうが高くつく構造を料金表から整理し、rows_read実測→インデックス→read replicationの順番をまとめます。",
+    "date": "2026-09-06T00:00:00.000Z",
+    "updated": "2026-09-06T00:00:00.000Z",
+    "categories": [
+      "テクノロジー"
+    ],
+    "tags": [
+      "Cloudflare",
+      "D1",
+      "Workers KV",
+      "コスト設計"
+    ],
+    "draft": false,
+    "readingTime": 15,
+    "wordCount": 5675,
+    "ogImage": "/blog-assets/cloudflare-d1-kv-cache/featured.jpg",
+    "experiment": {
+      "hook": "contrarian",
+      "cta": "inquiry",
+      "targetKw": "Cloudflare D1 キャッシュ",
+      "utmCampaign": "cloudflare-d1-kv-cache"
+    }
+  },
+  {
+    "id": 3155126896,
+    "slug": "claude-code-permission-rule-pitfalls",
+    "title": "Claude Codeのdenyが効かない3つの穴｜権限ルールは書き方で無効になる",
+    "description": "Claude Codeで書いたはずのdenyルールが効かない原因を、2.1.260で修正された記法起因の3つの穴から整理します。括弧入りパスの無視、コンパイル不能パターンによる全編集停止、zsh変数代入に隠したコマンド置換の自動承認と、2.1.259差し戻しから学ぶ運用の型をまとめます。",
+    "date": "2026-09-05T00:00:00.000Z",
+    "updated": "2026-09-05T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "AIエージェント",
+      "自動化",
+      "セキュリティ"
+    ],
+    "draft": false,
+    "readingTime": 8,
+    "wordCount": 2962,
+    "ogImage": "/blog-assets/claude-code-permission-rule-pitfalls/featured.jpg",
+    "experiment": {
+      "hook": "number",
+      "cta": "inquiry",
+      "targetKw": "Claude Code deny 効かない",
+      "utmCampaign": "claude-code-permission-rule-pitfalls-202609"
+    }
+  },
+  {
+    "id": 2088894840,
+    "slug": "mcp-write-tools-evaluation",
+    "title": "MCP対応ツールの選び方｜機能一覧より先に書き込みツールの本数を数える",
+    "description": "MCP対応を謳うツールを採用する前に確認すべき評価軸を解説します。OSSのSEOツールを検討したら公開ツール9本のうち書き込みは1本だけで、月次で回す自動化の設計が崩れました。read/write比率の数え方と、足りないツールを自分で生やす判断までまとめます。",
+    "date": "2026-09-05T00:00:00.000Z",
+    "updated": "2026-09-05T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "MCP",
+      "AIエージェント",
+      "自動化",
+      "ツール選定"
+    ],
+    "draft": false,
+    "readingTime": 12,
+    "wordCount": 4676,
+    "ogImage": "/blog-assets/mcp-write-tools-evaluation/featured.jpg",
+    "experiment": {
+      "hook": "contrarian",
+      "cta": "inquiry",
+      "targetKw": "MCPサーバー 選び方",
+      "utmCampaign": "mcp-write-tools-evaluation"
+    }
+  },
+  {
+    "id": 869657981,
+    "slug": "ai-agent-operation-failures",
+    "title": "AIエージェント運用の失敗10選｜SNS自動化を全部任せた2週間の記録",
+    "description": "AIエージェントにSNS運用を丸ごと任せて2週間で出た問題を10個に絞って解説します。厄介だったのは文章の質ではなく、成功通知が嘘をつく、事実の空白に創作が湧くといった観測と事実の問題でした。症状・なぜ厄介か・対処の型で整理します。",
+    "date": "2026-09-04T00:00:00.000Z",
+    "updated": "2026-09-04T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "AIエージェント",
+      "自動化",
+      "運用",
+      "設計"
+    ],
+    "draft": false,
+    "readingTime": 14,
+    "wordCount": 5221,
+    "ogImage": "/blog-assets/ai-agent-operation-failures/featured.jpg",
+    "experiment": {
+      "hook": "number",
+      "cta": "inquiry",
+      "targetKw": "AIエージェント 運用 失敗",
+      "utmCampaign": "ai-agent-operation-failures-202609"
+    }
+  },
+  {
+    "id": 414538387,
+    "slug": "claude-code-context-management",
+    "title": "Claude Codeのコンテキスト管理入門｜/compactより先に/clearを覚える",
+    "description": "Claude Codeのコンテキスト管理を公式ドキュメントベースで整理します。/contextでの観測、auto-compactの挙動、/compactの指示付き圧縮と要約で細部が落ちるリスク、/clearで区切る基本方針、CLAUDE.md・サブエージェント・MCP設定で「そもそも入れない」設計までをまとめます。",
+    "date": "2026-09-04T00:00:00.000Z",
+    "updated": "2026-09-04T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "AIエージェント",
+      "自動化",
+      "コンテキスト管理"
+    ],
+    "draft": false,
+    "readingTime": 9,
+    "wordCount": 3314,
+    "ogImage": "/blog-assets/claude-code-context-management/featured.jpg",
+    "experiment": {
+      "hook": "contrarian",
+      "cta": "inquiry",
+      "targetKw": "Claude Code コンテキスト管理",
+      "utmCampaign": "claude-code-context-management-202609"
+    }
+  },
+  {
+    "id": 81336799,
+    "slug": "claude-code-model-switch-hooks",
+    "title": "Claude Codeのモデル切替を管理する｜PreModelSwitchフックと動く既定値",
+    "description": "Claude Codeのモデル選択を運用の管理下に置く方法を整理します。既定モデルが更新で動き、経路によって解決先が変わる実例と、2.1.251で追加されたPreModelSwitch / PostModelSwitchフックによる切替のブロック・確認・注記、無人運用での固定と検査の2段構えをまとめます。",
+    "date": "2026-09-03T00:00:00.000Z",
+    "updated": "2026-09-03T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "AIエージェント",
+      "自動化",
+      "モデル選択"
+    ],
+    "draft": false,
+    "readingTime": 7,
+    "wordCount": 2598,
+    "ogImage": "/blog-assets/claude-code-model-switch-hooks/featured.jpg",
+    "experiment": {
+      "hook": "contrarian",
+      "cta": "inquiry",
+      "targetKw": "Claude Code モデル切替",
+      "utmCampaign": "claude-code-model-switch"
+    }
+  },
+  {
+    "id": 2476196901,
+    "slug": "cloudflare-d1-pricing",
+    "title": "Cloudflare D1の料金解説｜課金されるのはDB数ではなくスキャン行数",
+    "description": "Cloudflare D1の料金体系を整理します。Workers Paidの$5はアカウント単位でDBを何個作っても増えず、課金軸はrows read・rows written・ストレージの3つだけ。「返した行数ではなくスキャンした行数」という落とし穴と$134請求の外部事例、対策3点をまとめます。",
+    "date": "2026-09-03T00:00:00.000Z",
+    "updated": "2026-09-03T00:00:00.000Z",
+    "categories": [
+      "テクノロジー"
+    ],
+    "tags": [
+      "Cloudflare",
+      "D1",
+      "データベース",
+      "コスト設計"
+    ],
+    "draft": false,
+    "readingTime": 8,
+    "wordCount": 2888,
+    "ogImage": "/blog-assets/cloudflare-d1-pricing/featured.jpg",
+    "experiment": {
+      "hook": "contrarian",
+      "cta": "inquiry",
+      "targetKw": "Cloudflare D1 料金",
+      "utmCampaign": "cloudflare-d1-pricing"
+    }
+  },
+  {
+    "id": 606659200,
+    "slug": "ai-agent-human-in-the-loop",
+    "title": "AIエージェントのヒューマンインザループ設計｜承認ボタンではなく既定値で作る",
+    "description": "AIエージェントの無人運用でヒューマンインザループをどう設計するかを整理します。都度の承認ボタンが機能しない理由、Claude CodeとGitHub Copilotの承認まわりの既定値の変化、人間の承認ゲートをゼロにする代わりに置いた4つの境界を、実運用中の構成で解説します。",
+    "date": "2026-09-02T00:00:00.000Z",
+    "updated": "2026-09-02T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "AIエージェント",
+      "自動化",
+      "Claude Code",
+      "設計"
+    ],
+    "draft": false,
+    "readingTime": 8,
+    "wordCount": 3148,
+    "ogImage": "/blog-assets/ai-agent-human-in-the-loop/featured.jpg",
+    "experiment": {
+      "hook": "contrarian",
+      "cta": "inquiry",
+      "targetKw": "AIエージェント ヒューマンインザループ",
+      "utmCampaign": "ai-agent-human-in-the-loop-202609"
+    }
+  },
+  {
+    "id": 1214003575,
+    "slug": "fde-forward-deployed-engineer",
+    "title": "FDE（Forward Deployed Engineer）とは？求人票の「オーナーシップ」の正体",
+    "description": "FDE（Forward Deployed Engineer）の仕事内容を求人票の抽象語から分解します。「オーナーシップ」の正体が「持ち帰らずその場で決めること」である理由、日本と海外での意味のずれ、技術要件で実際に詰まる2つのポイント、求人を見るときの確認点をまとめます。",
+    "date": "2026-09-02T00:00:00.000Z",
+    "updated": "2026-09-02T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "FDE",
+      "AIエージェント",
+      "キャリア",
+      "受託開発"
+    ],
+    "draft": false,
+    "readingTime": 13,
+    "wordCount": 4940,
+    "ogImage": "/blog-assets/fde-forward-deployed-engineer/featured.jpg",
+    "experiment": {
+      "hook": "contrarian",
+      "cta": "inquiry",
+      "targetKw": "FDE エンジニア 仕事内容",
+      "utmCampaign": "fde-forward-deployed-engineer-202609"
+    }
+  },
+  {
+    "id": 3608154483,
+    "slug": "claude-code-headless-mode",
+    "title": "Claude Codeヘッドレスモード入門｜claude -p を自動化に組み込む設計",
+    "description": "Claude Codeを非対話で実行するヘッドレスモード（claude -p）の使い方を解説します。出力をJSONで受ける方法、許可ツールと権限モードの固定、max-turnsによる暴走と費用の上限設計、CI・cronへの組み込みパターンと向かない用途までをまとめます。",
+    "date": "2026-09-01T00:00:00.000Z",
+    "updated": "2026-09-01T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "AIエージェント",
+      "自動化",
+      "CLI"
+    ],
+    "draft": false,
+    "readingTime": 10,
+    "wordCount": 3820,
+    "ogImage": "/blog-assets/claude-code-headless-mode/featured.jpg",
+    "experiment": {
+      "hook": "howto",
+      "cta": "inquiry",
+      "targetKw": "Claude Code ヘッドレスモード",
+      "utmCampaign": "claude-code-headless-mode-202609"
+    }
+  },
+  {
+    "id": 3820769154,
+    "slug": "lambda-oom-nodejs",
+    "title": "LambdaのOOM対策｜メモリ解放では直らずPresigned URLで直る理由",
+    "description": "Node.jsのLambdaがPDF処理でOOMになる原因を整理します。null代入で直らない理由、event.bodyで受けた時点でBase64込みの全量がヒープに乗る構造、Presigned URLとストリームでピークメモリを頭打ちにする設計と裏取りをまとめます。",
+    "date": "2026-09-01T00:00:00.000Z",
+    "updated": "2026-09-01T00:00:00.000Z",
+    "categories": [
+      "テクノロジー"
+    ],
+    "tags": [
+      "AWS",
+      "Lambda",
+      "Node.js",
+      "サーバーレス"
+    ],
+    "draft": false,
+    "readingTime": 14,
+    "wordCount": 5337,
+    "ogImage": "/blog-assets/lambda-oom-nodejs/featured.jpg",
+    "experiment": {
+      "hook": "contrarian",
+      "cta": "inquiry",
+      "targetKw": "Lambda OOM Node.js",
+      "utmCampaign": "lambda-oom-nodejs-202609"
+    }
+  },
+  {
     "id": 1743758738,
     "slug": "claude-code-mcp-setup",
     "title": "Claude CodeにMCPサーバーを追加する設定ガイド｜3つのスコープと.mcp.jsonの使い分け",

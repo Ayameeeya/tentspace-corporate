@@ -71,11 +71,32 @@
       "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DAgents%2Band%2Bparallel%2Bwork%26appearance%3Dsystem%26title%3DCreate%2Bcustom%2Bsubagents%26description%3DCreate%2Band%2Buse%2Bspecialized%2BAI%2Bsubagents%2Bin%2BClaude%2BCode%2Bfor%2Btask-specific%2Bworkflows%2Band%2Bimproved%2Bcontext%2Bmanagement.%26logoLight%3Dhttps%253A%252F%252Fmintcdn.com%252Fclaude-code%252Fc5r9_6tjPMzFdDDT%252Flogo%252Flight.svg%253Ffit%253Dmax%2526auto%253Dformat%2526n%253Dc5r9_6tjPMzFdDDT%2526q%253D85%2526s%253D78fd01ff4f4340295a4f66e2ea54903c%26logoDark%3Dhttps%253A%252F%252Fmintcdn.com%252Fclaude-code%252Fc5r9_6tjPMzFdDDT%252Flogo%252Fdark.svg%253Ffit%253Dmax%2526auto%253Dformat%2526n%253Dc5r9_6tjPMzFdDDT%2526q%253D85%2526s%253D1298a0c3b3a1da603b190d0de0e31712%26primaryColor%3D%25230E0E0E%26lightColor%3D%2523D4A27F%26backgroundLight%3D%2523FDFDF7%26backgroundDark%3D%252309090B&w=1200&q=100",
       "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
     },
+    "https://dev.classmethod.jp/articles/coding-agent-team-ai-gateway-ideal/": {
+      "title": "チームで coding agent を使うための AI Gateway とルーターの理想形を考えてみた | DevelopersIO",
+      "description": "coding agent のチーム利用に要る AI Gateway を課金経路・窓口・振り分け・実行側・観測の五層に分け、Claude Code の配備 6 経路と構成 7 パターンを比べました。LiteLLM 一台に 3 種のエージェントを通した帰属・予算・header 転送の実測も添えました。",
+      "domain": "dev.classmethod.jp",
+      "image": "https://images.ctfassets.net/ct0aopd36mqt/1dD7b8HkT2sbiJzUIewMTD/e5cdc6f33c4fdd9d798f11a4564612ff/eyecatch_developersio_darktone_1200x630.jpg",
+      "favicon": "https://dev.classmethod.jp/favicon.ico"
+    },
     "https://developer.atlassian.com/cloud/trello/guides/rest-api/api-introduction/": {
       "title": "API Introduction",
       "description": "",
       "domain": "developer.atlassian.com",
       "favicon": "https://dac-static.atlassian.com/favicon.ico"
+    },
+    "https://developers.cloudflare.com/containers/examples/cron": {
+      "title": "Cron Container",
+      "description": "Running a container on a schedule using Cron Triggers",
+      "domain": "developers.cloudflare.com",
+      "image": "https://developers.cloudflare.com/og-docs.png",
+      "favicon": "https://developers.cloudflare.com/favicon.png"
+    },
+    "https://developers.cloudflare.com/containers/pricing/": {
+      "title": "Pricing",
+      "description": "Billing rates for Containers vCPU, memory, disk, and network egress, including included usage on the Workers Paid plan.",
+      "domain": "developers.cloudflare.com",
+      "image": "https://developers.cloudflare.com/og-docs.png",
+      "favicon": "https://developers.cloudflare.com/favicon.png"
     },
     "https://developers.cloudflare.com/d1/": {
       "title": "Cloudflare D1",
@@ -84,9 +105,23 @@
       "image": "https://developers.cloudflare.com/og-docs.png",
       "favicon": "https://developers.cloudflare.com/favicon.png"
     },
+    "https://developers.cloudflare.com/d1/platform/pricing/": {
+      "title": "Pricing",
+      "description": "D1 pricing based on rows read, rows written, and storage with scale-to-zero billing.",
+      "domain": "developers.cloudflare.com",
+      "image": "https://developers.cloudflare.com/og-docs.png",
+      "favicon": "https://developers.cloudflare.com/favicon.png"
+    },
     "https://developers.cloudflare.com/durable-objects/platform/pricing/": {
       "title": "Pricing",
       "description": "Durable Objects compute and storage billing, including pricing examples and free tier limits.",
+      "domain": "developers.cloudflare.com",
+      "image": "https://developers.cloudflare.com/og-docs.png",
+      "favicon": "https://developers.cloudflare.com/favicon.png"
+    },
+    "https://developers.cloudflare.com/email-service/": {
+      "title": "Cloudflare Email Service",
+      "description": "Send transactional emails and route incoming emails to Workers or email addresses with Cloudflare Email Service.",
       "domain": "developers.cloudflare.com",
       "image": "https://developers.cloudflare.com/og-docs.png",
       "favicon": "https://developers.cloudflare.com/favicon.png"
@@ -101,6 +136,20 @@
     "https://developers.cloudflare.com/workers-vpc/": {
       "title": "Cloudflare Workers VPC",
       "description": "Securely connect your private cloud to Cloudflare to build cross-cloud apps.",
+      "domain": "developers.cloudflare.com",
+      "image": "https://developers.cloudflare.com/og-docs.png",
+      "favicon": "https://developers.cloudflare.com/favicon.png"
+    },
+    "https://developers.cloudflare.com/workers/configuration/cron-triggers/": {
+      "title": "Cron Triggers",
+      "description": "Enable your Worker to be executed on a schedule.",
+      "domain": "developers.cloudflare.com",
+      "image": "https://developers.cloudflare.com/og-docs.png",
+      "favicon": "https://developers.cloudflare.com/favicon.png"
+    },
+    "https://developers.cloudflare.com/workers/platform/pricing/": {
+      "title": "Pricing",
+      "description": "Workers plans and pricing information.",
       "domain": "developers.cloudflare.com",
       "image": "https://developers.cloudflare.com/og-docs.png",
       "favicon": "https://developers.cloudflare.com/favicon.png"
@@ -231,6 +280,18 @@
       "image": "https://developers.google.com/static/search/images/home-social-share-lockup.jpg",
       "favicon": "https://www.gstatic.com/devrel-devsite/prod/v8c5e9c8e09d4f0c961905721a95aa2027138cb55ec6e1fa60fd7aaa3726ca05f/developers/images/favicon-new.png"
     },
+    "https://docs.aws.amazon.com/AmazonS3/latest/userguide/PresignedUrlUploadObject.html": {
+      "title": "Uploading objects with presigned URLs - Amazon Simple Storage Service",
+      "description": "Upload objects by using presigned URLs when someone with permission has provided you with the URL resources.",
+      "domain": "docs.aws.amazon.com",
+      "favicon": "https://docs.aws.amazon.com/assets/images/favicon.ico"
+    },
+    "https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html": {
+      "title": "Lambda quotas - AWS Lambda",
+      "description": "Maximum sizes, limits, and quotas for Lambda functions and API requests.",
+      "domain": "docs.aws.amazon.com",
+      "favicon": "https://docs.aws.amazon.com/assets/images/favicon.ico"
+    },
     "https://docs.claude.com/en/docs/build-with-claude/prompt-caching": {
       "title": "Prompt caching",
       "description": "Cache prompt prefixes with `cache_control` to cut costs and latency, using automatic caching or explicit breakpoints with 5-minute or 1-hour TTLs.",
@@ -238,11 +299,39 @@
       "image": "https://platform.claude.com/web-api/og/docs/en/build-with-claude/prompt-caching?design-rev=2",
       "favicon": "https://platform.claude.com/favicon.ico"
     },
+    "https://docs.claude.com/en/docs/claude-code/checkpointing": {
+      "title": "Checkpointing - Claude Code Docs",
+      "description": "Track, rewind, and summarize Claude's edits and conversation to manage session state.",
+      "domain": "code.claude.com",
+      "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DReference%26title%3DCheckpointing%26description%3DTrack%252C%2Brewind%252C%2Band%2Bsummarize%2BClaude%2527s%2Bedits%2Band%2Bconversation%2Bto%2Bmanage%2Bsession%2Bstate.%26theme%3D03628e99c753a03aec319053&w=1200&q=100",
+      "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
+    },
+    "https://docs.claude.com/en/docs/claude-code/cli-reference": {
+      "title": "CLI reference - Claude Code Docs",
+      "description": "Complete reference for Claude Code command-line interface, including commands and flags.",
+      "domain": "code.claude.com",
+      "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DReference%26title%3DCLI%2Breference%26description%3DComplete%2Breference%2Bfor%2BClaude%2BCode%2Bcommand-line%2Binterface%252C%2Bincluding%2Bcommands%2Band%2Bflags.%26theme%3D03628e99c753a03aec319053&w=1200&q=100",
+      "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
+    },
     "https://docs.claude.com/en/docs/claude-code/mcp": {
       "title": "Connect Claude Code to tools via MCP - Claude Code Docs",
       "description": "Learn how to connect Claude Code to your tools with the Model Context Protocol.",
       "domain": "code.claude.com",
       "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DMCP%26title%3DConnect%2BClaude%2BCode%2Bto%2Btools%2Bvia%2BMCP%26description%3DLearn%2Bhow%2Bto%2Bconnect%2BClaude%2BCode%2Bto%2Byour%2Btools%2Bwith%2Bthe%2BModel%2BContext%2BProtocol.%26theme%3D03628e99c753a03aec319053&w=1200&q=100",
+      "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
+    },
+    "https://docs.claude.com/en/docs/claude-code/memory": {
+      "title": "How Claude remembers your project - Claude Code Docs",
+      "description": "Give Claude persistent instructions with CLAUDE.md files, and let Claude accumulate learnings automatically with auto memory.",
+      "domain": "code.claude.com",
+      "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DUse%2BClaude%2BCode%26title%3DHow%2BClaude%2Bremembers%2Byour%2Bproject%26description%3DGive%2BClaude%2Bpersistent%2Binstructions%2Bwith%2BCLAUDE.md%2Bfiles%252C%2Band%2Blet%2BClaude%2Baccumulate%2Blearnings%2Bautomatically%2Bwith%2Bauto%2Bmemory.%26theme%3D03628e99c753a03aec319053&w=1200&q=100",
+      "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
+    },
+    "https://docs.claude.com/en/docs/claude-code/slash-commands": {
+      "title": "Extend Claude with skills - Claude Code Docs",
+      "description": "Create, manage, and share skills to extend Claude's capabilities in Claude Code. Includes custom commands and bundled skills.",
+      "domain": "code.claude.com",
+      "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DSkills%26title%3DExtend%2BClaude%2Bwith%2Bskills%26description%3DCreate%252C%2Bmanage%252C%2Band%2Bshare%2Bskills%2Bto%2Bextend%2BClaude%2527s%2Bcapabilities%2Bin%2BClaude%2BCode.%2BIncludes%2Bcustom%2Bcommands%2Band%2Bbundled%2Bskills.%26theme%3D03628e99c753a03aec319053&w=1200&q=100",
       "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
     },
     "https://docs.docker.com/get-started/": {
@@ -371,6 +460,34 @@
       "image": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Fsocialpreview%252FBJYuJLS829e7wvgPdf5m%252FGitBook%25201280x630.png%3Falt%3Dmedia%26token%3D535a1998-3467-4390-aef9-2f68fdbe688f&width=1200&height=630&sign=e0b43641&sv=2",
       "favicon": "https://docs.n8n.io/~gitbook/image?url=https%3A%2F%2F2083420238-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Forganizations%252FgkeAaBEvbwHB2NmepVHG%252Fsites%252Fsite_Qp7QM%252Ficon%252Fv5uzPttcoF7tjbeDaGCu%252FFavicon.png%3Falt%3Dmedia%26token%3Dd8f83a90-d3fd-4858-bc5f-1d50f340cf79&width=48&height=48&sign=f18fb73f&sv=2"
     },
+    "https://exawizards.com/column/article/forward-deployed-engineer/": {
+      "title": "FDE（Forward Deployed Engineer）とは？AI導入を成功させる新職種の役割・必要スキル・企業事例を解説 - AI新聞",
+      "description": "FDE（Forward Deployed Engineer）とは、顧客の業務現場に入り込み、AIやデータプラットフォームを活用して課題を解決するエンジニア職です。直訳すると「前線配備エンジニア」を意味し、米国のデータ分析 [&hellip;]",
+      "domain": "exawizards.com",
+      "image": "https://exawizards.com/column/wp-content/uploads/2026/06/FDE-Forward-Deployed-Engineer-AI-1.jpg",
+      "favicon": "https://exawizards.com/column/wp-content/themes/exa_dx_media/assets/img/favicon.svg"
+    },
+    "https://fullstacksveltekit.com/blog/cloudflare-d1-bill": {
+      "title": "I got a $134 Cloudflare D1 bill. Here's how I cut it 95% - Full Stack SvelteKit",
+      "description": "Cloudflare D1 pricing punishes unindexed queries. I racked up a $134 bill before fixing it with composite indexes, ANALYZE, and a KV cache layer for SvelteKit.",
+      "domain": "fullstacksveltekit.com",
+      "image": "https://fullstacksveltekit.com/full-stack-sveltekit-og.png",
+      "favicon": "https://fullstacksveltekit.com/full-stack-sveltekit-favicon.png"
+    },
+    "https://github.blog/changelog/2026-09-01-copilot-code-review-can-now-approve-pull-requests/": {
+      "title": "Copilot code review can now approve pull requests - GitHub Changelog",
+      "description": "Copilot now tells you when a pull request is ready to approve, and admins can authorize it to sign off on approval. The ability for Copilot to approve is off&hellip;",
+      "domain": "github.blog",
+      "image": "https://github.blog/wp-content/uploads/2026/09/640486943-995df08a-2d27-4fa0-a465-3e4e2ec3f6cb.png",
+      "favicon": "https://github.githubassets.com/favicon.ico"
+    },
+    "https://github.com/every-app/open-seo": {
+      "title": "GitHub - every-app/open-seo: Open source alternative to Semrush and Ahrefs",
+      "description": "Open source alternative to Semrush and Ahrefs. Contribute to every-app/open-seo development by creating an account on GitHub.",
+      "domain": "github.com",
+      "image": "https://opengraph.githubassets.com/52a8366cd9a57a73de96fc79e3c9e75944c387decf5f106962d59670316aac8a/every-app/open-seo",
+      "favicon": "https://github.githubassets.com/favicons/favicon.png"
+    },
     "https://github.com/webmachinelearning/webmcp": {
       "title": "GitHub - webmachinelearning/webmcp: 🤖 WebMCP",
       "description": "🤖 WebMCP. Contribute to webmachinelearning/webmcp development by creating an account on GitHub.",
@@ -412,6 +529,19 @@
       "domain": "n8n.io",
       "image": "https://n8niostorageaccount.blob.core.windows.net/n8nio-strapi-blobs-prod/assets/og_image_website_3_afd66761a9_4b5695cba2.png",
       "favicon": "https://n8n.io/favicon.ico"
+    },
+    "https://nodejs.org/api/stream.html": {
+      "title": "Stream | Node.js v26.8.1 Documentation",
+      "description": "",
+      "domain": "nodejs.org",
+      "favicon": "https://nodejs.org/favicon.ico"
+    },
+    "https://openseo.so/features/mcp": {
+      "title": "SEO MCP Server: Keyword, SERP & Backlink Tools - OpenSEO",
+      "description": "Give Claude, Cursor, or any MCP client real SEO tools: keyword research, live SERPs, backlinks, rank tracking, and Search Console data via one MCP server.",
+      "domain": "openseo.so",
+      "image": "https://openseo.so/social-card.jpg",
+      "favicon": "https://openseo.so/favicon.ico"
     },
     "https://plato.stanford.edu/entries/descartes/": {
       "title": "René Descartes (Stanford Encyclopedia of Philosophy)",
