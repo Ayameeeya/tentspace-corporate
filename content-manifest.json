@@ -1,5 +1,32 @@
 [
   {
+    "id": 500718280,
+    "slug": "claude-code-git-worktree-parallel",
+    "title": "Claude Codeをgit worktreeで並列実行する｜衝突しない複数タスクの進め方",
+    "description": "Claude Codeで複数タスクを同時に進める方法を公式ドキュメントベースで整理します。同じディレクトリで2セッション動かすと編集が衝突する理由、git worktreeで作業ツリーを分離する手順、依存インストールやポート衝突などのハマりどころ、並列にしない方がよい場面の判断までをまとめます。",
+    "date": "2026-09-08T00:00:00.000Z",
+    "updated": "2026-09-08T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "AIエージェント",
+      "自動化",
+      "git"
+    ],
+    "draft": false,
+    "readingTime": 11,
+    "wordCount": 4015,
+    "ogImage": "/blog-assets/claude-code-git-worktree-parallel/featured.jpg",
+    "experiment": {
+      "hook": "howto",
+      "cta": "inquiry",
+      "targetKw": "Claude Code git worktree",
+      "utmCampaign": "claude-code-git-worktree-parallel"
+    }
+  },
+  {
     "id": 607099278,
     "slug": "cloudflare-workers-cron-containers",
     "title": "Cloudflare Workersの定時実行ガイド｜cronとContainersの使い分け",

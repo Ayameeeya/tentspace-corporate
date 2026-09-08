@@ -54,13 +54,16 @@ generated-content drift / test / typecheck / build）→ 作成エージェン�
 - `main` への直接 push と force pushを禁止する。
 - 1 記事 1 PR。PR 説明に「狙い」「検証する仮説（Notion の仮説ページへの
   リンク）」「実験属性」「セルフチェック結果」を書く。
+- 記事 PR は `npm run content:validate` 後の `content-manifest.json`、
+  `content-rendered.json`、`content/link-card-cache.json` も同梱する。
 - 自己承認は禁止。`gh pr review --approve` を使わない。
-- diff が `content/posts/**` に完全に閉じた記事 PR の自己マージを許可する。
+- diff が対象記事・対応画像・上記生成物に閉じた記事 PR の自己マージを許可する。
 - `draft: false` への変更は、公開準備が完了した記事 PR 内でのみ行う。
 
 ## マージ規約
 
-- 記事 PR の自己マージを許可する。対象は diff が `content/posts/**` に完全に
+- 記事 PR の自己マージを許可する。対象は diff が
+  `content/posts/<slug>/**`、`public/blog-assets/<slug>/**` と上記生成物だけに
   閉じ、`content-critic` が `RESULT: PASS`、必須 CI がすべて成功し、未解決の
   レビュー指摘がない PR のみとする。
 - 条件を満たした記事 PR は
@@ -68,8 +71,8 @@ generated-content drift / test / typecheck / build）→ 作成エージェン�
   `MERGED` を確認してから終了する。GitHub の auto-merge が利用できない場合は、
   必須 CI の成功確認後に `gh pr merge --squash --delete-branch <number>` で
   自己マージする。記事 PR のマージに人間の承認は必須としない。
-- `content/posts/**` 外を 1 ファイルでも含む PR は自己マージせず、人間レビューに
-  エスカレーションする。
+- 記事・対応画像・上記生成物以外を 1 ファイルでも含む PR は自己マージせず、
+  人間レビューにエスカレーションする。
 - 憲法層（`facts.md` / `docs/review-rubric.md` / `.github/` / `hooks/` /
   `.claude/settings.json`）は変更を起案できるが、マージは必ず人間が行う。
 - CI・所有者規則は既存設定を正とし、エージェントが無断で置き換えない。
