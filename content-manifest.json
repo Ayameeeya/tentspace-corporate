@@ -1,5 +1,32 @@
 [
   {
+    "id": 607099278,
+    "slug": "cloudflare-workers-cron-containers",
+    "title": "Cloudflare Workersの定時実行ガイド｜cronとContainersの使い分け",
+    "description": "Cloudflareの定時バッチを整理します。高頻度×軽量ならWorkers Cron Trigger（実質無料）、重いバッチならContainers（月$5にほぼ収まる試算）。cron式のUTC罠、fetch/scheduled同居の仕組み、TinyGo+WASMでGoを載せる最小構成のコード解説までまとめます。",
+    "date": "2026-09-08T00:00:00.000Z",
+    "updated": "2026-09-08T00:00:00.000Z",
+    "categories": [
+      "テクノロジー"
+    ],
+    "tags": [
+      "Cloudflare",
+      "Cloudflare Workers",
+      "Go",
+      "コスト設計"
+    ],
+    "draft": false,
+    "readingTime": 17,
+    "wordCount": 6662,
+    "ogImage": "/blog-assets/cloudflare-workers-cron-containers/featured.jpg",
+    "experiment": {
+      "hook": "question",
+      "cta": "inquiry",
+      "targetKw": "Cloudflare Workers 定時実行",
+      "utmCampaign": "cloudflare-workers-cron-containers"
+    }
+  },
+  {
     "id": 1840429280,
     "slug": "claude-code-checkpoint-rewind",
     "title": "Claude Codeのチェックポイント入門｜/rewindで戻れる範囲と戻れないもの",

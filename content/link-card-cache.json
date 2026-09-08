@@ -84,6 +84,20 @@
       "domain": "developer.atlassian.com",
       "favicon": "https://dac-static.atlassian.com/favicon.ico"
     },
+    "https://developers.cloudflare.com/containers/examples/cron": {
+      "title": "Cron Container",
+      "description": "Running a container on a schedule using Cron Triggers",
+      "domain": "developers.cloudflare.com",
+      "image": "https://developers.cloudflare.com/og-docs.png",
+      "favicon": "https://developers.cloudflare.com/favicon.png"
+    },
+    "https://developers.cloudflare.com/containers/pricing/": {
+      "title": "Pricing",
+      "description": "Billing rates for Containers vCPU, memory, disk, and network egress, including included usage on the Workers Paid plan.",
+      "domain": "developers.cloudflare.com",
+      "image": "https://developers.cloudflare.com/og-docs.png",
+      "favicon": "https://developers.cloudflare.com/favicon.png"
+    },
     "https://developers.cloudflare.com/d1/": {
       "title": "Cloudflare D1",
       "description": "Build serverless SQL databases on Cloudflare's global network and query them from Workers and Pages projects.",
@@ -122,6 +136,13 @@
     "https://developers.cloudflare.com/workers-vpc/": {
       "title": "Cloudflare Workers VPC",
       "description": "Securely connect your private cloud to Cloudflare to build cross-cloud apps.",
+      "domain": "developers.cloudflare.com",
+      "image": "https://developers.cloudflare.com/og-docs.png",
+      "favicon": "https://developers.cloudflare.com/favicon.png"
+    },
+    "https://developers.cloudflare.com/workers/configuration/cron-triggers/": {
+      "title": "Cron Triggers",
+      "description": "Enable your Worker to be executed on a schedule.",
       "domain": "developers.cloudflare.com",
       "image": "https://developers.cloudflare.com/og-docs.png",
       "favicon": "https://developers.cloudflare.com/favicon.png"
