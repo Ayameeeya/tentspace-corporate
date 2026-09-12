@@ -1,0 +1,191 @@
+---
+title: "claude mcp addのスコープ解説｜設定の保存先と同名サーバーの優先順位"
+description: "claude mcp addの--scope（local・project・user）で設定がどこへ保存され、同名サーバーはどれが勝つのかを実測で整理します。3スコープ=3ファイルではない保存構造、承認前のprojectが順位に参加しない挙動、削除の罠までまとめます。"
+date: 2026-09-12
+slug: claude-mcp-add-scope
+categories: ["AI活用"]
+tags: ["Claude Code", "MCP", "AIエージェント", "設定"]
+draft: false
+ogImage: "/blog-assets/claude-mcp-add-scope/featured.jpg"
+experiment:
+  pillar: "ai-dev"
+  hook: "howto"
+  cta: "inquiry"
+  targetKw: "claude mcp scope"
+  utmCampaign: "claude-mcp-add-scope-202609"
+---
+
+`claude mcp add` の `--scope` は、覚えることが2つだけあります。**設定がどのファイルへ書かれるか**と、**同じ名前のサーバーが複数スコープにあるとき、どれが実際に使われるか**。この2つさえ手元で確認できれば、「addしたのに繋がらない」「消したはずのサーバーが残っている」系のトラブルはほぼ自力で解けます。
+
+先に結論です。3つのスコープ（local / project / user）は3つのファイルに対応している、と思いたくなりますが、実際はそうなっていません。**localとuserは同じ `~/.claude.json` に同居**していて、projectだけがリポジトリ内の `.mcp.json` に書かれます。そして同名サーバーの優先順位は公式ドキュメント上 local > project > user ですが、**承認前のprojectサーバーはこの順位に参加しません**。この「承認」が絡む挙動を知らないと、優先順位の表を暗記していても現象を説明できない場面があります。
+
+この記事は、スコープの使い分けの入門ではなく、その一段下の深掘りです。3スコープの基本と使い分けの判断軸は、先に設定ガイドにまとめてあります。
+
+<LinkCard slug="claude-code-mcp-setup" />
+
+以下の実測はすべてClaude Code 2.1.269（2026-09-12時点）で確認しました。仕様の一次情報は公式ドキュメントのMCPページです。
+
+<LinkCard url="https://docs.claude.com/en/docs/claude-code/mcp" title="Claude Code公式: Connect Claude Code to tools via MCP" />
+
+## スコープ指定の基本形
+
+おさらいを1段落だけ。`claude mcp add` は `-s` / `--scope` で保存先を選びます。省略時はlocalです。
+
+```bash
+# 省略時はlocal（自分だけ・このプロジェクトだけ）
+claude mcp add my-server -- npx -y some-mcp-server
+
+# チーム共有はproject（.mcp.jsonへ）
+claude mcp add --scope project team-server -- npx -y some-mcp-server
+
+# 全プロジェクト共通はuser
+claude mcp add --scope user my-tools -- npx -y some-mcp-server
+```
+
+ここまでは入門記事の通り。ここからが本題です。
+
+## 保存先は3ファイルではなく2ファイル
+
+addを実行すると、Claude Codeは書き込んだファイルを `File modified:` としてそのまま表示してくれます。3スコープで順に実行した結果がこれです。
+
+```text
+$ claude mcp add lab-echo -- echo hello
+Added stdio MCP server lab-echo with command: echo hello to local config
+File modified: /Users/you/.claude.json [project: /path/to/your-repo]
+
+$ claude mcp add --scope user lab-user -- echo user-level
+Added stdio MCP server lab-user with command: echo user-level to user config
+File modified: /Users/you/.claude.json
+
+$ claude mcp add --scope project lab-proj -- echo proj-level
+Added stdio MCP server lab-proj with command: echo proj-level to project config
+File modified: /path/to/your-repo/.mcp.json
+```
+
+並べると構造が見えます。
+
+| スコープ | 保存先 | 位置づけ |
+| --- | --- | --- |
+| local | `~/.claude.json` の `[project: <パス>]` 区画 | 自分だけ・このプロジェクトだけ |
+| user | `~/.claude.json`（プロジェクト区画の外） | 自分だけ・全プロジェクト |
+| project | リポジトリ直下の `.mcp.json` | リポジトリを共有する全員 |
+
+つまり「自分だけの設定」は、スコープがlocalでもuserでも同じ `~/.claude.json` に住んでいます。違いはプロジェクトのパスをキーにした区画の内側か外側か。localはプロジェクト区画の内側なので、同じ設定でも別のディレクトリでClaude Codeを起動すると見えなくなります。
+
+これを知っていると、「設定がどこかに残っている気がするが見つからない」ときに探す場所が2つに絞れます。リポジトリの `.mcp.json` と、ホームの `~/.claude.json`。この2つ以外にはありません。
+
+なお `~/.claude.json` は手で編集するより、後述の `claude mcp get` / `claude mcp remove` で操作する方が安全です。このファイルにはMCP以外の状態も入っています。
+
+## 同名サーバーを3スコープに置いてみる
+
+優先順位の仕様は「local > project > user」。これを実測で確かめようとして、面白い挙動に当たりました。
+
+同じ名前 `dup-server` をuserスコープとprojectスコープの両方へ登録して、`claude mcp get` でどちらが使われるかを見ます。仕様通りならprojectが勝つはずです。
+
+```text
+$ claude mcp add --scope user dup-server -- echo from-user
+$ claude mcp add --scope project dup-server -- echo from-project
+$ claude mcp get dup-server
+dup-server:
+  Scope: User config (available in all your projects)
+  Type: stdio
+  Command: echo
+  Args: from-user
+```
+
+**勝ったのはuserでした。** 仕様と逆に見えますが、原因は優先順位ではありません。`.mcp.json` 由来のサーバーは、リポジトリ由来の設定が勝手にプロセスを起動しないよう、**使用前にユーザーの承認が必要**です。承認前のprojectサーバーは `claude mcp list` で「⏸ Pending approval」と表示され、接続の候補から外れます。つまり承認が済むまで、その名前は**存在しないのと同じ扱い**で、順位の低いuser設定が使われ続けます。
+
+続けてlocalスコープにも同名を追加すると、今度は仕様通りlocalが勝ちます。
+
+```text
+$ claude mcp add --scope local dup-server -- echo from-local
+$ claude mcp get dup-server
+dup-server:
+  Scope: Local config (private to you in this project)
+  Command: echo
+  Args: from-local
+```
+
+まとめるとこうなります。優先順位の表は「local > project > user」で正しい。ただし**各サーバーがまず順位表に載る条件**があり、projectスコープだけは承認が済むまで載りません。「チームの `.mcp.json` に切り替えたのに、なぜか自分のuser設定のまま動いている」という現象は、たいていこれです。
+
+## トラブル対処1: .mcp.jsonに書いたのに繋がらない
+
+上の挙動をトラブル側から見ると、対処はシンプルです。
+
+まず `claude mcp list` で状態を見ます。「⏸ Pending approval」なら、設定は読めていて承認待ちなだけ。対話セッションを起動すると承認を求められるので、そこで許可すれば繋がります。
+
+過去に「使わない」と答えてしまった場合も同じ見え方になります。承認・拒否の選択はプロジェクト単位で記憶されるので、やり直すにはリセットを使います。
+
+```bash
+claude mcp reset-project-choices
+```
+
+ヘルプの説明にある通り、このコマンドは「このプロジェクト内で承認・拒否済みのprojectスコープ（.mcp.json）サーバーをすべてリセット」します。個別のサーバーだけ選び直すことはできず、プロジェクト単位で一括リセットです。
+
+承認済みなのに繋がらない場合は、スコープの問題ではなく起動コマンドか認証の問題なので、`claude mcp get <name>` でエラーメッセージを読む段階に進みます。
+
+## トラブル対処2: 消したはずのサーバーが残っている
+
+`claude mcp remove` にもスコープの罠があります。同じ名前が複数スコープにあるとき、スコープ指定なしのremoveは削除せず、候補を列挙して止まります。
+
+```text
+$ claude mcp remove dup-server
+MCP server "dup-server" exists in multiple scopes:
+  - Local config (/Users/you/.claude.json [project: /path/to/your-repo])
+  - Project config (/path/to/your-repo/.mcp.json)
+  - User config (/Users/you/.claude.json)
+
+To remove from a specific scope, use:
+  claude mcp remove dup-server -s local
+```
+
+止まってくれるのは親切な設計です。怖いのはむしろ、1つのスコープからは消えて成功メッセージが出たのに、別スコープの同名が残っていて「消したのに `claude mcp list` に出続ける」パターン。removeが成功したのにサーバーが見えるときは、消えたスコープと使われているスコープが別だった、とまず疑ってください。
+
+現在どのスコープの定義が使われているかは、`claude mcp get <name>` が一番早いです。Scope行に加えて、そのスコープから消すためのremoveコマンドまで表示してくれます。
+
+ちなみにスコープ間の「移動」コマンドはありません。localで検証したサーバーをチームへ配るときは、removeしてから `--scope project` でaddし直すか、`.mcp.json` へ直接書きます。
+
+## トラブル対処3: 認証情報をどのスコープに置くか
+
+`.mcp.json` はコミット対象なので、APIキーの直書きは事故です。公式ドキュメントの通り、`.mcp.json` は `${VAR}` 形式の環境変数展開に対応しているので、ファイルには変数名だけを書き、値は各メンバーの環境に持たせます。
+
+私の運用でも、社内のCloudflare Workers上に立てたMCPサーバーをこの形で繋いでいます。実際にコミットしているのは次の形だけで、トークンの実体はリポジトリに存在しません。
+
+```json
+{
+  "mcpServers": {
+    "sns-mcp": {
+      "type": "http",
+      "url": "https://<your-worker>.workers.dev/mcp",
+      "headers": {
+        "Authorization": "Bearer ${MCP_BEARER}"
+      }
+    }
+  }
+}
+```
+
+`claude mcp add` のワンライナーで組み立てにくい設定は、JSONのまま渡す `add-json` が楽です。上と同じ内容ならこう書けます。
+
+```bash
+claude mcp add-json sns-mcp '{"type":"http","url":"https://<your-worker>.workers.dev/mcp","headers":{"Authorization":"Bearer ${MCP_BEARER}"}}'
+```
+
+add-jsonも保存先の既定はlocalです（実測で「Added http MCP server sns-mcp to local config」と表示されます）。チームへ配る意図なら、スコープの指定を忘れずに。
+
+1つ、2.1.269の実測で気づいた挙動を添えておきます。HTTPサーバーに `Authorization` ヘッダーを自分で設定すると、接続失敗時のエラーメッセージに「headers.Authorizationが設定されている場合、OAuthフォールバックは無効」と明示されます。OAuth認証で繋ぐつもりのサーバーにヘッダーを書いてしまうと、OAuthフローに入らず認証エラーで止まる、という組み合わせの罠です。ヘッダー方式とOAuth方式は片方だけを選んでください。
+
+## スコープ絡みの調査手順まとめ
+
+MCPサーバーの挙動がおかしいとき、スコープ起因かどうかは次の順で3分あれば切り分けられます。
+
+1. `claude mcp get <name>` で、**いま使われているスコープ**と定義を見る
+2. `claude mcp list` で「⏸ Pending approval」がないか見る。あれば承認の問題で、必要なら `claude mcp reset-project-choices`
+3. 消しても残る・書き換えたのに変わらないときは、**別スコープの同名**を疑う。探す場所はリポジトリの `.mcp.json` とホームの `~/.claude.json` の2つだけ
+4. それでも解けなければスコープの問題ではないので、起動コマンド・環境変数・認証方式（ヘッダーかOAuthか）の確認へ進む
+
+スコープの優先順位は「local > project > user、ただし承認前のprojectは不参加」。この一文と上の手順だけ持ち帰ってもらえれば、`--scope` 絡みで迷子になることはもうないはずです。
+
+ツール一覧が会話の途中で変わるとプロンプトキャッシュが壊れる、という「繋いだ後」の話は別記事にまとめています。スコープを整理してサーバー構成を安定させることは、実はコスト面にも効きます。
+
+<LinkCard slug="claude-code-cache-miss-tool-changes" />
