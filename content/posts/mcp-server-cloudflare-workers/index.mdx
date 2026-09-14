@@ -1,0 +1,243 @@
+---
+title: "MCPサーバーの自作入門｜Cloudflare Workersで作って本番運用するまで"
+description: "自作MCPサーバーをCloudflare Workersで動かす手順を、実運用中のコードで解説します。公式TypeScript SDKでの最小構成、入力スキーマ・Bearer認証・confirm必須・KVの回数制限という「断る側」の設計、ツール表面を固定するテストまでまとめます。"
+date: 2026-09-14
+slug: mcp-server-cloudflare-workers
+categories: ["AI活用"]
+tags: ["MCP", "Cloudflare Workers", "AIエージェント", "自動化"]
+draft: false
+ogImage: "/blog-assets/mcp-server-cloudflare-workers/featured.jpg"
+experiment:
+  pillar: "build-public"
+  hook: "howto"
+  cta: "inquiry"
+  targetKw: "MCPサーバー 自作"
+  utmCampaign: "mcp-server-cloudflare-workers-202609"
+---
+
+MCPサーバーの自作は、思っているより簡単です。公式TypeScript SDKとCloudflare Workersの組み合わせなら、最小構成は実質1ファイルと設定1枚で、デプロイまで一直線に進みます。ただし、それは「動くまで」の話です。SNS運用の自動化のために自作したMCPサーバー（公開ツール55本）を無人運用してきて、時間を使う価値があったのはツールを生やす側ではなく、**スキーマ・認証・回数制限という「断る側」の設計**でした。
+
+この記事は、自分の用途に合うMCPサーバーが見つからず「作る側」に回ろうとしている人に向けて、実運用中の構成をそのまま解説します。最小構成のコード、本番運用で効いた設計5つ、ツール表面を壊さないためのテストの順です。MCPの概念やクライアント側の接続設定は、先にこちらにまとめてあります。
+
+<LinkCard slug="claude-code-mcp-setup" />
+
+## なぜ既製サーバーで済まさず自作したのか
+
+私はSNS運用（Threads・Instagram・LinkedIn・ブログ）をAIエージェントの定時実行に任せていて、エージェントには投稿・記事公開・画像生成の「書き込みツール」が必要でした。既製のMCPサーバーを探すと、読み取り系は豊富でも書き込みが決定的に足りない。このread/write比率の数え方は以前に書いたとおりで、結局「足りないツールは自分で生やす」判断になりました。
+
+<LinkCard slug="mcp-write-tools-evaluation" />
+
+もう1つの理由は、運用の都合をサーバー側に置きたかったことです。「60分に3件まで」「Threadsは1日3件まで」のような公開回数の上限、公開成功・失敗のSlack通知、SNSトークンの保管。これらをプロンプトで頼むのではなく、コードとして強制できる場所が欲しかった。MCPサーバーを自作すると、この置き場所が手に入ります。
+
+## 全体構成
+
+実運用中の構成は次のとおりです。Cloudflareの無料枠〜Workers Paid（月$5）の範囲に収まる規模です。
+
+- **Worker 1本**: `/mcp` エンドポイントでMCPリクエストを受ける（streamable HTTP・stateless運用）
+- **KV**: SNSの長期トークンと、公開回数のカウント
+- **R2**: 生成画像・動画の置き場。公開URLはWorker経由で配信
+- **Secrets**: 各SNSのAPIトークン、Bearer認証の鍵、Slack Webhook URL
+
+パッケージは3つだけです。`package.json`から抜粋します。
+
+```json
+{
+  "dependencies": {
+    "@modelcontextprotocol/server": "2.0.0",
+    "agents": "^0.20.1",
+    "zod": "^4.1.5"
+  }
+}
+```
+
+`@modelcontextprotocol/server`が[MCP公式のTypeScript SDK](https://modelcontextprotocol.io/)、`agents`が[Cloudflareのエージェント用SDK](https://developers.cloudflare.com/agents/)で、WorkersでMCPリクエストを処理するハンドラを提供します。スキーマ定義はzodです。
+
+## 最小構成のコード
+
+ツール1本のサーバーを最小で書くと、次の形になります。
+
+```ts
+import { McpServer } from "@modelcontextprotocol/server";
+import { createMcpHandler } from "agents/mcp/server";
+import { z } from "zod";
+
+function createServer(env: Env): McpServer {
+  const server = new McpServer({ name: "my-mcp", version: "0.1.0" });
+
+  server.registerTool(
+    "articles_list",
+    {
+      title: "List Articles",
+      description: "公開記事のメタデータを読む",
+      inputSchema: {
+        query: z.string().min(1).max(200).optional(),
+        limit: z.number().int().min(1).max(100).default(25),
+      },
+      annotations: { readOnlyHint: true, destructiveHint: false },
+    },
+    async ({ query, limit }) => ({
+      content: [{
+        type: "text",
+        text: JSON.stringify(await listArticles(env, query, limit)),
+      }],
+    }),
+  );
+
+  return server;
+}
+
+export default {
+  async fetch(request, env, ctx) {
+    const handler = createMcpHandler(() => createServer(env), {
+      route: "/mcp",
+      corsOptions: false,
+      legacy: "stateless",
+    });
+    return handler(request, env, ctx);
+  },
+} satisfies ExportedHandler<Env>;
+```
+
+`wrangler.jsonc`は最小ならこれだけです。
+
+```jsonc
+{
+  "name": "my-mcp",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-11",
+  "compatibility_flags": ["nodejs_compat"],
+  "kv_namespaces": [{ "binding": "TOKEN_KV" }],
+  "r2_buckets": [{ "binding": "MEDIA_BUCKET", "bucket_name": "my-mcp-media" }]
+}
+```
+
+`wrangler deploy`で公開したら、Claude Code側は`--transport http`で接続します。
+
+```bash
+claude mcp add --transport http my-mcp \
+  https://<your-worker>.workers.dev/mcp \
+  --header "Authorization: Bearer <token>"
+```
+
+ここまでが「動くまで」です。問題はここからでした。
+
+## 動いてからが本番だった——効いたのは「断る側」の設計5つ
+
+作っている間は、ツールの本数を進捗として数えたくなります。実際に無人運用へ入ると見方が逆になりました。ツールはエージェントの能力を増やしますが、事故の半径を決めるのはスキーマと制限です。運用で効いた設計を5つ並べます。
+
+### 1. 入力スキーマは「動く最小」より厳しく
+
+zodのスキーマは型を合わせるだけでなく、値の形まで縛ります。実運用のコードから抜粋します。
+
+```ts
+const idSchema = z.string().min(1).max(128).regex(
+  /^[A-Za-z0-9_-]+$/,
+  "IDs may contain only letters, digits, underscores, and hyphens",
+);
+
+const threadsUrlSchema = z.string().url().refine((value) => {
+  const hostname = new URL(value).hostname.toLowerCase();
+  return hostname === "threads.net" || hostname.endsWith(".threads.net")
+    || hostname === "threads.com" || hostname.endsWith(".threads.com");
+}, "Use a threads.net or threads.com post URL");
+```
+
+IDは文字種と長さを制限し、URLはホスト名の許可リストで縛る。エージェントは外部コンテンツ（記事本文、SNSの返信）を読んだ直後にツールを呼ぶことがあるので、入力は「多少おかしな値が混ざる前提」で設計します。エラーメッセージに正しい形を書いておくと、エージェントが自力でリトライできる点も実運用では効きます。
+
+### 2. 副作用のあるツールは`confirm: true`を必須にする
+
+外部に見える副作用（投稿・削除・課金を伴う生成）を持つツールには、リテラル型の確認フラグを入れています。
+
+```ts
+const confirmationSchema = z.literal(true).describe(
+  "Must be true to confirm this external side effect",
+);
+
+server.registerTool("slack_post_notification", {
+  inputSchema: {
+    text: z.string().min(1).max(4_000),
+    confirm: confirmationSchema,
+  },
+  // ...
+});
+```
+
+55本のツールのうち21本がこの形です。人間の承認を待つ仕組みではなく、「エージェントがこの呼び出しの副作用を認識して引数に明示した」ことを機械的に要求するゲートです。読み取りのつもりで書き込みツールを呼ぶ、という種類の事故をスキーマの段階で止められます。
+
+### 3. tool annotationsをツールごとに宣言する
+
+MCPには`readOnlyHint`や`destructiveHint`などのアノテーションがあり、クライアント側の権限管理のヒントになります。自作サーバーでは全ツールに`READ_ONLY` / `WRITE` / `DESTRUCTIVE`の定数を割り当てて、宣言漏れをなくしました。削除系ツールを`destructiveHint: true`にしておくと、クライアント側で承認ポリシーを分けられます。
+
+### 4. 認証はWorkerで受け、トークンはエージェントに見せない
+
+`/mcp`はBearer認証で守ります。比較はタイミング攻撃対策で、SHA-256ダイジェスト同士を`timingSafeEqual`で突き合わせています。
+
+```ts
+async function secureEqual(provided: string, expected: string): Promise<boolean> {
+  const encoder = new TextEncoder();
+  const [providedHash, expectedHash] = await Promise.all([
+    crypto.subtle.digest("SHA-256", encoder.encode(provided)),
+    crypto.subtle.digest("SHA-256", encoder.encode(expected)),
+  ]);
+  return crypto.subtle.timingSafeEqual(providedHash, expectedHash);
+}
+```
+
+もう1つ大事なのは、SNS各社のAPIトークンをWorkerのSecretsとKVにだけ置き、エージェント側の環境変数・会話・ログへ一切出さないことです。エージェントが漏らせるのは持っているものだけなので、そもそも持たせない。MCPサーバーはこの境界を引くのに一番自然な場所です。
+
+### 5. 回数制限と通知はプロンプトではなくサーバーに置く
+
+「投稿しすぎない」はプロンプトで頼んでも守られる保証がありません。公開系ツールはすべて、KVに記録した公開イベントで「全チャネル合算60分3件・チャネル別の日次上限」を検査してから実行します。上限超過・公開失敗・成功はサーバーからSlackへ通知します。
+
+```ts
+// 公開系ツールの共通フロー（抜粋・簡略化）
+const reservation = await publishQuota.reserve(channel, now); // 上限超過ならthrow
+try {
+  const result = await publish();
+  await publishQuota.commit(reservation.id, now);
+  return result;
+} catch (error) {
+  await publishQuota.release(reservation.id); // 失敗時は枠を戻す
+  throw error;
+}
+```
+
+単純なカウントではなくreserve→commit/releaseの二段階にした理由や失敗時の枠の戻し方は、1本の記事として別にまとめています。
+
+<LinkCard slug="mcp-server-publish-rate-limit" />
+
+## ツール表面を固定するテスト
+
+サーバーを育てていくと、ツールの追加・削除・リネームが積み重なります。エージェント側のスキルはツール名に依存しているので、**ツール表面が黙って変わることが一番怖い**。そこで、公開ツールの一覧そのものをテストで固定しています。
+
+```ts
+import { Client, InMemoryTransport } from "@modelcontextprotocol/client";
+
+const server = createSnsMcpServer(operations);
+const client = new Client({ name: "test", version: "0.1.0" });
+const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+await Promise.all([server.connect(serverTransport), client.connect(clientTransport)]);
+
+const { tools } = await client.listTools();
+expect(tools.map((tool) => tool.name).sort()).toEqual([
+  "articles_get",
+  "articles_list",
+  // ...公開する全ツール名を列挙
+]);
+```
+
+MCP公式のクライアントSDKには`InMemoryTransport`があり、HTTPを立てずにサーバーと直結できます。テスト自体は`@cloudflare/vitest-pool-workers`でWorkers実行環境のまま回します。ツールを1本増やすとこのテストが落ちるので、「増やした事実」が必ずレビューに載る。地味ですが、ツール55本まで育てても表面が把握できているのはこのテストのおかげです。
+
+## ハマりどころ
+
+- **statelessかセッション持ちか**: 今回は`legacy: "stateless"`で、状態は全部KVとR2に置いています。定時実行のエージェントから叩く用途ならこれで足ります。会話的なセッション状態をサーバー側に持ちたい場合は、`agents`パッケージにDurable Objectsを使う`McpAgent`が用意されているので、そちらが候補になります（[公式ドキュメント](https://developers.cloudflare.com/agents/model-context-protocol/)）。
+- **KVは厳密なロックではない**: KVは結果整合なので、回数制限のカウンタとしては「ほぼ同時の2リクエスト」を完全には防げません。エージェント1系統の運用では実害が出ていませんが、多重化するならDurable Objectsに置き換える前提でいます。
+- **公開パスの線引き**: R2の画像を配信するパスだけは認証なしで返す必要があり、「認証必須の`/mcp`」と「公開メディアパス」の境界をルーティングの最初で明示的に分けています。ここが曖昧だと、認証を足したつもりで穴が残ります。
+
+## まとめ——自作が向くケース、向かないケース
+
+自作が向くのは、(1)書き込みツールが必要で既製に無い、(2)回数制限や通知など運用ルールをコードで強制したい、(3)トークンをエージェントから隔離したい、のどれかに当てはまる場合です。読み取り中心で既製サーバーが揃っている用途なら、自作の維持コストを払う理由は薄いと思います。
+
+作る場合の要点は今日の5つに尽きます。スキーマは厳しく、副作用にはconfirm、アノテーションは全ツールに、認証と秘密はWorker側に、制限と通知はサーバーに。ツールを生やすのは楽しい作業ですが、無人運用の信頼を作るのは断る側の実装でした。
+
+一次情報は[MCP公式ドキュメント](https://modelcontextprotocol.io/)と[CloudflareのAgents SDKドキュメント](https://developers.cloudflare.com/agents/)を参照してください（いずれも2026-09-14確認）。
