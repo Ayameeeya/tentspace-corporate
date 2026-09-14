@@ -31,7 +31,7 @@ MCPサーバーの自作は、思っているより簡単です。公式TypeScri
 
 ## 全体構成
 
-実運用中の構成は次のとおりです。Cloudflareの無料枠〜Workers Paid（月$5）の範囲に収まる規模です。
+実運用中の構成は次のとおりです。Cloudflareの無料枠〜有料プランの最小構成に収まる規模です（最新の料金は[Workersの料金ページ](https://developers.cloudflare.com/workers/platform/pricing/)を参照してください）。
 
 - **Worker 1本**: `/mcp` エンドポイントでMCPリクエストを受ける（streamable HTTP・stateless運用）
 - **KV**: SNSの長期トークンと、公開回数のカウント
