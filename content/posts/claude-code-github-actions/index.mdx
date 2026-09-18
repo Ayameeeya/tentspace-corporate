@@ -1,0 +1,148 @@
+---
+title: "Claude CodeのGitHub Actions連携入門｜@claudeで動かす設定と権限設計"
+description: "Claude CodeをGitHub Actionsで動かす公式連携（claude-code-action）を整理します。@claudeメンションで動く対話型とpromptを渡す自動実行の2形態、最小のワークフロー設定、「トリガーできる人が実質の承認者になる」権限設計、素のclaude -pとの使い分けをまとめます。"
+date: 2026-09-18
+slug: claude-code-github-actions
+categories: ["AI活用"]
+tags: ["Claude Code", "GitHub Actions", "AIエージェント", "自動化"]
+draft: false
+ogImage: "/blog-assets/claude-code-github-actions/featured.jpg"
+experiment:
+  pillar: "ai-dev"
+  hook: "howto"
+  cta: "inquiry"
+  targetKw: "Claude Code GitHub Actions"
+  utmCampaign: "claude-code-github-actions-202609"
+---
+
+Claude CodeのGitHub Actions連携は、「CIにAIレビューを1本足す機能」というより、**リポジトリのイベントをトリガーに、いつものClaude Codeをヘッドレスで走らせる実行形態**です。Issueのコメントに `@claude` と書けば、GitHubのランナー上でエージェントが起動し、コードを読んで、変更をブランチに積んで、PRの作成まで進みます。導入はワークフローファイル1枚。だから設計の本体はyamlの書き方ではなく、**「誰が起動できて、何を許すか」**になります。
+
+この記事は、Claude Codeを手元の対話で使っていて「リポジトリ側でも動かしたい」と考え始めた人向けに、公式のGitHub Actions連携（claude-code-action）のセットアップ、2つの使い方、権限設計、素の `claude -p` との使い分けを整理します。仕様は執筆時点の[公式ドキュメント](https://code.claude.com/docs/en/github-actions)と[claude-code-actionのリポジトリ](https://github.com/anthropics/claude-code-action)を正としています。Actionの入力やフラグは更新が続いているので、導入前に最新版を確認してください。
+
+<LinkCard url="https://code.claude.com/docs/en/github-actions" title="Claude Code公式ドキュメント: GitHub Actions" />
+
+## @claudeメンションで何が起きるか
+
+公式連携の中心は、Anthropicが公開しているGitHub Action「claude-code-action」です。ワークフローを1枚置いたリポジトリでは、IssueやPRのコメントに `@claude` を含めて書き込むと、それをトリガーにGitHub Actionsのジョブが起動し、ランナーの中でClaude Codeが動きます。
+
+挙動のイメージは、手元のヘッドレス実行をリポジトリのイベントに接続したものです。
+
+- Issueで「このバグを直して @claude」と書くと、コードを調査し、修正をブランチに積んで、PR作成へ進みます
+- 既存のPRで「この関数のエラーハンドリングを追加して @claude」と書くと、そのPRのブランチへ修正を積みます
+- 「この設計どう思う？ @claude」のような質問なら、コードを読んだうえでコメントとして回答します
+
+進捗はコメントとして投稿され、作業の経過が同じコメントの更新で追えるようになっています。一方で、公式ドキュメントの機能と制限の整理では、PRの正式な承認（approve）はできないとされています。つまり「実装まで進めるが、マージの判断は人間側に残る」構図です。ここは後半の権限設計の話に効いてくるので覚えておいてください。
+
+## セットアップは2通り
+
+導入経路は2つあります。楽なのは、手元のClaude Codeのターミナルで案内に従う方法です。
+
+```text
+/install-github-app
+```
+
+このコマンドが、Claude GitHub Appのインストールと必要なシークレットの設定をガイドしてくれます。対象リポジトリの管理者権限が必要です。
+
+手動でやる場合は、次の3点を自分で揃えます。
+
+1. Claude GitHub Appを対象リポジトリにインストールする
+2. リポジトリのSecretsに `ANTHROPIC_API_KEY` を登録する
+3. ワークフローファイルを追加する
+
+最小のワークフローはこの程度です（`@claude` を含むコメントに反応する形。フィールドの正確な最新形は前掲の公式READMEを正としてください）。
+
+```yaml
+name: Claude
+on:
+  issue_comment:
+    types: [created]
+  issues:
+    types: [opened]
+
+jobs:
+  claude:
+    if: contains(github.event.comment.body, '@claude') || contains(github.event.issue.body, '@claude')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+```
+
+認証はAPIキーのほかに、Pro / Maxサブスクリプション用のOAuthトークン（`claude setup-token` で発行）、AWS BedrockやGoogle Vertex AI経由の実行もサポートされています。会社のモデル利用がクラウド経由に寄せてある場合でも、経路ごと載せ替えられる作りです。
+
+<LinkCard url="https://github.com/anthropics/claude-code-action" title="GitHub: anthropics/claude-code-action" />
+
+## 使い方は2形態。モードはpromptの有無で決まる
+
+このActionには、大きく2つの使い方があります。
+
+**1つ目は対話型**。ここまで見てきた `@claude` メンションへの反応です。人間がIssueやPRで指示を出し、エージェントが応える。トリガーは常に人間の書き込みです。
+
+**2つ目は自動実行型**。ワークフローの入力に `prompt` を渡すと、メンションを待たずに、そのプロンプトを実行するジョブになります。scheduleトリガーやpushトリガーと組み合わせて、定時や特定イベントで走る無人ジョブが組めます。
+
+```yaml
+on:
+  schedule:
+    - cron: "0 0 * * *"   # cronはUTC指定
+
+jobs:
+  daily-check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: "昨日のコミットを読んで、ドキュメント更新が必要な箇所をIssue形式で列挙して"
+          claude_args: "--max-turns 20"
+```
+
+覚えておくと迷わないのは、**モードを自分で指定する項目は（v1では）基本的にない**ことです。`prompt` があれば自動実行、なければメンション待ち、とActionが入力から判定します。以前は用途ごとにモード指定が分かれていましたが、v1で統合されました。
+
+もうひとつ重要なのが `claude_args` です。ここにはClaude CodeのCLIフラグがそのまま渡せます。`--max-turns` でターン数上限、`--allowedTools` で許可ツールの絞り込み、`--model` でモデル指定。つまり、ヘッドレスモードで「実行前に決め切る」ものが、そのままワークフローの設定として固定できます。この設計感覚は素の `claude -p` と共通なので、先にこちらを読んでいる方はそのまま持ち込めます。
+
+<LinkCard slug="claude-code-headless-mode" />
+
+## 導入して気づく反転——@claudeを書ける人が、実質の承認者になる
+
+セットアップまでは「CIにAIを足す」話に見えます。ただ、実際に設計を詰めると、手元の対話モードとの一番の違いは機能ではなく**承認の主体**だと気づきます。
+
+対話モードのClaude Codeでは、危ない操作の前に確認を求められ、答えるのは自分です。GitHub Actionsでは、この確認に相当するものが**トリガーの時点**に前倒しされます。`@claude` と書き込んだ瞬間、ジョブはワークフローに書かれた権限のまま最後まで走る。つまり、**メンションを書ける人の集合が、そのまま実行の承認者の集合**になります。
+
+だから公式も、この境界を既定で絞っています。claude-code-actionのドキュメントでは、リポジトリへの書き込み権限（write access）を持つユーザーからのトリガーだけに反応することが、セキュリティ上の前提として説明されています。誰でもコメントできる公開リポジトリで、通りすがりの `@claude` がコードを書き換え始める、という事故を入口で止める設計です。
+
+そのうえで、ワークフロー側で決め切る項目は、手元のヘッドレス設計と同じ3点に集約されます。
+
+- **ツールの上限**: `claude_args` の `--allowedTools` で、ジョブの目的に必要な最小集合だけを列挙する
+- **実行量の上限**: `--max-turns` と、ジョブ自体のtimeoutで、暴走と費用を頭打ちにする
+- **トークンの上限**: ワークフローの `permissions` で `GITHUB_TOKEN` の権限を必要最小限にする（読み取りだけのジョブに `contents: write` を渡さない）
+
+もうひとつ、見落としやすい入口がIssueやコメントの本文そのものです。エージェントはトリガーになったテキストを読んで動くので、外部から書き込める文章は、指示が紛れ込み得る入力経路でもあります。書き込み権限者しかトリガーできない既定はここでも効きますが、権限を広げる改変をするなら、その分だけ許可ツールを絞る方向で釣り合いを取るべきです。権限を層で考える整理は別記事にまとめています。
+
+<LinkCard slug="claude-code-permission-layers" />
+
+## Actionsに載せる仕事と、載せない仕事
+
+最後に使い分けです。私は「トリガーがどこで発生するか」で線を引くのが一番実用的だと考えています。
+
+**GitHub Actionsに向くのは、リポジトリのイベントに反応する仕事**です。Issueへの一次対応、PRへの修正指示、ラベルを付けたら定型作業が走る、といった形。トリガー・実行環境・成果物（ブランチとPR）が全部GitHubの中で閉じるので、認証も監査ログも既存の仕組みに乗ります。
+
+一方、**起点がリポジトリの外にある仕事は、無理に載せない方が素直**です。実例をひとつ。私はこのブログの記事作成を無人運用していますが、そのパイプラインはGitHub Actionsに載せていません。起点が「リポジトリのイベント」ではなく「時刻とNotion上のキュー」だからです。書く側は定時実行のClaude Codeセッション、公開の副作用（コミットや投稿の回数制限）は自作MCPサーバー側の制限に分離しています。この構成の詳細は[公開前チェックを2層に分ける話](/blog/ai-agent-two-layer-review)や[レート制限をサーバー側に置く話](/blog/mcp-server-publish-rate-limit)に書きました。逆に、同じリポジトリでも「PRに来た指摘への対応」のような受動的な仕事なら、Actionsの方が座りがいい。同じエージェントでも、トリガーの発生源で置き場所を変えるわけです。
+
+費用の面も一言。Actions経由の実行には、APIのトークン代に加えてGitHub Actionsのランナー実行時間がかかります。トークン側は `--max-turns`、ランナー側はジョブのtimeoutと、上限は両方に掛けておくのが安全です。
+
+## まとめ
+
+Claude CodeのGitHub Actions連携は、ワークフロー1枚で入りますが、実体は「確認に答える人間がいない実行形態」をリポジトリに常設する話です。設計の要点は3つ。トリガーできる人の集合が承認者の集合になること。`claude_args` でツールとターン数を実行前に決め切ること。`GITHUB_TOKEN` の権限をジョブの目的まで絞ること。
+
+最初の1歩は、質問対応だけの読み取り運用から始めるのがおすすめです。`@claude` に設計の質問を投げる使い方なら書き込み権限を渡さずに試せて、チームがエージェントの挙動に慣れてから、実装タスクへ広げる順番が組めます。
