@@ -1,0 +1,122 @@
+---
+title: "Claude Codeのsettings.json解説｜5つの置き場所と優先順位"
+description: "Claude Codeの設定ファイルsettings.jsonを整理します。ユーザー・プロジェクト・ローカル・管理ポリシーという4つの置き場所とコマンドライン引数を加えた優先順位、permissionsやenvなど主要キーの書き方、エージェント自身に書き換えさせない置き方までまとめます。"
+date: "2026-09-22"
+slug: "claude-code-settings-json"
+categories: ["AI活用"]
+tags: ["Claude Code", "AIエージェント", "自動化", "設定"]
+draft: false
+ogImage: "/blog-assets/claude-code-settings-json/featured.jpg"
+experiment:
+  pillar: "ai-dev"
+  hook: "number"
+  cta: "inquiry"
+  targetKw: "Claude Code settings.json"
+  utmCampaign: "claude-code-settings-json-202609"
+---
+
+Claude Codeの設定ファイル`settings.json`は、1つではありません。ユーザー設定、プロジェクト共有設定、プロジェクトローカル設定、組織の管理ポリシーの4ファイルがあり、コマンドライン引数を加えると設定の出どころは5つ。どれが勝つかの優先順位は固定です（[公式ドキュメント](https://code.claude.com/docs/en/settings)）。そして実際に運用してみると、つまずくのは書式ではなく「どこに書くか」の選択でした。置き場所の選択は、そのまま「誰が（何が）この設定を上書きできるか」の選択だからです。
+
+対象読者は、`settings.json`を触り始めて置き場所の違いが曖昧な人、チームで設定を共有したい人、そしてエージェントに自動運用を任せていて設定ファイル自体の守り方を決めたい人です。
+
+これまで[権限設定の4層](/blog/claude-code-permission-layers)、[denyルールの穴](/blog/claude-code-permission-rule-pitfalls)、[hooksによる強制](/blog/claude-code-hooks-bash-guard)と書いてきましたが、どの仕組みも設定の実体はこのファイルにあります。今回はその器そのものを整理します。
+
+## settings.jsonは1つではない
+
+まず4つのファイルの場所から。すべて同じJSON形式で、書けるキーも共通です。
+
+| 層 | 場所 | 効く範囲 |
+| --- | --- | --- |
+| ユーザー設定 | `~/.claude/settings.json` | 自分の全プロジェクト |
+| プロジェクト共有設定 | `.claude/settings.json` | このリポジトリの全員（git管理） |
+| プロジェクトローカル設定 | `.claude/settings.local.json` | 自分×このリポジトリ（git管理外） |
+| 管理ポリシー | `managed-settings.json` | 組織の全マシン（管理者が配布） |
+
+見分けのポイントは「gitに入るかどうか」です。`.claude/settings.json`はリポジトリにコミットしてチームで共有する前提のファイル。一方`.claude/settings.local.json`は個人用で、作成されるとClaude Codeが自動でgitの管理対象から外します。「自分だけの実験的な設定をうっかりコミットした」が起きにくい設計です。
+
+管理ポリシーの`managed-settings.json`だけは置き場所がOS側にあります。公式ドキュメントの記載では、macOSは`/Library/Application Support/ClaudeCode/`、LinuxとWSLは`/etc/claude-code/`、Windowsは`C:\ProgramData\ClaudeCode\`。ユーザーが自分で編集する場所ではなく、組織の管理者がMDMなどで配る前提のファイルです。
+
+これに、`claude --model opus`や`--permission-mode plan`のようなコマンドライン引数が「そのセッション限り」の層として加わります。
+
+## 優先順位は「強い順」に固定されている
+
+同じキーを複数の場所に書いた場合、どれが勝つか。優先順位は高い順にこうなります。
+
+1. 管理ポリシー（`managed-settings.json`）
+2. コマンドライン引数
+3. プロジェクトローカル設定（`.claude/settings.local.json`）
+4. プロジェクト共有設定（`.claude/settings.json`）
+5. ユーザー設定（`~/.claude/settings.json`）
+
+ユーザー設定が一番弱く、組織の管理ポリシーが一番強い。つまり「個人の好みは下の層、チームや組織の決めごとは上の層」という力関係がファイル構造に埋め込まれています。ユーザー設定で好きなモデルを指定していても、プロジェクト共有設定に`model`があればそちらが使われますし、管理ポリシーにある設定は現場では覆せません。
+
+1つだけ注意が要るのは、`permissions`のルールはこの「上書き」の話とは別に扱われることです。allowやdenyのルールは各ファイルから足し合わされて評価され、denyに当たる操作はどの層のallowでも通せません。「どこかのファイルにdenyを書いたのに、別のファイルのallowで開いてしまった」は起きない設計です。ただし、書いたdenyが記法の問題で効かないケースは実際にあったので、ルールを書いたら効いているかの検証まで含めて1セットにしています。この点は[denyが効かない3つの穴](/blog/claude-code-permission-rule-pitfalls)で書いたとおりです。
+
+## 主要キーは4つ覚えれば形になる
+
+書けるキーは多いですが、日常の運用で決め手になるのは`permissions`・`env`・`model`・`hooks`の4つです。実際の形はこうなります。
+
+```json
+{
+  "permissions": {
+    "allow": ["Bash(npm run check)", "Bash(git diff:*)"],
+    "ask": ["Bash(git push:*)"],
+    "deny": ["Read(./.env)", "Read(./.dev.vars)"],
+    "defaultMode": "default"
+  },
+  "env": {
+    "DISABLE_TELEMETRY": "1"
+  },
+  "model": "opus",
+  "includeCoAuthoredBy": false
+}
+```
+
+`permissions`は許可・確認・禁止のルールを持つ、このファイルの中心です。ルールは`ツール名(指定子)`の形で書き、`Bash(git diff:*)`のように`:*`を付けると前方一致になります。`Read`や`Edit`の指定子はgitignore風のパスパターンです。`deny`に`Read(./.env)`を入れて機密ファイルをエージェントの読み取りから外すのは、公式ドキュメントも案内している定番の使い方です。どの操作をどの層（渡さない・許す・止める）で守るかという設計の話は[権限設定4層ガイド](/blog/claude-code-permission-layers)に書いたので、ここでは省きます。
+
+`env`は、Claude Codeのセッション全体に適用する環境変数です。起動のたびにシェルでexportする代わりに、ここへ書けば全セッションで揃います。`model`はそのスコープでの既定モデルの指定。`hooks`はツール実行前後などに自作スクリプトを差し込む設定で、これは1本の記事として[Bashガード実装記録](/blog/claude-code-hooks-bash-guard)に書きました。
+
+残りはこまごました調整です。`includeCoAuthoredBy`をfalseにするとコミットへの共著者行の付与をやめられます。`cleanupPeriodDays`は会話ログの保持日数、`statusLine`はターミナル下部の表示を自作コマンドに差し替える設定。現在のセッションで有効になっている権限ルールは、設定ファイルを直接読むより`/permissions`コマンドで確認するのが確実です。
+
+## settings.jsonに書かないものを分けておく
+
+`.claude/`ディレクトリには設定っぽいファイルが同居するので、境界を先に引いておくと迷いません。
+
+- エージェントへの指示（プロジェクトの約束事・文脈）は`CLAUDE.md`。settings.jsonは挙動と権限の設定で、日本語の指示を書く場所ではありません
+- MCPサーバーの接続定義は`.mcp.json`。どのスコープに保存されるかの話は[claude mcp addのスコープ解説](/blog/claude-mcp-add-scope)で書きました。settings.json側が持つのは`enableAllProjectMcpServers`のような「その定義を承認するか」の設定です
+- スラッシュコマンドやスキルは`.claude/commands/`・`.claude/skills/`配下の別ファイル
+
+「モデルに読ませて従わせるもの」と「モデルの判断を経由せず機械的に効くもの」の区別、と覚えています。settings.jsonは後者です。
+
+## 「どこに書くか」より先に、エージェントが書ける場所を数えた
+
+ここまでは優先順位の整理でした。設計の本題はここからです。無人運用の前提でこの5層を見直したとき、効いたのは優先順位の暗記ではなく、**「このうち、エージェント自身が書き換えられる層はどれか」を数えること**でした。
+
+まず、`.claude/settings.local.json`は自分で編集した覚えがなくても育ちます。権限プロンプトで「常に許可」を選ぶと、その許可ルールはこのファイルに保存されるからです。使っているだけで設定が増えていく層、と言えます。対話で使う分には便利ですが、放置すると「いつ何のために許可したのか分からないallow」が積もる。定期的に開いて、残す価値のあるルールはチームの共有設定へ昇格させ、それ以外は消す棚卸しをするようになりました。
+
+次に、プロジェクト共有設定そのものです。エージェントがEditツールで`.claude/settings.json`を書き換えられる構成なら、そこに書いたdenyもhooksも形だけになります。検査のルールを検査対象に書き換えさせない、という[hooksの記事](/blog/claude-code-hooks-bash-guard)で書いた原則がそのまま効く場所です。うちのSNS自動運用では、この設定ファイルとhooksスクリプトを自動改善の対象から外し、変更のマージは人間だけが行う層として扱っています。
+
+管理ポリシーはこの問題への公式の最終回答で、現場のファイル編集では覆せません。ただ個人や少人数の開発にMDM配布は大げさなので、リポジトリ側の保護（設定変更を含むPRは人間がレビューしてマージする運用）で代替する、が現実的な落としどころだと考えています。
+
+## どこに何を書くか、運用している指針
+
+最後に、置き場所の使い分けを指針の形でまとめます。
+
+- **チームに強制したい安全系**（deny、ask、hooks）→ `.claude/settings.json`。gitでレビューを通し、変更履歴を残す
+- **個人の好み**（model、statusLine、通知系のenv）→ `~/.claude/settings.json`。プロジェクトを汚さない
+- **試行中の許可・一時的な設定** → `.claude/settings.local.json`。下書き扱いにして、定着したものだけ共有設定へ昇格
+- **組織として絶対に破らせない線** → `managed-settings.json`。配布手段がなければ、リポジトリの人間レビューで代替
+
+localは下書き、projectは合意済み、managedは法律。この3語で覚えてから、「とりあえず動いたからどこかに書いておく」がなくなりました。
+
+## まとめ
+
+`settings.json`は4ファイル＋コマンドライン引数の5層で、優先順位は管理ポリシー→CLI引数→ローカル→プロジェクト共有→ユーザーの固定順。permissionsルールだけは足し合わせで評価され、denyはどの層のallowでも覆せません。そして無人運用まで見据えるなら、優先順位の理解より先に「エージェント自身が書き換えられる層」を数え、共有設定を人間のレビュー下に置くことをおすすめします。
+
+まずは自分の環境で`~/.claude/settings.json`と`.claude/settings.local.json`を開いて、身に覚えのないallowがないか見るところから。5分で終わりますし、権限設計の現在地がそのまま見えます。
+
+## 関連記事・公式資料
+
+<LinkCard url="https://code.claude.com/docs/en/settings" title="Claude Code公式：Settings" />
+<LinkCard slug="claude-code-permission-layers" />
+<LinkCard slug="claude-code-hooks-bash-guard" />
