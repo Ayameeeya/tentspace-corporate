@@ -57,6 +57,13 @@
       "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DPermissions%2Band%2Bsandboxing%26title%3DChoose%2Ba%2Bpermission%2Bmode%26description%3DControl%2Bwhether%2BClaude%2Basks%2Bbefore%2Bacting.%2BSwitch%2Bpermission%2Bmodes%2Bwith%2BShift%252BTab%2Bin%2Bthe%2BCLI%252C%2Bthe%2Bmode%2Bindicator%2Bin%2BVS%2BCode%252C%2Bor%2Bthe%2Bmode%2Bselector%2Bin%2BDesktop.%26theme%3D03628e99c753a03aec319053&w=1200&q=100",
       "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
     },
+    "https://code.claude.com/docs/en/settings": {
+      "title": "Settings files and precedence - Claude Code Docs",
+      "description": "Change Claude Code settings, pick the scope a key belongs in, verify the change, and learn which value Claude Code uses when a key is set in several places.",
+      "domain": "code.claude.com",
+      "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DSettings%26title%3DSettings%2Bfiles%2Band%2Bprecedence%26description%3DChange%2BClaude%2BCode%2Bsettings%252C%2Bpick%2Bthe%2Bscope%2Ba%2Bkey%2Bbelongs%2Bin%252C%2Bverify%2Bthe%2Bchange%252C%2Band%2Blearn%2Bwhich%2Bvalue%2BClaude%2BCode%2Buses%2Bwhen%2Ba%2Bkey%2Bis%2Bset%2Bin%2Bseveral%2Bplaces.%26theme%3D03628e99c753a03aec319053&w=1200&q=100",
+      "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
+    },
     "https://code.claude.com/docs/en/skills": {
       "title": "Extend Claude with skills - Claude Code Docs",
       "description": "Create, manage, and share skills to extend Claude's capabilities in Claude Code. Includes custom commands and bundled skills.",
