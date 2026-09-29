@@ -36,11 +36,32 @@
       "image": "https://blog.cloudflare.com/_emdash/api/media/file/01KW47G6K18ZKMNC8636CN3FNG.png",
       "favicon": "https://blog.cloudflare.com/favicon.svg"
     },
+    "https://code.claude.com/docs/en/auto-mode-classifier-billing": {
+      "title": "Auto mode classifier request charges - Claude Code Docs",
+      "description": "Resolve the Claude Code notice saying this session isn't eligible for auto mode's no-charge classifier requests: what it means, why it appears, and what to do.",
+      "domain": "code.claude.com",
+      "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DDocumentation%26title%3DAuto%2Bmode%2Bclassifier%2Brequest%2Bcharges%26description%3DResolve%2Bthe%2BClaude%2BCode%2Bnotice%2Bsaying%2Bthis%2Bsession%2Bisn%2527t%2Beligible%2Bfor%2Bauto%2Bmode%2527s%2Bno-charge%2Bclassifier%2Brequests%253A%2Bwhat%2Bit%2Bmeans%252C%2Bwhy%2Bit%2Bappears%252C%2Band%2Bwhat%2Bto%2Bdo.%26theme%3D03628e99c753a03aec319053&w=1200&q=100",
+      "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
+    },
     "https://code.claude.com/docs/en/changelog": {
       "title": "Claude Code changelog - Claude Code Docs",
       "description": "Release notes for Claude Code, including new features, improvements, and bug fixes by version.",
       "domain": "code.claude.com",
       "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DGetting%2Bstarted%26title%3DClaude%2BCode%2Bchangelog%26description%3DRelease%2Bnotes%2Bfor%2BClaude%2BCode%252C%2Bincluding%2Bnew%2Bfeatures%252C%2Bimprovements%252C%2Band%2Bbug%2Bfixes%2Bby%2Bversion.%26theme%3D03628e99c753a03aec319053&w=1200&q=100",
+      "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
+    },
+    "https://code.claude.com/docs/en/claude-code-on-the-web": {
+      "title": "Use Claude Code in the cloud - Claude Code Docs",
+      "description": "Run Claude Code sessions in the cloud from your browser, phone, desktop app, or terminal, move them with --cloud and --teleport, and auto-fix pull requests.",
+      "domain": "code.claude.com",
+      "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DClaude%2BCode%2Bin%2Bthe%2Bcloud%26title%3DUse%2BClaude%2BCode%2Bin%2Bthe%2Bcloud%26description%3DRun%2BClaude%2BCode%2Bsessions%2Bin%2Bthe%2Bcloud%2Bfrom%2Byour%2Bbrowser%252C%2Bphone%252C%2Bdesktop%2Bapp%252C%2Bor%2Bterminal%252C%2Bmove%2Bthem%2Bwith%2B--cloud%2Band%2B--teleport%252C%2Band%2Bauto-fix%2Bpull%2Brequests.%26theme%3D03628e99c753a03aec319053&w=1200&q=100",
+      "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
+    },
+    "https://code.claude.com/docs/en/github-actions": {
+      "title": "Claude Code GitHub Actions - Claude Code Docs",
+      "description": "Run Claude Code in GitHub Actions workflows to respond to @claude mentions, automate tasks, and turn issues into pull requests",
+      "domain": "code.claude.com",
+      "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DCode%2Breview%2B%2526%2BCI%252FCD%26title%3DClaude%2BCode%2BGitHub%2BActions%26description%3DRun%2BClaude%2BCode%2Bin%2BGitHub%2BActions%2Bworkflows%2Bto%2Brespond%2Bto%2B%2540claude%2Bmentions%252C%2Bautomate%2Btasks%252C%2Band%2Bturn%2Bissues%2Binto%2Bpull%2Brequests%26theme%3D03628e99c753a03aec319053&w=1200&q=100",
       "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
     },
     "https://code.claude.com/docs/en/hooks": {
@@ -50,6 +71,13 @@
       "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DReference%26appearance%3Dsystem%26title%3DHooks%2Breference%26description%3DReference%2Bfor%2BClaude%2BCode%2Bhook%2Bevents%252C%2Bconfiguration%2Bschema%252C%2BJSON%2Binput%252Foutput%2Bformats%252C%2Bexit%2Bcodes%252C%2Basync%2Bhooks%252C%2BHTTP%2Bhooks%252C%2Bprompt%2Bhooks%252C%2Band%2BMCP%2Btool%2Bhooks.%26logoLight%3Dhttps%253A%252F%252Fmintcdn.com%252Fclaude-code%252Fc5r9_6tjPMzFdDDT%252Flogo%252Flight.svg%253Ffit%253Dmax%2526auto%253Dformat%2526n%253Dc5r9_6tjPMzFdDDT%2526q%253D85%2526s%253D78fd01ff4f4340295a4f66e2ea54903c%26logoDark%3Dhttps%253A%252F%252Fmintcdn.com%252Fclaude-code%252Fc5r9_6tjPMzFdDDT%252Flogo%252Fdark.svg%253Ffit%253Dmax%2526auto%253Dformat%2526n%253Dc5r9_6tjPMzFdDDT%2526q%253D85%2526s%253D1298a0c3b3a1da603b190d0de0e31712%26primaryColor%3D%25230E0E0E%26lightColor%3D%2523D4A27F%26backgroundLight%3D%2523FDFDF7%26backgroundDark%3D%252309090B&w=1200&q=100",
       "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
     },
+    "https://code.claude.com/docs/en/overview": {
+      "title": "Overview - Claude Code Docs",
+      "description": "Claude Code is an agentic coding tool that reads your codebase, edits files, runs commands, and integrates with your development tools. Available in your terminal, IDE, desktop app, and browser.",
+      "domain": "code.claude.com",
+      "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DGetting%2Bstarted%26title%3DOverview%26description%3DClaude%2BCode%2Bis%2Ban%2Bagentic%2Bcoding%2Btool%2Bthat%2Breads%2Byour%2Bcodebase%252C%2Bedits%2Bfiles%252C%2Bruns%2Bcommands%252C%2Band%2Bintegrates%2Bwith%2Byour%2Bdevelopment%2Btools.%2BAvailable%2Bin%2Byour%2Btermin%26theme%3D03628e99c753a03aec319053&w=1200&q=100",
+      "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
+    },
     "https://code.claude.com/docs/en/permission-modes": {
       "title": "Choose a permission mode - Claude Code Docs",
       "description": "Control whether Claude asks before acting. Switch permission modes with Shift+Tab in the CLI, the mode indicator in VS Code, or the mode selector in Desktop.",
@@ -57,11 +85,32 @@
       "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DPermissions%2Band%2Bsandboxing%26title%3DChoose%2Ba%2Bpermission%2Bmode%26description%3DControl%2Bwhether%2BClaude%2Basks%2Bbefore%2Bacting.%2BSwitch%2Bpermission%2Bmodes%2Bwith%2BShift%252BTab%2Bin%2Bthe%2BCLI%252C%2Bthe%2Bmode%2Bindicator%2Bin%2BVS%2BCode%252C%2Bor%2Bthe%2Bmode%2Bselector%2Bin%2BDesktop.%26theme%3D03628e99c753a03aec319053&w=1200&q=100",
       "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
     },
+    "https://code.claude.com/docs/en/plugins": {
+      "title": "Plugins overview - Claude Code Docs",
+      "description": "Understand what a Claude Code plugin is, when you need one instead of a standalone skill or MCP server, and which page to read to install or create one.",
+      "domain": "code.claude.com",
+      "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DPlugins%26title%3DPlugins%2Boverview%26description%3DUnderstand%2Bwhat%2Ba%2BClaude%2BCode%2Bplugin%2Bis%252C%2Bwhen%2Byou%2Bneed%2Bone%2Binstead%2Bof%2Ba%2Bstandalone%2Bskill%2Bor%2BMCP%2Bserver%252C%2Band%2Bwhich%2Bpage%2Bto%2Bread%2Bto%2Binstall%2Bor%2Bcreate%2Bone.%26theme%3D03628e99c753a03aec319053&w=1200&q=100",
+      "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
+    },
+    "https://code.claude.com/docs/en/settings": {
+      "title": "Settings files and precedence - Claude Code Docs",
+      "description": "Change Claude Code settings, pick the scope a key belongs in, verify the change, and learn which value Claude Code uses when a key is set in several places.",
+      "domain": "code.claude.com",
+      "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DSettings%26title%3DSettings%2Bfiles%2Band%2Bprecedence%26description%3DChange%2BClaude%2BCode%2Bsettings%252C%2Bpick%2Bthe%2Bscope%2Ba%2Bkey%2Bbelongs%2Bin%252C%2Bverify%2Bthe%2Bchange%252C%2Band%2Blearn%2Bwhich%2Bvalue%2BClaude%2BCode%2Buses%2Bwhen%2Ba%2Bkey%2Bis%2Bset%2Bin%2Bseveral%2Bplaces.%26theme%3D03628e99c753a03aec319053&w=1200&q=100",
+      "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
+    },
     "https://code.claude.com/docs/en/skills": {
       "title": "Extend Claude with skills - Claude Code Docs",
       "description": "Create, manage, and share skills to extend Claude's capabilities in Claude Code. Includes custom commands and bundled skills.",
       "domain": "code.claude.com",
       "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DSkills%26appearance%3Dsystem%26title%3DExtend%2BClaude%2Bwith%2Bskills%26description%3DCreate%252C%2Bmanage%252C%2Band%2Bshare%2Bskills%2Bto%2Bextend%2BClaude%2527s%2Bcapabilities%2Bin%2BClaude%2BCode.%2BIncludes%2Bcustom%2Bcommands%2Band%2Bbundled%2Bskills.%26logoLight%3Dhttps%253A%252F%252Fmintcdn.com%252Fclaude-code%252Fc5r9_6tjPMzFdDDT%252Flogo%252Flight.svg%253Ffit%253Dmax%2526auto%253Dformat%2526n%253Dc5r9_6tjPMzFdDDT%2526q%253D85%2526s%253D78fd01ff4f4340295a4f66e2ea54903c%26logoDark%3Dhttps%253A%252F%252Fmintcdn.com%252Fclaude-code%252Fc5r9_6tjPMzFdDDT%252Flogo%252Fdark.svg%253Ffit%253Dmax%2526auto%253Dformat%2526n%253Dc5r9_6tjPMzFdDDT%2526q%253D85%2526s%253D1298a0c3b3a1da603b190d0de0e31712%26primaryColor%3D%25230E0E0E%26lightColor%3D%2523D4A27F%26backgroundLight%3D%2523FDFDF7%26backgroundDark%3D%252309090B&w=1200&q=100",
+      "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
+    },
+    "https://code.claude.com/docs/en/slash-commands": {
+      "title": "Extend Claude with skills - Claude Code Docs",
+      "description": "Create, manage, and share skills to extend Claude's capabilities in Claude Code. Includes custom commands and bundled skills.",
+      "domain": "code.claude.com",
+      "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DSkills%26title%3DExtend%2BClaude%2Bwith%2Bskills%26description%3DCreate%252C%2Bmanage%252C%2Band%2Bshare%2Bskills%2Bto%2Bextend%2BClaude%2527s%2Bcapabilities%2Bin%2BClaude%2BCode.%2BIncludes%2Bcustom%2Bcommands%2Band%2Bbundled%2Bskills.%26theme%3D03628e99c753a03aec319053&w=1200&q=100",
       "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
     },
     "https://code.claude.com/docs/en/sub-agents": {
@@ -292,6 +341,13 @@
       "domain": "docs.aws.amazon.com",
       "favicon": "https://docs.aws.amazon.com/assets/images/favicon.ico"
     },
+    "https://docs.claude.com/en/api/agent-sdk/overview": {
+      "title": "Agent SDK overview - Claude Code Docs",
+      "description": "Build production AI agents with Claude Code as a library",
+      "domain": "code.claude.com",
+      "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DAgent%2BSDK%26title%3DAgent%2BSDK%2Boverview%26description%3DBuild%2Bproduction%2BAI%2Bagents%2Bwith%2BClaude%2BCode%2Bas%2Ba%2Blibrary%26theme%3D03628e99c753a03aec319053&w=1200&q=100",
+      "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
+    },
     "https://docs.claude.com/en/docs/build-with-claude/prompt-caching": {
       "title": "Prompt caching",
       "description": "Cache prompt prefixes with `cache_control` to cut costs and latency, using automatic caching or explicit breakpoints with 5-minute or 1-hour TTLs.",
@@ -481,6 +537,13 @@
       "image": "https://github.blog/wp-content/uploads/2026/09/640486943-995df08a-2d27-4fa0-a465-3e4e2ec3f6cb.png",
       "favicon": "https://github.githubassets.com/favicon.ico"
     },
+    "https://github.com/anthropics/claude-code-action": {
+      "title": "GitHub - anthropics/claude-code-action",
+      "description": "Contribute to anthropics/claude-code-action development by creating an account on GitHub.",
+      "domain": "github.com",
+      "image": "https://opengraph.githubassets.com/48dd249da011e18902b1288c427582afb91d9e3d5c5eba327dd3b7aba56135ae/anthropics/claude-code-action",
+      "favicon": "https://github.githubassets.com/favicons/favicon.png"
+    },
     "https://github.com/every-app/open-seo": {
       "title": "GitHub - every-app/open-seo: Open source alternative to Semrush and Ahrefs",
       "description": "Open source alternative to Semrush and Ahrefs. Contribute to every-app/open-seo development by creating an account on GitHub.",
@@ -586,6 +649,12 @@
       "description": "Google Keyword Planner helps you research keywords for your Search campaigns. You can use the Google Keyword Planner tool to",
       "domain": "support.google.com",
       "favicon": "https://support.google.com/favicon.png"
+    },
+    "https://www.anthropic.com/engineering/building-agents-with-the-claude-agent-sdk": {
+      "title": "Building agents with the Claude Agent SDK | Claude by Anthropic",
+      "description": "How to get started with the Claude Agent SDK and best practices for using it.",
+      "domain": "claude.com",
+      "favicon": "https://cdn.prod.website-files.com/6889473510b50328dbb70ae6/6a74d3f8662b198856f05f49_favicon.ico"
     },
     "https://www.anthropic.com/engineering/claude-code-best-practices": {
       "title": "Best practices for Claude Code - Claude Code Docs",
