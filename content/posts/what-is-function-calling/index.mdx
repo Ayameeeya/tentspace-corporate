@@ -1,0 +1,156 @@
+---
+title: "Function Callingとは？LLMがツールを使う仕組みと実装の始め方"
+description: "Function Callingの仕組みを、実装前に知っておきたい設計の勘所まで含めて整理します。モデルとアプリの役割分担、ツール定義から実行までの5ステップ、各社APIでの呼び名の違い、MCPやAIエージェントとの関係、ツール設計のコツをまとめます。"
+date: "2026-10-03"
+slug: "what-is-function-calling"
+categories: ["AI活用"]
+tags: ["AIエージェント", "Function Calling", "LLM", "MCP"]
+draft: false
+ogImage: "/blog-assets/what-is-function-calling/featured.jpg"
+experiment:
+  pillar: "ai-dev"
+  hook: "question"
+  cta: "inquiry"
+  targetKw: "Function Calling とは"
+  utmCampaign: "what-is-function-calling"
+---
+
+結論から言うと、Function Calling（ファンクションコーリング）とは、**LLMに「使える道具の一覧」を渡しておくと、モデルが必要に応じて「この道具をこの引数で使いたい」という構造化データを返してくる仕組み**です。天気APIを叩く、データベースを検索する、メールを送る——テキスト生成しかできなかったLLMが外部の世界に手を伸ばすための、いちばん土台にある機構です。
+
+そして、この名前には1つ大きな罠があります。**Function Callingという名前なのに、モデルは関数を呼びません。** 実行するのは常にあなたのアプリ側です。この分業を正確に理解しているかどうかで、エージェント開発の設計も安全対策も変わってきます。
+
+この記事では、仕組みの5ステップ、各社APIでの呼び名の違い、MCPやAIエージェントとの関係、そして実装前に知っておきたいツール設計の勘所までを整理します。想定読者は、「エージェントやMCPの記事でfunction callingという言葉が頻出するが、正確には何なのか」を30分で押さえたい方です。
+
+## 仕組みは5ステップ——モデルは「呼びたい」と言うだけ
+
+Function Callingの1往復は、次の5ステップで動きます。
+
+1. **ツール定義を渡す**: アプリがAPIリクエストに「使える関数の一覧」を添える。各関数は名前・説明文・引数の型（JSON Schema）で定義する
+2. **モデルが判断する**: ユーザーの入力を見て、テキストで答えるか、関数を使うかをモデルが選ぶ
+3. **モデルが「呼び出し指示」を返す**: 関数を使うと決めたら、`{"name": "get_weather", "arguments": {"city": "東京"}}` のような構造化データを応答として返す
+4. **アプリが実行する**: 返ってきた関数名と引数を見て、実際のAPI呼び出しやDB検索を実行するのはアプリ側のコード
+5. **結果をモデルに返す**: 実行結果を会話履歴に追加して再度モデルを呼ぶと、モデルが結果を踏まえた最終的な文章を生成する
+
+ツール定義はたとえばこういう形です（Anthropic APIの例）。
+
+```json
+{
+  "name": "get_weather",
+  "description": "指定した都市の現在の天気を取得する",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "city": { "type": "string", "description": "都市名" }
+    },
+    "required": ["city"]
+  }
+}
+```
+
+ポイントは、モデルの出力があくまで**「この関数をこう呼びたい」という宣言（JSON）にすぎない**ことです。モデルとあなたのコードの間には、必ず「アプリが実行する」という一拍が挟まります。
+
+## 名前に反して、モデルは関数を呼ばない——この分業が安全設計の土台
+
+最初にこの仕組みを知ったとき、意外に感じるのはここだと思います。「Function Calling」と聞くと、モデルが直接システムに手を突っ込んでくる姿を想像しがちですが、実際には**モデルは一度もあなたの環境に触れません**。触れるのは、モデルの宣言を受け取って実行する、あなたのアプリだけです。
+
+そしてこの「モデルは提案、実行はアプリ」という分業こそが、安全設計の土台になります。実行の手前にアプリのコードが必ず挟まるということは、そこに**検証と制御を差し込める**ということだからです。
+
+- **引数の検証**: モデルが返した引数をスキーマや業務ルールで検証してから実行する
+- **権限の制御**: 「読み取り系は自動実行、書き込み系は人間の承認後」のような段階を作る
+- **記録**: どのツールがどの引数で呼ばれたかをログに残す
+
+逆に言うと、モデルの宣言を無検証のまま`eval`的に実行してしまう実装は、この仕組みが用意してくれた安全の挟み込みポイントを自分で捨てていることになります。Function Callingの価値は「モデルがツールを使えること」そのものと同じくらい、「実行の直前に必ずアプリの判断が挟まる構造」にあります。
+
+## 呼び名は各社で違うが、構造は同じ
+
+実装を調べ始めると、同じ仕組みが文書によって違う名前で呼ばれていることに気づきます。
+
+- **OpenAI**: [Function calling](https://platform.openai.com/docs/guides/function-calling)という呼び名で、関数定義を`tools`パラメータで渡します
+- **Anthropic（Claude）**: [Tool use](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview)という呼び名で、ツール定義を`tools`パラメータで渡します
+- **Google（Gemini）**: [Function calling](https://ai.google.dev/gemini-api/docs/function-calling)の呼び名を使います
+
+パラメータ名やJSONの形は少しずつ違いますが、「スキーマ付きのツール定義を渡す → モデルが呼び出し宣言を返す → アプリが実行して結果を返す」という構造は共通です。どれか1社のAPIで一度実装しておけば、他社APIへの読み替えはすぐにできます。
+
+## 最小の実装——1往復なら50行もいらない
+
+雰囲気をつかむために、Anthropic APIで1往復を書くとこうなります（Node.js、エラー処理は省略）。
+
+```javascript
+import Anthropic from "@anthropic-ai/sdk";
+const client = new Anthropic();
+
+const tools = [{
+  name: "get_weather",
+  description: "指定した都市の現在の天気を取得する",
+  input_schema: {
+    type: "object",
+    properties: { city: { type: "string", description: "都市名" } },
+    required: ["city"],
+  },
+}];
+
+// 1回目: モデルがツールを使うと判断すると tool_use ブロックが返る
+const first = await client.messages.create({
+  model: "claude-sonnet-5-5",
+  max_tokens: 1024,
+  tools,
+  messages: [{ role: "user", content: "東京の天気は？" }],
+});
+
+const toolUse = first.content.find((b) => b.type === "tool_use");
+
+// 2回目: アプリ側で実行した結果を tool_result として返す
+const result = await getWeather(toolUse.input.city); // ここだけが自前の処理
+const second = await client.messages.create({
+  model: "claude-sonnet-5-5",
+  max_tokens: 1024,
+  tools,
+  messages: [
+    { role: "user", content: "東京の天気は？" },
+    { role: "assistant", content: first.content },
+    {
+      role: "user",
+      content: [{ type: "tool_result", tool_use_id: toolUse.id, content: result }],
+    },
+  ],
+});
+```
+
+コードにすると、分業の線がどこに引かれているかがはっきり見えます。モデルとのやり取りは`messages.create`の2回だけで、**実際に天気を取りに行く`getWeather`は、この仕組みの外側にある普通の自前コード**です。だからこそ、その1行の手前に引数の検証でも権限チェックでも、好きなだけ挟めます。
+
+## MCP・AIエージェントとの関係——全部この土台の上にいる
+
+Function Callingを押さえると、エージェント関連の用語の位置関係が一気に整理されます。
+
+**MCP（Model Context Protocol）との関係**: Function Callingが「アプリとモデルの間でツールをやり取りする仕組み」だとすると、MCPは「ツールの提供側を標準化する規格」です。MCPサーバーが提供するツールも、アプリ（MCPクライアント）がモデルに渡すときには、結局この記事で見たツール定義の形になります。つまりMCPはFunction Callingの代替ではなく、その上に乗る配線の規格です。詳しくは別記事にまとめています。
+
+<LinkCard slug="what-is-mcp" />
+
+**AIエージェントとの関係**: Function Callingの5ステップを「1回で終わらせず、モデルがもう道具を使わなくなるまでループで回す」と、それがエージェントです。エージェントの本体が数十行のループで書ける理由は、重たい仕事（ツールを選ぶ・引数を組み立てる）をFunction Callingの仕組みがモデル側に寄せてくれているからです。
+
+<LinkCard slug="ai-agent-build-guide" />
+
+## 実装前に知っておきたいツール設計の勘所
+
+仕組み自体の実装はすぐに終わるはずです。差が出るのはツールの設計です。押さえておきたい点を4つに絞ります。
+
+- **説明文がモデルへのUIになる**: モデルがツールを選ぶ判断材料は、名前と説明文だけです。「何をするか」に加えて「いつ使うべきか・いつ使うべきでないか」まで説明文に書くことが、選択の精度に直結します
+- **引数は少なく、具体的に**: 引数が多い・曖昧なツールは、モデルが引数を組み立てる段階でミスを誘発します。汎用の1ツールより、用途の明確な数ツールに分ける方が安定します
+- **エラーはモデルに返す**: ツール実行が失敗したら、例外で止めるのではなくエラーメッセージを結果としてモデルに返します。モデルは引数を直して再試行したり、別の手段に切り替えたりできます
+- **ツールは足しすぎない**: ツール定義はすべてコンテキストを消費し、選択肢が増えるほど選択ミスも増えます。「使うかもしれない」で足さず、その会話で本当に使うものだけを渡します
+
+## Function Callingを使わない方がいい場面
+
+最後に境界線をひとつ。「モデルの出力を決まった形のJSONで受け取りたいだけ」なら、Function Callingではなく**構造化出力（Structured Outputs）**の専用機能が適しています（例: [Anthropicの構造化出力](https://docs.claude.com/en/docs/build-with-claude/structured-outputs)）。ツールの実行が目的ではなく出力形式の固定が目的の場合にFunction Callingを流用すると、不要な往復と複雑さを抱え込みます。
+
+逆に、外部の情報を取りに行く・外部に作用する処理が1つでも入るなら、Function Callingが正道です。そこから先、ツールが増えて配線がつらくなったらMCP、ループで自律的に回したくなったらエージェント、と段階的に積み上げていけます。
+
+## まとめ
+
+- Function Callingは、LLMにツール定義を渡し、モデルが**呼び出し宣言のJSON**を返してくる仕組み
+- **実行するのは常にアプリ側**。この分業が検証・権限・記録を挟む安全設計の土台になる
+- OpenAIはfunction calling、Anthropicはtool use、Geminiはfunction callingと呼び名は違うが構造は同じ
+- MCPはツール提供の標準化規格、エージェントはこの仕組みのループ運用。どちらもFunction Callingの上に乗っている
+- 設計の勘所は、説明文・少ない引数・エラーをモデルに返す・足しすぎない、の4つ
+
+<LinkCard url="https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview" title="Tool use with Claude - Anthropic公式ドキュメント" />
