@@ -299,6 +299,13 @@
       "image": "https://platform.claude.com/web-api/og/docs/en/build-with-claude/prompt-caching?design-rev=2",
       "favicon": "https://platform.claude.com/favicon.ico"
     },
+    "https://docs.claude.com/en/docs/build-with-claude/structured-outputs": {
+      "title": "Structured outputs",
+      "description": "Get validated JSON results from agent workflows",
+      "domain": "platform.claude.com",
+      "image": "https://platform.claude.com/web-api/og/docs/en/build-with-claude/structured-outputs?design-rev=4",
+      "favicon": "https://platform.claude.com/favicon.ico"
+    },
     "https://docs.claude.com/en/docs/claude-code/checkpointing": {
       "title": "Checkpointing - Claude Code Docs",
       "description": "Track, rewind, and summarize Claude's edits and conversation to manage session state.",
