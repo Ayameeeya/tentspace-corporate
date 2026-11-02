@@ -36,12 +36,26 @@
       "image": "https://blog.cloudflare.com/_emdash/api/media/file/01KW47G6K18ZKMNC8636CN3FNG.png",
       "favicon": "https://blog.cloudflare.com/favicon.svg"
     },
+    "https://code.claude.com/docs/en/amazon-bedrock": {
+      "title": "Claude Code on Amazon Bedrock - Claude Code Docs",
+      "description": "Learn about configuring Claude Code through Amazon Bedrock, including setup, IAM configuration, and troubleshooting.",
+      "domain": "code.claude.com",
+      "image": "https://claude-code.mintlify.app/_mintlify/api/og/v2?division=Deployment&title=Claude+Code+on+Amazon+Bedrock&description=Learn+about+configuring+Claude+Code+through+Amazon+Bedrock%2C+including+setup%2C+IAM+configuration%2C+and+troubleshooting.&theme=8d9812df31da293aba4e8103&signature=0a192b44132c4221c3311f9cea27d19e4698a979b48e324cddfe74bef169c74e",
+      "favicon": "https://code.claude.com/docs/mintlify-assets/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
+    },
     "https://code.claude.com/docs/en/changelog": {
       "title": "Claude Code changelog - Claude Code Docs",
       "description": "Release notes for Claude Code, including new features, improvements, and bug fixes by version.",
       "domain": "code.claude.com",
       "image": "https://claude-code.mintlify.app/_next/image?url=%2F_mintlify%2Fapi%2Fog%3Fdivision%3DGetting%2Bstarted%26title%3DClaude%2BCode%2Bchangelog%26description%3DRelease%2Bnotes%2Bfor%2BClaude%2BCode%252C%2Bincluding%2Bnew%2Bfeatures%252C%2Bimprovements%252C%2Band%2Bbug%2Bfixes%2Bby%2Bversion.%26theme%3D03628e99c753a03aec319053&w=1200&q=100",
       "favicon": "https://code.claude.com/docs/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
+    },
+    "https://code.claude.com/docs/en/google-vertex-ai": {
+      "title": "Claude Code on Google Cloud's Agent Platform - Claude Code Docs",
+      "description": "Learn about configuring Claude Code through Google Cloud's Agent Platform, formerly Vertex AI, including setup, IAM configuration, and troubleshooting.",
+      "domain": "code.claude.com",
+      "image": "https://claude-code.mintlify.app/_mintlify/api/og/v2?division=Deployment&title=Claude+Code+on+Google+Cloud%27s+Agent+Platform&description=Learn+about+configuring+Claude+Code+through+Google+Cloud%27s+Agent+Platform%2C+formerly+Vertex+AI%2C+including+setup%2C+IAM+configuration%2C+and+troubleshooting.&theme=8d9812df31da293aba4e8103&signature=c12c378833074b3a7f52cf45adfaf0ac53da57981bf302238d0fb83cb7c512a9",
+      "favicon": "https://code.claude.com/docs/mintlify-assets/_mintlify/favicons/claude-code/pLsy-mRpNksna2sx/_generated/favicon/android-chrome-192x192.png"
     },
     "https://code.claude.com/docs/en/hooks": {
       "title": "Hooks reference - Claude Code Docs",
