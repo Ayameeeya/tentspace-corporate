@@ -1,5 +1,653 @@
 [
   {
+    "id": 4271505980,
+    "slug": "claude-code-web",
+    "title": "Claude Code Web版の使い方｜ブラウザから任せてPRで受け取る",
+    "description": "Claude CodeのWeb版（claude.ai/code）の使い方を公式ドキュメントベースで整理します。GitHub連携での始め方、セッションごとに使い捨てられるクラウド実行環境の仕組み、ネットワークポリシーと環境設定、CLI・GitHub Actionsとの使い分けまでまとめます。",
+    "date": "2026-09-29T00:00:00.000Z",
+    "updated": "2026-09-29T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "AIエージェント",
+      "自動化",
+      "クラウド実行"
+    ],
+    "draft": false,
+    "readingTime": 10,
+    "wordCount": 3740,
+    "ogImage": "/blog-assets/claude-code-web/featured.jpg",
+    "experiment": {
+      "hook": "howto",
+      "cta": "inquiry",
+      "targetKw": "Claude Code Web版",
+      "utmCampaign": "claude-code-web-202609"
+    }
+  },
+  {
+    "id": 2802399002,
+    "slug": "claude-code-on-the-web",
+    "title": "Claude Code Web版の使い方｜クラウド実行の仕組みと使いどころ",
+    "description": "Claude CodeのWeb版（Claude Code on the web）を公式ドキュメントベースで整理します。ブラウザから使うと何がどこで動くのか、GitHub接続と環境設定、ローカルの感覚で使うと踏む3つの段差、CLI・GitHub Actionsとの使い分けまでまとめます。",
+    "date": "2026-09-28T00:00:00.000Z",
+    "updated": "2026-09-28T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "AIエージェント",
+      "自動化",
+      "クラウド実行"
+    ],
+    "draft": false,
+    "readingTime": 13,
+    "wordCount": 4987,
+    "ogImage": "/blog-assets/claude-code-on-the-web/featured.jpg",
+    "experiment": {
+      "hook": "contrarian",
+      "cta": "inquiry",
+      "targetKw": "Claude Code Web版",
+      "utmCampaign": "claude-code-on-the-web-202609"
+    }
+  },
+  {
+    "id": 1863612217,
+    "slug": "ai-agent-chat-ui",
+    "title": "AIエージェントにチャットUIは必要か｜作業面をDBと通知に置いた設計",
+    "description": "AIエージェントと人間の接点をチャット以外に置く設計を整理します。GitHubの「チャットはしばしば間違ったUI」という提起を一次情報から読み、無人運用の作業面をNotionのデータベースとSlack通知に置いた実構成、面を変えると何が見えなくなるか、面を選ぶ3つの質問をまとめます。",
+    "date": "2026-09-27T00:00:00.000Z",
+    "updated": "2026-09-27T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "AIエージェント",
+      "自動化",
+      "設計",
+      "UI"
+    ],
+    "draft": false,
+    "readingTime": 12,
+    "wordCount": 4662,
+    "ogImage": "/blog-assets/ai-agent-chat-ui/featured.jpg",
+    "experiment": {
+      "hook": "contrarian",
+      "cta": "inquiry",
+      "targetKw": "AIエージェント チャットUI",
+      "utmCampaign": "ai-agent-chat-ui-202609"
+    }
+  },
+  {
+    "id": 4163045909,
+    "slug": "claude-code-sandbox-settings",
+    "title": "Claude Codeサンドボックス設定ガイド｜有効化だけでは残る3つの穴",
+    "description": "Claude CodeのBashサンドボックスを有効化した後に残る3つの既定の穴（ファイル読取・環境変数の継承・ネットワーク許可リストの膨張）と、それを塞ぐ設定キーを整理します。設定の本体が「壁の厚さ」ではなく「内側への持ち込み申告」である理由までまとめます。",
+    "date": "2026-09-26T00:00:00.000Z",
+    "updated": "2026-09-26T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "AIエージェント",
+      "自動化",
+      "セキュリティ"
+    ],
+    "draft": false,
+    "readingTime": 9,
+    "wordCount": 3447,
+    "ogImage": "/blog-assets/claude-code-sandbox-settings/featured.jpg",
+    "experiment": {
+      "hook": "number",
+      "cta": "inquiry",
+      "targetKw": "Claude Code サンドボックス 設定",
+      "utmCampaign": "claude-code-sandbox-settings-202609"
+    }
+  },
+  {
+    "id": 3636263685,
+    "slug": "rest-api-mcp-tools",
+    "title": "REST APIをMCPツール化する2つの方法｜宣言生成と手書きサーバーの分かれ目",
+    "description": "既存のREST APIをMCPツールにする方法を2つ比較します。Google Cloud API GatewayのOpenAPI注釈による宣言生成（Public Preview）の手順と制約、自作サーバーを55ツールまで手書きした運用から見えた「生成で消える工数」と「手書きにしか置けない層」の分かれ目をまとめます。",
+    "date": "2026-09-26T00:00:00.000Z",
+    "updated": "2026-09-26T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "MCP",
+      "AIエージェント",
+      "API",
+      "設計"
+    ],
+    "draft": false,
+    "readingTime": 8,
+    "wordCount": 2976,
+    "ogImage": "/blog-assets/rest-api-mcp-tools/featured.jpg",
+    "experiment": {
+      "hook": "contrarian",
+      "cta": "inquiry",
+      "targetKw": "REST API MCP化",
+      "utmCampaign": "rest-api-mcp-tools-202609"
+    }
+  },
+  {
+    "id": 3056450910,
+    "slug": "claude-code-getting-started",
+    "title": "Claude Code入門｜インストールから最初のタスクまで",
+    "description": "Claude Codeの始め方を公式ドキュメントベースで整理します。インストールからログインまでの3手順、最初に任せるタスクの選び方、Esc・プランモード・/rewindという「止め方」の基本、/initでのCLAUDE.md作成、次に読む設定ガイドまでまとめます。",
+    "date": "2026-09-25T00:00:00.000Z",
+    "updated": "2026-09-25T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "AIエージェント",
+      "自動化",
+      "初心者向け"
+    ],
+    "draft": false,
+    "readingTime": 11,
+    "wordCount": 4011,
+    "ogImage": "/blog-assets/claude-code-getting-started/featured.jpg",
+    "experiment": {
+      "hook": "howto",
+      "cta": "inquiry",
+      "targetKw": "Claude Code 使い方",
+      "utmCampaign": "claude-code-getting-started-202609"
+    }
+  },
+  {
+    "id": 1631298427,
+    "slug": "claude-code-auto-mode",
+    "title": "Claude Codeのauto mode解説｜安全分類器の課金条件と止まり方",
+    "description": "Claude Codeのauto modeの安全分類器を整理します。2.1.278でサーバー側既定になり審査分の課金が消えた変更、ゲートウェイ経由では無料にならない条件と/statusでの確認方法、審査が断る・答えないときに1回打ち切り・10連続停止となる挙動までまとめます。",
+    "date": "2026-09-24T00:00:00.000Z",
+    "updated": "2026-09-24T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "AIエージェント",
+      "自動化",
+      "セキュリティ"
+    ],
+    "draft": false,
+    "readingTime": 12,
+    "wordCount": 4489,
+    "ogImage": "/blog-assets/claude-code-auto-mode/featured.jpg",
+    "experiment": {
+      "hook": "number",
+      "cta": "inquiry",
+      "targetKw": "Claude Code auto mode",
+      "utmCampaign": "claude-code-auto-mode-202609"
+    }
+  },
+  {
+    "id": 212086186,
+    "slug": "claude-agent-sdk",
+    "title": "Claude Agent SDK入門｜Claude Codeの中身を自分のエージェントに使う",
+    "description": "Claude Agent SDKを公式ドキュメントベースで整理します。旧Claude Code SDKからの改名の経緯、Messages APIに対して何を肩代わりするか、TypeScriptの最小構成、既定でCLAUDE.mdを読まない注意点、CLI・headlessモードとの使い分けまでまとめます。",
+    "date": "2026-09-23T00:00:00.000Z",
+    "updated": "2026-09-23T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Agent SDK",
+      "AIエージェント",
+      "Claude Code",
+      "自動化"
+    ],
+    "draft": false,
+    "readingTime": 13,
+    "wordCount": 4817,
+    "ogImage": "/blog-assets/claude-agent-sdk/featured.jpg",
+    "experiment": {
+      "hook": "howto",
+      "cta": "inquiry",
+      "targetKw": "Claude Agent SDK",
+      "utmCampaign": "claude-agent-sdk-202609"
+    }
+  },
+  {
+    "id": 2892059568,
+    "slug": "claude-code-settings-json",
+    "title": "Claude Codeのsettings.json解説｜5つの置き場所と優先順位",
+    "description": "Claude Codeの設定ファイルsettings.jsonを整理します。ユーザー・プロジェクト・ローカル・管理ポリシーという4つの置き場所とコマンドライン引数を加えた優先順位、permissionsやenvなど主要キーの書き方、エージェント自身に書き換えさせない置き方までまとめます。",
+    "date": "2026-09-22T00:00:00.000Z",
+    "updated": "2026-09-22T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "AIエージェント",
+      "自動化",
+      "設定"
+    ],
+    "draft": false,
+    "readingTime": 12,
+    "wordCount": 4538,
+    "ogImage": "/blog-assets/claude-code-settings-json/featured.jpg",
+    "experiment": {
+      "hook": "number",
+      "cta": "inquiry",
+      "targetKw": "Claude Code settings.json",
+      "utmCampaign": "claude-code-settings-json-202609"
+    }
+  },
+  {
+    "id": 2117390210,
+    "slug": "mcp-vs-skills",
+    "title": "MCPサーバーとスキルの使い分け｜「どちらで実装するか」を決める3つの質問",
+    "description": "エージェントの機能をMCPサーバーとスキルのどちらで実装するかの判断軸を整理します。GitHub公式ブログの「skillsはMCPを殺したのか」議論を一次情報から読み、自作MCPサーバー55ツールとスキル13個を併用している運用での分け方、迷ったときの3つの質問をまとめます。",
+    "date": "2026-09-21T00:00:00.000Z",
+    "updated": "2026-09-21T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "MCP",
+      "Claude Code",
+      "AIエージェント",
+      "設計"
+    ],
+    "draft": false,
+    "readingTime": 9,
+    "wordCount": 3587,
+    "ogImage": "/blog-assets/mcp-vs-skills/featured.jpg",
+    "experiment": {
+      "hook": "contrarian",
+      "cta": "inquiry",
+      "targetKw": "MCP スキル 使い分け",
+      "utmCampaign": "mcp-vs-skills-202609"
+    }
+  },
+  {
+    "id": 2915525676,
+    "slug": "claude-code-slash-commands",
+    "title": "Claude Codeのスラッシュコマンド入門｜カスタムコマンドの作り方と使い分け",
+    "description": "Claude Codeのスラッシュコマンドを公式ドキュメントベースで整理します。まず覚える組み込みコマンド、Markdown 1枚で作るカスタムコマンドの手順、$ARGUMENTSやfrontmatterの書き方、スキル・hooksとの使い分けの境界線までまとめます。",
+    "date": "2026-09-20T00:00:00.000Z",
+    "updated": "2026-09-20T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "AIエージェント",
+      "自動化",
+      "スラッシュコマンド"
+    ],
+    "draft": false,
+    "readingTime": 11,
+    "wordCount": 4275,
+    "ogImage": "/blog-assets/claude-code-slash-commands/featured.jpg",
+    "experiment": {
+      "hook": "howto",
+      "cta": "inquiry",
+      "targetKw": "Claude Code スラッシュコマンド",
+      "utmCampaign": "claude-code-slash-commands-202609"
+    }
+  },
+  {
+    "id": 1938008327,
+    "slug": "mcp-server-auth-guide",
+    "title": "MCPサーバーの認証ガイド｜トークンの置き場所と漏れる場所の設計",
+    "description": "MCPサーバーの認証と資格情報の扱いを、実運用中の自作サーバーの実装で解説します。Bearer検証の実装判断、トークンをWorker KVだけに置く境界、クライアント側のエラー文へ資格情報が出ていた漏れ口まで、置き場所と出さない場所の設計を整理します。",
+    "date": "2026-09-19T00:00:00.000Z",
+    "updated": "2026-09-19T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "MCP",
+      "Claude Code",
+      "セキュリティ",
+      "Cloudflare Workers"
+    ],
+    "draft": false,
+    "readingTime": 9,
+    "wordCount": 3235,
+    "ogImage": "/blog-assets/mcp-server-auth-guide/featured.jpg",
+    "experiment": {
+      "hook": "contrarian",
+      "cta": "inquiry",
+      "targetKw": "MCP 認証",
+      "utmCampaign": "mcp-server-auth-guide-202609"
+    }
+  },
+  {
+    "id": 730768626,
+    "slug": "workers-vpc-hyperdrive-guide",
+    "title": "Workers VPCの実装ガイド｜トンネルからHyperdrive設定までの4段構成",
+    "description": "Cloudflare Workersから私設ネットワークのDBへ繋ぐWorkers VPCの実装を4段構成で整理します。cloudflaredトンネル、VPC Serviceの登録、Hyperdrive設定、Workerからの接続という手順と、実装前に決めておく3つの設計判断をまとめます。",
+    "date": "2026-09-19T00:00:00.000Z",
+    "updated": "2026-09-19T00:00:00.000Z",
+    "categories": [
+      "テクノロジー"
+    ],
+    "tags": [
+      "Cloudflare",
+      "Cloudflare Workers",
+      "Hyperdrive",
+      "データベース"
+    ],
+    "draft": false,
+    "readingTime": 10,
+    "wordCount": 3962,
+    "ogImage": "/blog-assets/workers-vpc-hyperdrive-guide/featured.jpg",
+    "experiment": {
+      "hook": "howto",
+      "cta": "inquiry",
+      "targetKw": "Workers VPC 設定",
+      "utmCampaign": "workers-vpc-hyperdrive-guide-202609"
+    }
+  },
+  {
+    "id": 1572012559,
+    "slug": "claude-code-github-actions",
+    "title": "Claude CodeのGitHub Actions連携入門｜@claudeで動かす設定と権限設計",
+    "description": "Claude CodeをGitHub Actionsで動かす公式連携（claude-code-action）を整理します。@claudeメンションで動く対話型とpromptを渡す自動実行の2形態、最小のワークフロー設定、「トリガーできる人が実質の承認者になる」権限設計、素のclaude -pとの使い分けをまとめます。",
+    "date": "2026-09-18T00:00:00.000Z",
+    "updated": "2026-09-18T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "GitHub Actions",
+      "AIエージェント",
+      "自動化"
+    ],
+    "draft": false,
+    "readingTime": 11,
+    "wordCount": 4006,
+    "ogImage": "/blog-assets/claude-code-github-actions/featured.jpg",
+    "experiment": {
+      "hook": "howto",
+      "cta": "inquiry",
+      "targetKw": "Claude Code GitHub Actions",
+      "utmCampaign": "claude-code-github-actions-202609"
+    }
+  },
+  {
+    "id": 3736846254,
+    "slug": "claude-code-mcp-connection-troubleshooting",
+    "title": "Claude CodeでMCPに接続できない時の切り分け方｜設定・接続方式・権限の3段",
+    "description": "Claude CodeでMCPサーバーに接続できない・ツールが出てこないときの切り分け手順を整理します。設定→接続方式→権限の3段チェック、2.1.274でまとめて直った「エラー表示そのものの誤り」、無人運用で接続の欠落を静かに見逃さないための設計までまとめます。",
+    "date": "2026-09-17T00:00:00.000Z",
+    "updated": "2026-09-17T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "MCP",
+      "AIエージェント",
+      "トラブルシューティング"
+    ],
+    "draft": false,
+    "readingTime": 12,
+    "wordCount": 4735,
+    "ogImage": "/blog-assets/claude-code-mcp-connection-troubleshooting/featured.jpg",
+    "experiment": {
+      "hook": "howto",
+      "cta": "inquiry",
+      "targetKw": "Claude Code MCP 接続できない",
+      "utmCampaign": "claude-code-mcp-connection-troubleshooting-202609"
+    }
+  },
+  {
+    "id": 2805497821,
+    "slug": "agent-gateway",
+    "title": "Agent Gatewayとは？エージェントの安全を実行時の共通ゲートに寄せる設計",
+    "description": "GoogleのAgent Gatewayを一次情報から整理します。ビルド時の検査では捕まらない「構文は正しいが意図に反する呼び出し」を実行時の共通強制点で審査する3層構成、既定denyがGoogle自身の内部呼び出しを止めた摩擦報告、小規模運用にも持ち帰れる設計の形をまとめます。",
+    "date": "2026-09-16T00:00:00.000Z",
+    "updated": "2026-09-16T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "AIエージェント",
+      "セキュリティ",
+      "設計",
+      "自動化"
+    ],
+    "draft": false,
+    "readingTime": 12,
+    "wordCount": 4634,
+    "ogImage": "/blog-assets/agent-gateway/featured.jpg",
+    "experiment": {
+      "hook": "contrarian",
+      "cta": "inquiry",
+      "targetKw": "Agent Gateway とは",
+      "utmCampaign": "agent-gateway-202609"
+    }
+  },
+  {
+    "id": 3214553666,
+    "slug": "claude-code-plugins",
+    "title": "Claude Codeのプラグイン入門｜スキルやMCP設定をまとめて配る仕組み",
+    "description": "Claude Codeのプラグインを公式ドキュメントベースで整理します。スラッシュコマンド・スキル・hooks・MCP設定を1つにまとめる構造、マーケットプレイスからの導入手順、チームへ配る設定、リポジトリ直置きで足りる場合の判断軸までまとめます。",
+    "date": "2026-09-15T00:00:00.000Z",
+    "updated": "2026-09-15T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "AIエージェント",
+      "自動化",
+      "プラグイン"
+    ],
+    "draft": false,
+    "readingTime": 9,
+    "wordCount": 3502,
+    "ogImage": "/blog-assets/claude-code-plugins/featured.jpg",
+    "experiment": {
+      "hook": "howto",
+      "cta": "inquiry",
+      "targetKw": "Claude Code プラグイン",
+      "utmCampaign": "claude-code-plugins-202609"
+    }
+  },
+  {
+    "id": 3936569157,
+    "slug": "mcp-server-cloudflare-workers",
+    "title": "MCPサーバーの自作入門｜Cloudflare Workersで作って本番運用するまで",
+    "description": "自作MCPサーバーをCloudflare Workersで動かす手順を、実運用中のコードで解説します。公式TypeScript SDKでの最小構成、入力スキーマ・Bearer認証・confirm必須・KVの回数制限という「断る側」の設計、ツール表面を固定するテストまでまとめます。",
+    "date": "2026-09-14T00:00:00.000Z",
+    "updated": "2026-09-14T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "MCP",
+      "Cloudflare Workers",
+      "AIエージェント",
+      "自動化"
+    ],
+    "draft": false,
+    "readingTime": 10,
+    "wordCount": 3865,
+    "ogImage": "/blog-assets/mcp-server-cloudflare-workers/featured.jpg",
+    "experiment": {
+      "hook": "howto",
+      "cta": "inquiry",
+      "targetKw": "MCPサーバー 自作",
+      "utmCampaign": "mcp-server-cloudflare-workers-202609"
+    }
+  },
+  {
+    "id": 3517517365,
+    "slug": "claude-code-sandbox",
+    "title": "Claude Codeのサンドボックス入門｜3段の隔離と権限ルールの限界",
+    "description": "Claude Codeの実行環境を隔離する3つの方法（Bashサンドボックス・Dev Container・クラウド実行）を整理します。symlinkやteeで権限ルールが漏れた修正履歴から「ルールと壁は別物」と考える理由、3段の使い分けの判断軸、壁の内側に持ち込むものの棚卸しまでまとめます。",
+    "date": "2026-09-13T00:00:00.000Z",
+    "updated": "2026-09-13T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "AIエージェント",
+      "自動化",
+      "セキュリティ"
+    ],
+    "draft": false,
+    "readingTime": 10,
+    "wordCount": 3804,
+    "ogImage": "/blog-assets/claude-code-sandbox/featured.jpg",
+    "experiment": {
+      "hook": "contrarian",
+      "cta": "inquiry",
+      "targetKw": "Claude Code サンドボックス",
+      "utmCampaign": "claude-code-sandbox-202609"
+    }
+  },
+  {
+    "id": 1884024826,
+    "slug": "ai-agent-harness",
+    "title": "エージェントハーネスとは？出力レビューでは捕まらない回帰の見つけ方",
+    "description": "エージェントハーネスとは何かを、GitHubとGoogleが1週間差で公開した一次情報から整理します。成果物のレビューとハーネスの振る舞い評価が別物である理由、自社運用で実際に起きた「全PASSなのに指示が2週間守られない」回帰の実例、回帰を数える側の設計をまとめます。",
+    "date": "2026-09-12T00:00:00.000Z",
+    "updated": "2026-09-12T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "AIエージェント",
+      "自動化",
+      "評価",
+      "設計"
+    ],
+    "draft": false,
+    "readingTime": 12,
+    "wordCount": 4544,
+    "ogImage": "/blog-assets/ai-agent-harness/featured.jpg",
+    "experiment": {
+      "hook": "contrarian",
+      "cta": "inquiry",
+      "targetKw": "エージェントハーネス",
+      "utmCampaign": "ai-agent-harness-202609"
+    }
+  },
+  {
+    "id": 3353957121,
+    "slug": "claude-mcp-add-scope",
+    "title": "claude mcp addのスコープ解説｜設定の保存先と同名サーバーの優先順位",
+    "description": "claude mcp addの--scope（local・project・user）で設定がどこへ保存され、同名サーバーはどれが勝つのかを実測で整理します。3スコープ=3ファイルではない保存構造、承認前のprojectが順位に参加しない挙動、削除の罠までまとめます。",
+    "date": "2026-09-12T00:00:00.000Z",
+    "updated": "2026-09-12T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "MCP",
+      "AIエージェント",
+      "設定"
+    ],
+    "draft": false,
+    "readingTime": 10,
+    "wordCount": 3786,
+    "ogImage": "/blog-assets/claude-mcp-add-scope/featured.jpg",
+    "experiment": {
+      "hook": "howto",
+      "cta": "inquiry",
+      "targetKw": "claude mcp scope",
+      "utmCampaign": "claude-mcp-add-scope-202609"
+    }
+  },
+  {
+    "id": 3576787404,
+    "slug": "claude-code-cache-miss-tool-changes",
+    "title": "Claude Codeのキャッシュミス対策｜会話途中のツール一覧変更を疑う",
+    "description": "Claude Codeでプロンプトキャッシュが効かない・拡張思考が消えるときに疑う場所を整理します。原因はMCPサーバーの接続台数より「会話途中のツール一覧変更」で、2.1.267では同じ原因の修正が1リリースに11件入りました。内訳の分類と、更新後も運用側に残る対策をまとめます。",
+    "date": "2026-09-10T00:00:00.000Z",
+    "updated": "2026-09-10T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "MCP",
+      "AIエージェント",
+      "コスト設計"
+    ],
+    "draft": false,
+    "readingTime": 12,
+    "wordCount": 4781,
+    "ogImage": "/blog-assets/claude-code-cache-miss-tool-changes/featured.jpg",
+    "experiment": {
+      "hook": "number",
+      "cta": "inquiry",
+      "targetKw": "Claude Code キャッシュミス",
+      "utmCampaign": "claude-code-cache-miss-202609"
+    }
+  },
+  {
+    "id": 2884165166,
+    "slug": "claude-code-session-resume",
+    "title": "Claude Codeのセッション再開ガイド｜--continueと--resumeで戻るもの・戻らないもの",
+    "description": "Claude Codeで中断したセッションへ復帰する方法を整理します。--continueと--resume・/resumeの使い分け、再開で戻る会話と戻らない実行状態の区別、2.1.265の再開まわりの修正9件から読む設計上の注意、無人運用で再開に頼らない判断までをまとめます。",
+    "date": "2026-09-09T00:00:00.000Z",
+    "updated": "2026-09-09T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "Claude Code",
+      "AIエージェント",
+      "自動化",
+      "セッション管理"
+    ],
+    "draft": false,
+    "readingTime": 9,
+    "wordCount": 3392,
+    "ogImage": "/blog-assets/claude-code-session-resume/featured.jpg",
+    "experiment": {
+      "hook": "howto",
+      "cta": "inquiry",
+      "targetKw": "Claude Code セッション再開",
+      "utmCampaign": "claude-code-session-resume"
+    }
+  },
+  {
+    "id": 321785734,
+    "slug": "gpt-6-astra-agents-md-audit",
+    "title": "GPT-6 AstraはAGENTS.mdを書いてある通りに実行する｜移行前の指示ファイル監査",
+    "description": "OpenAI公式ガイドが推奨するGPT-6 Astra移行時のAGENTS.md・SKILL.md監査を整理します。指示追従が強くなったモデルで放置された一文まで実行されるようになる構図、公式が示す監査プロンプト2本、監査で済むケースと作り直すべきケースの判断基準をまとめます。",
+    "date": "2026-09-09T00:00:00.000Z",
+    "updated": "2026-09-09T00:00:00.000Z",
+    "categories": [
+      "AI活用"
+    ],
+    "tags": [
+      "GPT-6 Astra",
+      "AGENTS.md",
+      "AIエージェント",
+      "OpenAI"
+    ],
+    "draft": false,
+    "readingTime": 12,
+    "wordCount": 4618,
+    "ogImage": "/blog-assets/gpt-6-astra-agents-md-audit/featured.jpg",
+    "experiment": {
+      "hook": "contrarian",
+      "cta": "inquiry",
+      "targetKw": "GPT-6 Astra AGENTS.md",
+      "utmCampaign": "gpt-6-astra-agents-md-audit"
+    }
+  },
+  {
     "id": 500718280,
     "slug": "claude-code-git-worktree-parallel",
     "title": "Claude Codeをgit worktreeで並列実行する｜衝突しない複数タスクの進め方",
